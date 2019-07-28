@@ -37,6 +37,16 @@ import org.apache.spark.scheduler.cluster.CoarseGrainedClusterMessages._
 import org.apache.spark.serializer.SerializerInstance
 import org.apache.spark.util.{ThreadUtils, Utils}
 
+/**
+  * 在worker中为app启动executor的jvm进程，相当于启动CoarseGrainedExecutorBackend这个类。
+  * @param rpcEnv
+  * @param driverUrl
+  * @param executorId
+  * @param hostname
+  * @param cores
+  * @param userClassPath
+  * @param env
+  */
 private[spark] class CoarseGrainedExecutorBackend(
     override val rpcEnv: RpcEnv,
     driverUrl: String,
@@ -60,6 +70,7 @@ private[spark] class CoarseGrainedExecutorBackend(
     rpcEnv.asyncSetupEndpointRefByURI(driverUrl).flatMap { ref =>
       // This is a very fast action so we can use "ThreadUtils.sameThread"
       driver = Some(ref)
+      // 向driver发动注册executor信息
       ref.ask[Boolean](RegisterExecutor(executorId, self, hostname, cores, extractLogUrls))
     }(ThreadUtils.sameThread).onComplete {
       // This is a very fast action so we can use "ThreadUtils.sameThread"
@@ -76,6 +87,10 @@ private[spark] class CoarseGrainedExecutorBackend(
       .map(e => (e._1.substring(prefix.length).toLowerCase(Locale.ROOT), e._2))
   }
 
+  /**
+    * 接收处理返回消息
+    * @return
+    */
   override def receive: PartialFunction[Any, Unit] = {
     case RegisteredExecutor =>
       logInfo("Successfully registered with driver")
@@ -173,7 +188,16 @@ private[spark] class CoarseGrainedExecutorBackend(
 }
 
 private[spark] object CoarseGrainedExecutorBackend extends Logging {
-
+  /**
+    * 创建executor方法
+    * @param driverUrl
+    * @param executorId
+    * @param hostname
+    * @param cores
+    * @param appId
+    * @param workerUrl
+    * @param userClassPath
+    */
   private def run(
       driverUrl: String,
       executorId: String,
@@ -233,6 +257,10 @@ private[spark] object CoarseGrainedExecutorBackend extends Logging {
     }
   }
 
+  /**
+    * 程序执行的主方法
+    * @param args
+    */
   def main(args: Array[String]) {
     var driverUrl: String = null
     var executorId: String = null
@@ -280,11 +308,14 @@ private[spark] object CoarseGrainedExecutorBackend extends Logging {
       appId == null) {
       printUsageAndExit()
     }
-
+    // 调用方法创建executor进程
     run(driverUrl, executorId, hostname, cores, appId, workerUrl, userClassPath)
     System.exit(0)
   }
 
+  /**
+    * 帮助类
+    */
   private def printUsageAndExit() = {
     // scalastyle:off println
     System.err.println(

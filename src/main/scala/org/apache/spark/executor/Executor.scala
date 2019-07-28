@@ -167,12 +167,26 @@ private[spark] class Executor(
 
   private[executor] def numRunningTasks: Int = runningTasks.size()
 
+  /**
+    * 创建一个task
+    * @param context
+    * @param taskDescription
+    */
   def launchTask(context: ExecutorBackend, taskDescription: TaskDescription): Unit = {
+    // 对于每一个task，都会对应创建一个TaskRunner类
     val tr = new TaskRunner(context, taskDescription)
+    // 把创建好的task丢进ConcurrentHashMap中
     runningTasks.put(taskDescription.taskId, tr)
+    // 把封装的task丢入线程池中
     threadPool.execute(tr)
   }
 
+  /**
+    * 杀掉对应的task
+    * @param taskId
+    * @param interruptThread
+    * @param reason
+    */
   def killTask(taskId: Long, interruptThread: Boolean, reason: String): Unit = {
     val taskRunner = runningTasks.get(taskId)
     if (taskRunner != null) {
@@ -225,6 +239,11 @@ private[spark] class Executor(
     ManagementFactory.getGarbageCollectorMXBeans.asScala.map(_.getCollectionTime).sum
   }
 
+  /**
+    * 运行中task对应的类
+    * @param execBackend
+    * @param taskDescription
+    */
   class TaskRunner(
       execBackend: ExecutorBackend,
       private val taskDescription: TaskDescription)
