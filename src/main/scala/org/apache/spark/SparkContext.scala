@@ -61,9 +61,11 @@ import org.apache.spark.ui.jobs.JobProgressListener
 import org.apache.spark.util._
 
 /**
+  * 编写spark代码的主要入口，可以在集群使用，包括创建RDD、累加器和广播数据
  * Main entry point for Spark functionality. A SparkContext represents the connection to a Spark
  * cluster, and can be used to create RDDs, accumulators and broadcast variables on that cluster.
  *
+  * 在每一个JVM中只能有一个活跃的sc，创建新的之前需要把之前的sc stop掉
  * Only one SparkContext may be active per JVM.  You must `stop()` the active SparkContext before
  * creating a new one.  This limitation may eventually be removed; see SPARK-2243 for more details.
  *

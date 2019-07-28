@@ -17,6 +17,9 @@
 
 package org.apache.spark
 
+/**
+  * task所有状态信息
+  */
 private[spark] object TaskState extends Enumeration {
 
   val LAUNCHING, RUNNING, FINISHED, FAILED, KILLED, LOST = Value
