@@ -109,6 +109,7 @@ object SparkSubmit extends CommandLineUtils {
   // scalastyle:on println
 
   override def main(args: Array[String]): Unit = {
+    // 获取参数解析列表
     val appArgs = new SparkSubmitArguments(args)
     if (appArgs.verbose) {
       // scalastyle:off println
@@ -116,7 +117,7 @@ object SparkSubmit extends CommandLineUtils {
       // scalastyle:on println
     }
     appArgs.action match {
-      case SparkSubmitAction.SUBMIT => submit(appArgs)
+      case SparkSubmitAction.SUBMIT => submit(appArgs)  // 提交spark作业
       case SparkSubmitAction.KILL => kill(appArgs)
       case SparkSubmitAction.REQUEST_STATUS => requestStatus(appArgs)
     }
@@ -140,6 +141,7 @@ object SparkSubmit extends CommandLineUtils {
   }
 
   /**
+    * 根据提供的参数提交这个app
    * Submit the application using the provided parameters.
    *
    * This runs in two steps. First, we prepare the launch environment by setting up
@@ -154,11 +156,13 @@ object SparkSubmit extends CommandLineUtils {
 
     def doRunMain(): Unit = {
       if (args.proxyUser != null) {
+        // 获取单向代理对象
         val proxyUser = UserGroupInformation.createProxyUser(args.proxyUser,
           UserGroupInformation.getCurrentUser())
         try {
           proxyUser.doAs(new PrivilegedExceptionAction[Unit]() {
             override def run(): Unit = {
+              // 开始调用执行
               runMain(childArgs, childClasspath, sysProps, childMainClass, args.verbose)
             }
           })
@@ -752,6 +756,7 @@ object SparkSubmit extends CommandLineUtils {
     }
 
     try {
+      // 反射调用，真正开始执行用户提交的app
       mainMethod.invoke(null, childArgs.toArray)
     } catch {
       case t: Throwable =>
