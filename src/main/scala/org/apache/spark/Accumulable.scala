@@ -28,6 +28,7 @@ import org.apache.spark.util.{AccumulatorContext, AccumulatorMetadata, LegacyAcc
 
 
 /**
+  * 累加不同类型的值
  * A data type that can be accumulated, i.e. has a commutative and associative "add" operation,
  * but where the result type, `R`, may be different from the element type being added, `T`.
  *
@@ -36,6 +37,7 @@ import org.apache.spark.util.{AccumulatorContext, AccumulatorMetadata, LegacyAcc
  * [[org.apache.spark.Accumulator]]. They won't always be the same, though -- e.g., imagine you are
  * accumulating a set. You will add items to the set, and you will union two sets together.
  *
+  * 该操作不是线程安全的。
  * Operations are not thread-safe.
  *
  * @param id ID of this accumulator; for internal use only.

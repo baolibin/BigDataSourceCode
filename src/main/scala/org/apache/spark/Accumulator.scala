@@ -18,6 +18,7 @@
 package org.apache.spark
 
 /**
+  * 累加相同类型的值。
  * A simpler value of [[Accumulable]] where the result type being accumulated is the same
  * as the types of elements being merged, i.e. variables that are only "added" to through an
  * associative and commutative operation and can therefore be efficiently supported in parallel.
