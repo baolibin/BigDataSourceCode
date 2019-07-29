@@ -52,7 +52,7 @@
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="md" value="52" />
-          <entry key="scala" value="709" />
+          <entry key="scala" value="797" />
           <entry key="txt" value="7" />
         </counts>
       </usages-collector>
@@ -60,21 +60,21 @@
         <counts>
           <entry key="Markdown" value="52" />
           <entry key="PLAIN_TEXT" value="7" />
-          <entry key="Scala" value="709" />
+          <entry key="Scala" value="797" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
           <entry key="java" value="7" />
           <entry key="md" value="1" />
-          <entry key="scala" value="86" />
+          <entry key="scala" value="88" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
           <entry key="JAVA" value="7" />
           <entry key="Markdown" value="1" />
-          <entry key="Scala" value="86" />
+          <entry key="Scala" value="88" />
         </counts>
       </usages-collector>
     </session>
@@ -111,11 +111,29 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/scala/org/apache/spark/Partitioner.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="283">
-              <caret line="251" column="13" selection-start-line="251" selection-start-column="5" selection-end-line="251" selection-end-column="13" />
+            <state relative-caret-position="208">
+              <caret line="127" column="12" lean-forward="true" selection-start-line="127" selection-start-column="12" selection-end-line="127" selection-end-column="12" />
               <folding>
                 <element signature="n#!!doc" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="jar://E:/2016spark/maven_repository/org/scala-lang/scala-library/2.11.8/scala-library-2.11.8-sources.jar!/scala/Product2.scala">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="197">
+              <caret line="19" column="6" selection-start-line="19" selection-start-column="6" selection-end-line="19" selection-end-column="6" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/scala/org/apache/spark/util/Utils.scala">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="189">
+              <caret line="1692" column="6" selection-start-line="1692" selection-start-column="6" selection-end-line="1692" selection-end-column="6" />
             </state>
           </provider>
         </entry>
@@ -244,7 +262,7 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1564410054041" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1564410756195" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="MavenSettings" />
   </component>
@@ -383,9 +401,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/scala/org/apache/spark/internal/config/ConfigBuilder.scala">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/org/apache/spark/internal/io/SparkHadoopWriterUtils.scala">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-601">
@@ -602,13 +617,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/org/apache/spark/util/Utils.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="19874">
-          <caret line="1103" column="6" selection-start-line="1103" selection-start-column="6" selection-end-line="1103" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/org/apache/spark/TaskContext.scala">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1083">
@@ -750,10 +758,24 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/org/apache/spark/util/Utils.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="189">
+          <caret line="1692" column="6" selection-start-line="1692" selection-start-column="6" selection-end-line="1692" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://E:/2016spark/maven_repository/org/scala-lang/scala-library/2.11.8/scala-library-2.11.8-sources.jar!/scala/Product2.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="197">
+          <caret line="19" column="6" selection-start-line="19" selection-start-column="6" selection-end-line="19" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/org/apache/spark/Partitioner.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="283">
-          <caret line="251" column="13" selection-start-line="251" selection-start-column="5" selection-end-line="251" selection-end-column="13" />
+        <state relative-caret-position="208">
+          <caret line="127" column="12" lean-forward="true" selection-start-line="127" selection-start-column="12" selection-end-line="127" selection-end-column="12" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
           </folding>

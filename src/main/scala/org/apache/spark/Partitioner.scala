@@ -100,9 +100,11 @@ class HashPartitioner(partitions: Int) extends Partitioner {
 }
 
 /**
+  * 每个分区被分割成大致相等的范围，范围是通过抽样内容决定的。
  * A [[org.apache.spark.Partitioner]] that partitions sortable records by range into roughly
  * equal ranges. The ranges are determined by sampling the content of the RDD passed in.
  *
+  * 实际通过采样的分区个数可能不等于partitions个数，这种情况采样记录数少于partitions。
  * @note The actual number of partitions created by the RangePartitioner might not be the same
  * as the `partitions` parameter, in the case where the number of sampled records is less than
  * the value of `partitions`.
@@ -118,6 +120,7 @@ class RangePartitioner[K : Ordering : ClassTag, V](
 
   private var ordering = implicitly[Ordering[K]]
 
+  // 数组下标index-1
   // An array of upper bounds for the first (partitions - 1) partitions
   private var rangeBounds: Array[K] = {
     if (partitions <= 1) {
