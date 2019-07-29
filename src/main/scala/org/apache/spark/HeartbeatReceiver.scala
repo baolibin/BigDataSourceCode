@@ -29,6 +29,7 @@ import org.apache.spark.storage.BlockManagerId
 import org.apache.spark.util._
 
 /**
+  * executor到driver端心跳，数个共享的方法被使用来作为内部数个组件的消息传递以及异常的运行中task信息。
  * A heartbeat from executors to the driver. This is a shared message used by several internal
  * components to convey liveness or execution information for in-progress tasks. It will also
  * expire the hosts that have not heartbeated for more than spark.network.timeout.
@@ -54,6 +55,7 @@ private case class ExecutorRemoved(executorId: String)
 private[spark] case class HeartbeatResponse(reregisterBlockManager: Boolean)
 
 /**
+  * 活着的driver从executor端接受心跳信息
  * Lives in the driver to receive heartbeats from executors..
  */
 private[spark] class HeartbeatReceiver(sc: SparkContext, clock: Clock)

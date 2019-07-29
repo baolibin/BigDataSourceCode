@@ -34,6 +34,7 @@ import org.apache.spark.network.sasl.SecretKeyHolder
 import org.apache.spark.util.Utils
 
 /**
+  * 负责spark安全的类
  * Spark class responsible for security.
  *
  * In general this class should be instantiated by the SparkEnv and most components
