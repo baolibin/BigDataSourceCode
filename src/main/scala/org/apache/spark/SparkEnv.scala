@@ -44,6 +44,7 @@ import org.apache.spark.storage._
 import org.apache.spark.util.{RpcUtils, Utils}
 
 /**
+  * 保存一个spark作业所有运行中的环境信息。
  * :: DeveloperApi ::
  * Holds all the runtime environment objects for a running Spark instance (either master or worker),
  * including the serializer, RpcEnv, block manager, map output tracker, etc. Currently

@@ -30,6 +30,7 @@ import org.apache.spark.serializer.KryoSerializer
 import org.apache.spark.util.Utils
 
 /**
+  * spark作业配置K-V参数信息
  * Configuration for a Spark application. Used to set various Spark parameters as key-value pairs.
  *
  * Most of the time, you would create a SparkConf object with `new SparkConf()`, which will load
@@ -44,6 +45,7 @@ import org.apache.spark.util.Utils
  *
  * @param loadDefaults whether to also load values from Java system properties
  *
+  * spark不支持运行中更新sparkConf配置信息
  * @note Once a SparkConf object is passed to Spark, it is cloned and can no longer be modified
  * by the user. Spark does not support modifying the configuration at runtime.
  */
@@ -54,6 +56,7 @@ class SparkConf(loadDefaults: Boolean) extends Cloneable with Logging with Seria
   /** Create a SparkConf that loads defaults from system properties and the classpath */
   def this() = this(true)
 
+  // 存放配置信息
   private val settings = new ConcurrentHashMap[String, String]()
 
   @transient private lazy val reader: ConfigReader = {
