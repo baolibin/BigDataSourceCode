@@ -30,6 +30,7 @@ import org.apache.spark.util.{CollectionsUtils, Utils}
 import org.apache.spark.util.random.SamplingUtils
 
 /**
+  * K-V格式的RDD是怎样的通过K来进行分区的
  * An object that defines how the elements in a key-value pair RDD are partitioned by key.
  * Maps each key to a partition ID, from 0 to `numPartitions - 1`.
  */
@@ -44,6 +45,7 @@ object Partitioner {
    *
    * If any of the RDDs already has a partitioner, choose that one.
    *
+    * 默认使用Hash分区策略
    * Otherwise, we use a default HashPartitioner. For the number of partitions, if
    * spark.default.parallelism is set, then we'll use the value from SparkContext
    * defaultParallelism, otherwise we'll use the max number of upstream partitions.
