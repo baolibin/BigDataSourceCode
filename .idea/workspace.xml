@@ -2,12 +2,198 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d7a34c12-f12d-4ae2-a110-f9934eb8a907" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/src/main/scala/org/apache/spark/Accumulable.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/org/apache/spark/Accumulable.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/scala/org/apache/spark/Accumulator.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/org/apache/spark/Accumulator.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/scala/org/apache/spark/ExecutorAllocationClient.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/org/apache/spark/ExecutorAllocationClient.scala" afterDir="false" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.gitignore" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__cglib_cglib_nodep_2_1_3.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__cglib_cglib_nodep_2_1_3.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_clearspring_analytics_stream_2_7_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_clearspring_analytics_stream_2_7_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_esotericsoftware_kryo_shaded_3_0_3.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_esotericsoftware_kryo_shaded_3_0_3.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_esotericsoftware_minlog_1_3_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_esotericsoftware_minlog_1_3_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_fasterxml_jackson_core_jackson_annotations_2_6_5.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_fasterxml_jackson_core_jackson_annotations_2_6_5.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_fasterxml_jackson_core_jackson_core_2_6_5.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_fasterxml_jackson_core_jackson_core_2_6_5.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_fasterxml_jackson_core_jackson_databind_2_6_5.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_fasterxml_jackson_core_jackson_databind_2_6_5.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_fasterxml_jackson_module_jackson_module_paranamer_2_6_5.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_fasterxml_jackson_module_jackson_module_paranamer_2_6_5.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_fasterxml_jackson_module_jackson_module_scala_2_11_2_6_5.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_fasterxml_jackson_module_jackson_module_scala_2_11_2_6_5.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_google_code_findbugs_jsr305_1_3_9.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_google_code_findbugs_jsr305_1_3_9.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_google_code_gson_gson_2_2_4.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_google_code_gson_gson_2_2_4.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_google_guava_guava_14_0_1.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_google_guava_guava_14_0_1.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_google_protobuf_protobuf_java_2_5_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_google_protobuf_protobuf_java_2_5_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_jamesmurty_utils_java_xmlbuilder_1_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_jamesmurty_utils_java_xmlbuilder_1_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_ning_compress_lzf_1_0_3.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_ning_compress_lzf_1_0_3.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_novocode_junit_interface_0_11.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_novocode_junit_interface_0_11.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_thoughtworks_paranamer_paranamer_2_6.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_thoughtworks_paranamer_paranamer_2_6.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_twitter_chill_2_11_0_8_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_twitter_chill_2_11_0_8_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_twitter_chill_java_0_8_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_twitter_chill_java_0_8_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__commons_beanutils_commons_beanutils_1_7_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__commons_beanutils_commons_beanutils_1_7_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__commons_beanutils_commons_beanutils_core_1_8_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__commons_beanutils_commons_beanutils_core_1_8_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__commons_cli_commons_cli_1_2.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__commons_cli_commons_cli_1_2.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__commons_codec_commons_codec_1_10.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__commons_codec_commons_codec_1_10.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__commons_collections_commons_collections_3_2_2.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__commons_collections_commons_collections_3_2_2.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__commons_configuration_commons_configuration_1_6.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__commons_configuration_commons_configuration_1_6.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__commons_digester_commons_digester_1_8.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__commons_digester_commons_digester_1_8.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__commons_httpclient_commons_httpclient_3_1.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__commons_httpclient_commons_httpclient_3_1.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__commons_io_commons_io_2_4.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__commons_io_commons_io_2_4.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__commons_lang_commons_lang_2_6.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__commons_lang_commons_lang_2_6.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__commons_logging_commons_logging_1_2.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__commons_logging_commons_logging_1_2.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__commons_net_commons_net_2_2.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__commons_net_commons_net_2_2.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__io_dropwizard_metrics_metrics_core_3_1_2.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_dropwizard_metrics_metrics_core_3_1_2.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__io_dropwizard_metrics_metrics_graphite_3_1_2.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_dropwizard_metrics_metrics_graphite_3_1_2.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__io_dropwizard_metrics_metrics_json_3_1_2.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_dropwizard_metrics_metrics_json_3_1_2.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__io_dropwizard_metrics_metrics_jvm_3_1_2.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_dropwizard_metrics_metrics_jvm_3_1_2.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__io_netty_netty_3_9_9_Final.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_netty_netty_3_9_9_Final.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__io_netty_netty_all_4_0_43_Final.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_netty_netty_all_4_0_43_Final.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__javax_activation_activation_1_1_1.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__javax_activation_activation_1_1_1.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__javax_annotation_javax_annotation_api_1_2.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__javax_annotation_javax_annotation_api_1_2.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__javax_mail_mail_1_4_7.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__javax_mail_mail_1_4_7.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__javax_servlet_javax_servlet_api_3_1_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__javax_servlet_javax_servlet_api_3_1_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__javax_validation_validation_api_1_1_0_Final.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__javax_validation_validation_api_1_1_0_Final.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__javax_ws_rs_javax_ws_rs_api_2_0_1.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__javax_ws_rs_javax_ws_rs_api_2_0_1.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__javax_xml_bind_jaxb_api_2_2_2.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__javax_xml_bind_jaxb_api_2_2_2.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__javax_xml_stream_stax_api_1_0_2.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__javax_xml_stream_stax_api_1_0_2.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__junit_junit_4_12.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__junit_junit_4_12.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__log4j_log4j_1_2_17.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__log4j_log4j_1_2_17.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__mx4j_mx4j_3_0_2.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__mx4j_mx4j_3_0_2.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__net_iharder_base64_2_3_8.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__net_iharder_base64_2_3_8.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__net_java_dev_jets3t_jets3t_0_9_3.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__net_java_dev_jets3t_jets3t_0_9_3.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__net_java_dev_jna_jna_4_1_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__net_java_dev_jna_jna_4_1_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__net_java_dev_jna_jna_platform_4_1_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__net_java_dev_jna_jna_platform_4_1_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__net_jpountz_lz4_lz4_1_3_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__net_jpountz_lz4_lz4_1_3_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__net_razorvine_pyrolite_4_13.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__net_razorvine_pyrolite_4_13.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__net_sf_py4j_py4j_0_10_4.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__net_sf_py4j_py4j_0_10_4.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__net_sourceforge_cssparser_cssparser_0_9_16.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__net_sourceforge_cssparser_cssparser_0_9_16.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__net_sourceforge_htmlunit_htmlunit_2_18.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__net_sourceforge_htmlunit_htmlunit_2_18.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__net_sourceforge_htmlunit_htmlunit_core_js_2_17.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__net_sourceforge_htmlunit_htmlunit_core_js_2_17.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__net_sourceforge_nekohtml_nekohtml_1_9_22.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__net_sourceforge_nekohtml_nekohtml_1_9_22.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_avro_avro_1_7_7.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_avro_avro_1_7_7.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_avro_avro_ipc_1_7_7.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_avro_avro_ipc_1_7_7.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_avro_avro_ipc_tests_1_7_7.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_avro_avro_ipc_tests_1_7_7.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_avro_avro_mapred_hadoop2_1_7_7.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_avro_avro_mapred_hadoop2_1_7_7.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_commons_commons_compress_1_4_1.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_commons_commons_compress_1_4_1.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_commons_commons_crypto_1_0_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_commons_commons_crypto_1_0_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_commons_commons_exec_1_3.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_commons_commons_exec_1_3.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_commons_commons_lang3_3_5.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_commons_commons_lang3_3_5.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_commons_commons_math3_3_4_1.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_commons_commons_math3_3_4_1.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_commons_commons_math_2_2.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_commons_commons_math_2_2.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_curator_curator_client_2_6_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_curator_curator_client_2_6_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_curator_curator_framework_2_6_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_curator_curator_framework_2_6_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_curator_curator_recipes_2_6_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_curator_curator_recipes_2_6_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_curator_curator_test_2_6_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_curator_curator_test_2_6_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_derby_derby_10_12_1_1.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_derby_derby_10_12_1_1.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_directory_api_api_asn1_api_1_0_0_M20.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_directory_api_api_asn1_api_1_0_0_M20.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_directory_api_api_util_1_0_0_M20.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_directory_api_api_util_1_0_0_M20.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_directory_server_apacheds_i18n_2_0_0_M15.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_directory_server_apacheds_i18n_2_0_0_M15.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_directory_server_apacheds_kerberos_codec_2_0_0_M15.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_directory_server_apacheds_kerberos_codec_2_0_0_M15.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_hadoop_hadoop_annotations_2_6_5.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_hadoop_hadoop_annotations_2_6_5.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_hadoop_hadoop_auth_2_6_5.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_hadoop_hadoop_auth_2_6_5.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_hadoop_hadoop_client_2_6_5.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_hadoop_hadoop_client_2_6_5.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_hadoop_hadoop_common_2_6_5.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_hadoop_hadoop_common_2_6_5.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_hadoop_hadoop_hdfs_2_6_5.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_hadoop_hadoop_hdfs_2_6_5.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_hadoop_hadoop_mapreduce_client_app_2_6_5.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_hadoop_hadoop_mapreduce_client_app_2_6_5.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_hadoop_hadoop_mapreduce_client_common_2_6_5.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_hadoop_hadoop_mapreduce_client_common_2_6_5.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_hadoop_hadoop_mapreduce_client_core_2_6_5.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_hadoop_hadoop_mapreduce_client_core_2_6_5.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_hadoop_hadoop_mapreduce_client_jobclient_2_6_5.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_hadoop_hadoop_mapreduce_client_jobclient_2_6_5.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_hadoop_hadoop_mapreduce_client_shuffle_2_6_5.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_hadoop_hadoop_mapreduce_client_shuffle_2_6_5.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_hadoop_hadoop_yarn_api_2_6_5.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_hadoop_hadoop_yarn_api_2_6_5.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_hadoop_hadoop_yarn_client_2_6_5.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_hadoop_hadoop_yarn_client_2_6_5.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_hadoop_hadoop_yarn_common_2_6_5.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_hadoop_hadoop_yarn_common_2_6_5.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_hadoop_hadoop_yarn_server_common_2_6_5.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_hadoop_hadoop_yarn_server_common_2_6_5.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_httpcomponents_httpclient_4_5_2.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_httpcomponents_httpclient_4_5_2.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_httpcomponents_httpcore_4_4_4.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_httpcomponents_httpcore_4_4_4.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_httpcomponents_httpmime_4_5_2.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_httpcomponents_httpmime_4_5_2.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_ivy_ivy_2_4_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_ivy_ivy_2_4_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_spark_spark_launcher_2_11_2_2_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_spark_spark_launcher_2_11_2_2_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_spark_spark_network_common_2_11_2_2_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_spark_spark_network_common_2_11_2_2_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_spark_spark_network_shuffle_2_11_2_2_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_spark_spark_network_shuffle_2_11_2_2_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_spark_spark_tags_2_11_2_2_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_spark_spark_tags_2_11_2_2_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_spark_spark_tags_2_11_test_jar_tests_2_2_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_spark_spark_tags_2_11_test_jar_tests_2_2_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_spark_spark_unsafe_2_11_2_2_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_spark_spark_unsafe_2_11_2_2_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_xbean_xbean_asm5_shaded_4_4.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_xbean_xbean_asm5_shaded_4_4.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_zookeeper_zookeeper_3_4_6.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_zookeeper_zookeeper_3_4_6.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_bouncycastle_bcprov_jdk15on_1_51.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_bouncycastle_bcprov_jdk15on_1_51.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_codehaus_jackson_jackson_core_asl_1_9_13.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_codehaus_jackson_jackson_core_asl_1_9_13.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_codehaus_jackson_jackson_jaxrs_1_9_13.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_codehaus_jackson_jackson_jaxrs_1_9_13.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_codehaus_jackson_jackson_mapper_asl_1_9_13.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_codehaus_jackson_jackson_mapper_asl_1_9_13.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_codehaus_jackson_jackson_xc_1_9_13.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_codehaus_jackson_jackson_xc_1_9_13.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_eclipse_jetty_jetty_client_9_3_11_v20160721.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_eclipse_jetty_jetty_client_9_3_11_v20160721.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_eclipse_jetty_jetty_continuation_9_3_11_v20160721.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_eclipse_jetty_jetty_continuation_9_3_11_v20160721.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_eclipse_jetty_jetty_http_9_3_11_v20160721.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_eclipse_jetty_jetty_http_9_3_11_v20160721.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_eclipse_jetty_jetty_io_9_3_11_v20160721.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_eclipse_jetty_jetty_io_9_3_11_v20160721.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_eclipse_jetty_jetty_jndi_9_3_11_v20160721.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_eclipse_jetty_jetty_jndi_9_3_11_v20160721.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_eclipse_jetty_jetty_plus_9_3_11_v20160721.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_eclipse_jetty_jetty_plus_9_3_11_v20160721.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_eclipse_jetty_jetty_proxy_9_3_11_v20160721.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_eclipse_jetty_jetty_proxy_9_3_11_v20160721.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_eclipse_jetty_jetty_security_9_3_11_v20160721.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_eclipse_jetty_jetty_security_9_3_11_v20160721.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_eclipse_jetty_jetty_server_9_3_11_v20160721.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_eclipse_jetty_jetty_server_9_3_11_v20160721.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_eclipse_jetty_jetty_servlet_9_3_11_v20160721.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_eclipse_jetty_jetty_servlet_9_3_11_v20160721.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_eclipse_jetty_jetty_servlets_9_3_11_v20160721.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_eclipse_jetty_jetty_servlets_9_3_11_v20160721.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_eclipse_jetty_jetty_util_9_3_11_v20160721.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_eclipse_jetty_jetty_util_9_3_11_v20160721.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_eclipse_jetty_jetty_webapp_9_3_11_v20160721.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_eclipse_jetty_jetty_webapp_9_3_11_v20160721.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_eclipse_jetty_jetty_xml_9_3_11_v20160721.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_eclipse_jetty_jetty_xml_9_3_11_v20160721.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_eclipse_jetty_websocket_websocket_api_9_2_12_v20150709.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_eclipse_jetty_websocket_websocket_api_9_2_12_v20150709.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_eclipse_jetty_websocket_websocket_client_9_2_12_v20150709.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_eclipse_jetty_websocket_websocket_client_9_2_12_v20150709.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_eclipse_jetty_websocket_websocket_common_9_2_12_v20150709.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_eclipse_jetty_websocket_websocket_common_9_2_12_v20150709.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_fusesource_leveldbjni_leveldbjni_all_1_8.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_fusesource_leveldbjni_leveldbjni_all_1_8.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_glassfish_hk2_external_aopalliance_repackaged_2_4_0_b34.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_glassfish_hk2_external_aopalliance_repackaged_2_4_0_b34.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_glassfish_hk2_external_javax_inject_2_4_0_b34.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_glassfish_hk2_external_javax_inject_2_4_0_b34.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_glassfish_hk2_hk2_api_2_4_0_b34.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_glassfish_hk2_hk2_api_2_4_0_b34.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_glassfish_hk2_hk2_locator_2_4_0_b34.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_glassfish_hk2_hk2_locator_2_4_0_b34.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_glassfish_hk2_hk2_utils_2_4_0_b34.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_glassfish_hk2_hk2_utils_2_4_0_b34.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_glassfish_hk2_osgi_resource_locator_1_0_1.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_glassfish_hk2_osgi_resource_locator_1_0_1.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_glassfish_jersey_bundles_repackaged_jersey_guava_2_22_2.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_glassfish_jersey_bundles_repackaged_jersey_guava_2_22_2.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_glassfish_jersey_containers_jersey_container_servlet_2_22_2.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_glassfish_jersey_containers_jersey_container_servlet_2_22_2.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_glassfish_jersey_containers_jersey_container_servlet_core_2_22_2.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_glassfish_jersey_containers_jersey_container_servlet_core_2_22_2.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_glassfish_jersey_core_jersey_client_2_22_2.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_glassfish_jersey_core_jersey_client_2_22_2.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_glassfish_jersey_core_jersey_common_2_22_2.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_glassfish_jersey_core_jersey_common_2_22_2.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_glassfish_jersey_core_jersey_server_2_22_2.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_glassfish_jersey_core_jersey_server_2_22_2.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_glassfish_jersey_media_jersey_media_jaxb_2_22_2.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_glassfish_jersey_media_jersey_media_jaxb_2_22_2.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_hamcrest_hamcrest_core_1_3.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_hamcrest_hamcrest_core_1_3.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_hamcrest_hamcrest_library_1_3.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_hamcrest_hamcrest_library_1_3.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_htrace_htrace_core_3_0_4.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_htrace_htrace_core_3_0_4.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_javassist_javassist_3_18_1_GA.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_javassist_javassist_3_18_1_GA.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_json4s_json4s_ast_2_11_3_2_11.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_json4s_json4s_ast_2_11_3_2_11.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_json4s_json4s_core_2_11_3_2_11.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_json4s_json4s_core_2_11_3_2_11.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_json4s_json4s_jackson_2_11_3_2_11.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_json4s_json4s_jackson_2_11_3_2_11.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_mockito_mockito_core_1_10_19.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_mockito_mockito_core_1_10_19.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_mortbay_jetty_jetty_util_6_1_26.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_mortbay_jetty_jetty_util_6_1_26.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_objenesis_objenesis_2_1.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_objenesis_objenesis_2_1.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_roaringbitmap_RoaringBitmap_0_5_11.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_roaringbitmap_RoaringBitmap_0_5_11.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_scala_lang_modules_scala_parser_combinators_2_11_1_0_4.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_scala_lang_modules_scala_parser_combinators_2_11_1_0_4.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_scala_lang_modules_scala_xml_2_11_1_0_2.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_scala_lang_modules_scala_xml_2_11_1_0_2.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_scala_lang_scala_compiler_2_11_8.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_scala_lang_scala_compiler_2_11_8.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_scala_lang_scala_library_2_11_8.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_scala_lang_scala_library_2_11_8.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_scala_lang_scala_reflect_2_11_8.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_scala_lang_scala_reflect_2_11_8.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_scala_lang_scalap_2_11_8.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_scala_lang_scalap_2_11_8.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_scala_sbt_test_interface_1_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_scala_sbt_test_interface_1_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_scalacheck_scalacheck_2_11_1_12_5.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_scalacheck_scalacheck_2_11_1_12_5.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_scalatest_scalatest_2_11_2_2_6.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_scalatest_scalatest_2_11_2_2_6.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_seleniumhq_selenium_selenium_api_2_52_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_seleniumhq_selenium_selenium_api_2_52_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_seleniumhq_selenium_selenium_chrome_driver_2_52_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_seleniumhq_selenium_selenium_chrome_driver_2_52_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_seleniumhq_selenium_selenium_edge_driver_2_52_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_seleniumhq_selenium_selenium_edge_driver_2_52_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_seleniumhq_selenium_selenium_firefox_driver_2_52_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_seleniumhq_selenium_selenium_firefox_driver_2_52_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_seleniumhq_selenium_selenium_htmlunit_driver_2_52_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_seleniumhq_selenium_selenium_htmlunit_driver_2_52_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_seleniumhq_selenium_selenium_ie_driver_2_52_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_seleniumhq_selenium_selenium_ie_driver_2_52_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_seleniumhq_selenium_selenium_java_2_52_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_seleniumhq_selenium_selenium_java_2_52_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_seleniumhq_selenium_selenium_leg_rc_2_52_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_seleniumhq_selenium_selenium_leg_rc_2_52_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_seleniumhq_selenium_selenium_remote_driver_2_52_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_seleniumhq_selenium_selenium_remote_driver_2_52_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_seleniumhq_selenium_selenium_safari_driver_2_52_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_seleniumhq_selenium_selenium_safari_driver_2_52_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_seleniumhq_selenium_selenium_support_2_52_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_seleniumhq_selenium_selenium_support_2_52_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_slf4j_jcl_over_slf4j_1_7_16.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_slf4j_jcl_over_slf4j_1_7_16.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_slf4j_jul_to_slf4j_1_7_16.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_slf4j_jul_to_slf4j_1_7_16.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_slf4j_slf4j_api_1_7_16.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_slf4j_slf4j_api_1_7_16.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_slf4j_slf4j_log4j12_1_7_16.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_slf4j_slf4j_log4j12_1_7_16.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_spark_project_spark_unused_1_0_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_spark_project_spark_unused_1_0_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_tukaani_xz_1_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_tukaani_xz_1_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_w3c_css_sac_1_3.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_w3c_css_sac_1_3.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_webbitserver_webbit_0_4_14.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_webbitserver_webbit_0_4_14.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_xerial_snappy_snappy_java_1_1_2_6.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_xerial_snappy_snappy_java_1_1_2_6.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__oro_oro_2_0_8.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__oro_oro_2_0_8.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__xalan_serializer_2_7_2.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__xalan_serializer_2_7_2.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__xalan_xalan_2_7_2.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__xalan_xalan_2_7_2.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__xerces_xercesImpl_2_9_1.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__xerces_xercesImpl_2_9_1.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__xml_apis_xml_apis_1_4_01.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__xml_apis_xml_apis_1_4_01.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__xmlenc_xmlenc_0_52.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__xmlenc_xmlenc_0_52.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -83,19 +269,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/scala/org/apache/spark/InternalAccumulator.scala">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="95">
-              <caret line="20" column="74" selection-start-line="20" selection-start-column="62" selection-end-line="20" selection-end-column="74" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
+      <file leaf-file-name="FutureAction.scala" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/scala/org/apache/spark/FutureAction.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state>
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding>
                 <element signature="n#!!doc" expanded="true" />
               </folding>
@@ -103,19 +281,21 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file leaf-file-name="ExecutorAllocationManager.scala" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/scala/org/apache/spark/ExecutorAllocationManager.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-31">
-              <caret line="34" column="82" selection-start-line="34" selection-start-column="74" selection-end-line="34" selection-end-column="82" />
+            <state relative-caret-position="126">
+              <caret line="34" column="82" lean-forward="false" selection-start-line="34" selection-start-column="74" selection-end-line="34" selection-end-column="82" />
+              <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file leaf-file-name="Dependency.scala" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/scala/org/apache/spark/Dependency.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1845">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding>
                 <element signature="n#!!doc" expanded="true" />
               </folding>
@@ -123,10 +303,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file leaf-file-name="ContextCleaner.scala" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/scala/org/apache/spark/ContextCleaner.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state>
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding>
                 <element signature="n#!!doc" expanded="true" />
               </folding>
@@ -134,20 +315,21 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file leaf-file-name="Aggregator.scala" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/scala/org/apache/spark/Aggregator.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="285">
-              <caret line="31" column="11" selection-start-line="31" selection-start-column="11" selection-end-line="31" selection-end-column="11" />
+            <state relative-caret-position="270">
+              <caret line="31" column="11" lean-forward="false" selection-start-line="31" selection-start-column="11" selection-end-line="31" selection-end-column="11" />
+              <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file leaf-file-name="Accumulator.scala" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/scala/org/apache/spark/Accumulator.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="266">
-              <caret line="20" column="13" selection-start-line="20" selection-start-column="13" selection-end-line="20" selection-end-column="13" />
+            <state relative-caret-position="-126">
+              <caret line="20" column="13" lean-forward="false" selection-start-line="20" selection-start-column="13" selection-end-line="20" selection-end-column="13" />
               <folding>
                 <element signature="n#!!doc" expanded="true" />
               </folding>
@@ -155,11 +337,31 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file leaf-file-name="ShuffleReader.scala" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/scala/org/apache/spark/shuffle/ShuffleReader.scala">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="324">
+              <caret line="33" column="0" lean-forward="false" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/.gitignore">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Accumulable.scala" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/scala/org/apache/spark/Accumulable.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="323">
-              <caret line="39" column="15" selection-start-line="39" selection-start-column="15" selection-end-line="39" selection-end-column="15" />
+            <state relative-caret-position="306">
+              <caret line="39" column="15" lean-forward="false" selection-start-line="39" selection-start-column="15" selection-end-line="39" selection-end-column="15" />
               <folding>
                 <element signature="n#!!doc" expanded="true" />
               </folding>
@@ -167,23 +369,12 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file leaf-file-name="ExecutorAllocationClient.scala" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/scala/org/apache/spark/ExecutorAllocationClient.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="95">
-              <caret line="20" column="53" selection-start-line="20" selection-start-column="53" selection-end-line="20" selection-end-column="53" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/scala/org/apache/spark/HeartbeatReceiver.scala">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="37">
-              <caret line="151" column="3" lean-forward="true" selection-start-line="151" selection-start-column="3" selection-end-line="151" selection-end-column="3" />
-              <folding>
-                <element signature="n#!!doc" expanded="true" />
-              </folding>
+            <state relative-caret-position="90">
+              <caret line="20" column="53" lean-forward="false" selection-start-line="20" selection-start-column="53" selection-end-line="20" selection-end-column="53" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -199,6 +390,11 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GradleLocalSettings">
+    <option name="externalProjectsViewState">
+      <projects_view />
+    </option>
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
@@ -236,70 +432,36 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="-8" />
-    <option name="y" value="-8" />
+    <option name="x" value="388" />
+    <option name="y" value="139" />
     <option name="width" value="1382" />
     <option name="height" value="754" />
   </component>
   <component name="ProjectView">
-    <navigator proportions="" version="1">
+    <navigator currentView="ProjectPane" proportions="" version="1">
+      <flattenPackages />
+      <showMembers />
+      <showModules />
+      <showLibraryContents />
+      <hideEmptyPackages />
+      <abbreviatePackageNames />
+      <autoscrollToSource />
+      <autoscrollFromSource />
+      <sortByType />
+      <manualOrder />
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
       <pane id="PackagesPane" />
       <pane id="Scope" />
       <pane id="AndroidView" />
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
             <path>
               <item name="spark-core_2.11" type="b2602c69:ProjectViewProjectNode" />
               <item name="spark-core" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="spark-core_2.11" type="b2602c69:ProjectViewProjectNode" />
-              <item name="spark-core" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="spark-core_2.11" type="b2602c69:ProjectViewProjectNode" />
-              <item name="spark-core" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="spark-core_2.11" type="b2602c69:ProjectViewProjectNode" />
-              <item name="spark-core" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="scala" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="spark-core_2.11" type="b2602c69:ProjectViewProjectNode" />
-              <item name="spark-core" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="scala" type="462c0819:PsiDirectoryNode" />
-              <item name="org" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="spark-core_2.11" type="b2602c69:ProjectViewProjectNode" />
-              <item name="spark-core" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="scala" type="462c0819:PsiDirectoryNode" />
-              <item name="org" type="462c0819:PsiDirectoryNode" />
-              <item name="apache" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="spark-core_2.11" type="b2602c69:ProjectViewProjectNode" />
-              <item name="spark-core" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="scala" type="462c0819:PsiDirectoryNode" />
-              <item name="org" type="462c0819:PsiDirectoryNode" />
-              <item name="apache" type="462c0819:PsiDirectoryNode" />
-              <item name="spark" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -341,7 +503,6 @@
                 <option value="compile" />
               </list>
             </option>
-            <option name="pomFileName" />
             <option name="profilesMap">
               <map />
             </option>
@@ -350,8 +511,15 @@
           </MavenRunnerParameters>
         </option>
       </MavenSettings>
-      <method v="2" />
     </configuration>
+  </component>
+  <component name="SbtLocalSettings">
+    <option name="externalProjectsViewState">
+      <projects_view />
+    </option>
+  </component>
+  <component name="ShelveChangesManager" show_recycled="false">
+    <option name="remove_strategy" value="false" />
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -376,147 +544,96 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1382" height="754" extended-state="0" />
-    <editor active="true" />
+    <frame x="388" y="139" width="1382" height="754" extended-state="0" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.23676248" />
-      <window_info id="Designer" order="1" />
-      <window_info id="Image Layers" order="2" />
-      <window_info id="DB Browser" order="3" weight="0.32980332" />
-      <window_info id="UI Designer" order="4" />
-      <window_info id="Project Explorer" order="5" />
-      <window_info id="Favorites" order="6" side_tool="true" />
-      <window_info id="Capture Tool" order="7" />
-      <window_info id="Job Explorer" order="8" />
-      <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.73752016" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" weight="0.32850242" />
-      <window_info anchor="bottom" id="DB Execution Console" order="7" />
-      <window_info anchor="bottom" id="Terminal" order="8" weight="0.32850242" />
-      <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
-      <window_info anchor="bottom" id="Console" order="10" />
-      <window_info anchor="bottom" id="Version Control" order="11" />
-      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
-      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="right" id="Palette" order="3" />
-      <window_info anchor="right" id="Capture Analysis" order="4" />
-      <window_info anchor="right" id="Maven Projects" order="5" />
-      <window_info anchor="right" id="Palette&#9;" order="6" />
-      <window_info anchor="right" id="Theme Preview" order="7" />
-      <window_info anchor="right" id="Structure" order="8" visible="true" weight="0.21331316" />
+      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32961783" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32961783" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
-    <layout-to-restore>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.22087745" />
-      <window_info id="Designer" order="1" />
-      <window_info id="Image Layers" order="2" />
-      <window_info id="DB Browser" order="3" weight="0.32980332" />
-      <window_info id="UI Designer" order="4" />
-      <window_info id="Project Explorer" order="5" />
-      <window_info id="Favorites" order="6" side_tool="true" />
-      <window_info id="Capture Tool" order="7" />
-      <window_info id="Job Explorer" order="8" />
-      <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.73752016" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="DB Execution Console" order="7" />
-      <window_info anchor="bottom" id="Terminal" order="8" weight="0.329582" />
-      <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
-      <window_info anchor="bottom" id="Console" order="10" />
-      <window_info anchor="bottom" id="Version Control" order="11" />
-      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
-      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="right" id="Palette" order="3" />
-      <window_info anchor="right" id="Capture Analysis" order="4" />
-      <window_info anchor="right" id="Maven Projects" order="5" />
-      <window_info anchor="right" id="Palette&#9;" order="6" />
-      <window_info anchor="right" id="Theme Preview" order="7" />
-      <window_info active="true" anchor="right" id="Structure" order="8" visible="true" weight="0.21331316" />
-    </layout-to-restore>
   </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
   </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager />
+    <watches-manager />
+  </component>
   <component name="editorHistoryManager">
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_111/src.zip!/java/lang/reflect/Method.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="38">
-          <caret line="25" column="25" selection-start-line="25" selection-start-column="18" selection-end-line="25" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://E:/2016spark/maven_repository/org/apache/hadoop/hadoop-common/2.6.5/hadoop-common-2.6.5-sources.jar!/org/apache/hadoop/security/UserGroupInformation.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="22838">
-          <caret line="1307" column="37" selection-start-line="1307" selection-start-column="37" selection-end-line="1307" selection-end-column="37" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/org/apache/spark/deploy/SparkSubmitArguments.scala">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="5776">
-          <caret line="332" column="25" selection-start-line="332" selection-start-column="25" selection-end-line="332" selection-end-column="25" />
+          <caret line="332" column="25" lean-forward="false" selection-start-line="332" selection-start-column="25" selection-end-line="332" selection-end-column="25" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/org/apache/spark/partial/MeanEvaluator.scala">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="171">
-          <caret line="26" column="21" selection-start-line="26" selection-start-column="21" selection-end-line="26" selection-end-column="21" />
+          <caret line="26" column="21" lean-forward="false" selection-start-line="26" selection-start-column="21" selection-end-line="26" selection-end-column="21" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/org/apache/spark/partial/package.scala">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="228">
-          <caret line="27" column="22" selection-start-line="27" selection-start-column="15" selection-end-line="27" selection-end-column="22" />
+          <caret line="27" column="22" lean-forward="false" selection-start-line="27" selection-start-column="15" selection-end-line="27" selection-end-column="22" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/org/apache/spark/network/BlockTransferService.scala">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="266">
-          <caret line="40" lean-forward="true" selection-start-line="40" selection-end-line="40" />
+          <caret line="40" column="0" lean-forward="true" selection-start-line="40" selection-start-column="0" selection-end-line="40" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/org/apache/spark/network/BlockDataManager.scala">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="608">
-          <caret line="50" lean-forward="true" selection-start-line="50" selection-end-line="50" />
+          <caret line="50" column="0" lean-forward="true" selection-start-line="50" selection-start-column="0" selection-end-line="50" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/org/apache/spark/network/netty/NettyBlockRpcServer.scala">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="228">
-          <caret line="43" column="10" selection-start-line="43" selection-start-column="10" selection-end-line="43" selection-end-column="10" />
+          <caret line="43" column="10" lean-forward="false" selection-start-line="43" selection-start-column="10" selection-end-line="43" selection-end-column="10" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/org/apache/spark/network/netty/NettyBlockTransferService.scala">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-1840">
-          <caret line="42" column="21" selection-start-line="42" selection-start-column="21" selection-end-line="42" selection-end-column="21" />
-          <folding>
-            <element signature="e#842#861#0" expanded="true" />
-          </folding>
+          <caret line="42" column="21" lean-forward="false" selection-start-line="42" selection-start-column="21" selection-end-line="42" selection-end-column="21" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/org/apache/spark/network/netty/SparkTransportConf.scala">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="209">
-          <caret line="29" column="7" selection-start-line="29" selection-start-column="7" selection-end-line="29" selection-end-column="7" />
+          <caret line="29" column="7" lean-forward="false" selection-start-line="29" selection-start-column="7" selection-end-line="29" selection-end-column="7" />
         </state>
       </provider>
     </entry>
@@ -530,48 +647,42 @@
     <entry file="file://$PROJECT_DIR$/src/main/scala/org/apache/spark/broadcast/Broadcast.scala">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-35">
-          <caret line="125" column="16" selection-start-line="125" selection-start-column="16" selection-end-line="125" selection-end-column="16" />
+          <caret line="125" column="16" lean-forward="false" selection-start-line="125" selection-start-column="16" selection-end-line="125" selection-end-column="16" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/org/apache/spark/internal/Logging.scala">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="152">
-          <caret line="30" column="6" selection-start-line="30" selection-start-column="6" selection-end-line="30" selection-end-column="6" />
+          <caret line="30" column="6" lean-forward="false" selection-start-line="30" selection-start-column="6" selection-end-line="30" selection-end-column="6" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/org/apache/spark/TaskContext.scala">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1083">
-          <caret line="80" column="15" selection-start-line="80" selection-start-column="15" selection-end-line="80" selection-end-column="15" />
+          <caret line="80" column="15" lean-forward="false" selection-start-line="80" selection-start-column="15" selection-end-line="80" selection-end-column="15" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/org/apache/spark/TaskContextImpl.scala">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="663">
-          <caret line="176" lean-forward="true" selection-start-line="176" selection-end-line="176" />
-          <folding>
-            <element signature="e#828#855#0" expanded="true" />
-          </folding>
+          <caret line="176" column="0" lean-forward="true" selection-start-line="176" selection-start-column="0" selection-end-line="176" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/org/apache/spark/TaskEndReason.scala">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-342">
-          <caret line="45" column="41" selection-start-line="45" selection-start-column="28" selection-end-line="45" selection-end-column="41" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
+          <caret line="45" column="41" lean-forward="false" selection-start-line="45" selection-start-column="28" selection-end-line="45" selection-end-column="41" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/org/apache/spark/TaskNotSerializableException.scala">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="133">
-          <caret line="22" column="21" selection-start-line="22" selection-start-column="21" selection-end-line="22" selection-end-column="21" />
+          <caret line="22" column="21" lean-forward="false" selection-start-line="22" selection-start-column="21" selection-end-line="22" selection-end-column="21" />
         </state>
       </provider>
     </entry>
@@ -585,17 +696,14 @@
     <entry file="file://$PROJECT_DIR$/src/main/scala/org/apache/spark/TaskState.scala">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="133">
-          <caret line="22" column="22" selection-start-line="22" selection-start-column="22" selection-end-line="22" selection-end-column="22" />
+          <caret line="22" column="22" lean-forward="false" selection-start-line="22" selection-start-column="22" selection-end-line="22" selection-end-column="22" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/org/apache/spark/TestUtils.scala">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="588">
-          <caret line="116" column="14" selection-start-line="116" selection-start-column="14" selection-end-line="116" selection-end-column="14" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
+          <caret line="116" column="14" lean-forward="false" selection-start-line="116" selection-start-column="14" selection-end-line="116" selection-end-column="14" />
         </state>
       </provider>
     </entry>
@@ -603,9 +711,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="494">
           <caret line="41" column="27" lean-forward="true" selection-start-line="41" selection-start-column="27" selection-end-line="41" selection-end-column="27" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -633,24 +738,21 @@
     <entry file="file://$PROJECT_DIR$/src/main/scala/org/apache/spark/SparkException.scala">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="456">
-          <caret line="39" lean-forward="true" selection-start-line="39" selection-end-line="39" />
+          <caret line="39" column="0" lean-forward="true" selection-start-line="39" selection-start-column="0" selection-end-line="39" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/org/apache/spark/SparkEnv.scala">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="342">
-          <caret line="57" column="6" selection-start-line="57" selection-start-column="6" selection-end-line="57" selection-end-column="6" />
+          <caret line="57" column="6" lean-forward="false" selection-start-line="57" selection-start-column="6" selection-end-line="57" selection-end-column="6" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/org/apache/spark/SparkContext.scala">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="816">
-          <caret line="196" column="14" selection-start-line="196" selection-start-column="14" selection-end-line="196" selection-end-column="14" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
+          <caret line="196" column="14" lean-forward="false" selection-start-line="196" selection-start-column="14" selection-end-line="196" selection-end-column="14" />
         </state>
       </provider>
     </entry>
@@ -664,120 +766,98 @@
     <entry file="file://$PROJECT_DIR$/src/main/scala/org/apache/spark/package.scala">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="440">
-          <caret line="98" lean-forward="true" selection-start-line="98" selection-end-line="98" />
+          <caret line="98" column="0" lean-forward="true" selection-start-line="98" selection-start-column="0" selection-end-line="98" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/org/apache/spark/util/CollectionsUtils.scala">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="133">
-          <caret line="24" column="6" selection-start-line="24" selection-start-column="6" selection-end-line="24" selection-end-column="6" />
+          <caret line="24" column="6" lean-forward="false" selection-start-line="24" selection-start-column="6" selection-end-line="24" selection-end-column="6" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/org/apache/spark/util/Utils.scala">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="189">
-          <caret line="1692" column="6" selection-start-line="1692" selection-start-column="6" selection-end-line="1692" selection-end-column="6" />
+          <caret line="1692" column="6" lean-forward="false" selection-start-line="1692" selection-start-column="6" selection-end-line="1692" selection-end-column="6" />
         </state>
       </provider>
     </entry>
-    <entry file="jar://E:/2016spark/maven_repository/org/scala-lang/scala-library/2.11.8/scala-library-2.11.8-sources.jar!/scala/Product2.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="197">
-          <caret line="19" column="6" selection-start-line="19" selection-start-column="6" selection-end-line="19" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://E:/2016spark/maven_repository/org/scala-lang/scala-library/2.11.8/scala-library-2.11.8-sources.jar!/scala/math/package.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="197">
-          <caret line="138" column="6" selection-start-line="138" selection-start-column="6" selection-end-line="138" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="jar://E:/2016spark/maven_repository/org/scala-lang/scala-library/2.11.8/scala-library-2.11.8-sources.jar!/scala/Product2.scala" />
+    <entry file="jar://E:/2016spark/maven_repository/org/scala-lang/scala-library/2.11.8/scala-library-2.11.8-sources.jar!/scala/math/package.scala" />
     <entry file="file://$PROJECT_DIR$/src/main/scala/org/apache/spark/SerializableWritable.scala">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="494">
-          <caret line="48" lean-forward="true" selection-start-line="48" selection-end-line="48" />
+          <caret line="48" column="0" lean-forward="true" selection-start-line="48" selection-start-column="0" selection-end-line="48" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/org/apache/spark/SecurityManager.scala">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="250">
-          <caret line="554" column="6" selection-start-line="554" selection-start-column="6" selection-end-line="554" selection-end-column="6" />
+          <caret line="554" column="6" lean-forward="false" selection-start-line="554" selection-start-column="6" selection-end-line="554" selection-end-column="6" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/org/apache/spark/Partition.scala">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="304">
-          <caret line="31" column="21" selection-start-line="31" selection-start-column="15" selection-end-line="31" selection-end-column="21" />
+          <caret line="31" column="21" lean-forward="false" selection-start-line="31" selection-start-column="15" selection-end-line="31" selection-end-column="21" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/org/apache/spark/Partitioner.scala">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="189">
-          <caret line="36" column="42" selection-start-line="36" selection-start-column="42" selection-end-line="36" selection-end-column="42" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
+          <caret line="36" column="42" lean-forward="false" selection-start-line="36" selection-start-column="42" selection-end-line="36" selection-end-column="42" />
         </state>
       </provider>
     </entry>
-    <entry file="jar://E:/2016spark/maven_repository/org/scala-lang/scala-library/2.11.8/scala-library-2.11.8-sources.jar!/scala/Serializable.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="133">
-          <caret line="13" column="29" lean-forward="true" selection-start-line="13" selection-start-column="29" selection-end-line="13" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="jar://E:/2016spark/maven_repository/org/scala-lang/scala-library/2.11.8/scala-library-2.11.8-sources.jar!/scala/Serializable.scala" />
     <entry file="file://$PROJECT_DIR$/src/main/scala/org/apache/spark/MapOutputTracker.scala">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="228">
-          <caret line="39" column="70" selection-start-line="39" selection-start-column="70" selection-end-line="39" selection-end-column="70" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
+          <caret line="39" column="70" lean-forward="false" selection-start-line="39" selection-start-column="70" selection-end-line="39" selection-end-column="70" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/org/apache/spark/MapOutputStatistics.scala">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="209">
-          <caret line="26" column="21" selection-start-line="26" selection-start-column="21" selection-end-line="26" selection-end-column="21" />
+          <caret line="26" column="21" lean-forward="false" selection-start-line="26" selection-start-column="21" selection-end-line="26" selection-end-column="21" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/org/apache/spark/InterruptibleIterator.scala">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="228">
-          <caret line="27" column="6" selection-start-line="27" selection-start-column="6" selection-end-line="27" selection-end-column="6" />
+          <caret line="27" column="6" lean-forward="false" selection-start-line="27" selection-start-column="6" selection-end-line="27" selection-end-column="6" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/org/apache/spark/HeartbeatReceiver.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="37">
-          <caret line="151" column="3" lean-forward="true" selection-start-line="151" selection-start-column="3" selection-end-line="151" selection-end-column="3" />
+        <state relative-caret-position="2286">
+          <caret line="151" column="3" lean-forward="false" selection-start-line="151" selection-start-column="3" selection-end-line="151" selection-end-column="3" />
           <folding>
-            <element signature="n#!!doc" expanded="true" />
+            <element signature="n#!!doc" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/org/apache/spark/InternalAccumulator.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="95">
-          <caret line="20" column="74" selection-start-line="20" selection-start-column="62" selection-end-line="20" selection-end-column="74" />
+        <state relative-caret-position="90">
+          <caret line="20" column="74" lean-forward="false" selection-start-line="20" selection-start-column="62" selection-end-line="20" selection-end-column="74" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/org/apache/spark/FutureAction.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
           </folding>
@@ -786,21 +866,24 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/org/apache/spark/ExecutorAllocationClient.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="95">
-          <caret line="20" column="53" selection-start-line="20" selection-start-column="53" selection-end-line="20" selection-end-column="53" />
+        <state relative-caret-position="90">
+          <caret line="20" column="53" lean-forward="false" selection-start-line="20" selection-start-column="53" selection-end-line="20" selection-end-column="53" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/org/apache/spark/ExecutorAllocationManager.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-31">
-          <caret line="34" column="82" selection-start-line="34" selection-start-column="74" selection-end-line="34" selection-end-column="82" />
+        <state relative-caret-position="126">
+          <caret line="34" column="82" lean-forward="false" selection-start-line="34" selection-start-column="74" selection-end-line="34" selection-end-column="82" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/org/apache/spark/Dependency.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1845">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
           </folding>
@@ -809,7 +892,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/org/apache/spark/ContextCleaner.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
           </folding>
@@ -818,15 +902,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/org/apache/spark/Aggregator.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="31" column="11" selection-start-line="31" selection-start-column="11" selection-end-line="31" selection-end-column="11" />
+        <state relative-caret-position="270">
+          <caret line="31" column="11" lean-forward="false" selection-start-line="31" selection-start-column="11" selection-end-line="31" selection-end-column="11" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/org/apache/spark/Accumulable.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="39" column="15" selection-start-line="39" selection-start-column="15" selection-end-line="39" selection-end-column="15" />
+        <state relative-caret-position="306">
+          <caret line="39" column="15" lean-forward="false" selection-start-line="39" selection-start-column="15" selection-end-line="39" selection-end-column="15" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
           </folding>
@@ -835,11 +920,27 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/org/apache/spark/Accumulator.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="266">
-          <caret line="20" column="13" selection-start-line="20" selection-start-column="13" selection-end-line="20" selection-end-column="13" />
+        <state relative-caret-position="-126">
+          <caret line="20" column="13" lean-forward="false" selection-start-line="20" selection-start-column="13" selection-end-line="20" selection-end-column="13" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/org/apache/spark/shuffle/ShuffleReader.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="324">
+          <caret line="33" column="0" lean-forward="false" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
