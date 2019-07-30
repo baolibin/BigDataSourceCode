@@ -18,6 +18,7 @@
 package org.apache.spark.shuffle
 
 /**
+  * reduce task读数据从shuffle system
  * Obtained inside a reduce task to read combined records from the mappers.
  */
 private[spark] trait ShuffleReader[K, C] {

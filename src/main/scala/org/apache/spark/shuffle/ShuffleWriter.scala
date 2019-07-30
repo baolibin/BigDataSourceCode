@@ -22,6 +22,7 @@ import java.io.IOException
 import org.apache.spark.scheduler.MapStatus
 
 /**
+  * map task输出到shuffle system
  * Obtained inside a map task to write out records to the shuffle system.
  */
 private[spark] abstract class ShuffleWriter[K, V] {
