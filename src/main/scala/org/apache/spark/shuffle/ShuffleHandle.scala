@@ -20,6 +20,7 @@ package org.apache.spark.shuffle
 import org.apache.spark.annotation.DeveloperApi
 
 /**
+  * shuffle的内部操作类，使用ShuffleManager传递信息在相关的task之间
  * An opaque handle to a shuffle, used by a ShuffleManager to pass information about it to tasks.
  *
  * @param shuffleId ID of the shuffle

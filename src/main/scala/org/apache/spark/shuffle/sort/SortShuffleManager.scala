@@ -24,6 +24,8 @@ import org.apache.spark.internal.Logging
 import org.apache.spark.shuffle._
 
 /**
+  * map输出数据排序后根据partition ids写入单独文件中，reduce可以获得连续的map输出的部门区域。
+  * map输出数据内存放不下，会溢写到磁盘，磁盘文件会进行合并后，再提供最终的输出文件。
  * In sort-based shuffle, incoming records are sorted according to their target partition ids, then
  * written to a single map output file. Reducers fetch contiguous regions of this file in order to
  * read their portion of the map output. In cases where the map output data is too large to fit in

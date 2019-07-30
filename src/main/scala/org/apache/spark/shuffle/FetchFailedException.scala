@@ -22,6 +22,7 @@ import org.apache.spark.storage.BlockManagerId
 import org.apache.spark.util.Utils
 
 /**
+  * 失败获取shuffle块，executor将抛异常并把这个消息传递给DAGScheduler，需要重新生成上一个stage。
  * Failed to fetch a shuffle block. The executor catches this exception and propagates it
  * back to DAGScheduler (through TaskEndReason) so we'd resubmit the previous stage.
  *
