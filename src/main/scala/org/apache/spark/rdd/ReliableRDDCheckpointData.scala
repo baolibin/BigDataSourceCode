@@ -25,6 +25,7 @@ import org.apache.spark._
 import org.apache.spark.internal.Logging
 
 /**
+  * checkpoint实现恢复RDD的stage，允许driver在失败情况下生成之前的stage。
  * An implementation of checkpointing that writes the RDD data to reliable storage.
  * This allows drivers to be restarted on failure with previously computed state.
  */

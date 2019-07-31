@@ -29,6 +29,7 @@ class ZippedWithIndexRDDPartition(val prev: Partition, val startIndex: Long)
 }
 
 /**
+  * RDD内每个元素对应每个分区index。
  * Represents an RDD zipped with its element indices. The ordering is first based on the partition
  * index and then the ordering of items within each partition. So the first item in the first
  * partition gets index 0, and the last item in the last partition receives the largest index.
