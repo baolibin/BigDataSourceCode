@@ -28,11 +28,15 @@ import org.apache.spark.metrics.MetricsSystem
 import org.apache.spark.util._
 
 /**
+  * 执行的基本单元Task, 包括两种,ShuffleMapTask和ResultTask
  * A unit of execution. We have two kinds of Task's in Spark:
  *
  *  - [[org.apache.spark.scheduler.ShuffleMapTask]]
  *  - [[org.apache.spark.scheduler.ResultTask]]
  *
+  * 一个spark作业包括一个或多个stage,最后一个stage包括多个ResultTask,早期stage包括多个ShuffleMapTask.
+  * 一个ResultTask执行这些task并且发送结果给driver.
+  * 一个ShuffleMapTask执行这些task并且划分结果到多个桶中.
  * A Spark job consists of one or more stages. The very last stage in a job consists of multiple
  * ResultTasks, while earlier stages consist of ShuffleMapTasks. A ResultTask executes the task
  * and sends the task output back to the driver application. A ShuffleMapTask executes the task

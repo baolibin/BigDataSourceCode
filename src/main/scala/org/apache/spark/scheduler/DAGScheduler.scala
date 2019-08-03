@@ -45,6 +45,8 @@ import org.apache.spark.storage.BlockManagerMessages.BlockManagerHeartbeat
 import org.apache.spark.util._
 
 /**
+  * 这个高可用调度层面向stage的调度,计算每个作业的stages的有向无环图.
+  * 一个stage对应一组task集合taskset,TaskScheduler调度这些task运行在集群上.
  * The high-level scheduling layer that implements stage-oriented scheduling. It computes a DAG of
  * stages for each job, keeps track of which RDDs and stage outputs are materialized, and finds a
  * minimal schedule to run the job. It then submits stages as TaskSets to an underlying
