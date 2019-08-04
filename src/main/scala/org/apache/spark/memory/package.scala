@@ -18,13 +18,16 @@
 package org.apache.spark
 
 /**
+  * Spark内存管理系统.
  * This package implements Spark's memory management system. This system consists of two main
  * components, a JVM-wide memory manager and a per-task manager:
  *
+  * 管理Spark总体内存使用在一个JVM里面.
  *  - [[org.apache.spark.memory.MemoryManager]] manages Spark's overall memory usage within a JVM.
  *    This component implements the policies for dividing the available memory across tasks and for
  *    allocating memory between storage (memory used caching and data transfer) and execution
  *    (memory used by computations, such as shuffles, joins, sorts, and aggregations).
+  * 管理划分内存在task中使用.
  *  - [[org.apache.spark.memory.TaskMemoryManager]] manages the memory allocated by individual
  *    tasks. Tasks interact with TaskMemoryManager and never directly interact with the JVM-wide
  *    MemoryManager.
