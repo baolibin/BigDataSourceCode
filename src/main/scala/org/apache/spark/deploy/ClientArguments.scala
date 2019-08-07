@@ -27,6 +27,7 @@ import org.apache.log4j.Level
 import org.apache.spark.util.{IntParam, MemoryParam, Utils}
 
 /**
+  * driver客户端的命令行参数
  * Command-line parser for the driver client.
  */
 private[deploy] class ClientArguments(args: Array[String]) {
