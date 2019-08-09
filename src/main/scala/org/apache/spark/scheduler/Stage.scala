@@ -25,6 +25,7 @@ import org.apache.spark.rdd.RDD
 import org.apache.spark.util.CallSite
 
 /**
+  * 一个stage是一组并行的task，计算在相同的函数中，作为spark作业的一部分。所有的task都是窄依赖。
  * A stage is a set of parallel tasks all computing the same function that need to run as part
  * of a Spark job, where all the tasks have the same shuffle dependencies. Each DAG of tasks run
  * by the scheduler is split up into stages at the boundaries where shuffle occurs, and then the
