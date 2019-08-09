@@ -23,6 +23,7 @@ import org.apache.spark.annotation.DeveloperApi
 
 /**
  * :: DeveloperApi ::
+  * TaskSet中一个运行中task的相关信息
  * Information about a running task attempt inside a TaskSet.
  */
 @DeveloperApi

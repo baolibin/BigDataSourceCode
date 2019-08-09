@@ -37,6 +37,8 @@ import org.apache.spark.storage.BlockManagerId
 import org.apache.spark.util.{AccumulatorV2, ThreadUtils, Utils}
 
 /**
+  * TaskScheduler的实现类，调度支持多种运行方式，
+  * 集群模式的SchedulerBackend，本地模式的LocalSchedulerBackend。
  * Schedules tasks for multiple types of clusters by acting through a SchedulerBackend.
  * It can also work with a local setup by using a `LocalSchedulerBackend` and setting
  * isLocal to true. It handles common logic, like determining a scheduling order across jobs, waking
