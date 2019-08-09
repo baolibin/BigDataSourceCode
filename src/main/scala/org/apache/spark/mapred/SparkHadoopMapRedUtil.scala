@@ -28,6 +28,7 @@ import org.apache.spark.internal.Logging
 
 object SparkHadoopMapRedUtil extends Logging {
   /**
+    * 多个task可能会输出到相同的目录partition,我们需要定时去检测,一个task是否可以输出到某个partition.
    * Commits a task output.  Before committing the task output, we need to know whether some other
    * task attempt might be racing to commit the same output partition. Therefore, coordinate with
    * the driver in order to determine whether this attempt can commit (please see SPARK-4879 for

@@ -33,6 +33,7 @@ import org.apache.spark.launcher.SparkSubmitArgumentsParser
 import org.apache.spark.util.Utils
 
 /**
+  * 从spark-submit脚本中解析出作业参数
  * Parses and encapsulates arguments from the spark-submit script.
  * The env argument is used for testing.
  */

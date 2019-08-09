@@ -60,8 +60,10 @@ private[deploy] object SparkSubmitAction extends Enumeration {
 }
 
 /**
+  * 启动一个spark作业的主要入口
  * Main gateway of launching a Spark application.
  *
+  *设置spark依赖的相应配置,提供了不同集群管理模式(cluster,local)和部署方式(yarn,standalone..)
  * This program handles setting up the classpath with relevant Spark dependencies and provides
  * a layer over the different cluster managers and deploy modes that Spark supports.
  */

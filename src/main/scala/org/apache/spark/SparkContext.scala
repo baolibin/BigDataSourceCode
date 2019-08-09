@@ -2151,6 +2151,7 @@ class SparkContext(config: SparkConf) extends Logging {
   }
 
   /**
+    * 提交执行一个作业
    * Submit a job for execution and return a FutureJob holding the result.
    *
    * @param rdd target RDD to run tasks on

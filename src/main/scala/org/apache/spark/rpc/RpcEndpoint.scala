@@ -20,6 +20,7 @@ package org.apache.spark.rpc
 import org.apache.spark.SparkException
 
 /**
+  * 创建RpcEnv的工场类,它必须有一个空的构造函数,以至于可以通过反射来创建.
  * A factory class to create the [[RpcEnv]]. It must have an empty constructor so that it can be
  * created using Reflection.
  */

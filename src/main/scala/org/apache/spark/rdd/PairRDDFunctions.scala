@@ -47,6 +47,7 @@ import org.apache.spark.util.collection.CompactBuffer
 import org.apache.spark.util.random.StratifiedSamplingUtils
 
 /**
+  * (k,v)型RDD
  * Extra functions available on RDDs of (key, value) pairs through an implicit conversion.
  */
 class PairRDDFunctions[K, V](self: RDD[(K, V)])
