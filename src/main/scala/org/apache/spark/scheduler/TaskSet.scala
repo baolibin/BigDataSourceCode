@@ -20,6 +20,7 @@ package org.apache.spark.scheduler
 import java.util.Properties
 
 /**
+  * TaskScheduler将stage分成一组tasks
  * A set of tasks submitted together to the low-level TaskScheduler, usually representing
  * missing partitions of a particular stage.
  */
