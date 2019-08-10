@@ -21,6 +21,7 @@ import org.apache.spark.annotation.DeveloperApi
 
 /**
  * :: DeveloperApi ::
+  * DAGScheduler调度作业返回的结果
  * A result of a job in the DAGScheduler.
  */
 @DeveloperApi

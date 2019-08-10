@@ -24,6 +24,7 @@ import scala.concurrent.{Future, Promise}
 import org.apache.spark.internal.Logging
 
 /**
+  * 等待DAGScheduler调度作业执行完成后，把结果传递给指定处理的函数。
  * An object that waits for a DAGScheduler job to complete. As tasks finish, it passes their
  * results to the given handler function.
  */

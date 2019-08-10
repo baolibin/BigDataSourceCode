@@ -18,6 +18,7 @@
 package org.apache.spark
 
 /**
+  * RDD分区
  * An identifier for a partition in an RDD.
  */
 trait Partition extends Serializable {

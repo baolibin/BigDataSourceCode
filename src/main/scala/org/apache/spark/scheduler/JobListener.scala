@@ -18,6 +18,7 @@
 package org.apache.spark.scheduler
 
 /**
+  * 监听提交到DAGScheduler的作业完成还是失败。
  * Interface used to listen for job completion or failure events after submitting a job to the
  * DAGScheduler. The listener is notified each time a task succeeds, as well as if the whole
  * job fails (and no further taskSucceeded events will happen).
