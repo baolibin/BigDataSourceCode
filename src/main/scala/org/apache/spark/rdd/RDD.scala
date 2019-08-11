@@ -152,7 +152,7 @@ abstract class RDD[T: ClassTag](
   /** A friendly name for this RDD */
   @transient var name: String = null
 
-  /** Assign a name to this RDD */
+  /** Assign a name to this RDD  对RDD指定一个名字 */
   def setName(_name: String): this.type = {
     name = _name
     this
