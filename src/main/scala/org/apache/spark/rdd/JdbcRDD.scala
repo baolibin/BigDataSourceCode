@@ -34,6 +34,7 @@ private[spark] class JdbcPartition(idx: Int, val lower: Long, val upper: Long) e
 
 // TODO: Expose a jdbcRDD function in SparkContext and mark this as semi-private
 /**
+  * JDBC执行sql语句后返回的结果RDD
  * An RDD that executes a SQL query on a JDBC connection and reads results.
  * For usage example, see test case JdbcRDDSuite.
  *
