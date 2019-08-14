@@ -44,6 +44,7 @@ import org.apache.spark.util.{BoundedPriorityQueue, SerializableConfiguration, S
 import org.apache.spark.util.collection.CompactBuffer
 
 /**
+  * kryo序列化
  * A Spark serializer that uses the <a href="https://code.google.com/p/kryo/">
  * Kryo serialization library</a>.
  *

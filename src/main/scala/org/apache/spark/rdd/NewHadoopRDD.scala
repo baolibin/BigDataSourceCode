@@ -54,6 +54,7 @@ private[spark] class NewHadoopPartition(
 
 /**
  * :: DeveloperApi ::
+  * 用新的Mr API从HDFS,HBase或s3中读取数据生成的RDD
  * An RDD that provides core functionality for reading data stored in Hadoop (e.g., files in HDFS,
  * sources in HBase, or S3), using the new MapReduce API (`org.apache.hadoop.mapreduce`).
  *
