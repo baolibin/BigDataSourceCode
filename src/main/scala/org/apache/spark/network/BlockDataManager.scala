@@ -26,12 +26,14 @@ private[spark]
 trait BlockDataManager {
 
   /**
+    * 得到本地数据块的接口
    * Interface to get local block data. Throws an exception if the block cannot be found or
    * cannot be read successfully.
    */
   def getBlockData(blockId: BlockId): ManagedBuffer
 
   /**
+    * 根据给定的存储模式,把数据存储到本地
    * Put the block locally, using the given storage level.
    *
    * Returns true if the block was stored and false if the put operation failed or the block
