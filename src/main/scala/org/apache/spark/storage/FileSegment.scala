@@ -20,6 +20,7 @@ package org.apache.spark.storage
 import java.io.File
 
 /**
+  * 引用一个文件的特定分段,基于offset和length
  * References a particular segment of a file (potentially the entire file),
  * based off an offset and a length.
  */

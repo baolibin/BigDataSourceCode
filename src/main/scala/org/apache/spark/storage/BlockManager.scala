@@ -102,6 +102,7 @@ private[spark] class ByteBufferBlockData(
 }
 
 /**
+  * 管理正在运行的节点上,存储或接收数据,在本地或远端的存储方法(内存,磁盘,堆)
  * Manager running on every node (driver and executors) which provides interfaces for putting and
  * retrieving blocks both locally and remotely into various stores (memory, disk, and off-heap).
  *

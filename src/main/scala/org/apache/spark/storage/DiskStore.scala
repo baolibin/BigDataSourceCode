@@ -39,6 +39,7 @@ import org.apache.spark.util.{ByteBufferInputStream, Utils}
 import org.apache.spark.util.io.ChunkedByteBuffer
 
 /**
+  * 存储管理的数据块到磁盘上
  * Stores BlockManager blocks on disk.
  */
 private[spark] class DiskStore(
