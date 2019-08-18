@@ -21,6 +21,16 @@ import org.apache.spark.annotation.DeveloperApi
 import org.apache.spark.rdd.{RDD, RDDOperationScope}
 import org.apache.spark.util.Utils
 
+/**
+  * 一个RDD相关信息
+  * @param id
+  * @param name
+  * @param numPartitions
+  * @param storageLevel
+  * @param parentIds
+  * @param callSite
+  * @param scope
+  */
 @DeveloperApi
 class RDDInfo(
     val id: Int,

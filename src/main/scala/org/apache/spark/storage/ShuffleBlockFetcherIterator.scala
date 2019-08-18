@@ -34,6 +34,7 @@ import org.apache.spark.util.Utils
 import org.apache.spark.util.io.ChunkedByteBufferOutputStream
 
 /**
+  * 拉取多个存储快的迭代器,对于本地的存储快,从本地块管理拉取,远端的存储快,从提供的BlockTransferService拉取.
  * An iterator that fetches multiple blocks. For local blocks, it fetches from the local block
  * manager. For remote blocks, it fetches them using the provided BlockTransferService.
  *
