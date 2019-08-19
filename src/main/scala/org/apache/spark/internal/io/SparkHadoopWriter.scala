@@ -32,6 +32,7 @@ import org.apache.spark.rdd.HadoopRDD
 import org.apache.spark.util.SerializableJobConf
 
 /**
+  * 内部帮助类,使用Hadoop输出格式化类来保存一个RDD
  * Internal helper class that saves an RDD using a Hadoop OutputFormat.
  *
  * Saves the RDD using a JobConf, which should contain an output key class, an output value class,
