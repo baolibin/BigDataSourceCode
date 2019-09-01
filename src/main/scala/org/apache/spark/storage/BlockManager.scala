@@ -46,6 +46,12 @@ import org.apache.spark.unsafe.Platform
 import org.apache.spark.util._
 import org.apache.spark.util.io.ChunkedByteBuffer
 
+/**
+  * BlockManager会运行在Driver和每个Executor上。
+  * 而运行在Driver上的BlockManager负责整个App的Block的管理工作；
+  * 运行在Executor上的BlockManager负责管理该Executor上的Block，
+  * 并且向Driver的BlockManager汇报Block的信息和接受来自它的命令。
+  */
 /* Class for returning a fetched block and associated metrics. */
 private[spark] class BlockResult(
     val data: Iterator[Any],
