@@ -18,6 +18,7 @@
 package org.apache.spark.rpc
 
 /**
+  * RPC回调
  * A callback that [[RpcEndpoint]] can use to send back a message or failure. It's thread-safe
  * and can be called in any thread.
  */
