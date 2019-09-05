@@ -27,7 +27,9 @@ import org.apache.spark.metrics.source.Source
 import org.apache.spark.shuffle.FetchFailedException
 import org.apache.spark.util.{AccumulatorV2, TaskCompletionListener, TaskFailureListener}
 
-
+/**
+  * Task的上下文信息
+  */
 object TaskContext {
   /**
    * Return the currently active TaskContext. This can be called inside of
