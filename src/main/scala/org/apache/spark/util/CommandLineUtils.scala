@@ -22,35 +22,37 @@ import java.io.PrintStream
 import org.apache.spark.SparkException
 
 /**
- * Contains basic command line parsing functionality and methods to parse some common Spark CLI
- * options.
- */
+  * 命令行解析工具公共方法
+  * Contains basic command line parsing functionality and methods to parse some common Spark CLI
+  * options.
+  */
 private[spark] trait CommandLineUtils {
 
-  // Exposed for testing
-  private[spark] var exitFn: Int => Unit = (exitCode: Int) => System.exit(exitCode)
+    // Exposed for testing
+    private[spark] var exitFn: Int => Unit = (exitCode: Int) => System.exit(exitCode)
 
-  private[spark] var printStream: PrintStream = System.err
+    private[spark] var printStream: PrintStream = System.err
 
-  // scalastyle:off println
+    // scalastyle:off println
+    // 打印警告信息
+    private[spark] def printWarning(str: String): Unit = printStream.println("Warning: " + str)
 
-  private[spark] def printWarning(str: String): Unit = printStream.println("Warning: " + str)
-
-  private[spark] def printErrorAndExit(str: String): Unit = {
-    printStream.println("Error: " + str)
-    printStream.println("Run with --help for usage help or --verbose for debug output")
-    exitFn(1)
-  }
-
-  // scalastyle:on println
-
-  private[spark] def parseSparkConfProperty(pair: String): (String, String) = {
-    pair.split("=", 2).toSeq match {
-      case Seq(k, v) => (k, v)
-      case _ => printErrorAndExit(s"Spark config without '=': $pair")
-        throw new SparkException(s"Spark config without '=': $pair")
+    // 打印错误信息并退出
+    private[spark] def printErrorAndExit(str: String): Unit = {
+        printStream.println("Error: " + str)
+        printStream.println("Run with --help for usage help or --verbose for debug output")
+        exitFn(1)
     }
-  }
 
-  def main(args: Array[String]): Unit
+    // scalastyle:on println
+    // 解析SparkConf里的属性配置信息
+    private[spark] def parseSparkConfProperty(pair: String): (String, String) = {
+        pair.split("=", 2).toSeq match {
+            case Seq(k, v) => (k, v)
+            case _ => printErrorAndExit(s"Spark config without '=': $pair")
+                throw new SparkException(s"Spark config without '=': $pair")
+        }
+    }
+
+    def main(args: Array[String]): Unit
 }
