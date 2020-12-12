@@ -91,6 +91,7 @@ object SparkSubmit extends CommandLineUtils {
   private val CLASS_NOT_FOUND_EXIT_STATUS = 101
 
   // scalastyle:off println
+  // 运行spark-shell命令时候,输出的一些版本信息
   private[spark] def printVersionAndExit(): Unit = {
     printStream.println("""Welcome to
       ____              __
