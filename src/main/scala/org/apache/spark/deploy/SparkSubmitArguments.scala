@@ -62,7 +62,7 @@ private[deploy] class SparkSubmitArguments(args: Seq[String], env: Map[String, S
   var repositories: String = null
   var ivyRepoPath: String = null
   var packagesExclusions: String = null
-  var verbose: Boolean = false
+  var verbose: Boolean = false  // 用于确认是否打印一些JVM信息，默认为false。
   var isPython: Boolean = false
   var pyFiles: String = null
   var isR: Boolean = false
