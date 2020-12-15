@@ -4,7 +4,6 @@
     <list default="true" id="d7a34c12-f12d-4ae2-a110-f9934eb8a907" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/scala/org/apache/spark/deploy/SparkSubmit.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/org/apache/spark/deploy/SparkSubmit.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/scala/org/apache/spark/deploy/SparkSubmitArguments.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/org/apache/spark/deploy/SparkSubmitArguments.scala" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -139,7 +138,14 @@
       <option name="project" value="LOCAL" />
       <updated>1607762470194</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="submit">
+      <created>1607956337427</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1607956337431</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TodoView">
@@ -153,7 +159,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="update" />
-    <option name="LAST_COMMIT_MESSAGE" value="update" />
+    <MESSAGE value="submit" />
+    <option name="LAST_COMMIT_MESSAGE" value="submit" />
   </component>
   <component name="WindowStateProjectService">
     <state x="426" y="282" key="#com.intellij.framework.addSupport.AddSupportForSingleFrameworkDialog" timestamp="1606535569505">
@@ -164,10 +171,10 @@
       <screen x="0" y="0" width="1366" height="738" />
     </state>
     <state x="529" y="257" key="#com.intellij.ide.util.projectWizard.JdkChooserPanel.MyDialog/0.0.1366.738@0.0.1366.738" timestamp="1606535566311" />
-    <state x="321" y="0" key="CommitChangelistDialog2" timestamp="1607762466375">
+    <state x="321" y="0" key="CommitChangelistDialog2" timestamp="1607956328959">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state x="321" y="0" key="CommitChangelistDialog2/0.0.1366.738@0.0.1366.738" timestamp="1607762466375" />
+    <state x="321" y="0" key="CommitChangelistDialog2/0.0.1366.738@0.0.1366.738" timestamp="1607956328959" />
     <state x="92" y="92" width="1182" height="554" key="DiffContextDialog" timestamp="1607762575288">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
@@ -180,10 +187,10 @@
       <screen x="0" y="0" width="1366" height="738" />
     </state>
     <state x="392" y="83" key="MultipleFileMergeDialog/0.0.1366.738@0.0.1366.738" timestamp="1607762515573" />
-    <state x="275" y="101" key="Vcs.Push.Dialog.v2" timestamp="1607762567954">
+    <state x="275" y="101" key="Vcs.Push.Dialog.v2" timestamp="1607956339395">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state x="275" y="101" key="Vcs.Push.Dialog.v2/0.0.1366.738@0.0.1366.738" timestamp="1607762567954" />
+    <state x="275" y="101" key="Vcs.Push.Dialog.v2/0.0.1366.738@0.0.1366.738" timestamp="1607956339395" />
     <state x="511" y="102" key="VcsDiffUtil.ChangesDialog" timestamp="1607762563389">
       <screen x="0" y="0" width="1366" height="738" />
     </state>

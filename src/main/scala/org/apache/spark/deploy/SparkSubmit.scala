@@ -200,6 +200,7 @@ object SparkSubmit extends CommandLineUtils {
         //   (2) The new REST-based gateway introduced in Spark 1.3
         // The latter is the default behavior as of Spark 1.3, but Spark submit will fail over
         // to use the legacy gateway if the master endpoint turns out to be not a REST server.
+        // standalone模式
         if (args.isStandaloneCluster && args.useRest) {
             try {
                 // scalastyle:off println
@@ -216,17 +217,19 @@ object SparkSubmit extends CommandLineUtils {
             }
             // In all other modes, just run the main class as prepared
         } else {
+            // 其它cluster模式
             doRunMain()
         }
     }
 
     /**
+     * 准备环境，为提交一个Spark作业应用。
      * Prepare the environment for submitting an application.
      * This returns a 4-tuple:
-     * (1) the arguments for the child process,
-     * (2) a list of classpath entries for the child,
-     * (3) a map of system properties, and
-     * (4) the main class for the child
+     * (1) the arguments for the child process,子进程的参数
+     * (2) a list of classpath entries for the child, 子程序的类路径条目信息
+     * (3) a map of system properties, and  系统参数配置
+     * (4) the main class for the child 子程序的主类
      * Exposed for testing.
      */
     private[deploy] def prepareSubmitEnvironment(args: SparkSubmitArguments)
@@ -238,6 +241,7 @@ object SparkSubmit extends CommandLineUtils {
         var childMainClass = ""
 
         // Set the cluster manager
+        // 设置集群模式
         val clusterManager: Int = args.master match {
             case "yarn" => YARN
             case "yarn-client" | "yarn-cluster" =>
@@ -253,6 +257,7 @@ object SparkSubmit extends CommandLineUtils {
         }
 
         // Set the deploy mode; default is client mode
+        // 设置部署模式，默认是client模式
         var deployMode: Int = args.deployMode match {
             case "client" | null => CLIENT
             case "cluster" => CLUSTER
@@ -690,6 +695,7 @@ object SparkSubmit extends CommandLineUtils {
     }
 
     /**
+     * 使用提供的加载环境运行子类的主方法
      * Run the main method of the child class using the provided launch environment.
      *
      * Note that this main class will not be the one provided by the user if we're
@@ -702,6 +708,7 @@ object SparkSubmit extends CommandLineUtils {
                                childMainClass: String,
                                verbose: Boolean): Unit = {
         // scalastyle:off println
+        // 打印一些JVM信息
         if (verbose) {
             printStream.println(s"Main class:\n$childMainClass")
             printStream.println(s"Arguments:\n${childArgs.mkString("\n")}")
