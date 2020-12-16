@@ -194,6 +194,7 @@ object UnifiedMemoryManager {
     // This serves a function similar to `spark.memory.fraction`, but guarantees that we reserve
     // sufficient memory for the system even for small heaps. E.g. if we have a 1GB JVM, then
     // the memory used for execution and storage will be (1024 - 300) * 0.6 = 434MB by default.
+    // 预留内存大小，默认300M
     private val RESERVED_SYSTEM_MEMORY_BYTES = 300 * 1024 * 1024
 
     def apply(conf: SparkConf, numCores: Int): UnifiedMemoryManager = {
@@ -210,7 +211,9 @@ object UnifiedMemoryManager {
      * Return the total amount of memory shared between execution and storage, in bytes.
      */
     private def getMaxMemory(conf: SparkConf): Long = {
+        // 系统内存
         val systemMemory = conf.getLong("spark.testing.memory", Runtime.getRuntime.maxMemory)
+        // 预留内存，默认300M
         val reservedMemory = conf.getLong("spark.testing.reservedMemory",
             if (conf.contains("spark.testing")) 0 else RESERVED_SYSTEM_MEMORY_BYTES)
         val minSystemMemory = (reservedMemory * 1.5).ceil.toLong
@@ -228,8 +231,10 @@ object UnifiedMemoryManager {
                         s"--executor-memory option or spark.executor.memory in Spark configuration.")
             }
         }
+        // 可用内存
         val usableMemory = systemMemory - reservedMemory
         val memoryFraction = conf.getDouble("spark.memory.fraction", 0.6)
+        // 执行内存和存储内存占比内存大小
         (usableMemory * memoryFraction).toLong
     }
 }

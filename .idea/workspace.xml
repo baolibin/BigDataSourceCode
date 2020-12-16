@@ -3,9 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="d7a34c12-f12d-4ae2-a110-f9934eb8a907" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/scala/org/apache/spark/memory/MemoryManager.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/org/apache/spark/memory/MemoryManager.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/scala/org/apache/spark/memory/MemoryPool.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/org/apache/spark/memory/MemoryPool.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/scala/org/apache/spark/memory/StaticMemoryManager.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/org/apache/spark/memory/StaticMemoryManager.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/scala/org/apache/spark/memory/UnifiedMemoryManager.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/org/apache/spark/memory/UnifiedMemoryManager.scala" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -174,13 +172,21 @@
       <option name="project" value="LOCAL" />
       <updated>1608044091463</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="memory">
+      <created>1608127587324</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1608127587325</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="update" />
     <MESSAGE value="submit" />
-    <option name="LAST_COMMIT_MESSAGE" value="submit" />
+    <MESSAGE value="memory" />
+    <option name="LAST_COMMIT_MESSAGE" value="memory" />
   </component>
   <component name="WindowStateProjectService">
     <state x="426" y="282" key="#com.intellij.framework.addSupport.AddSupportForSingleFrameworkDialog" timestamp="1606535569505">
@@ -191,10 +197,10 @@
       <screen x="0" y="0" width="1366" height="738" />
     </state>
     <state x="529" y="257" key="#com.intellij.ide.util.projectWizard.JdkChooserPanel.MyDialog/0.0.1366.738@0.0.1366.738" timestamp="1606535566311" />
-    <state x="321" y="0" key="CommitChangelistDialog2" timestamp="1608044084808">
+    <state x="321" y="0" key="CommitChangelistDialog2" timestamp="1608127584568">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state x="321" y="0" key="CommitChangelistDialog2/0.0.1366.738@0.0.1366.738" timestamp="1608044084808" />
+    <state x="321" y="0" key="CommitChangelistDialog2/0.0.1366.738@0.0.1366.738" timestamp="1608127584568" />
     <state x="92" y="92" width="1182" height="554" key="DiffContextDialog" timestamp="1607762575288">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
@@ -207,10 +213,10 @@
       <screen x="0" y="0" width="1366" height="738" />
     </state>
     <state x="392" y="83" key="MultipleFileMergeDialog/0.0.1366.738@0.0.1366.738" timestamp="1607762515573" />
-    <state x="275" y="101" key="Vcs.Push.Dialog.v2" timestamp="1608044095194">
+    <state x="275" y="101" key="Vcs.Push.Dialog.v2" timestamp="1608127589267">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state x="275" y="101" key="Vcs.Push.Dialog.v2/0.0.1366.738@0.0.1366.738" timestamp="1608044095194" />
+    <state x="275" y="101" key="Vcs.Push.Dialog.v2/0.0.1366.738@0.0.1366.738" timestamp="1608127589267" />
     <state x="511" y="102" key="VcsDiffUtil.ChangesDialog" timestamp="1607762563389">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
