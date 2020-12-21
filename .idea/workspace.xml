@@ -178,7 +178,14 @@
       <option name="project" value="LOCAL" />
       <updated>1608127587325</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="memory">
+      <created>1608217595350</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1608217595350</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -196,10 +203,10 @@
       <screen x="0" y="0" width="1366" height="738" />
     </state>
     <state x="529" y="257" key="#com.intellij.ide.util.projectWizard.JdkChooserPanel.MyDialog/0.0.1366.738@0.0.1366.738" timestamp="1606535566311" />
-    <state x="321" y="0" key="CommitChangelistDialog2" timestamp="1608130026087">
+    <state x="321" y="0" key="CommitChangelistDialog2" timestamp="1608217592433">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state x="321" y="0" key="CommitChangelistDialog2/0.0.1366.738@0.0.1366.738" timestamp="1608130026087" />
+    <state x="321" y="0" key="CommitChangelistDialog2/0.0.1366.738@0.0.1366.738" timestamp="1608217592433" />
     <state x="92" y="92" width="1182" height="554" key="DiffContextDialog" timestamp="1607762575288">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
@@ -212,10 +219,10 @@
       <screen x="0" y="0" width="1366" height="738" />
     </state>
     <state x="392" y="83" key="MultipleFileMergeDialog/0.0.1366.738@0.0.1366.738" timestamp="1607762515573" />
-    <state x="275" y="101" key="Vcs.Push.Dialog.v2" timestamp="1608130029536">
+    <state x="275" y="101" key="Vcs.Push.Dialog.v2" timestamp="1608217596938">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state x="275" y="101" key="Vcs.Push.Dialog.v2/0.0.1366.738@0.0.1366.738" timestamp="1608130029536" />
+    <state x="275" y="101" key="Vcs.Push.Dialog.v2/0.0.1366.738@0.0.1366.738" timestamp="1608217596938" />
     <state x="511" y="102" key="VcsDiffUtil.ChangesDialog" timestamp="1607762563389">
       <screen x="0" y="0" width="1366" height="738" />
     </state>

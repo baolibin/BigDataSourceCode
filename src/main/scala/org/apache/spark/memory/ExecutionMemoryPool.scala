@@ -150,6 +150,7 @@ private[memory] class ExecutionMemoryPool(
     }
 
     /**
+     * 释放指定Task指定内存字节数
      * Release `numBytes` of memory acquired by the given task.
      */
     def releaseMemory(numBytes: Long, taskAttemptId: Long): Unit = lock.synchronized {
@@ -172,6 +173,7 @@ private[memory] class ExecutionMemoryPool(
     }
 
     /**
+     * 释放指定Task占用的所有字节内存数
      * Release all memory for the given task and mark it as inactive (e.g. when a task ends).
      *
      * @return the number of bytes freed.
