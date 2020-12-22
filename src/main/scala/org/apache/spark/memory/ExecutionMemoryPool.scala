@@ -71,6 +71,7 @@ private[memory] class ExecutionMemoryPool(
     }
 
     /**
+     * 为指定的Task申请内存，并返回获得的字节数
      * Try to acquire up to `numBytes` of memory for the given task and return the number of bytes
      * obtained, or 0 if none can be allocated.
      *
