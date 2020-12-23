@@ -110,19 +110,25 @@ private[spark] object StaticMemoryManager {
     private val MIN_MEMORY_BYTES = 32 * 1024 * 1024
 
     /**
+     * 返回最大可获得的存储内存字节数
      * Return the total amount of memory available for the storage region, in bytes.
      */
     private def getMaxStorageMemory(conf: SparkConf): Long = {
+        // 系统最大内存
         val systemMaxMemory = conf.getLong("spark.testing.memory", Runtime.getRuntime.maxMemory)
+        // 存储内存占系统最大内存比例
         val memoryFraction = conf.getDouble("spark.storage.memoryFraction", 0.6)
+        // 避免出现OOM，存储内存会设置一个安全系数
         val safetyFraction = conf.getDouble("spark.storage.safetyFraction", 0.9)
         (systemMaxMemory * memoryFraction * safetyFraction).toLong
     }
 
     /**
+     * 返回最大可获得的执行内存字节数
      * Return the total amount of memory available for the execution region, in bytes.
      */
     private def getMaxExecutionMemory(conf: SparkConf): Long = {
+        // 系统最大内存
         val systemMaxMemory = conf.getLong("spark.testing.memory", Runtime.getRuntime.maxMemory)
 
         if (systemMaxMemory < MIN_MEMORY_BYTES) {
@@ -138,7 +144,9 @@ private[spark] object StaticMemoryManager {
                         s"--executor-memory option or spark.executor.memory in Spark configuration.")
             }
         }
+        // 执行内存占系统最大内存比例
         val memoryFraction = conf.getDouble("spark.shuffle.memoryFraction", 0.2)
+        // 避免出现OOM，执行内存会设置一个安全系数
         val safetyFraction = conf.getDouble("spark.shuffle.safetyFraction", 0.8)
         (systemMaxMemory * memoryFraction * safetyFraction).toLong
     }
