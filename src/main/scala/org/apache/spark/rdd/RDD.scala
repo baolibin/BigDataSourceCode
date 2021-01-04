@@ -264,6 +264,7 @@ abstract class RDD[T: ClassTag](
     }
 
     /**
+     * 返回RDD分区个数
      * Returns the number of partitions of this RDD.
      */
     @Since("1.6.0")
@@ -1321,6 +1322,7 @@ abstract class RDD[T: ClassTag](
     }
 
     /**
+     * 返回RDD前n个元素，以数组形式返回
      * Take the first num elements of the RDD. It works by first scanning one partition, and use the
      * results from that partition to estimate the number of additional partitions needed to satisfy
      * the limit.
@@ -1368,6 +1370,7 @@ abstract class RDD[T: ClassTag](
     }
 
     /**
+     * 返回RDD的第一个元素
      * Return the first element in this RDD.
      */
     def first(): T = withScope {
