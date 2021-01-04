@@ -199,14 +199,22 @@
       <option name="project" value="LOCAL" />
       <updated>1608733417206</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="RDD">
+      <created>1609676809246</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1609676809246</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="update" />
     <MESSAGE value="submit" />
     <MESSAGE value="memory" />
-    <option name="LAST_COMMIT_MESSAGE" value="memory" />
+    <MESSAGE value="RDD" />
+    <option name="LAST_COMMIT_MESSAGE" value="RDD" />
   </component>
   <component name="WindowStateProjectService">
     <state x="426" y="282" key="#com.intellij.framework.addSupport.AddSupportForSingleFrameworkDialog" timestamp="1606535569505">
@@ -217,10 +225,10 @@
       <screen x="0" y="0" width="1366" height="738" />
     </state>
     <state x="529" y="257" key="#com.intellij.ide.util.projectWizard.JdkChooserPanel.MyDialog/0.0.1366.738@0.0.1366.738" timestamp="1606535566311" />
-    <state x="321" y="0" key="CommitChangelistDialog2" timestamp="1609676798854">
+    <state x="321" y="0" key="CommitChangelistDialog2" timestamp="1609769392822">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state x="321" y="0" key="CommitChangelistDialog2/0.0.1366.738@0.0.1366.738" timestamp="1609676798854" />
+    <state x="321" y="0" key="CommitChangelistDialog2/0.0.1366.738@0.0.1366.738" timestamp="1609769392822" />
     <state x="92" y="92" width="1182" height="554" key="DiffContextDialog" timestamp="1607762575288">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
@@ -233,10 +241,10 @@
       <screen x="0" y="0" width="1366" height="738" />
     </state>
     <state x="392" y="83" key="MultipleFileMergeDialog/0.0.1366.738@0.0.1366.738" timestamp="1607762515573" />
-    <state x="275" y="101" key="Vcs.Push.Dialog.v2" timestamp="1609252952940">
+    <state x="275" y="101" key="Vcs.Push.Dialog.v2" timestamp="1609676811879">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state x="275" y="101" key="Vcs.Push.Dialog.v2/0.0.1366.738@0.0.1366.738" timestamp="1609252952940" />
+    <state x="275" y="101" key="Vcs.Push.Dialog.v2/0.0.1366.738@0.0.1366.738" timestamp="1609676811879" />
     <state x="511" y="102" key="VcsDiffUtil.ChangesDialog" timestamp="1607762563389">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
