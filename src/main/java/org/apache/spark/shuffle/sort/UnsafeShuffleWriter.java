@@ -236,8 +236,9 @@ public class UnsafeShuffleWriter<K, V> extends ShuffleWriter<K, V> {
     final K key = record._1();
     final int partitionId = partitioner.getPartition(key);
     serBuffer.reset();
-    serOutputStream.writeKey(key, OBJECT_CLASS_TAG);
-    serOutputStream.writeValue(record._2(), OBJECT_CLASS_TAG);
+    // error
+    // serOutputStream.writeKey(key, OBJECT_CLASS_TAG);
+    // serOutputStream.writeValue(record._2(), OBJECT_CLASS_TAG);
     serOutputStream.flush();
 
     final int serializedRecordSize = serBuffer.size();
@@ -468,16 +469,16 @@ public class UnsafeShuffleWriter<K, V> extends ShuffleWriter<K, V> {
       taskContext.taskMetrics().incPeakExecutionMemory(getPeakMemoryUsedBytes());
 
       if (stopping) {
-        return Option.apply(null);
+        return Option.<MapStatus>apply(null);
       } else {
         stopping = true;
         if (success) {
           if (mapStatus == null) {
             throw new IllegalStateException("Cannot call stop(true) without having called write()");
           }
-          return Option.apply(mapStatus);
+          return Option.<MapStatus>apply(mapStatus);
         } else {
-          return Option.apply(null);
+          return Option.<MapStatus>apply(null);
         }
       }
     } finally {

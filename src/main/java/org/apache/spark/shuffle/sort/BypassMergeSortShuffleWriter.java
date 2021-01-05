@@ -220,14 +220,16 @@ final class BypassMergeSortShuffleWriter<K, V> extends ShuffleWriter<K, V> {
   @Override
   public Option<MapStatus> stop(boolean success) {
     if (stopping) {
-      return None$.empty();
+      return None$.<MapStatus>empty();
     } else {
       stopping = true;
       if (success) {
         if (mapStatus == null) {
           throw new IllegalStateException("Cannot call stop(true) without having called write()");
         }
-        return Option.apply(mapStatus);
+        // return Option.apply(mapStatus);
+        Option<MapStatus> apply = Option.<MapStatus>apply(mapStatus);
+        return apply;
       } else {
         // The map task failed, so delete our output data.
         if (partitionWriters != null) {
@@ -243,7 +245,7 @@ final class BypassMergeSortShuffleWriter<K, V> extends ShuffleWriter<K, V> {
             partitionWriters = null;
           }
         }
-        return None$.empty();
+        return None$.<MapStatus>empty();
       }
     }
   }
