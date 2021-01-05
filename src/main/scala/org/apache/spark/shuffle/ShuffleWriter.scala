@@ -22,14 +22,16 @@ import java.io.IOException
 import org.apache.spark.scheduler.MapStatus
 
 /**
-  * map task输出到shuffle system
- * Obtained inside a map task to write out records to the shuffle system.
- */
+  * Map Task输出到shuffle system,很经典的溢写磁盘过程.
+  * Hadoop的MapReduce是强制性写入磁盘,而Spark可选择写入内存还是磁盘.
+  * Obtained inside a map task to write out records to the shuffle system.
+  */
 private[spark] abstract class ShuffleWriter[K, V] {
-  /** Write a sequence of records to this task's output */
-  @throws[IOException]
-  def write(records: Iterator[Product2[K, V]]): Unit
+    /** Write a sequence of records to this task's output */
+    // Map函数溢写磁盘,溢写到环形内存缓冲区,会进行快速排序
+    @throws[IOException]
+    def write(records: Iterator[Product2[K, V]]): Unit
 
-  /** Close this writer, passing along whether the map completed */
-  def stop(success: Boolean): Option[MapStatus]
+    /** Close this writer, passing along whether the map completed */
+    def stop(success: Boolean): Option[MapStatus]
 }
