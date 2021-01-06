@@ -20,7 +20,7 @@ package org.apache.spark.shuffle
 import org.apache.spark.{ShuffleDependency, TaskContext}
 
 /**
-  * 可插拔的接口，能被driver和每个executor创建在SparkEnv里
+ * 可插拔的接口，能被driver和每个executor创建在SparkEnv里
  * Pluggable interface for shuffle systems. A ShuffleManager is created in SparkEnv on the driver
  * and on each executor, based on the spark.shuffle.manager setting. The driver registers shuffles
  * with it, and executors (or tasks running locally in the driver) can ask to read and write data.
@@ -30,38 +30,41 @@ import org.apache.spark.{ShuffleDependency, TaskContext}
  */
 private[spark] trait ShuffleManager {
 
-  /**
-   * Register a shuffle with the manager and obtain a handle for it to pass to tasks.
-   */
-  def registerShuffle[K, V, C](
-      shuffleId: Int,
-      numMaps: Int,
-      dependency: ShuffleDependency[K, V, C]): ShuffleHandle
+    /**
+     * 注册一个ShuffleHandle类
+     * 传入参数包括shuffleId、父RDD的分区数、宽依赖信息。
+     * Register a shuffle with the manager and obtain a handle for it to pass to tasks.
+     */
+    def registerShuffle[K, V, C](
+                                        shuffleId: Int,
+                                        numMaps: Int,
+                                        dependency: ShuffleDependency[K, V, C]): ShuffleHandle
 
-  /** Get a writer for a given partition. Called on executors by map tasks. */
-  def getWriter[K, V](handle: ShuffleHandle, mapId: Int, context: TaskContext): ShuffleWriter[K, V]
+    /** Get a writer for a given partition. Called on executors by map tasks. */
+    def getWriter[K, V](handle: ShuffleHandle, mapId: Int, context: TaskContext): ShuffleWriter[K, V]
 
-  /**
-   * Get a reader for a range of reduce partitions (startPartition to endPartition-1, inclusive).
-   * Called on executors by reduce tasks.
-   */
-  def getReader[K, C](
-      handle: ShuffleHandle,
-      startPartition: Int,
-      endPartition: Int,
-      context: TaskContext): ShuffleReader[K, C]
+    /**
+     * Get a reader for a range of reduce partitions (startPartition to endPartition-1, inclusive).
+     * Called on executors by reduce tasks.
+     */
+    def getReader[K, C](
+                               handle: ShuffleHandle,
+                               startPartition: Int,
+                               endPartition: Int,
+                               context: TaskContext): ShuffleReader[K, C]
 
-  /**
-   * Remove a shuffle's metadata from the ShuffleManager.
-   * @return true if the metadata removed successfully, otherwise false.
-   */
-  def unregisterShuffle(shuffleId: Int): Boolean
+    /**
+     * Remove a shuffle's metadata from the ShuffleManager.
+     *
+     * @return true if the metadata removed successfully, otherwise false.
+     */
+    def unregisterShuffle(shuffleId: Int): Boolean
 
-  /**
-   * Return a resolver capable of retrieving shuffle block data based on block coordinates.
-   */
-  def shuffleBlockResolver: ShuffleBlockResolver
+    /**
+     * Return a resolver capable of retrieving shuffle block data based on block coordinates.
+     */
+    def shuffleBlockResolver: ShuffleBlockResolver
 
-  /** Shut down this ShuffleManager. */
-  def stop(): Unit
+    /** Shut down this ShuffleManager. */
+    def stop(): Unit
 }
