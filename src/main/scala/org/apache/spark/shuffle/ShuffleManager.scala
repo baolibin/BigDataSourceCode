@@ -66,6 +66,7 @@ private[spark] trait ShuffleManager {
     def unregisterShuffle(shuffleId: Int): Boolean
 
     /**
+      * 用于实现shuffle数据块与物理文件的映射.
       * Return a resolver capable of retrieving shuffle block data based on block coordinates.
       */
     def shuffleBlockResolver: ShuffleBlockResolver
