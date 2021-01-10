@@ -25,6 +25,7 @@ import org.apache.spark.memory.MemoryMode
 import org.apache.spark.util.Utils
 
 /**
+ * 标记控制数据RDD的存储状态。
  * :: DeveloperApi ::
  * Flags for controlling the storage of an RDD. Each StorageLevel records whether to use memory,
  * or ExternalBlockStore, whether to drop the RDD to disk if it falls out of memory or
@@ -44,33 +45,7 @@ class StorageLevel private(
                                   private var _replication: Int = 1)
         extends Externalizable {
 
-    // TODO: Also add fields for caching priority, dataset ID, and flushing.
-    private def this(flags: Int, replication: Int) {
-        this((flags & 8) != 0, (flags & 4) != 0, (flags & 2) != 0, (flags & 1) != 0, replication)
-    }
-
     def this() = this(false, true, false, false) // For deserialization
-
-    def useDisk: Boolean = _useDisk
-
-    def useMemory: Boolean = _useMemory
-
-    def useOffHeap: Boolean = _useOffHeap
-
-    def deserialized: Boolean = _deserialized
-
-    def replication: Int = _replication
-
-    assert(replication < 40, "Replication restricted to be less than 40 for calculating hash codes")
-
-    if (useOffHeap) {
-        require(!deserialized, "Off-heap storage level does not support deserialized storage")
-    }
-
-    private[spark] def memoryMode: MemoryMode = {
-        if (useOffHeap) MemoryMode.OFF_HEAP
-        else MemoryMode.ON_HEAP
-    }
 
     override def clone(): StorageLevel = {
         new StorageLevel(useDisk, useMemory, useOffHeap, deserialized, replication)
@@ -89,6 +64,39 @@ class StorageLevel private(
 
     def isValid: Boolean = (useMemory || useDisk) && (replication > 0)
 
+    override def writeExternal(out: ObjectOutput): Unit = Utils.tryOrIOException {
+        out.writeByte(toInt)
+        out.writeByte(_replication)
+    }
+
+    override def readExternal(in: ObjectInput): Unit = Utils.tryOrIOException {
+        val flags = in.readByte()
+        _useDisk = (flags & 8) != 0
+        _useMemory = (flags & 4) != 0
+        _useOffHeap = (flags & 2) != 0
+        _deserialized = (flags & 1) != 0
+        _replication = in.readByte()
+    }
+
+    override def toString: String = {
+        val disk = if (useDisk) "disk" else ""
+        val memory = if (useMemory) "memory" else ""
+        val heap = if (useOffHeap) "offheap" else ""
+        val deserialize = if (deserialized) "deserialized" else ""
+
+        val output =
+            Seq(disk, memory, heap, deserialize, s"$replication replicas").filter(_.nonEmpty)
+        s"StorageLevel(${output.mkString(", ")})"
+    }
+
+    assert(replication < 40, "Replication restricted to be less than 40 for calculating hash codes")
+
+    if (useOffHeap) {
+        require(!deserialized, "Off-heap storage level does not support deserialized storage")
+    }
+
+    override def hashCode(): Int = toInt * 41 + replication
+
     def toInt: Int = {
         var ret = 0
         if (_useDisk) {
@@ -106,36 +114,6 @@ class StorageLevel private(
         ret
     }
 
-    override def writeExternal(out: ObjectOutput): Unit = Utils.tryOrIOException {
-        out.writeByte(toInt)
-        out.writeByte(_replication)
-    }
-
-    override def readExternal(in: ObjectInput): Unit = Utils.tryOrIOException {
-        val flags = in.readByte()
-        _useDisk = (flags & 8) != 0
-        _useMemory = (flags & 4) != 0
-        _useOffHeap = (flags & 2) != 0
-        _deserialized = (flags & 1) != 0
-        _replication = in.readByte()
-    }
-
-    @throws(classOf[IOException])
-    private def readResolve(): Object = StorageLevel.getCachedStorageLevel(this)
-
-    override def toString: String = {
-        val disk = if (useDisk) "disk" else ""
-        val memory = if (useMemory) "memory" else ""
-        val heap = if (useOffHeap) "offheap" else ""
-        val deserialize = if (deserialized) "deserialized" else ""
-
-        val output =
-            Seq(disk, memory, heap, deserialize, s"$replication replicas").filter(_.nonEmpty)
-        s"StorageLevel(${output.mkString(", ")})"
-    }
-
-    override def hashCode(): Int = toInt * 41 + replication
-
     def description: String = {
         var result = ""
         result += (if (useDisk) "Disk " else "")
@@ -146,32 +124,62 @@ class StorageLevel private(
         result += s"${replication}x Replicated"
         result
     }
-}
 
+    def useDisk: Boolean = _useDisk
+
+    def useMemory: Boolean = _useMemory
+
+    def useOffHeap: Boolean = _useOffHeap
+
+    def deserialized: Boolean = _deserialized
+
+    def replication: Int = _replication
+
+    // TODO: Also add fields for caching priority, dataset ID, and flushing.
+    private def this(flags: Int, replication: Int) {
+        this((flags & 8) != 0, (flags & 4) != 0, (flags & 2) != 0, (flags & 1) != 0, replication)
+    }
+
+    private[spark] def memoryMode: MemoryMode = {
+        if (useOffHeap) MemoryMode.OFF_HEAP
+        else MemoryMode.ON_HEAP
+    }
+
+    @throws(classOf[IOException])
+    private def readResolve(): Object = StorageLevel.getCachedStorageLevel(this)
+}
 
 /**
  * Various [[org.apache.spark.storage.StorageLevel]] defined and utility functions for creating
  * new storage levels.
  */
 object StorageLevel {
-    // 数据存储级别
+    // 不使用任何存储
     val NONE = new StorageLevel(false, false, false, false)
+    // 只存储在硬盘上
     val DISK_ONLY = new StorageLevel(true, false, false, false)
+    // 数据存储两份
     val DISK_ONLY_2 = new StorageLevel(true, false, false, false, 2)
+    // 只存储在内存中
     val MEMORY_ONLY = new StorageLevel(false, true, false, true)
     val MEMORY_ONLY_2 = new StorageLevel(false, true, false, true, 2)
+    // 数据序列化后存储在内存中
     val MEMORY_ONLY_SER = new StorageLevel(false, true, false, false)
     val MEMORY_ONLY_SER_2 = new StorageLevel(false, true, false, false, 2)
+    // 先写内存，若内存中存不下，则溢写到磁盘上
     val MEMORY_AND_DISK = new StorageLevel(true, true, false, true)
     val MEMORY_AND_DISK_2 = new StorageLevel(true, true, false, true, 2)
+    // // 先写内存，若内存中存不下，则序列化后溢写到磁盘上
     val MEMORY_AND_DISK_SER = new StorageLevel(true, true, false, false)
     val MEMORY_AND_DISK_SER_2 = new StorageLevel(true, true, false, false, 2)
+    // 使用JVM堆外内存存储，利用Java unsafe API实现内存管理
     val OFF_HEAP = new StorageLevel(true, true, true, false, 1)
+    private[spark] val storageLevelCache = new ConcurrentHashMap[StorageLevel, StorageLevel]()
 
     /**
+     * 返回指定StorageLevel存储级别对象
      * :: DeveloperApi ::
      * Return the StorageLevel object with the specified name.
-     * 返回指定StorageLevel存储级别对象
      */
     @DeveloperApi
     def fromString(s: String): StorageLevel = s match {
@@ -191,9 +199,9 @@ object StorageLevel {
     }
 
     /**
+     * 创建一个StorageLevel存储级别对象
      * :: DeveloperApi ::
      * Create a new StorageLevel object.
-     * 创建一个StorageLevel存储级别对象
      */
     @DeveloperApi
     def apply(
@@ -238,8 +246,6 @@ object StorageLevel {
         obj.readExternal(in)
         getCachedStorageLevel(obj)
     }
-
-    private[spark] val storageLevelCache = new ConcurrentHashMap[StorageLevel, StorageLevel]()
 
     private[spark] def getCachedStorageLevel(level: StorageLevel): StorageLevel = {
         storageLevelCache.putIfAbsent(level, level)
