@@ -46,12 +46,6 @@ import org.apache.spark.unsafe.Platform
 import org.apache.spark.util._
 import org.apache.spark.util.io.ChunkedByteBuffer
 
-/**
-  * BlockManager会运行在Driver和每个Executor上。
-  * 而运行在Driver上的BlockManager负责整个App的Block的管理工作；
-  * 运行在Executor上的BlockManager负责管理该Executor上的Block，
-  * 并且向Driver的BlockManager汇报Block的信息和接受来自它的命令。
-  */
 /* Class for returning a fetched block and associated metrics. */
 private[spark] class BlockResult(
     val data: Iterator[Any],
@@ -67,10 +61,10 @@ private[spark] trait BlockData {
   def toInputStream(): InputStream
 
   /**
-   * Returns a Netty-friendly wrapper for the block's data.
-   *
-   * Please see `ManagedBuffer.convertToNetty()` for more details.
-   */
+    * Returns a Netty-friendly wrapper for the block's data.
+    *
+    * Please see `ManagedBuffer.convertToNetty()` for more details.
+    */
   def toNetty(): Object
 
   def toChunkedByteBuffer(allocator: Int => ByteBuffer): ChunkedByteBuffer
@@ -108,7 +102,8 @@ private[spark] class ByteBufferBlockData(
 }
 
 /**
-  * 管理正在运行的节点上,存储或接收数据,在本地或远端的存储方法(内存,磁盘,堆)
+  * BlockManager运行在每一个节点上，包括driver和executor，都有一份。主要提供了在本地和远程存储数据的功能。
+ * 支持内存、磁盘、堆外存储
  * Manager running on every node (driver and executors) which provides interfaces for putting and
  * retrieving blocks both locally and remotely into various stores (memory, disk, and off-heap).
  *
@@ -1500,7 +1495,12 @@ private[spark] class BlockManager(
   }
 }
 
-
+/**
+ * BlockManager会运行在Driver和每个Executor上。
+ * 而运行在Driver上的BlockManager负责整个App的Block的管理工作；
+ * 运行在Executor上的BlockManager负责管理该Executor上的Block，
+ * 并且向Driver的BlockManager汇报Block的信息和接受来自它的命令。
+ */
 private[spark] object BlockManager {
   private val ID_GENERATOR = new IdGenerator
 
