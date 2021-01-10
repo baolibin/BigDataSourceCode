@@ -22,51 +22,57 @@ import org.apache.spark.rdd.{RDD, RDDOperationScope}
 import org.apache.spark.util.Utils
 
 /**
-  * 一个RDD相关信息
-  * @param id
-  * @param name
-  * @param numPartitions
-  * @param storageLevel
-  * @param parentIds
-  * @param callSite
-  * @param scope
-  */
+ * RDD相关信息
+ *
+ * @param id            RDD的Id标识
+ * @param name          RDD的名字
+ * @param numPartitions RDD分区数量
+ * @param storageLevel  存储级别
+ * @param parentIds     父RDD的Id序列
+ * @param callSite      RDD用户调用栈信息
+ * @param scope         RDD操作范围
+ */
 @DeveloperApi
 class RDDInfo(
-    val id: Int,
-    var name: String,
-    val numPartitions: Int,
-    var storageLevel: StorageLevel,
-    val parentIds: Seq[Int],
-    val callSite: String = "",
-    val scope: Option[RDDOperationScope] = None)
-  extends Ordered[RDDInfo] {
+                     val id: Int,
+                     var name: String,
+                     val numPartitions: Int,
+                     var storageLevel: StorageLevel,
+                     val parentIds: Seq[Int],
+                     val callSite: String = "",
+                     val scope: Option[RDDOperationScope] = None)
+        extends Ordered[RDDInfo] {
+    // 缓存的分区数量
+    var numCachedPartitions = 0
+    // 使用的内存大小
+    var memSize = 0L
+    // 使用的磁盘大小
+    var diskSize = 0L
+    // Block存储在外部的大小
+    var externalBlockStoreSize = 0L
 
-  var numCachedPartitions = 0
-  var memSize = 0L
-  var diskSize = 0L
-  var externalBlockStoreSize = 0L
+    // 是否已缓存
+    def isCached: Boolean = (memSize + diskSize > 0) && numCachedPartitions > 0
 
-  def isCached: Boolean = (memSize + diskSize > 0) && numCachedPartitions > 0
+    override def toString: String = {
+        import Utils.bytesToString
+        ("RDD \"%s\" (%d) StorageLevel: %s; CachedPartitions: %d; TotalPartitions: %d; " +
+                "MemorySize: %s; DiskSize: %s").format(
+            name, id, storageLevel.toString, numCachedPartitions, numPartitions,
+            bytesToString(memSize), bytesToString(diskSize))
+    }
 
-  override def toString: String = {
-    import Utils.bytesToString
-    ("RDD \"%s\" (%d) StorageLevel: %s; CachedPartitions: %d; TotalPartitions: %d; " +
-      "MemorySize: %s; DiskSize: %s").format(
-        name, id, storageLevel.toString, numCachedPartitions, numPartitions,
-        bytesToString(memSize), bytesToString(diskSize))
-  }
-
-  override def compare(that: RDDInfo): Int = {
-    this.id - that.id
-  }
+    // RDDInfo继承了Ordered，所以需要重写compare方法用于排序。
+    override def compare(that: RDDInfo): Int = {
+        this.id - that.id
+    }
 }
 
 private[spark] object RDDInfo {
-  def fromRdd(rdd: RDD[_]): RDDInfo = {
-    val rddName = Option(rdd.name).getOrElse(Utils.getFormattedClassName(rdd))
-    val parentIds = rdd.dependencies.map(_.rdd.id)
-    new RDDInfo(rdd.id, rddName, rdd.partitions.length,
-      rdd.getStorageLevel, parentIds, rdd.creationSite.shortForm, rdd.scope)
-  }
+    def fromRdd(rdd: RDD[_]): RDDInfo = {
+        val rddName = Option(rdd.name).getOrElse(Utils.getFormattedClassName(rdd))
+        val parentIds = rdd.dependencies.map(_.rdd.id)
+        new RDDInfo(rdd.id, rddName, rdd.partitions.length,
+            rdd.getStorageLevel, parentIds, rdd.creationSite.shortForm, rdd.scope)
+    }
 }
