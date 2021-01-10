@@ -23,64 +23,69 @@ import org.apache.spark.internal.Logging
 import org.apache.spark.util.Utils
 
 /**
+ * TopologyMapper（拓扑映射器）提供指定主机的拓扑信息。
  * ::DeveloperApi::
  * TopologyMapper provides topology information for a given host
+ *
  * @param conf SparkConf to get required properties, if needed
  */
 @DeveloperApi
 abstract class TopologyMapper(conf: SparkConf) {
-  /**
-   * Gets the topology information given the host name
-   *
-   * @param hostname Hostname
-   * @return topology information for the given hostname. One can use a 'topology delimiter'
-   *         to make this topology information nested.
-   *         For example : ‘/myrack/myhost’, where ‘/’ is the topology delimiter,
-   *         ‘myrack’ is the topology identifier, and ‘myhost’ is the individual host.
-   *         This function only returns the topology information without the hostname.
-   *         This information can be used when choosing executors for block replication
-   *         to discern executors from a different rack than a candidate executor, for example.
-   *
-   *         An implementation can choose to use empty strings or None in case topology info
-   *         is not available. This would imply that all such executors belong to the same rack.
-   */
-  def getTopologyForHost(hostname: String): Option[String]
+    /**
+     * Gets the topology information given the host name
+     *
+     * @param hostname Hostname
+     * @return topology information for the given hostname. One can use a 'topology delimiter'
+     *         to make this topology information nested.
+     *         For example : ‘/myrack/myhost’, where ‘/’ is the topology delimiter,
+     *         ‘myrack’ is the topology identifier, and ‘myhost’ is the individual host.
+     *         This function only returns the topology information without the hostname.
+     *         This information can be used when choosing executors for block replication
+     *         to discern executors from a different rack than a candidate executor, for example.
+     *
+     *         An implementation can choose to use empty strings or None in case topology info
+     *         is not available. This would imply that all such executors belong to the same rack.
+     */
+    def getTopologyForHost(hostname: String): Option[String]
 }
 
 /**
+ * TopologyMapper假定所有的节点都在同一个机架上。
  * A TopologyMapper that assumes all nodes are in the same rack
  */
 @DeveloperApi
 class DefaultTopologyMapper(conf: SparkConf) extends TopologyMapper(conf) with Logging {
-  override def getTopologyForHost(hostname: String): Option[String] = {
-    logDebug(s"Got a request for $hostname")
-    None
-  }
+    override def getTopologyForHost(hostname: String): Option[String] = {
+        logDebug(s"Got a request for $hostname")
+        None
+    }
 }
 
 /**
+ * 一个简单的基于文件的拓扑映射器。
  * A simple file based topology mapper. This expects topology information provided as a
  * `java.util.Properties` file. The name of the file is obtained from SparkConf property
  * `spark.storage.replication.topologyFile`. To use this topology mapper, set the
  * `spark.storage.replication.topologyMapper` property to
  * [[org.apache.spark.storage.FileBasedTopologyMapper]]
+ *
  * @param conf SparkConf object
  */
 @DeveloperApi
 class FileBasedTopologyMapper(conf: SparkConf) extends TopologyMapper(conf) with Logging {
-  val topologyFile = conf.getOption("spark.storage.replication.topologyFile")
-  require(topologyFile.isDefined, "Please specify topology file via " +
-    "spark.storage.replication.topologyFile for FileBasedTopologyMapper.")
-  val topologyMap = Utils.getPropertiesFromFile(topologyFile.get)
+    val topologyFile = conf.getOption("spark.storage.replication.topologyFile")
+    require(topologyFile.isDefined, "Please specify topology file via " +
+            "spark.storage.replication.topologyFile for FileBasedTopologyMapper.")
+    val topologyMap = Utils.getPropertiesFromFile(topologyFile.get)
 
-  override def getTopologyForHost(hostname: String): Option[String] = {
-    val topology = topologyMap.get(hostname)
-    if (topology.isDefined) {
-      logDebug(s"$hostname -> ${topology.get}")
-    } else {
-      logWarning(s"$hostname does not have any topology information")
+    override def getTopologyForHost(hostname: String): Option[String] = {
+        val topology = topologyMap.get(hostname)
+        if (topology.isDefined) {
+            logDebug(s"$hostname -> ${topology.get}")
+        } else {
+            logWarning(s"$hostname does not have any topology information")
+        }
+        topology
     }
-    topology
-  }
 }
 
