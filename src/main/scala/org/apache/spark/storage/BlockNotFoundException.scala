@@ -17,4 +17,9 @@
 
 package org.apache.spark.storage
 
+/**
+  * 数据块未发现异常
+  *
+  * @param blockId 数据块Id
+  */
 class BlockNotFoundException(blockId: String) extends Exception(s"Block $blockId not found")
