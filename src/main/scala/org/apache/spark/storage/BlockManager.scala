@@ -102,13 +102,27 @@ private[spark] class ByteBufferBlockData(
 }
 
 /**
-  * BlockManager运行在每一个节点上,包括driver和executor,都有一份.
-  * 主要提供了在本地和远程存储数据的功能，支持内存、磁盘、堆外存储.
+  * BlockManager运行在每一个节点上.主要提供了在本地和远程存储数据的功能,支持内存、磁盘、堆外存储.
   *
   * Manager running on every node (driver and executors) which provides interfaces for putting and
   * retrieving blocks both locally and remotely into various stores (memory, disk, and off-heap).
   *
   * Note that [[initialize()]] must be called before the BlockManager is usable.
+  */
+/**
+  * BlockManager运行在Executor上面.
+  *
+  * @param executorId
+  * @param rpcEnv
+  * @param master
+  * @param serializerManager
+  * @param conf
+  * @param memoryManager        内存管理模块
+  * @param mapOutputTracker     用来追踪每个Stage的Map输出信息.
+  * @param shuffleManager       Driver通过该类注册Shuffle类,Executor通过它来请求读取和写入数据.
+  * @param blockTransferService 通过Netty拉取数据块.
+  * @param securityManager
+  * @param numUsableCores
   */
 private[spark] class BlockManager(
 									 executorId: String,
@@ -1502,9 +1516,9 @@ private[spark] class BlockManager(
 
 /**
   * BlockManager会运行在Driver和每个Executor上。
-  * 而运行在Driver上的BlockManager负责整个App的Block的管理工作；
+  * 而运行在Driver上的BlockManagerMaster负责整个App的Block的管理工作；
   * 运行在Executor上的BlockManager负责管理该Executor上的Block，
-  * 并且向Driver的BlockManager汇报Block的信息和接受来自它的命令。
+  * 并且向Driver的BlockManagerMaster汇报Block的信息和接受来自它的命令。
   */
 private[spark] object BlockManager {
 	private val ID_GENERATOR = new IdGenerator
