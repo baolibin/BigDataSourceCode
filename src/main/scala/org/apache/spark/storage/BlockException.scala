@@ -18,10 +18,10 @@
 package org.apache.spark.storage
 
 /**
- * 数据块异常
- *
- * @param blockId 数据块Id
- * @param message 异常信息
- */
+  * 数据块异常
+  *
+  * @param blockId 数据块Id
+  * @param message 异常信息
+  */
 private[spark]
 case class BlockException(blockId: BlockId, message: String) extends Exception(message)
