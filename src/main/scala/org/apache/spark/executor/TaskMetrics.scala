@@ -17,9 +17,6 @@
 
 package org.apache.spark.executor
 
-import scala.collection.JavaConverters._
-import scala.collection.mutable.{ArrayBuffer, LinkedHashMap}
-
 import org.apache.spark._
 import org.apache.spark.annotation.DeveloperApi
 import org.apache.spark.internal.Logging
@@ -27,20 +24,24 @@ import org.apache.spark.scheduler.AccumulableInfo
 import org.apache.spark.storage.{BlockId, BlockStatus}
 import org.apache.spark.util._
 
+import scala.collection.JavaConverters._
+import scala.collection.mutable.{ArrayBuffer, LinkedHashMap}
+
 
 /**
- * :: DeveloperApi ::
- * Metrics tracked during the execution of a task.
- *
- * This class is wrapper around a collection of internal accumulators that represent metrics
- * associated with a task. The local values of these accumulators are sent from the executor
- * to the driver when the task completes. These values are then merged into the corresponding
- * accumulator previously registered on the driver.
- *
- * The accumulator updates are also sent to the driver periodically (on executor heartbeat)
- * and when the task failed with an exception. The [[TaskMetrics]] object itself should never
- * be sent to the driver.
- */
+  * 执行中task的性能追踪。
+  * :: DeveloperApi ::
+  * Metrics tracked during the execution of a task.
+  *
+  * This class is wrapper around a collection of internal accumulators that represent metrics
+  * associated with a task. The local values of these accumulators are sent from the executor
+  * to the driver when the task completes. These values are then merged into the corresponding
+  * accumulator previously registered on the driver.
+  *
+  * The accumulator updates are also sent to the driver periodically (on executor heartbeat)
+  * and when the task failed with an exception. The [[TaskMetrics]] object itself should never
+  * be sent to the driver.
+  */
 @DeveloperApi
 class TaskMetrics private[spark] () extends Serializable {
   // Each metric is internally represented as an accumulator

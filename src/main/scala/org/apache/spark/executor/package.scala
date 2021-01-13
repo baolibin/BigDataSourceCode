@@ -18,7 +18,8 @@
 package org.apache.spark
 
 /**
- * Executor components used with various cluster managers.
- * See [[org.apache.spark.executor.Executor]].
- */
+  * 多个集群模式Executor使用部分。
+  * Executor components used with various cluster managers.
+  * See [[org.apache.spark.executor.Executor]].
+  */
 package object executor

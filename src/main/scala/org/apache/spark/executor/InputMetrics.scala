@@ -22,38 +22,43 @@ import org.apache.spark.util.LongAccumulator
 
 
 /**
- * :: DeveloperApi ::
- * Method by which input data was read. Network means that the data was read over the network
- * from a remote block manager (which may have stored the data on-disk or in-memory).
- * Operations are not thread-safe.
- */
+  * :: DeveloperApi ::
+  * Method by which input data was read. Network means that the data was read over the network
+  * from a remote block manager (which may have stored the data on-disk or in-memory).
+  * Operations are not thread-safe.
+  */
 @DeveloperApi
 object DataReadMethod extends Enumeration with Serializable {
-  type DataReadMethod = Value
-  val Memory, Disk, Hadoop, Network = Value
+    type DataReadMethod = Value
+    val Memory, Disk, Hadoop, Network = Value
 }
 
 
 /**
- * :: DeveloperApi ::
- * A collection of accumulators that represents metrics about reading data from external systems.
- */
+  * 一批累加器，表示读取外部系统数据的性能。
+  * :: DeveloperApi ::
+  * A collection of accumulators that represents metrics about reading data from external systems.
+  */
 @DeveloperApi
-class InputMetrics private[spark] () extends Serializable {
-  private[executor] val _bytesRead = new LongAccumulator
-  private[executor] val _recordsRead = new LongAccumulator
+class InputMetrics private[spark]() extends Serializable {
+    private[executor] val _bytesRead = new LongAccumulator
+    private[executor] val _recordsRead = new LongAccumulator
 
-  /**
-   * Total number of bytes read.
-   */
-  def bytesRead: Long = _bytesRead.sum
+    /**
+      * 读取的总字节数。
+      * Total number of bytes read.
+      */
+    def bytesRead: Long = _bytesRead.sum
 
-  /**
-   * Total number of records read.
-   */
-  def recordsRead: Long = _recordsRead.sum
+    /**
+      * 读取的总行数。
+      * Total number of records read.
+      */
+    def recordsRead: Long = _recordsRead.sum
 
-  private[spark] def incBytesRead(v: Long): Unit = _bytesRead.add(v)
-  private[spark] def incRecordsRead(v: Long): Unit = _recordsRead.add(v)
-  private[spark] def setBytesRead(v: Long): Unit = _bytesRead.setValue(v)
+    private[spark] def incBytesRead(v: Long): Unit = _bytesRead.add(v)
+
+    private[spark] def incRecordsRead(v: Long): Unit = _recordsRead.add(v)
+
+    private[spark] def setBytesRead(v: Long): Unit = _bytesRead.setValue(v)
 }
