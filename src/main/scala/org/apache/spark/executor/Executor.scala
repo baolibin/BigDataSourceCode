@@ -142,6 +142,7 @@ private[spark] class Executor(
 	// Limit of bytes for total size of results (default is 1GB)
 	private val maxResultSize = Utils.getMaxResultSize(conf)
 
+	// 维护这运行中tasks列表.
 	// Maintains the list of running tasks.
 	private val runningTasks = new ConcurrentHashMap[Long, TaskRunner]
 
@@ -171,9 +172,6 @@ private[spark] class Executor(
 
 	/**
 	  * 创建一个task
-	  *
-	  * @param context
-	  * @param taskDescription
 	  */
 	def launchTask(context: ExecutorBackend, taskDescription: TaskDescription): Unit = {
 		// 对于每一个task，都会对应创建一个TaskRunner类
@@ -186,10 +184,6 @@ private[spark] class Executor(
 
 	/**
 	  * 杀掉对应的task
-	  *
-	  * @param taskId
-	  * @param interruptThread
-	  * @param reason
 	  */
 	def killTask(taskId: Long, interruptThread: Boolean, reason: String): Unit = {
 		val taskRunner = runningTasks.get(taskId)
@@ -246,9 +240,6 @@ private[spark] class Executor(
 
 	/**
 	  * 运行中task对应的类
-	  *
-	  * @param execBackend
-	  * @param taskDescription
 	  */
 	class TaskRunner(
 						execBackend: ExecutorBackend,
@@ -737,7 +728,11 @@ private[spark] class Executor(
 		}
 	}
 
-	/** Reports heartbeat and metrics for active tasks to the driver. */
+	/**
+	  * 所有活跃的Task向driver汇报心跳和性能指标.
+	  *
+	  * Reports heartbeat and metrics for active tasks to the driver.
+	  */
 	private def reportHeartBeat(): Unit = {
 		// list of (task id, accumUpdates) to send back to the driver
 		val accumUpdates = new ArrayBuffer[(Long, Seq[AccumulatorV2[_, _]])]()
@@ -773,6 +768,8 @@ private[spark] class Executor(
 	}
 
 	/**
+	  * 调度启动一个任务task向drive汇报所有活跃tasks的心跳和部分性能指标.
+	  *
 	  * Schedules a task to report heartbeat and partial metrics for active tasks to driver.
 	  */
 	private def startDriverHeartbeater(): Unit = {
