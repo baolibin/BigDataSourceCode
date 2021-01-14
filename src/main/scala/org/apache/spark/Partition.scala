@@ -18,14 +18,14 @@
 package org.apache.spark
 
 /**
- * RDD分区的标识
- * An identifier for a partition in an RDD.
- */
+  * RDD分区的标识
+  * An identifier for a partition in an RDD.
+  */
 trait Partition extends Serializable {
     /**
-     * Get the partition's index within its parent RDD
-     * 分区序列索引从0开始递增
-     */
+      * Get the partition's index within its parent RDD
+      * 分区序列索引从0开始递增
+      */
     def index: Int
 
     // A better default implementation of HashCode
