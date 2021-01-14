@@ -103,14 +103,6 @@ class SparkConf(loadDefaults: Boolean) extends Cloneable with Logging with Seria
     }
 
     /**
-      * 设置KV值
-      * Set a configuration variable.
-      */
-    def set(key: String, value: String): SparkConf = {
-        set(key, value, false)
-    }
-
-    /**
       * Set multiple environment variables to be used when launching executors.
       * (Java-friendly version.)
       */
@@ -176,6 +168,28 @@ class SparkConf(loadDefaults: Boolean) extends Cloneable with Logging with Seria
     }
 
     /**
+      * 设置KV值
+      * Set a configuration variable.
+      */
+    def set(key: String, value: String): SparkConf = {
+        set(key, value, false)
+    }
+
+    private[spark] def set(key: String, value: String, silent: Boolean): SparkConf = {
+        if (key == null) {
+            throw new NullPointerException("null key")
+        }
+        if (value == null) {
+            throw new NullPointerException("null value for " + key)
+        }
+        if (!silent) {
+            logDeprecationWarning(key)
+        }
+        settings.put(key, value)
+        this
+    }
+
+    /**
       * Use Kryo serialization and register the given set of Avro schemas so that the generic
       * record serializer can decrease network IO
       */
@@ -191,11 +205,6 @@ class SparkConf(loadDefaults: Boolean) extends Cloneable with Logging with Seria
         getAll.filter { case (k, v) => k.startsWith(avroNamespace) }
                 .map { case (k, v) => (k.substring(avroNamespace.length).toLong, v) }
                 .toMap
-    }
-
-    /** Get all parameters as a list of pairs */
-    def getAll: Array[(String, String)] = {
-        settings.entrySet().asScala.map(x => (x.getKey, x.getValue)).toArray
     }
 
     /**
@@ -221,7 +230,10 @@ class SparkConf(loadDefaults: Boolean) extends Cloneable with Logging with Seria
         getOption(key).getOrElse(defaultValue)
     }
 
-    /** Get a parameter as an Option */
+    /**
+      * 根据Key返回Option参数值。
+      * Get a parameter as an Option
+      */
     def getOption(key: String): Option[String] = {
         Option(settings.get(key)).orElse(getDeprecatedConfig(key, this))
     }
@@ -361,6 +373,11 @@ class SparkConf(loadDefaults: Boolean) extends Cloneable with Logging with Seria
                 .map { case (k, v) => (k.substring(prefix.length), v) }
     }
 
+    /** Get all parameters as a list of pairs */
+    def getAll: Array[(String, String)] = {
+        settings.entrySet().asScala.map(x => (x.getKey, x.getValue)).toArray
+    }
+
     /**
       * Returns the Spark application id, valid in the Driver after TaskScheduler registration and
       * from the start in the Executor.
@@ -398,20 +415,6 @@ class SparkConf(loadDefaults: Boolean) extends Cloneable with Logging with Seria
         for ((key, value) <- Utils.getSystemProperties if key.startsWith("spark.")) {
             set(key, value, silent)
         }
-        this
-    }
-
-    private[spark] def set(key: String, value: String, silent: Boolean): SparkConf = {
-        if (key == null) {
-            throw new NullPointerException("null key")
-        }
-        if (value == null) {
-            throw new NullPointerException("null value for " + key)
-        }
-        if (!silent) {
-            logDeprecationWarning(key)
-        }
-        settings.put(key, value)
         this
     }
 
