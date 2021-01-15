@@ -22,105 +22,108 @@ import org.apache.spark.TaskState.TaskState
 import org.apache.spark.annotation.DeveloperApi
 
 /**
- * :: DeveloperApi ::
-  * TaskSet中一个运行中task的相关信息
- * Information about a running task attempt inside a TaskSet.
- */
+  * TaskSet中task的运行相关信息.
+  *
+  * :: DeveloperApi ::
+  *
+  * Information about a running task attempt inside a TaskSet.
+  */
 @DeveloperApi
 class TaskInfo(
-    val taskId: Long,
-    /**
-     * The index of this task within its task set. Not necessarily the same as the ID of the RDD
-     * partition that the task is computing.
-     */
-    val index: Int,
-    val attemptNumber: Int,
-    val launchTime: Long,
-    val executorId: String,
-    val host: String,
-    val taskLocality: TaskLocality.TaskLocality,
-    val speculative: Boolean) {
+				  val taskId: Long,
 
-  /**
-   * The time when the task started remotely getting the result. Will not be set if the
-   * task result was sent immediately when the task finished (as opposed to sending an
-   * IndirectTaskResult and later fetching the result from the block manager).
-   */
-  var gettingResultTime: Long = 0
+				  /**
+					* The index of this task within its task set. Not necessarily the same as the ID of the RDD
+					* partition that the task is computing.
+					*/
+				  val index: Int,
+				  val attemptNumber: Int,
+				  val launchTime: Long,
+				  val executorId: String,
+				  val host: String,
+				  val taskLocality: TaskLocality.TaskLocality,
+				  val speculative: Boolean) {
 
-  /**
-   * Intermediate updates to accumulables during this task. Note that it is valid for the same
-   * accumulable to be updated multiple times in a single task or for two accumulables with the
-   * same name but different IDs to exist in a task.
-   */
-  def accumulables: Seq[AccumulableInfo] = _accumulables
+	/**
+	  * The time when the task started remotely getting the result. Will not be set if the
+	  * task result was sent immediately when the task finished (as opposed to sending an
+	  * IndirectTaskResult and later fetching the result from the block manager).
+	  */
+	var gettingResultTime: Long = 0
 
-  private[this] var _accumulables: Seq[AccumulableInfo] = Nil
+	/**
+	  * Intermediate updates to accumulables during this task. Note that it is valid for the same
+	  * accumulable to be updated multiple times in a single task or for two accumulables with the
+	  * same name but different IDs to exist in a task.
+	  */
+	def accumulables: Seq[AccumulableInfo] = _accumulables
 
-  private[spark] def setAccumulables(newAccumulables: Seq[AccumulableInfo]): Unit = {
-    _accumulables = newAccumulables
-  }
+	private[this] var _accumulables: Seq[AccumulableInfo] = Nil
 
-  /**
-   * The time when the task has completed successfully (including the time to remotely fetch
-   * results, if necessary).
-   */
-  var finishTime: Long = 0
+	private[spark] def setAccumulables(newAccumulables: Seq[AccumulableInfo]): Unit = {
+		_accumulables = newAccumulables
+	}
 
-  var failed = false
+	/**
+	  * The time when the task has completed successfully (including the time to remotely fetch
+	  * results, if necessary).
+	  */
+	var finishTime: Long = 0
 
-  var killed = false
+	var failed = false
 
-  private[spark] def markGettingResult(time: Long) {
-    gettingResultTime = time
-  }
+	var killed = false
 
-  private[spark] def markFinished(state: TaskState, time: Long) {
-    // finishTime should be set larger than 0, otherwise "finished" below will return false.
-    assert(time > 0)
-    finishTime = time
-    if (state == TaskState.FAILED) {
-      failed = true
-    } else if (state == TaskState.KILLED) {
-      killed = true
-    }
-  }
+	private[spark] def markGettingResult(time: Long) {
+		gettingResultTime = time
+	}
 
-  def gettingResult: Boolean = gettingResultTime != 0
+	private[spark] def markFinished(state: TaskState, time: Long) {
+		// finishTime should be set larger than 0, otherwise "finished" below will return false.
+		assert(time > 0)
+		finishTime = time
+		if (state == TaskState.FAILED) {
+			failed = true
+		} else if (state == TaskState.KILLED) {
+			killed = true
+		}
+	}
 
-  def finished: Boolean = finishTime != 0
+	def gettingResult: Boolean = gettingResultTime != 0
 
-  def successful: Boolean = finished && !failed && !killed
+	def finished: Boolean = finishTime != 0
 
-  def running: Boolean = !finished
+	def successful: Boolean = finished && !failed && !killed
 
-  def status: String = {
-    if (running) {
-      if (gettingResult) {
-        "GET RESULT"
-      } else {
-        "RUNNING"
-      }
-    } else if (failed) {
-      "FAILED"
-    } else if (killed) {
-      "KILLED"
-    } else if (successful) {
-      "SUCCESS"
-    } else {
-      "UNKNOWN"
-    }
-  }
+	def running: Boolean = !finished
 
-  def id: String = s"$index.$attemptNumber"
+	def status: String = {
+		if (running) {
+			if (gettingResult) {
+				"GET RESULT"
+			} else {
+				"RUNNING"
+			}
+		} else if (failed) {
+			"FAILED"
+		} else if (killed) {
+			"KILLED"
+		} else if (successful) {
+			"SUCCESS"
+		} else {
+			"UNKNOWN"
+		}
+	}
 
-  def duration: Long = {
-    if (!finished) {
-      throw new UnsupportedOperationException("duration() called on unfinished task")
-    } else {
-      finishTime - launchTime
-    }
-  }
+	def id: String = s"$index.$attemptNumber"
 
-  private[spark] def timeRunning(currentTime: Long): Long = currentTime - launchTime
+	def duration: Long = {
+		if (!finished) {
+			throw new UnsupportedOperationException("duration() called on unfinished task")
+		} else {
+			finishTime - launchTime
+		}
+	}
+
+	private[spark] def timeRunning(currentTime: Long): Long = currentTime - launchTime
 }
