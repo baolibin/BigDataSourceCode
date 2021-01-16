@@ -18,7 +18,7 @@
 package org.apache.spark.deploy.client
 
 /**
-  * 部署客户端时，发生各种消息的回调函数。
+  * 在发生各种事件时由部署客户端调用的回调。
   *
   * Callbacks invoked by deploy client when various events happen. There are currently four events:
   * connecting to the cluster, disconnecting, being given an executor, and having an executor

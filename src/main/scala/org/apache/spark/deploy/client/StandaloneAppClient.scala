@@ -33,7 +33,7 @@ import scala.util.control.NonFatal
 import scala.util.{Failure, Success}
 
 /**
-  * standalone模式的客户端。
+  * 允许应用程序与Spark独立群集管理器通信的接口。
   *
   * Interface allowing applications to speak with a Spark standalone cluster manager.
   *
@@ -175,13 +175,6 @@ private[spark] class StandaloneAppClient(
                 masterRef.send(MasterChangeAcknowledged(appId.get))
         }
 
-        def markDead(reason: String) {
-            if (!alreadyDead.get) {
-                listener.dead(reason)
-                alreadyDead.set(true)
-            }
-        }
-
         override def receiveAndReply(context: RpcCallContext): PartialFunction[Any, Unit] = {
             case StopAppClient =>
                 markDead("Application has been stopped.")
@@ -204,6 +197,13 @@ private[spark] class StandaloneAppClient(
                         logWarning("Attempted to kill executors before registering with Master.")
                         context.reply(false)
                 }
+        }
+
+        def markDead(reason: String) {
+            if (!alreadyDead.get) {
+                listener.dead(reason)
+                alreadyDead.set(true)
+            }
         }
 
         /**

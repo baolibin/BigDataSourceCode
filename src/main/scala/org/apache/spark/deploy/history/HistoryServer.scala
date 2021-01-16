@@ -35,7 +35,7 @@ import scala.util.control.NonFatal
 import scala.xml.Node
 
 /**
-  * 一个web服务，通过已完成的作业应用渲染。
+  * 呈现已完成应用程序的SparkUIs的web服务器。
   *
   * A web server that renders SparkUIs of completed applications.
   *
