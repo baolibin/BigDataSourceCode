@@ -26,7 +26,7 @@ import scala.annotation.tailrec
 import scala.collection.mutable.ListBuffer
 
 /**
-  * driver客户端的命令行参数
+  * 驱动程序客户端的命令行解析器。
   *
   * Command-line parser for the driver client.
   */

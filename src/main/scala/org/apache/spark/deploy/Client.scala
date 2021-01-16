@@ -31,7 +31,7 @@ import scala.reflect.ClassTag
 import scala.util.{Failure, Success}
 
 /**
-  * 代理传递消息给driver。
+  * 将消息传递给驱动程序的代理。
   *
   * Proxy that relays messages to the driver.
   *
