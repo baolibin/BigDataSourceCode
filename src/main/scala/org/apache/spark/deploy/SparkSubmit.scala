@@ -805,6 +805,9 @@ object SparkSubmit extends CommandLineUtils {
         }
     }
 
+    /**
+      * 添加jar包到环境变量里。
+      */
     private def addJarToClasspath(localJar: String, loader: MutableURLClassLoader) {
         val uri = Utils.resolveURI(localJar)
         uri.getScheme match {
@@ -821,6 +824,7 @@ object SparkSubmit extends CommandLineUtils {
     }
 
     /**
+      * 返回给定的主资源是否表示用户jar。
       * Return whether the given primary resource represents a user jar.
       */
     private[deploy] def isUserJar(res: String): Boolean = {
@@ -828,6 +832,7 @@ object SparkSubmit extends CommandLineUtils {
     }
 
     /**
+      * 返回给定的资源是否表示一个shell。
       * Return whether the given primary resource represents a shell.
       */
     private[deploy] def isShell(res: String): Boolean = {
@@ -835,6 +840,7 @@ object SparkSubmit extends CommandLineUtils {
     }
 
     /**
+      * 返回给定的资源是否表示一个sql shell。
       * Return whether the given main class represents a sql shell.
       */
     private[deploy] def isSqlShell(mainClass: String): Boolean = {
@@ -842,6 +848,7 @@ object SparkSubmit extends CommandLineUtils {
     }
 
     /**
+      * 返回给定的资源是否表示一个thrift server。
       * Return whether the given main class represents a thrift server.
       */
     private def isThriftServer(mainClass: String): Boolean = {
@@ -849,6 +856,7 @@ object SparkSubmit extends CommandLineUtils {
     }
 
     /**
+      * 返回给定的主资源是否需要运行python。
       * Return whether the given primary resource requires running python.
       */
     private[deploy] def isPython(res: String): Boolean = {
@@ -856,6 +864,7 @@ object SparkSubmit extends CommandLineUtils {
     }
 
     /**
+      * 返回给定的主资源是否需要运行R。
       * Return whether the given primary resource requires running R.
       */
     private[deploy] def isR(res: String): Boolean = {
@@ -867,6 +876,8 @@ object SparkSubmit extends CommandLineUtils {
     }
 
     /**
+      * 将一系列以逗号分隔的文件列表，其中一些列表可能为空，表示没有文件，合并到一个以逗号分隔的字符串中。
+      *
       * Merge a sequence of comma-separated file lists, some of which may be null to indicate
       * no files, into a single comma-separated string.
       */
@@ -878,6 +889,8 @@ object SparkSubmit extends CommandLineUtils {
     }
 
     /**
+      * 将远程文件列表下载到临时本地文件。
+      *
       * Download a list of remote files to temp local files. If the file is local, the original file
       * will be returned.
       *
@@ -892,6 +905,8 @@ object SparkSubmit extends CommandLineUtils {
     }
 
     /**
+      * 将文件从远程下载到本地临时目录。
+      *
       * Download a file from the remote to a local temporary directory. If the input path points to
       * a local path, returns it with no operation.
       */
@@ -914,13 +929,19 @@ object SparkSubmit extends CommandLineUtils {
     }
 }
 
-/** Provides utility functions to be used inside SparkSubmit. */
+/**
+  * 提供在SparkSubmit中使用的实用函数。
+  *
+  * Provides utility functions to be used inside SparkSubmit.
+  */
 private[spark] object SparkSubmitUtils {
 
     // Exposed for testing
     var printStream = SparkSubmit.printStream
 
     /**
+      * 使用带有默认解析器的选项构建Ivy设置。
+      *
       * Build Ivy Settings using options with default resolvers
       *
       * @param remoteRepos Comma-delimited string of remote repositories other than maven central
@@ -942,6 +963,8 @@ private[spark] object SparkSubmitUtils {
     }
 
     /**
+      * 从逗号分隔的字符串中提取maven坐标。
+      *
       * Extracts maven coordinates from a comma-delimited string
       *
       * @param defaultIvyUserDir The default user path for Ivy
@@ -1002,33 +1025,10 @@ private[spark] object SparkSubmitUtils {
     }
 
     /**
-      * Load Ivy settings from a given filename, using supplied resolvers
+      * 如果提供选项，则为缓存位置设置ivy设置。
       *
-      * @param settingsFile Path to Ivy settings file
-      * @param remoteRepos  Comma-delimited string of remote repositories other than maven central
-      * @param ivyPath      The path to the local ivy repository
-      * @return An IvySettings object
+      * Set ivy settings for location of cache, if option is supplied
       */
-    def loadIvySettings(
-                               settingsFile: String,
-                               remoteRepos: Option[String],
-                               ivyPath: Option[String]): IvySettings = {
-        val file = new File(settingsFile)
-        require(file.exists(), s"Ivy settings file $file does not exist")
-        require(file.isFile(), s"Ivy settings file $file is not a normal file")
-        val ivySettings: IvySettings = new IvySettings
-        try {
-            ivySettings.load(file)
-        } catch {
-            case e@(_: IOException | _: ParseException) =>
-                throw new SparkException(s"Failed when loading Ivy settings from $settingsFile", e)
-        }
-        processIvyPathArg(ivySettings, ivyPath)
-        processRemoteRepoArg(ivySettings, remoteRepos)
-        ivySettings
-    }
-
-    /* Set ivy settings for location of cache, if option is supplied */
     private def processIvyPathArg(ivySettings: IvySettings, ivyPath: Option[String]): Unit = {
         ivyPath.filterNot(_.trim.isEmpty).foreach { alternateIvyDir =>
             ivySettings.setDefaultIvyUserDir(new File(alternateIvyDir))
@@ -1036,7 +1036,11 @@ private[spark] object SparkSubmitUtils {
         }
     }
 
-    /* Add any optional additional remote repositories */
+    /**
+      * 添加任何可选的其他远程存储库。
+      *
+      * Add any optional additional remote repositories
+      */
     private def processRemoteRepoArg(ivySettings: IvySettings, remoteRepos: Option[String]): Unit = {
         remoteRepos.filterNot(_.trim.isEmpty).map(_.split(",")).foreach { repositoryList =>
             val cr = new ChainResolver
@@ -1064,6 +1068,37 @@ private[spark] object SparkSubmitUtils {
     }
 
     /**
+      * 使用提供的解析器从给定的文件名加载ivy设置。
+      *
+      * Load Ivy settings from a given filename, using supplied resolvers
+      *
+      * @param settingsFile Path to Ivy settings file
+      * @param remoteRepos  Comma-delimited string of remote repositories other than maven central
+      * @param ivyPath      The path to the local ivy repository
+      * @return An IvySettings object
+      */
+    def loadIvySettings(
+                               settingsFile: String,
+                               remoteRepos: Option[String],
+                               ivyPath: Option[String]): IvySettings = {
+        val file = new File(settingsFile)
+        require(file.exists(), s"Ivy settings file $file does not exist")
+        require(file.isFile(), s"Ivy settings file $file is not a normal file")
+        val ivySettings: IvySettings = new IvySettings
+        try {
+            ivySettings.load(file)
+        } catch {
+            case e@(_: IOException | _: ParseException) =>
+                throw new SparkException(s"Failed when loading Ivy settings from $settingsFile", e)
+        }
+        processIvyPathArg(ivySettings, ivyPath)
+        processRemoteRepoArg(ivySettings, remoteRepos)
+        ivySettings
+    }
+
+    /**
+      * 解析通过maven坐标提供的任何依赖项。
+      *
       * Resolves any dependencies that were supplied through maven coordinates
       *
       * @param coordinates Comma-delimited string of maven coordinates
@@ -1149,6 +1184,8 @@ private[spark] object SparkSubmitUtils {
     }
 
     /**
+      * 输出以逗号分隔的路径列表，供下载的jar添加到类路径。
+      *
       * Output a comma-delimited list of paths for the downloaded jars to be added to the classpath
       * (will append to jars in SparkSubmit).
       *
@@ -1166,7 +1203,11 @@ private[spark] object SparkSubmitUtils {
         }.mkString(",")
     }
 
-    /** Adds the given maven coordinates to Ivy's module descriptor. */
+    /**
+      * 将给定的maven坐标添加到Ivy的模块描述符中。
+      *
+      * Adds the given maven coordinates to Ivy's module descriptor.
+      */
     def addDependenciesToIvy(
                                     md: DefaultModuleDescriptor,
                                     artifacts: Seq[MavenCoordinate],
@@ -1183,6 +1224,7 @@ private[spark] object SparkSubmitUtils {
     }
 
     /**
+      * 为已包含在spark程序集中的依赖项添加排除规则。
       *
       * Add exclusion rules for dependencies already included in the spark-assembly
       */
@@ -1205,18 +1247,9 @@ private[spark] object SparkSubmitUtils {
         }
     }
 
-    private[deploy] def createExclusion(
-                                               coords: String,
-                                               ivySettings: IvySettings,
-                                               ivyConfName: String): ExcludeRule = {
-        val c = extractMavenCoordinates(coords)(0)
-        val id = new ArtifactId(new ModuleId(c.groupId, c.artifactId), "*", "*", "*")
-        val rule = new DefaultExcludeRule(id, ivySettings.getMatcher("glob"), null)
-        rule.addConfiguration(ivyConfName)
-        rule
-    }
-
     /**
+      * 从逗号分隔的字符串中提取maven坐标。
+      *
       * Extracts maven coordinates from a comma-delimited string. Coordinates should be provided
       * in the format `groupId:artifactId:version` or `groupId/artifactId:version`.
       *
@@ -1238,9 +1271,24 @@ private[spark] object SparkSubmitUtils {
         }
     }
 
-    /** A nice function to use in tests as well. Values are dummy strings. */
+    /**
+      * 在测试中也可以使用一个很好的函数。值是伪字符串。
+      *
+      * A nice function to use in tests as well. Values are dummy strings.
+      */
     def getModuleDescriptor: DefaultModuleDescriptor = DefaultModuleDescriptor.newDefaultInstance(
         ModuleRevisionId.newInstance("org.apache.spark", "spark-submit-parent", "1.0"))
+
+    private[deploy] def createExclusion(
+                                               coords: String,
+                                               ivySettings: IvySettings,
+                                               ivyConfName: String): ExcludeRule = {
+        val c = extractMavenCoordinates(coords)(0)
+        val id = new ArtifactId(new ModuleId(c.groupId, c.artifactId), "*", "*", "*")
+        val rule = new DefaultExcludeRule(id, ivySettings.getMatcher("glob"), null)
+        rule.addConfiguration(ivyConfName)
+        rule
+    }
 
     /**
       * 表示一个Maven的坐标
@@ -1257,6 +1305,8 @@ private[spark] object SparkSubmitUtils {
 }
 
 /**
+  * 提供一个间接层，用于将参数作为系统属性传递，标记到用户的驱动程序或下游启动程序工具。
+  *
   * Provides an indirection layer for passing arguments as system properties or flags to
   * the user's driver program or to downstream launcher tools.
   */
