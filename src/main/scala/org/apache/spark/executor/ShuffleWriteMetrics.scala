@@ -22,7 +22,8 @@ import org.apache.spark.util.LongAccumulator
 
 
 /**
-  * 一批累加器，表示写入Shuffle数据的性能。
+  * 一组累加器，表示有关写入shuffle数据的度量。
+  *
   * :: DeveloperApi ::
   * A collection of accumulators that represent metrics about writing shuffle data.
   * Operations are not thread-safe.
@@ -39,6 +40,8 @@ class ShuffleWriteMetrics private[spark]() extends Serializable {
     def shuffleBytesWritten: Long = bytesWritten
 
     /**
+      * 此任务为shuffle写入的字节数。
+      *
       * Number of bytes written for the shuffle by this task.
       */
     def bytesWritten: Long = _bytesWritten.sum
@@ -47,6 +50,8 @@ class ShuffleWriteMetrics private[spark]() extends Serializable {
     def shuffleWriteTime: Long = writeTime
 
     /**
+      * 任务在阻塞写入磁盘或缓冲区缓存上花费的时间，以纳秒为单位。
+      *
       * Time the task spent blocking on writes to disk or buffer cache, in nanoseconds.
       */
     def writeTime: Long = _writeTime.sum
@@ -55,6 +60,8 @@ class ShuffleWriteMetrics private[spark]() extends Serializable {
     def shuffleRecordsWritten: Long = recordsWritten
 
     /**
+      * 此任务写入shuffle的记录总数。
+      *
       * Total number of records written to the shuffle by this task.
       */
     def recordsWritten: Long = _recordsWritten.sum

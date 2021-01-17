@@ -22,7 +22,8 @@ import org.apache.spark.util.LongAccumulator
 
 
 /**
-  * 一批累加器，表示读取Shuffle数据的性能。
+  * 表示有关读取shuffle数据的度量的累加器集合。
+  *
   * :: DeveloperApi ::
   * A collection of accumulators that represent metrics about reading shuffle data.
   * Operations are not thread-safe.

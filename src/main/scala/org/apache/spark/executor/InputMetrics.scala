@@ -22,6 +22,8 @@ import org.apache.spark.util.LongAccumulator
 
 
 /**
+  * 读取输入数据的方法。网络意味着数据是通过网络从远程块管理器读取的。
+  *
   * :: DeveloperApi ::
   * Method by which input data was read. Network means that the data was read over the network
   * from a remote block manager (which may have stored the data on-disk or in-memory).
@@ -35,7 +37,8 @@ object DataReadMethod extends Enumeration with Serializable {
 
 
 /**
-  * 一批累加器，表示读取外部系统数据的性能。
+  * 表示从外部系统读取数据的度量的累加器集合。
+  *
   * :: DeveloperApi ::
   * A collection of accumulators that represents metrics about reading data from external systems.
   */
