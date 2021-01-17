@@ -102,3 +102,17 @@ Reducers获取此文件的连续区域，以便读取其映射输出部分。
 * StorageStatus：每个BlockManager的存储信息。这个类假设BlockId和BlockStatus是不可变的，这样这个类的使用者就不能改变信息的来源。访问不是线程安全的。
 * TopologyMapper：TopologyMapper提供给定主机的拓扑信息。
 
+-----
+##### 7、Util模块源码
+> [storage源码](src/main/scala/org/apache/spark/util)： Spark实用程序。
+1. util
+    1. collection
+        1. Sorter：Java实现[[TimSort]]上的简单包装器。Java实现是包私有的，因此不能在包外调用它org.apache.spark网站.使用集合. 这是一个可用于spark的简单包装。
+        2. Utils：集合的实用函数。
+    2. io
+        1. ChunkedByteBuffer：只读字节缓冲区，物理上存储为多个块而不是单个连续数组。
+    3. logging
+        1. FileAppender：连续地将输入流中的数据附加到给定的文件中。
+    4. random
+        1. Pseudorandom：具有伪随机行为的类。
+    
