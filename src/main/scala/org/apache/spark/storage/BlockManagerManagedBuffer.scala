@@ -22,47 +22,48 @@ import java.nio.ByteBuffer
 import java.util.concurrent.atomic.AtomicInteger
 
 import org.apache.spark.network.buffer.ManagedBuffer
-import org.apache.spark.util.io.ChunkedByteBuffer
 
 /**
- * This [[ManagedBuffer]] wraps a [[BlockData]] instance retrieved from the [[BlockManager]]
- * so that the corresponding block's read lock can be released once this buffer's references
- * are released.
- *
- * If `dispose` is set to true, the [[BlockData]]will be disposed when the buffer's reference
- * count drops to zero.
- *
- * This is effectively a wrapper / bridge to connect the BlockManager's notion of read locks
- * to the network layer's notion of retain / release counts.
- */
+  * 此[[ManagedBuffer]]包装从[[BlockManager]]检索的[[BlockData]]实例，以便在释放此缓冲区的引用后，可以释放相应块的读锁。
+  *
+  * This [[ManagedBuffer]] wraps a [[BlockData]] instance retrieved from the [[BlockManager]]
+  * so that the corresponding block's read lock can be released once this buffer's references
+  * are released.
+  *
+  * If `dispose` is set to true, the [[BlockData]]will be disposed when the buffer's reference
+  * count drops to zero.
+  *
+  * This is effectively a wrapper / bridge to connect the BlockManager's notion of read locks
+  * to the network layer's notion of retain / release counts.
+  */
 private[storage] class BlockManagerManagedBuffer(
-    blockInfoManager: BlockInfoManager,
-    blockId: BlockId,
-    data: BlockData,
-    dispose: Boolean) extends ManagedBuffer {
+                                                        blockInfoManager: BlockInfoManager,
+                                                        blockId: BlockId,
+                                                        data: BlockData,
+                                                        dispose: Boolean) extends ManagedBuffer {
 
-  private val refCount = new AtomicInteger(1)
+    private val refCount = new AtomicInteger(1)
 
-  override def size(): Long = data.size
+    override def size(): Long = data.size
 
-  override def nioByteBuffer(): ByteBuffer = data.toByteBuffer()
+    override def nioByteBuffer(): ByteBuffer = data.toByteBuffer()
 
-  override def createInputStream(): InputStream = data.toInputStream()
+    override def createInputStream(): InputStream = data.toInputStream()
 
-  override def convertToNetty(): Object = data.toNetty()
+    override def convertToNetty(): Object = data.toNetty()
 
-  override def retain(): ManagedBuffer = {
-    refCount.incrementAndGet()
-    val locked = blockInfoManager.lockForReading(blockId, blocking = false)
-    assert(locked.isDefined)
-    this
- }
-
-  override def release(): ManagedBuffer = {
-    blockInfoManager.unlock(blockId)
-    if (refCount.decrementAndGet() == 0 && dispose) {
-      data.dispose()
+    override def retain(): ManagedBuffer = {
+        refCount.incrementAndGet()
+        val locked = blockInfoManager.lockForReading(blockId, blocking = false)
+        assert(locked.isDefined)
+        this
     }
-    this
-  }
+
+    override def release(): ManagedBuffer = {
+        blockInfoManager.unlock(blockId)
+        if (refCount.decrementAndGet() == 0 && dispose) {
+            data.dispose()
+        }
+        this
+    }
 }

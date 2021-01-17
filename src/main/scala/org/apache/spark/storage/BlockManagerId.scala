@@ -25,9 +25,13 @@ import org.apache.spark.annotation.DeveloperApi
 import org.apache.spark.util.Utils
 
 /**
-  * BlockManager的唯一标识.
+  * 此类表示块管理器的唯一标识符。
+  *
   * :: DeveloperApi ::
   * This class represent an unique identifier for a BlockManager.
+  *
+  * 此类的前2个构造函数是私有的，以确保只能使用伴随对象中的apply方法创建BlockManagerId对象。这允许消除ID对象的重复。
+  * 另外，构造函数参数是私有的，以确保参数不能从此类外部修改。
   *
   * The first 2 constructors of this class are made private to ensure that BlockManagerId objects
   * can be created only using the apply method in the companion object. This allows de-duplication
@@ -36,107 +40,107 @@ import org.apache.spark.util.Utils
   */
 @DeveloperApi
 class BlockManagerId private(
-								private var executorId_ : String,
-								private var host_ : String,
-								private var port_ : Int,
-								private var topologyInfo_ : Option[String])
-	extends Externalizable {
+                                    private var executorId_ : String,
+                                    private var host_ : String,
+                                    private var port_ : Int,
+                                    private var topologyInfo_ : Option[String])
+        extends Externalizable {
 
-	private def this() = this(null, null, 0, None) // For deserialization only
+    def hostPort: String = {
+        // DEBUG code
+        Utils.checkHost(host)
+        assert(port > 0)
+        host + ":" + port
+    }
 
-	def executorId: String = executorId_
+    def isDriver: Boolean = {
+        executorId == SparkContext.DRIVER_IDENTIFIER ||
+                executorId == SparkContext.LEGACY_DRIVER_IDENTIFIER
+    }
 
-	if (null != host_) {
-		Utils.checkHost(host_, "Expected hostname")
-		assert(port_ > 0)
-	}
+    if (null != host_) {
+        Utils.checkHost(host_, "Expected hostname")
+        assert(port_ > 0)
+    }
 
-	def hostPort: String = {
-		// DEBUG code
-		Utils.checkHost(host)
-		assert(port > 0)
-		host + ":" + port
-	}
+    def executorId: String = executorId_
 
-	def host: String = host_
+    override def writeExternal(out: ObjectOutput): Unit = Utils.tryOrIOException {
+        out.writeUTF(executorId_)
+        out.writeUTF(host_)
+        out.writeInt(port_)
+        out.writeBoolean(topologyInfo_.isDefined)
+        // we only write topologyInfo if we have it
+        topologyInfo.foreach(out.writeUTF(_))
+    }
 
-	def port: Int = port_
+    override def readExternal(in: ObjectInput): Unit = Utils.tryOrIOException {
+        executorId_ = in.readUTF()
+        host_ = in.readUTF()
+        port_ = in.readInt()
+        val isTopologyInfoAvailable = in.readBoolean()
+        topologyInfo_ = if (isTopologyInfoAvailable) Option(in.readUTF()) else None
+    }
 
-	def topologyInfo: Option[String] = topologyInfo_
+    override def toString: String = s"BlockManagerId($executorId, $host, $port, $topologyInfo)"
 
-	def isDriver: Boolean = {
-		executorId == SparkContext.DRIVER_IDENTIFIER ||
-			executorId == SparkContext.LEGACY_DRIVER_IDENTIFIER
-	}
+    override def hashCode: Int =
+        ((executorId.hashCode * 41 + host.hashCode) * 41 + port) * 41 + topologyInfo.hashCode
 
-	override def writeExternal(out: ObjectOutput): Unit = Utils.tryOrIOException {
-		out.writeUTF(executorId_)
-		out.writeUTF(host_)
-		out.writeInt(port_)
-		out.writeBoolean(topologyInfo_.isDefined)
-		// we only write topologyInfo if we have it
-		topologyInfo.foreach(out.writeUTF(_))
-	}
+    def host: String = host_
 
-	override def readExternal(in: ObjectInput): Unit = Utils.tryOrIOException {
-		executorId_ = in.readUTF()
-		host_ = in.readUTF()
-		port_ = in.readInt()
-		val isTopologyInfoAvailable = in.readBoolean()
-		topologyInfo_ = if (isTopologyInfoAvailable) Option(in.readUTF()) else None
-	}
+    def port: Int = port_
 
-	@throws(classOf[IOException])
-	private def readResolve(): Object = BlockManagerId.getCachedBlockManagerId(this)
+    def topologyInfo: Option[String] = topologyInfo_
 
-	override def toString: String = s"BlockManagerId($executorId, $host, $port, $topologyInfo)"
+    override def equals(that: Any): Boolean = that match {
+        case id: BlockManagerId =>
+            executorId == id.executorId &&
+                    port == id.port &&
+                    host == id.host &&
+                    topologyInfo == id.topologyInfo
+        case _ =>
+            false
+    }
 
-	override def hashCode: Int =
-		((executorId.hashCode * 41 + host.hashCode) * 41 + port) * 41 + topologyInfo.hashCode
+    private def this() = this(null, null, 0, None) // For deserialization only
 
-	override def equals(that: Any): Boolean = that match {
-		case id: BlockManagerId =>
-			executorId == id.executorId &&
-				port == id.port &&
-				host == id.host &&
-				topologyInfo == id.topologyInfo
-		case _ =>
-			false
-	}
+    @throws(classOf[IOException])
+    private def readResolve(): Object = BlockManagerId.getCachedBlockManagerId(this)
 }
 
 
 private[spark] object BlockManagerId {
 
-	/**
-	  * Returns a [[org.apache.spark.storage.BlockManagerId]] for the given configuration.
-	  *
-	  * @param execId       ID of the executor.
-	  * @param host         Host name of the block manager.
-	  * @param port         Port of the block manager.
-	  * @param topologyInfo topology information for the blockmanager, if available
-	  *                     This can be network topology information for use while choosing peers
-	  *                     while replicating data blocks. More information available here:
-	  *                     [[org.apache.spark.storage.TopologyMapper]]
-	  * @return A new [[org.apache.spark.storage.BlockManagerId]].
-	  */
-	def apply(
-				 execId: String,
-				 host: String,
-				 port: Int,
-				 topologyInfo: Option[String] = None): BlockManagerId =
-		getCachedBlockManagerId(new BlockManagerId(execId, host, port, topologyInfo))
+    val blockManagerIdCache = new ConcurrentHashMap[BlockManagerId, BlockManagerId]()
 
-	def apply(in: ObjectInput): BlockManagerId = {
-		val obj = new BlockManagerId()
-		obj.readExternal(in)
-		getCachedBlockManagerId(obj)
-	}
+    /**
+      * Returns a [[org.apache.spark.storage.BlockManagerId]] for the given configuration.
+      *
+      * @param execId       ID of the executor.
+      * @param host         Host name of the block manager.
+      * @param port         Port of the block manager.
+      * @param topologyInfo topology information for the blockmanager, if available
+      *                     This can be network topology information for use while choosing peers
+      *                     while replicating data blocks. More information available here:
+      *                     [[org.apache.spark.storage.TopologyMapper]]
+      * @return A new [[org.apache.spark.storage.BlockManagerId]].
+      */
+    def apply(
+                     execId: String,
+                     host: String,
+                     port: Int,
+                     topologyInfo: Option[String] = None): BlockManagerId =
+        getCachedBlockManagerId(new BlockManagerId(execId, host, port, topologyInfo))
 
-	val blockManagerIdCache = new ConcurrentHashMap[BlockManagerId, BlockManagerId]()
+    def getCachedBlockManagerId(id: BlockManagerId): BlockManagerId = {
+        blockManagerIdCache.putIfAbsent(id, id)
+        blockManagerIdCache.get(id)
+    }
 
-	def getCachedBlockManagerId(id: BlockManagerId): BlockManagerId = {
-		blockManagerIdCache.putIfAbsent(id, id)
-		blockManagerIdCache.get(id)
-	}
+    def apply(in: ObjectInput): BlockManagerId = {
+        val obj = new BlockManagerId()
+        obj.readExternal(in)
+        getCachedBlockManagerId(obj)
+    }
 }

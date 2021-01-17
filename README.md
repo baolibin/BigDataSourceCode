@@ -47,6 +47,30 @@ Reducers获取此文件的连续区域，以便读取其映射输出部分。
 -----
 ##### 6、Storage模块源码
 > [storage源码](src/main/scala/org/apache/spark/storage)
-
-
+* MemoryStore：将块存储在内存中，可以是反序列化Java对象的数组，也可以是序列化ByteBuffers。
+* BlockId：标识特定的数据块，通常与单个文件关联。
+* BlockManager：在每个节点（驱动程序和执行程序）上运行的管理器，它提供接口，用于在本地和远程将块放入和检索到各种存储（内存、磁盘和堆外）。
+请注意，在BlockManager可用之前必须调用[[initialize（）]]。
+* BlockManagerId：此类表示块管理器的唯一标识符。
+* BlockManagerManagedBuffer：此[[ManagedBuffer]]包装从[[BlockManager]]检索的[[BlockData]]实例，以便在释放此缓冲区的引用后，可以释放相应块的读锁。
+* BlockInfoManager：[[BlockManager]]的组件，用于跟踪块的元数据并管理块锁定。
+* BlockManagerMaster：
+* BlockManagerMasterEndpoint：BlockManagerMasterEndpoint是主节点上的一个[[ThreadSafeRpcEndpoint]]，用于跟踪所有从节点的块管理器的状态。
+* BlockManagerMessages：
+* BlockManagerSlaveEndpoint：一个RpcEndpoint，从主控机接收命令以执行选项。例如，这用于从slave程序的BlockManager中删除块。
+* BlockManagerSource：
+* BlockReplicationPolicy：BlockReplicationPrioritization提供了为复制块的对等序列设置优先级的逻辑。
+* BlockStatusListener：
+* BlockUpdatedInfo：在块管理器中存储有关块状态的信息。
+* DiskBlockManager：创建并维护逻辑块和磁盘上物理位置之间的逻辑映射。一个块映射到一个文件，其名称由其BlockId给定。
+* DiskBlockObjectWriter：用于将JVM对象直接写入磁盘上的文件的类。此类允许将数据附加到现有块。
+* DiskStore：在磁盘上存储BlockManager块。
+* FileSegment：根据偏移量和长度引用文件的特定段（可能是整个文件）。
+* RDDInfo：
+* ShuffleBlockFetcherIterator：获取多个块的迭代器。对于本地块，它从本地块管理器获取。对于远程块，它使用提供的BlockTransferService获取它们。
+* StorageLevel：用于控制RDD存储的标志。每个StorageLevel记录是使用内存还是ExternalBlockStore，如果RDD没有内存或ExternalBlockStore，
+是否将数据以序列化格式保存在内存中，以及是否在多个节点上复制RDD分区。
+* StorageStatusListener：维护executor存储状态的SparkListener。
+* StorageStatus：每个BlockManager的存储信息。这个类假设BlockId和BlockStatus是不可变的，这样这个类的使用者就不能改变信息的来源。访问不是线程安全的。
+* TopologyMapper：TopologyMapper提供给定主机的拓扑信息。
 

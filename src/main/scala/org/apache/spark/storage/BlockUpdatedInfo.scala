@@ -21,7 +21,8 @@ import org.apache.spark.annotation.DeveloperApi
 import org.apache.spark.storage.BlockManagerMessages.UpdateBlockInfo
 
 /**
-  * 数据块的存储状态信息.
+  * 在块管理器中存储有关块状态的信息。
+  *
   * :: DeveloperApi ::
   * Stores information about a block status in a block manager.
   *
@@ -33,20 +34,20 @@ import org.apache.spark.storage.BlockManagerMessages.UpdateBlockInfo
   */
 @DeveloperApi
 case class BlockUpdatedInfo(
-							   blockManagerId: BlockManagerId,
-							   blockId: BlockId,
-							   storageLevel: StorageLevel,
-							   memSize: Long,
-							   diskSize: Long)
+                                   blockManagerId: BlockManagerId,
+                                   blockId: BlockId,
+                                   storageLevel: StorageLevel,
+                                   memSize: Long,
+                                   diskSize: Long)
 
 private[spark] object BlockUpdatedInfo {
 
-	private[spark] def apply(updateBlockInfo: UpdateBlockInfo): BlockUpdatedInfo = {
-		BlockUpdatedInfo(
-			updateBlockInfo.blockManagerId,
-			updateBlockInfo.blockId,
-			updateBlockInfo.storageLevel,
-			updateBlockInfo.memSize,
-			updateBlockInfo.diskSize)
-	}
+    private[spark] def apply(updateBlockInfo: UpdateBlockInfo): BlockUpdatedInfo = {
+        BlockUpdatedInfo(
+            updateBlockInfo.blockManagerId,
+            updateBlockInfo.blockId,
+            updateBlockInfo.storageLevel,
+            updateBlockInfo.memSize,
+            updateBlockInfo.diskSize)
+    }
 }

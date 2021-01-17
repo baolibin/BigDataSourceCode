@@ -24,13 +24,14 @@ import org.apache.spark.scheduler._
 import scala.collection.mutable
 
 /**
- * SparkListener监听executor存储状态信息。
- * :: DeveloperApi ::
- * A SparkListener that maintains executor storage status.
- *
- * 这个类是线程安全的。
- * This class is thread-safe (unlike JobProgressListener)
- */
+  * 维护executor存储状态的SparkListener。
+  *
+  * :: DeveloperApi ::
+  * A SparkListener that maintains executor storage status.
+  *
+  * 这个类是线程安全的。
+  * This class is thread-safe (unlike JobProgressListener)
+  */
 @DeveloperApi
 @deprecated("This class will be removed in a future release.", "2.2.0")
 class StorageStatusListener(conf: SparkConf) extends SparkListener {
