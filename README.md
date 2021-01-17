@@ -4,6 +4,21 @@
     包括部署Deploy模块、执行Executor模块、内存Memory模块、调度Scheduler模块、经典的Shuffle模块、存储Storage模块等等。
 ##### 1、Deploy模块源码
 > [deploy源码](src/main/scala/org/apache/spark/deploy)
+* Client：在standalone cluster模式中，启动和终止执行程序的驱动器。
+* ClientArguments：驱动程序客户端的命令行解析器。
+* DeployMessages：包含在调度程序终结点节点之间发送的消息。
+* ExecutorDescription：用于将Executors的状态从Worker发送到Master。此状态足以让Master在故障转移期间重建其内部数据结构。
+* ExecutorState：executor状态
+* ExternalShuffleService：提供Executors可以从中读取shuffle文件的服务器（而不是直接互相读取）。
+* ExternalShuffleServiceSource：为外部shuffle服务提供度量源。
+* FaultToleranceTest：这个套件测试Spark独立调度器的容错性。
+* LocalSparkCluster：在集群中创建Spark独立进程的测试类。
+* PythonRunner：用于启动Python应用程序的主类。它将python作为子进程执行，然后将其连接回JVM以访问系统属性等。
+* RRunner：用于使用spark submit启动SparkR应用程序的主类。它将R作为子进程执行，然后将其连接回JVM以访问系统属性等。
+* SparkCuratorUtil：Spark监护管理工具类。
+* SparkHadoopUtil：包含从Spark与Hadoop交互的util方法。
+* SparkSubmit：启动Spark应用程序的主要网关。这个程序负责设置具有相关Spark依赖项的类路径，并在Spark支持的不同集群管理器和部署模式上提供一个layer。
+* SparkSubmitArguments：解析和封装spark submit脚本中的参数。env参数用于测试。
 
 -----
 ##### 2、Executor模块源码

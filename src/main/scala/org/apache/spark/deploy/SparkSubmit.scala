@@ -50,7 +50,7 @@ import scala.collection.mutable.{ArrayBuffer, HashMap, Map}
 import scala.util.Properties
 
 /**
-  * 无论是提交、杀死作业，还是请求作业状态，目前都被支持在standalone和Mesos集群模式中。
+  * 是否提交、终止或请求应用程序的状态。后两种操作目前仅支持单机和Mesos集群。
   *
   * Whether to submit, kill, or request the status of an application.
   * The latter two operations are currently supported only for standalone and Mesos cluster modes.
@@ -1027,6 +1027,35 @@ private[spark] object SparkSubmitUtils {
     }
 
     /**
+      * 使用提供的解析器从给定的文件名加载ivy设置。
+      *
+      * Load Ivy settings from a given filename, using supplied resolvers
+      *
+      * @param settingsFile Path to Ivy settings file
+      * @param remoteRepos  Comma-delimited string of remote repositories other than maven central
+      * @param ivyPath      The path to the local ivy repository
+      * @return An IvySettings object
+      */
+    def loadIvySettings(
+                               settingsFile: String,
+                               remoteRepos: Option[String],
+                               ivyPath: Option[String]): IvySettings = {
+        val file = new File(settingsFile)
+        require(file.exists(), s"Ivy settings file $file does not exist")
+        require(file.isFile(), s"Ivy settings file $file is not a normal file")
+        val ivySettings: IvySettings = new IvySettings
+        try {
+            ivySettings.load(file)
+        } catch {
+            case e@(_: IOException | _: ParseException) =>
+                throw new SparkException(s"Failed when loading Ivy settings from $settingsFile", e)
+        }
+        processIvyPathArg(ivySettings, ivyPath)
+        processRemoteRepoArg(ivySettings, remoteRepos)
+        ivySettings
+    }
+
+    /**
       * 如果提供选项，则为缓存位置设置ivy设置。
       *
       * Set ivy settings for location of cache, if option is supplied
@@ -1067,35 +1096,6 @@ private[spark] object SparkSubmitUtils {
             ivySettings.addResolver(cr)
             ivySettings.setDefaultResolver(cr.getName)
         }
-    }
-
-    /**
-      * 使用提供的解析器从给定的文件名加载ivy设置。
-      *
-      * Load Ivy settings from a given filename, using supplied resolvers
-      *
-      * @param settingsFile Path to Ivy settings file
-      * @param remoteRepos  Comma-delimited string of remote repositories other than maven central
-      * @param ivyPath      The path to the local ivy repository
-      * @return An IvySettings object
-      */
-    def loadIvySettings(
-                               settingsFile: String,
-                               remoteRepos: Option[String],
-                               ivyPath: Option[String]): IvySettings = {
-        val file = new File(settingsFile)
-        require(file.exists(), s"Ivy settings file $file does not exist")
-        require(file.isFile(), s"Ivy settings file $file is not a normal file")
-        val ivySettings: IvySettings = new IvySettings
-        try {
-            ivySettings.load(file)
-        } catch {
-            case e@(_: IOException | _: ParseException) =>
-                throw new SparkException(s"Failed when loading Ivy settings from $settingsFile", e)
-        }
-        processIvyPathArg(ivySettings, ivyPath)
-        processRemoteRepoArg(ivySettings, remoteRepos)
-        ivySettings
     }
 
     /**
@@ -1249,6 +1249,17 @@ private[spark] object SparkSubmitUtils {
         }
     }
 
+    private[deploy] def createExclusion(
+                                               coords: String,
+                                               ivySettings: IvySettings,
+                                               ivyConfName: String): ExcludeRule = {
+        val c = extractMavenCoordinates(coords)(0)
+        val id = new ArtifactId(new ModuleId(c.groupId, c.artifactId), "*", "*", "*")
+        val rule = new DefaultExcludeRule(id, ivySettings.getMatcher("glob"), null)
+        rule.addConfiguration(ivyConfName)
+        rule
+    }
+
     /**
       * 从逗号分隔的字符串中提取maven坐标。
       *
@@ -1280,17 +1291,6 @@ private[spark] object SparkSubmitUtils {
       */
     def getModuleDescriptor: DefaultModuleDescriptor = DefaultModuleDescriptor.newDefaultInstance(
         ModuleRevisionId.newInstance("org.apache.spark", "spark-submit-parent", "1.0"))
-
-    private[deploy] def createExclusion(
-                                               coords: String,
-                                               ivySettings: IvySettings,
-                                               ivyConfName: String): ExcludeRule = {
-        val c = extractMavenCoordinates(coords)(0)
-        val id = new ArtifactId(new ModuleId(c.groupId, c.artifactId), "*", "*", "*")
-        val rule = new DefaultExcludeRule(id, ivySettings.getMatcher("glob"), null)
-        rule.addConfiguration(ivyConfName)
-        rule
-    }
 
     /**
       * 表示一个Maven的坐标
