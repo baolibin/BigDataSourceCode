@@ -115,4 +115,11 @@ Reducers获取此文件的连续区域，以便读取其映射输出部分。
         1. FileAppender：连续地将输入流中的数据附加到给定的文件中。
     4. random
         1. Pseudorandom：具有伪随机行为的类。
-    
+
+-----
+##### 8、核心Spark功能模块源码
+> [核心Spark功能模块源码](src/main/scala/org/apache/spark)： 核心Spark功能，[[org.apache.spark.SparkContext]]是Spark的主要入口，而[[org.apache.spark.rdd。rdd]]表示分布式集合的数据类型，并提供大多数并行操作。
+* Accumulable：一种可以累加的数据类型，即有一个可交换的和相联的“加法”运算，但结果类型“R”可能与所加的元素类型“T”不同。该操作不是线程安全的。 
+* Accumulator：一个更简单的值[[Accumulable]]，其中累加的结果类型与合并的元素类型相同，即仅通过关联和交换操作“添加”到的变量，因此可以有效地并行支持。
+* Aggregator：用于聚合数据的一组函数。
+
