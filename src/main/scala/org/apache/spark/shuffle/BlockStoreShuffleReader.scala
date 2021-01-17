@@ -18,17 +18,18 @@
 package org.apache.spark.shuffle
 
 import org.apache.spark._
-import org.apache.spark.internal.{config, Logging}
+import org.apache.spark.internal.{Logging, config}
 import org.apache.spark.serializer.SerializerManager
 import org.apache.spark.storage.{BlockManager, ShuffleBlockFetcherIterator}
 import org.apache.spark.util.CompletionIterator
 import org.apache.spark.util.collection.ExternalSorter
 
 /**
- * 在shuffle阶段进行读写，从其它节点请求指定范围partitions的数据
- * Fetches and reads the partitions in range [startPartition, endPartition) from a shuffle by
- * requesting them from other nodes' block stores.
- */
+  * 通过从其他节点的块存储请求，从shuffle中获取并读取范围[startPartition，endPartition]中的分区。
+  *
+  * Fetches and reads the partitions in range [startPartition, endPartition) from a shuffle by
+  * requesting them from other nodes' block stores.
+  */
 private[spark] class BlockStoreShuffleReader[K, C](
                                                           handle: BaseShuffleHandle[K, _, C],
                                                           startPartition: Int,
@@ -42,9 +43,9 @@ private[spark] class BlockStoreShuffleReader[K, C](
     private val dep = handle.dependency
 
     /**
-     * reduce task拉取map端输出的合并k-v对数据
-     * Read the combined key-values for this reduce task
-     */
+      * reduce task拉取map端输出的合并k-v对数据
+      * Read the combined key-values for this reduce task
+      */
     override def read(): Iterator[Product2[K, C]] = {
         val wrappedStreams = new ShuffleBlockFetcherIterator(
             context,
