@@ -1,5 +1,6 @@
 
 #### spark core源码阅读
+    SparkCore模块源码阅读，版本2.2。包括部署Deploy模块、执行Executor模块、内存Memory模块、调度Scheduler模块、经典的Shuffle模块、存储Storage模块等等。
 ##### 1、Deploy模块源码
 > [deploy源码](src/main/scala/org/apache/spark/deploy)
 
