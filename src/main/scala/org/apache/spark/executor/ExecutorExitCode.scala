@@ -20,7 +20,7 @@ package org.apache.spark.executor
 import org.apache.spark.util.SparkExitCode._
 
 /**
-  * Executor运行失败错误信息码。
+  * 假设集群管理框架可以捕获退出代码，那么这些退出代码应该被executor用来向主机提供关于执行者失败的信息。
   *
   * These are exit codes that executors should use to provide the master with information about
   * executor failures assuming that cluster management framework can capture the exit codes (but

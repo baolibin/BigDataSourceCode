@@ -20,7 +20,8 @@ package org.apache.spark.executor
 import org.apache.spark.{TaskCommitDenied, TaskFailedReason}
 
 /**
-  * task试图向HDFS输出内容，但被driver拒绝异常。
+  * 当任务尝试将输出提交到HDFS但被驱动程序拒绝时引发异常。
+  *
   * Exception thrown when a task attempts to commit output to HDFS but is denied by the driver.
   */
 private[spark] class CommitDeniedException(

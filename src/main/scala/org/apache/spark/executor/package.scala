@@ -18,7 +18,8 @@
 package org.apache.spark
 
 /**
-  * 多个集群模式Executor使用部分。
+  * 与各种集群管理器一起使用的执行器组件。
+  *
   * Executor components used with various cluster managers.
   * See [[org.apache.spark.executor.Executor]].
   */
