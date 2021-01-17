@@ -18,19 +18,25 @@
 package org.apache.spark.deploy.rest
 
 /**
- * An exception thrown in the REST application submission protocol.
- */
+  * REST应用程序提交协议中引发异常。
+  *
+  * An exception thrown in the REST application submission protocol.
+  */
 private[rest] class SubmitRestProtocolException(message: String, cause: Throwable = null)
-  extends Exception(message, cause)
+        extends Exception(message, cause)
 
 /**
- * An exception thrown if a field is missing from a [[SubmitRestProtocolMessage]].
- */
+  * 如果[[SubmitRestProtocolMessage]]中缺少字段，则引发异常。
+  *
+  * An exception thrown if a field is missing from a [[SubmitRestProtocolMessage]].
+  */
 private[rest] class SubmitRestMissingFieldException(message: String)
-  extends SubmitRestProtocolException(message)
+        extends SubmitRestProtocolException(message)
 
 /**
- * An exception thrown if the REST client cannot reach the REST server.
- */
+  * 如果REST客户端无法访问REST服务器，则引发异常。
+  *
+  * An exception thrown if the REST client cannot reach the REST server.
+  */
 private[deploy] class SubmitRestConnectionException(message: String, cause: Throwable)
-  extends SubmitRestProtocolException(message, cause)
+        extends SubmitRestProtocolException(message, cause)
