@@ -1,12 +1,24 @@
 
 #### spark core源码阅读
-    SparkCore模块源码阅读，版本2.2。包括部署Deploy模块、执行Executor模块、内存Memory模块、调度Scheduler模块、经典的Shuffle模块、存储Storage模块等等。
+    SparkCore模块源码阅读，版本2.2。
+    包括部署Deploy模块、执行Executor模块、内存Memory模块、调度Scheduler模块、经典的Shuffle模块、存储Storage模块等等。
 ##### 1、Deploy模块源码
 > [deploy源码](src/main/scala/org/apache/spark/deploy)
 
 -----
 ##### 2、Executor模块源码
-> [executor源码](src/main/scala/org/apache/spark/executor)
+> [executor源码](src/main/scala/org/apache/spark/executor)：与各种集群管理器一起使用的Executor组件。
+* CoarseGrainedExecutorBackend：在worker中为app启动executor的jvm进程
+* CommitDeniedException：当任务尝试将输出提交到HDFS但被驱动程序拒绝时引发异常。
+* Executor：Spark executor，由线程池支持以运行任务。
+* ExecutorBackend：Executor用来向集群调度程序发送更新的可插入接口。
+* ExecutorExitCode：假设集群管理框架可以捕获退出代码，那么这些退出代码应该被executor用来向主机提供关于执行者失败的信息。
+* ExecutorSource：ExecutorSource统计Executor各性能的使用指标。
+* InputMetrics：表示从外部系统读取数据的度量的累加器集合。
+* OutputMetrics：一组累加器，表示向外部系统写入数据的度量。
+* ShuffleReadMetrics：表示有关读取shuffle数据的度量的累加器集合。
+* ShuffleWriteMetrics：一组累加器，表示有关写入shuffle数据的度量。
+* TaskMetrics：此类是表示与任务关联的度量的内部累加器集合的包装器。
 
 -----
 ##### 3、Memory模块源码
