@@ -33,7 +33,7 @@
     
 -----
 ##### 4、Scheduler模块源码
-> [deploy源码](src/main/scala/org/apache/spark/scheduler)
+> [scheduler源码](src/main/scala/org/apache/spark/scheduler)
 
 -----
 ##### 5、Shuffle模块源码
