@@ -68,6 +68,16 @@
 * ExecutorLossReason：表示对executor或整个从属服务器失败或退出的解释。
 * ExternalClusterManager：一个集群管理器接口用于插件外部调度程序。
 * InputFormatInfo：解析并保存有关指定参数的inputFormat（和文件）的信息。
+* JobListener：用于在将作业提交给调度程序后侦听作业完成或失败事件的接口。
+* JobResult：DAGScheduler调度作业返回的结果。
+* JobWaiter：等待调度程序作业完成的对象。当任务完成时，它将结果传递给给定的处理函数。
+* LiveListenerBus：异步地将SparkListenerEvents传递给已注册的SparkListener。
+* MapStatus：ShuffleMapTask返回给调度程序的结果。包括运行任务的块管理器地址以及每个reducer的输出大小，以便传递给reduce任务。
+* OutputCommitCoordinator：决定任务是否可以将输出提交到HDFS的权限。使用“第一个提交者获胜”策略。
+* ReplayListenerBus：一种SparkListenerBus，可用于从序列化事件数据重播事件。
+* ：
+* ：
+* ：
 * ：
 * ：
 * ：

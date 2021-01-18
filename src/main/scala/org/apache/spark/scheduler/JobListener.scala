@@ -18,14 +18,15 @@
 package org.apache.spark.scheduler
 
 /**
-  * 监听提交到DAGScheduler的作业完成还是失败.
+  * 用于在将作业提交给调度程序后侦听作业完成或失败事件的接口。
+  * 每次任务成功时，以及整个作业失败时，都会通知侦听器（并且不会再发生taskSucceeded事件）。
   *
   * Interface used to listen for job completion or failure events after submitting a job to the
   * DAGScheduler. The listener is notified each time a task succeeds, as well as if the whole
   * job fails (and no further taskSucceeded events will happen).
   */
 private[spark] trait JobListener {
-	def taskSucceeded(index: Int, result: Any): Unit
+    def taskSucceeded(index: Int, result: Any): Unit
 
-	def jobFailed(exception: Exception): Unit
+    def jobFailed(exception: Exception): Unit
 }
