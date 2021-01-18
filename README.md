@@ -96,13 +96,14 @@
 * TaskResultGetter：运行反序列化和远程获取（如果需要）任务结果的线程池。
 * TaskScheduler：Low-level任务调度器接口，目前由[[TaskSchedulerImpl]]独家实施。
 * TaskSchedulerImpl：通过SchedulerBackend为多种类型的集群调度任务。它还可以通过使用“LocalSchedulerBackend”并将isLocal设置为true来使用本地设置。它处理常见的逻辑，如确定作业之间的调度顺序、唤醒以启动推测性任务等。
-* ：
-* ：
+* TaskSet：一起提交给low-level任务调度器的一组任务，通常表示特定阶段缺少的分区。
+* TaskSetBlacklist：处理任务集中的黑名单执行者和节点。这包括黑名单特定（任务，执行者）/（任务，节点）对，也完全黑名单执行者和整个任务集的节点。
+* TaskSetManager：在TaskSchedulerImpl的单个任务集中安排任务。此类跟踪每个任务，在任务失败时重试任务（次数有限），并通过延迟调度处理此任务集的位置感知调度。
+* WorkerOffer：表示executor上可用的免费资源。
 
 -----
 ##### 5、Shuffle模块源码
 > [shuffle源码](src/main/scala/org/apache/spark/shuffle)
-
 * ShuffleManager：shuffle系统的可插拔接口。在SparkEnv中，在driver和每个executor上创建一个ShuffleManager。
 基于spark.shuffle.manager设置，driver向它注册shuffle，executors（或在driver中本地运行的任务）可以请求读写数据。
     - SortShuffleManager：在基于排序的shuffle中，传入的记录根据其目标分区ID进行排序，然后写入单个映射输出文件。

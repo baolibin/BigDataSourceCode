@@ -20,18 +20,18 @@ package org.apache.spark.scheduler
 import java.util.Properties
 
 /**
-  * TaskScheduler将stage分成一组tasks,对应task集合TaskSet.
+  * 一起提交给low-level任务调度器的一组任务，通常表示特定阶段缺少的分区。
   *
   * A set of tasks submitted together to the low-level TaskScheduler, usually representing
   * missing partitions of a particular stage.
   */
 private[spark] class TaskSet(
-								val tasks: Array[Task[_]],
-								val stageId: Int,
-								val stageAttemptId: Int,
-								val priority: Int,
-								val properties: Properties) {
-	val id: String = stageId + "." + stageAttemptId
+                                    val tasks: Array[Task[_]],
+                                    val stageId: Int,
+                                    val stageAttemptId: Int,
+                                    val priority: Int,
+                                    val properties: Properties) {
+    val id: String = stageId + "." + stageAttemptId
 
-	override def toString: String = "TaskSet " + id
+    override def toString: String = "TaskSet " + id
 }

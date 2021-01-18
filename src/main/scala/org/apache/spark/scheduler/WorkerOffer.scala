@@ -18,7 +18,8 @@
 package org.apache.spark.scheduler
 
 /**
-  * 表示executor可获得的空闲资源.
+  * 表示executor上可用的免费资源。
+  *
   * Represents free resources available on an executor.
   */
 private[spark]
