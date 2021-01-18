@@ -75,11 +75,27 @@
 * MapStatus：ShuffleMapTask返回给调度程序的结果。包括运行任务的块管理器地址以及每个reducer的输出大小，以便传递给reduce任务。
 * OutputCommitCoordinator：决定任务是否可以将输出提交到HDFS的权限。使用“第一个提交者获胜”策略。
 * ReplayListenerBus：一种SparkListenerBus，可用于从序列化事件数据重播事件。
-* ：
-* ：
-* ：
-* ：
-* ：
+* ResultStage：ResultStages在RDD的某些分区上应用函数来计算操作的结果。
+* ResultTask：将输出发送回驱动程序应用程序的任务。
+* Schedulable：可调度实体的接口。有两种类型的可调度实体（Pools和TaskSetManagers）。
+* SchedulableBuilder：构建可调度tree的接口：构建树节点（池）addTaskSetManager：构建叶节点（TaskSetManagers）。
+* SchedulerBackend：用于调度系统的后端接口，允许在TaskSchedulerImpl下插入不同的系统。
+* SchedulingAlgorithm：排序算法接口，FIFO:TaskSetManagers之间的FIFO算法，FS：池之间的FS算法，以及池内的FIFO或FS。
+* SchedulingMode：“FAIR”和“FIFO”确定哪个策略用于在可调度的子队列中排序任务，当可调度的子队列没有子队列时使用“NONE”。
+* ShuffleMapStage：ShuffleMapStages是执行DAG中的中间阶段，它为一次shuffle操作生成数据。
+* ShuffleMapTask：ShuffleMapTask将RDD的元素划分为多个存储桶（基于ShuffleDependency中指定的分区器）。
+* SparkListener：“SparkListenerInterface”的默认实现，没有针对所有回调的op实现。请注意，这是一个内部接口，可能会在不同的Spark发布中发生变化。
+* SparkListenerBus：将[[SparkListenerEvent]]中继到侦听器的[[SparkListenerEvent]]s总线。
+* SplitInfo：有关特定拆分实例的信息：处理两个拆分实例。
+* Stage：stage是一组并行任务，所有任务都需要计算运行相同的函数,作为Spark作业的一部分。其中所有任务都具有相同的shuffle依赖项。调度程序运行的每一个DAG任务在发生shuffle的边界处被分为多个阶段，然后DAGScheduler按拓扑顺序运行这些阶段。
+* StageInfo：存储有关要从调度程序传递到侦听器的阶段的信息。
+* StatsReportListener：简单的SparkListener，在每个阶段完成时记录一些摘要统计信息。
+* Task：Task是执行的基本单元, 包括两种,ShuffleMapTask和ResultTask。
+* TaskDescription：对传递给要执行的executors任务的描述，通常由`TaskSetManager.resourceOffer`。
+* TaskInfo：有关任务集中正在运行的任务尝试的信息。
+* TaskResultGetter：运行反序列化和远程获取（如果需要）任务结果的线程池。
+* TaskScheduler：Low-level任务调度器接口，目前由[[TaskSchedulerImpl]]独家实施。
+* TaskSchedulerImpl：通过SchedulerBackend为多种类型的集群调度任务。它还可以通过使用“LocalSchedulerBackend”并将isLocal设置为true来使用本地设置。它处理常见的逻辑，如确定作业之间的调度顺序、唤醒以启动推测性任务等。
 * ：
 * ：
 

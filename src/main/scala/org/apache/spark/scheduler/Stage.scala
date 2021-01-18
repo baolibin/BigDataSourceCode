@@ -17,15 +17,17 @@
 
 package org.apache.spark.scheduler
 
-import scala.collection.mutable.HashSet
-
 import org.apache.spark.executor.TaskMetrics
 import org.apache.spark.internal.Logging
 import org.apache.spark.rdd.RDD
 import org.apache.spark.util.CallSite
 
+import scala.collection.mutable.HashSet
+
 /**
-  * stage是spark作业的组成部分,由一组并行的task组成,不同stage之间划分依据是宽依赖,DAGScheduler运行stages按照拓扑顺序.
+  * stage是一组并行任务，所有任务都需要计算运行相同的函数,作为Spark作业的一部分。
+  * 其中所有任务都具有相同的shuffle依赖项。
+  * 调度程序运行的每一个DAG任务在发生shuffle的边界处被分为多个阶段，然后DAGScheduler按拓扑顺序运行这些阶段。
   *
   * A stage is a set of parallel tasks all computing the same function that need to run as part
   * of a Spark job, where all the tasks have the same shuffle dependencies. Each DAG of tasks run
@@ -56,69 +58,65 @@ import org.apache.spark.util.CallSite
   *                   RDD was created, for a shuffle map stage, or where the action for a result stage was called.
   */
 private[scheduler] abstract class Stage(
-										   val id: Int,
-										   val rdd: RDD[_],
-										   val numTasks: Int,
-										   val parents: List[Stage],
-										   val firstJobId: Int,
-										   val callSite: CallSite)
-	extends Logging {
+                                               val id: Int,
+                                               val rdd: RDD[_],
+                                               val numTasks: Int,
+                                               val parents: List[Stage],
+                                               val firstJobId: Int,
+                                               val callSite: CallSite)
+        extends Logging {
 
-	val numPartitions = rdd.partitions.length
+    val numPartitions = rdd.partitions.length
 
-	/**
-	  * 设置stage属于哪些作业Id.
-	  * Set of jobs that this stage belongs to.
-	  */
-	val jobIds = new HashSet[Int]
+    /**
+      * 设置stage属于哪些作业Id.
+      * Set of jobs that this stage belongs to.
+      */
+    val jobIds = new HashSet[Int]
+    val name: String = callSite.shortForm
+    val details: String = callSite.longForm
+    /**
+      * Set of stage attempt IDs that have failed with a FetchFailure. We keep track of these
+      * failures in order to avoid endless retries if a stage keeps failing with a FetchFailure.
+      * We keep track of each attempt ID that has failed to avoid recording duplicate failures if
+      * multiple tasks from the same stage attempt fail (SPARK-5945).
+      */
+    val fetchFailedAttemptIds = new HashSet[Int]
+    /** The ID to use for the next new attempt for this stage. */
+    private var nextAttemptId: Int = 0
+    /**
+      * Pointer to the [[StageInfo]] object for the most recent attempt. This needs to be initialized
+      * here, before any attempts have actually been created, because the DAGScheduler uses this
+      * StageInfo to tell SparkListeners when a job starts (which happens before any stage attempts
+      * have been created).
+      */
+    private var _latestInfo: StageInfo = StageInfo.fromStage(this, nextAttemptId)
 
-	/** The ID to use for the next new attempt for this stage. */
-	private var nextAttemptId: Int = 0
+    override final def hashCode(): Int = id
 
-	val name: String = callSite.shortForm
-	val details: String = callSite.longForm
+    override final def equals(other: Any): Boolean = other match {
+        case stage: Stage => stage != null && stage.id == id
+        case _ => false
+    }
 
-	/**
-	  * Pointer to the [[StageInfo]] object for the most recent attempt. This needs to be initialized
-	  * here, before any attempts have actually been created, because the DAGScheduler uses this
-	  * StageInfo to tell SparkListeners when a job starts (which happens before any stage attempts
-	  * have been created).
-	  */
-	private var _latestInfo: StageInfo = StageInfo.fromStage(this, nextAttemptId)
+    /** Creates a new attempt for this stage by creating a new StageInfo with a new attempt ID. */
+    def makeNewStageAttempt(
+                                   numPartitionsToCompute: Int,
+                                   taskLocalityPreferences: Seq[Seq[TaskLocation]] = Seq.empty): Unit = {
+        val metrics = new TaskMetrics
+        metrics.register(rdd.sparkContext)
+        _latestInfo = StageInfo.fromStage(
+            this, nextAttemptId, Some(numPartitionsToCompute), metrics, taskLocalityPreferences)
+        nextAttemptId += 1
+    }
 
-	/**
-	  * Set of stage attempt IDs that have failed with a FetchFailure. We keep track of these
-	  * failures in order to avoid endless retries if a stage keeps failing with a FetchFailure.
-	  * We keep track of each attempt ID that has failed to avoid recording duplicate failures if
-	  * multiple tasks from the same stage attempt fail (SPARK-5945).
-	  */
-	val fetchFailedAttemptIds = new HashSet[Int]
+    /** Returns the StageInfo for the most recent attempt for this stage. */
+    def latestInfo: StageInfo = _latestInfo
 
-	private[scheduler] def clearFailures(): Unit = {
-		fetchFailedAttemptIds.clear()
-	}
+    /** Returns the sequence of partition ids that are missing (i.e. needs to be computed). */
+    def findMissingPartitions(): Seq[Int]
 
-	/** Creates a new attempt for this stage by creating a new StageInfo with a new attempt ID. */
-	def makeNewStageAttempt(
-							   numPartitionsToCompute: Int,
-							   taskLocalityPreferences: Seq[Seq[TaskLocation]] = Seq.empty): Unit = {
-		val metrics = new TaskMetrics
-		metrics.register(rdd.sparkContext)
-		_latestInfo = StageInfo.fromStage(
-			this, nextAttemptId, Some(numPartitionsToCompute), metrics, taskLocalityPreferences)
-		nextAttemptId += 1
-	}
-
-	/** Returns the StageInfo for the most recent attempt for this stage. */
-	def latestInfo: StageInfo = _latestInfo
-
-	override final def hashCode(): Int = id
-
-	override final def equals(other: Any): Boolean = other match {
-		case stage: Stage => stage != null && stage.id == id
-		case _ => false
-	}
-
-	/** Returns the sequence of partition ids that are missing (i.e. needs to be computed). */
-	def findMissingPartitions(): Seq[Int]
+    private[scheduler] def clearFailures(): Unit = {
+        fetchFailedAttemptIds.clear()
+    }
 }

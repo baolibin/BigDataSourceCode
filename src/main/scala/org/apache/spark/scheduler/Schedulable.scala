@@ -19,45 +19,45 @@ package org.apache.spark.scheduler
 
 import java.util.concurrent.ConcurrentLinkedQueue
 
-import scala.collection.mutable.ArrayBuffer
-
 import org.apache.spark.scheduler.SchedulingMode.SchedulingMode
 
+import scala.collection.mutable.ArrayBuffer
+
 /**
-  * 调度实体对象接口.
+  * 可调度实体的接口。有两种类型的可调度实体（Pools和TaskSetManagers）。
   *
   * An interface for schedulable entities.
   * there are two type of Schedulable entities(Pools and TaskSetManagers)
   */
 private[spark] trait Schedulable {
-	var parent: Pool
+    var parent: Pool
 
-	// child queues
-	def schedulableQueue: ConcurrentLinkedQueue[Schedulable]
+    // child queues
+    def schedulableQueue: ConcurrentLinkedQueue[Schedulable]
 
-	def schedulingMode: SchedulingMode
+    def schedulingMode: SchedulingMode
 
-	def weight: Int
+    def weight: Int
 
-	def minShare: Int
+    def minShare: Int
 
-	def runningTasks: Int
+    def runningTasks: Int
 
-	def priority: Int
+    def priority: Int
 
-	def stageId: Int
+    def stageId: Int
 
-	def name: String
+    def name: String
 
-	def addSchedulable(schedulable: Schedulable): Unit
+    def addSchedulable(schedulable: Schedulable): Unit
 
-	def removeSchedulable(schedulable: Schedulable): Unit
+    def removeSchedulable(schedulable: Schedulable): Unit
 
-	def getSchedulableByName(name: String): Schedulable
+    def getSchedulableByName(name: String): Schedulable
 
-	def executorLost(executorId: String, host: String, reason: ExecutorLossReason): Unit
+    def executorLost(executorId: String, host: String, reason: ExecutorLossReason): Unit
 
-	def checkSpeculatableTasks(minTimeToSpeculation: Int): Boolean
+    def checkSpeculatableTasks(minTimeToSpeculation: Int): Boolean
 
-	def getSortedTaskSetQueue: ArrayBuffer[TaskSetManager]
+    def getSortedTaskSetQueue: ArrayBuffer[TaskSetManager]
 }
