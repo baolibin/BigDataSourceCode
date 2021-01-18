@@ -18,7 +18,8 @@
 package org.apache.spark.shuffle
 
 /**
-  * reduce task读数据从shuffle system,拉取数据会跨节点传输数据,发生大量IO操作,常见容易发生数据倾斜问题.
+  * 在reduce任务中获得，用于从映射器读取组合记录。
+  *
   * Obtained inside a reduce task to read combined records from the mappers.
   */
 private[spark] trait ShuffleReader[K, C] {

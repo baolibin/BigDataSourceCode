@@ -29,7 +29,8 @@ import scala.collection.mutable.{ArrayBuffer, LinkedHashMap}
 
 
 /**
-  * 执行中task的性能追踪。
+  * 此类是表示与任务关联的度量的内部累加器集合的包装器。
+  *
   * :: DeveloperApi ::
   * Metrics tracked during the execution of a task.
   *

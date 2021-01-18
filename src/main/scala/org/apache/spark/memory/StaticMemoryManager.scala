@@ -21,13 +21,14 @@ import org.apache.spark.SparkConf
 import org.apache.spark.storage.BlockId
 
 /**
- * 静态内存管理
- * A [[MemoryManager]] that statically partitions the heap space into disjoint regions.
- *
- * The sizes of the execution and storage regions are determined through
- * `spark.shuffle.memoryFraction` and `spark.storage.memoryFraction` respectively. The two
- * regions are cleanly separated such that neither usage can borrow memory from the other.
- */
+  * 静态内存管理，它将堆空间静态地划分为不相交的区域。
+  *
+  * A [[MemoryManager]] that statically partitions the heap space into disjoint regions.
+  *
+  * The sizes of the execution and storage regions are determined through
+  * `spark.shuffle.memoryFraction` and `spark.storage.memoryFraction` respectively. The two
+  * regions are cleanly separated such that neither usage can borrow memory from the other.
+  */
 private[spark] class StaticMemoryManager(
                                                 conf: SparkConf,
                                                 maxOnHeapExecutionMemory: Long,
@@ -39,21 +40,21 @@ private[spark] class StaticMemoryManager(
             maxOnHeapStorageMemory,
             maxOnHeapExecutionMemory) {
 
-    def this(conf: SparkConf, numCores: Int) {
-        this(
-            conf,
-            StaticMemoryManager.getMaxExecutionMemory(conf),
-            StaticMemoryManager.getMaxStorageMemory(conf),
-            numCores)
+    // Max number of bytes worth of blocks to evict when unrolling
+    private val maxUnrollMemory: Long = {
+        (maxOnHeapStorageMemory * conf.getDouble("spark.storage.unrollFraction", 0.2)).toLong
     }
 
     // The StaticMemoryManager does not support off-heap storage memory:
     offHeapExecutionMemoryPool.incrementPoolSize(offHeapStorageMemoryPool.poolSize)
     offHeapStorageMemoryPool.decrementPoolSize(offHeapStorageMemoryPool.poolSize)
 
-    // Max number of bytes worth of blocks to evict when unrolling
-    private val maxUnrollMemory: Long = {
-        (maxOnHeapStorageMemory * conf.getDouble("spark.storage.unrollFraction", 0.2)).toLong
+    def this(conf: SparkConf, numCores: Int) {
+        this(
+            conf,
+            StaticMemoryManager.getMaxExecutionMemory(conf),
+            StaticMemoryManager.getMaxStorageMemory(conf),
+            numCores)
     }
 
     override def maxOffHeapStorageMemory: Long = 0L
@@ -110,9 +111,9 @@ private[spark] object StaticMemoryManager {
     private val MIN_MEMORY_BYTES = 32 * 1024 * 1024
 
     /**
-     * 返回最大可获得的存储内存字节数
-     * Return the total amount of memory available for the storage region, in bytes.
-     */
+      * 返回最大可获得的存储内存字节数
+      * Return the total amount of memory available for the storage region, in bytes.
+      */
     private def getMaxStorageMemory(conf: SparkConf): Long = {
         // 系统最大内存
         val systemMaxMemory = conf.getLong("spark.testing.memory", Runtime.getRuntime.maxMemory)
@@ -124,9 +125,9 @@ private[spark] object StaticMemoryManager {
     }
 
     /**
-     * 返回最大可获得的执行内存字节数
-     * Return the total amount of memory available for the execution region, in bytes.
-     */
+      * 返回最大可获得的执行内存字节数
+      * Return the total amount of memory available for the execution region, in bytes.
+      */
     private def getMaxExecutionMemory(conf: SparkConf): Long = {
         // 系统最大内存
         val systemMaxMemory = conf.getLong("spark.testing.memory", Runtime.getRuntime.maxMemory)

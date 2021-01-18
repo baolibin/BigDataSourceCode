@@ -17,69 +17,73 @@
 
 package org.apache.spark.deploy.rest
 
-import java.lang.Boolean
-
 /**
- * An abstract response sent from the server in the REST application submission protocol.
- */
+  * 在REST应用程序提交协议中从服务器发送的抽象响应。
+  *
+  * An abstract response sent from the server in the REST application submission protocol.
+  */
 private[rest] abstract class SubmitRestProtocolResponse extends SubmitRestProtocolMessage {
-  var serverSparkVersion: String = null
-  var success: Boolean = null
-  var unknownFields: Array[String] = null
-  protected override def doValidate(): Unit = {
-    super.doValidate()
-    assertFieldIsSet(serverSparkVersion, "serverSparkVersion")
-  }
+    var serverSparkVersion: String = null
+    var success: Boolean = null
+    var unknownFields: Array[String] = null
+
+    protected override def doValidate(): Unit = {
+        super.doValidate()
+        assertFieldIsSet(serverSparkVersion, "serverSparkVersion")
+    }
 }
 
 /**
- * A response to a [[CreateSubmissionRequest]] in the REST application submission protocol.
- */
+  * A response to a [[CreateSubmissionRequest]] in the REST application submission protocol.
+  */
 private[spark] class CreateSubmissionResponse extends SubmitRestProtocolResponse {
-  var submissionId: String = null
-  protected override def doValidate(): Unit = {
-    super.doValidate()
-    assertFieldIsSet(success, "success")
-  }
+    var submissionId: String = null
+
+    protected override def doValidate(): Unit = {
+        super.doValidate()
+        assertFieldIsSet(success, "success")
+    }
 }
 
 /**
- * A response to a kill request in the REST application submission protocol.
- */
+  * A response to a kill request in the REST application submission protocol.
+  */
 private[spark] class KillSubmissionResponse extends SubmitRestProtocolResponse {
-  var submissionId: String = null
-  protected override def doValidate(): Unit = {
-    super.doValidate()
-    assertFieldIsSet(submissionId, "submissionId")
-    assertFieldIsSet(success, "success")
-  }
+    var submissionId: String = null
+
+    protected override def doValidate(): Unit = {
+        super.doValidate()
+        assertFieldIsSet(submissionId, "submissionId")
+        assertFieldIsSet(success, "success")
+    }
 }
 
 /**
- * A response to a status request in the REST application submission protocol.
- */
+  * A response to a status request in the REST application submission protocol.
+  */
 private[spark] class SubmissionStatusResponse extends SubmitRestProtocolResponse {
-  var submissionId: String = null
-  var driverState: String = null
-  var workerId: String = null
-  var workerHostPort: String = null
+    var submissionId: String = null
+    var driverState: String = null
+    var workerId: String = null
+    var workerHostPort: String = null
 
-  protected override def doValidate(): Unit = {
-    super.doValidate()
-    assertFieldIsSet(submissionId, "submissionId")
-    assertFieldIsSet(success, "success")
-  }
+    protected override def doValidate(): Unit = {
+        super.doValidate()
+        assertFieldIsSet(submissionId, "submissionId")
+        assertFieldIsSet(success, "success")
+    }
 }
 
 /**
- * An error response message used in the REST application submission protocol.
- */
+  * An error response message used in the REST application submission protocol.
+  */
 private[rest] class ErrorResponse extends SubmitRestProtocolResponse {
-  // The highest protocol version that the server knows about
-  // This is set when the client specifies an unknown version
-  var highestProtocolVersion: String = null
-  protected override def doValidate(): Unit = {
-    super.doValidate()
-    assertFieldIsSet(message, "message")
-  }
+    // The highest protocol version that the server knows about
+    // This is set when the client specifies an unknown version
+    var highestProtocolVersion: String = null
+
+    protected override def doValidate(): Unit = {
+        super.doValidate()
+        assertFieldIsSet(message, "message")
+    }
 }

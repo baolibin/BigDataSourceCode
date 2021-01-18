@@ -16,7 +16,8 @@
  */
 
 /**
- * 集群模式下，executor使用部分。
+ * 用于各种集群管理器的executor组件的包。
+ * <p>
  * Package for executor components used with various cluster managers.
  */
 package org.apache.spark.executor;

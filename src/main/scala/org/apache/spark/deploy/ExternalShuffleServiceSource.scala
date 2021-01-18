@@ -17,21 +17,21 @@
 
 package org.apache.spark.deploy
 
-import javax.annotation.concurrent.ThreadSafe
-
 import com.codahale.metrics.MetricRegistry
-
+import javax.annotation.concurrent.ThreadSafe
 import org.apache.spark.metrics.source.Source
 import org.apache.spark.network.shuffle.ExternalShuffleBlockHandler
 
 /**
- * Provides metrics source for external shuffle service
- */
+  * 为外部shuffle服务提供度量源。
+  *
+  * Provides metrics source for external shuffle service
+  */
 @ThreadSafe
 private class ExternalShuffleServiceSource
 (blockHandler: ExternalShuffleBlockHandler) extends Source {
-  override val metricRegistry = new MetricRegistry()
-  override val sourceName = "shuffleService"
+    override val metricRegistry = new MetricRegistry()
+    override val sourceName = "shuffleService"
 
-  metricRegistry.registerAll(blockHandler.getAllMetrics)
+    metricRegistry.registerAll(blockHandler.getAllMetrics)
 }

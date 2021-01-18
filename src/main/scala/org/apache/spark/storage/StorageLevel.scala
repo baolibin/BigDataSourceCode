@@ -25,17 +25,19 @@ import org.apache.spark.memory.MemoryMode
 import org.apache.spark.util.Utils
 
 /**
- * 标记控制数据RDD的存储状态。
- * :: DeveloperApi ::
- * Flags for controlling the storage of an RDD. Each StorageLevel records whether to use memory,
- * or ExternalBlockStore, whether to drop the RDD to disk if it falls out of memory or
- * ExternalBlockStore, whether to keep the data in memory in a serialized format, and whether
- * to replicate the RDD partitions on multiple nodes.
- *
- * The [[org.apache.spark.storage.StorageLevel]] singleton object contains some static constants
- * for commonly useful storage levels. To create your own storage level object, use the
- * factory method of the singleton object (`StorageLevel(...)`).
- */
+  * 用于控制RDD存储的标志。每个StorageLevel记录是使用内存还是ExternalBlockStore，如果RDD没有内存或ExternalBlockStore，
+  * 是否将数据以序列化格式保存在内存中，以及是否在多个节点上复制RDD分区。
+  *
+  * :: DeveloperApi ::
+  * Flags for controlling the storage of an RDD. Each StorageLevel records whether to use memory,
+  * or ExternalBlockStore, whether to drop the RDD to disk if it falls out of memory or
+  * ExternalBlockStore, whether to keep the data in memory in a serialized format, and whether
+  * to replicate the RDD partitions on multiple nodes.
+  *
+  * The [[org.apache.spark.storage.StorageLevel]] singleton object contains some static constants
+  * for commonly useful storage levels. To create your own storage level object, use the
+  * factory method of the singleton object (`StorageLevel(...)`).
+  */
 @DeveloperApi
 class StorageLevel private(
                                   private var _useDisk: Boolean,
@@ -69,34 +71,6 @@ class StorageLevel private(
         out.writeByte(_replication)
     }
 
-    override def readExternal(in: ObjectInput): Unit = Utils.tryOrIOException {
-        val flags = in.readByte()
-        _useDisk = (flags & 8) != 0
-        _useMemory = (flags & 4) != 0
-        _useOffHeap = (flags & 2) != 0
-        _deserialized = (flags & 1) != 0
-        _replication = in.readByte()
-    }
-
-    override def toString: String = {
-        val disk = if (useDisk) "disk" else ""
-        val memory = if (useMemory) "memory" else ""
-        val heap = if (useOffHeap) "offheap" else ""
-        val deserialize = if (deserialized) "deserialized" else ""
-
-        val output =
-            Seq(disk, memory, heap, deserialize, s"$replication replicas").filter(_.nonEmpty)
-        s"StorageLevel(${output.mkString(", ")})"
-    }
-
-    assert(replication < 40, "Replication restricted to be less than 40 for calculating hash codes")
-
-    if (useOffHeap) {
-        require(!deserialized, "Off-heap storage level does not support deserialized storage")
-    }
-
-    override def hashCode(): Int = toInt * 41 + replication
-
     def toInt: Int = {
         var ret = 0
         if (_useDisk) {
@@ -113,6 +87,34 @@ class StorageLevel private(
         }
         ret
     }
+
+    override def readExternal(in: ObjectInput): Unit = Utils.tryOrIOException {
+        val flags = in.readByte()
+        _useDisk = (flags & 8) != 0
+        _useMemory = (flags & 4) != 0
+        _useOffHeap = (flags & 2) != 0
+        _deserialized = (flags & 1) != 0
+        _replication = in.readByte()
+    }
+
+    assert(replication < 40, "Replication restricted to be less than 40 for calculating hash codes")
+
+    if (useOffHeap) {
+        require(!deserialized, "Off-heap storage level does not support deserialized storage")
+    }
+
+    override def toString: String = {
+        val disk = if (useDisk) "disk" else ""
+        val memory = if (useMemory) "memory" else ""
+        val heap = if (useOffHeap) "offheap" else ""
+        val deserialize = if (deserialized) "deserialized" else ""
+
+        val output =
+            Seq(disk, memory, heap, deserialize, s"$replication replicas").filter(_.nonEmpty)
+        s"StorageLevel(${output.mkString(", ")})"
+    }
+
+    override def hashCode(): Int = toInt * 41 + replication
 
     def description: String = {
         var result = ""
@@ -150,9 +152,9 @@ class StorageLevel private(
 }
 
 /**
- * Various [[org.apache.spark.storage.StorageLevel]] defined and utility functions for creating
- * new storage levels.
- */
+  * Various [[org.apache.spark.storage.StorageLevel]] defined and utility functions for creating
+  * new storage levels.
+  */
 object StorageLevel {
     // 不使用任何存储
     val NONE = new StorageLevel(false, false, false, false)
@@ -177,10 +179,10 @@ object StorageLevel {
     private[spark] val storageLevelCache = new ConcurrentHashMap[StorageLevel, StorageLevel]()
 
     /**
-     * 返回指定StorageLevel存储级别对象
-     * :: DeveloperApi ::
-     * Return the StorageLevel object with the specified name.
-     */
+      * 返回指定StorageLevel存储级别对象
+      * :: DeveloperApi ::
+      * Return the StorageLevel object with the specified name.
+      */
     @DeveloperApi
     def fromString(s: String): StorageLevel = s match {
         case "NONE" => NONE
@@ -199,10 +201,10 @@ object StorageLevel {
     }
 
     /**
-     * 创建一个StorageLevel存储级别对象
-     * :: DeveloperApi ::
-     * Create a new StorageLevel object.
-     */
+      * 创建一个StorageLevel存储级别对象
+      * :: DeveloperApi ::
+      * Create a new StorageLevel object.
+      */
     @DeveloperApi
     def apply(
                      useDisk: Boolean,
@@ -215,9 +217,9 @@ object StorageLevel {
     }
 
     /**
-     * :: DeveloperApi ::
-     * Create a new StorageLevel object without setting useOffHeap.
-     */
+      * :: DeveloperApi ::
+      * Create a new StorageLevel object without setting useOffHeap.
+      */
     @DeveloperApi
     def apply(
                      useDisk: Boolean,
@@ -228,27 +230,27 @@ object StorageLevel {
     }
 
     /**
-     * :: DeveloperApi ::
-     * Create a new StorageLevel object from its integer representation.
-     */
+      * :: DeveloperApi ::
+      * Create a new StorageLevel object from its integer representation.
+      */
     @DeveloperApi
     def apply(flags: Int, replication: Int): StorageLevel = {
         getCachedStorageLevel(new StorageLevel(flags, replication))
     }
 
+    private[spark] def getCachedStorageLevel(level: StorageLevel): StorageLevel = {
+        storageLevelCache.putIfAbsent(level, level)
+        storageLevelCache.get(level)
+    }
+
     /**
-     * :: DeveloperApi ::
-     * Read StorageLevel object from ObjectInput stream.
-     */
+      * :: DeveloperApi ::
+      * Read StorageLevel object from ObjectInput stream.
+      */
     @DeveloperApi
     def apply(in: ObjectInput): StorageLevel = {
         val obj = new StorageLevel()
         obj.readExternal(in)
         getCachedStorageLevel(obj)
-    }
-
-    private[spark] def getCachedStorageLevel(level: StorageLevel): StorageLevel = {
-        storageLevelCache.putIfAbsent(level, level)
-        storageLevelCache.get(level)
     }
 }

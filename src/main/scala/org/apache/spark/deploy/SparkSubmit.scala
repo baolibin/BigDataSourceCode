@@ -24,10 +24,6 @@ import java.nio.file.Files
 import java.security.PrivilegedExceptionAction
 import java.text.ParseException
 
-import scala.annotation.tailrec
-import scala.collection.mutable.{ArrayBuffer, HashMap, Map}
-import scala.util.Properties
-
 import org.apache.commons.lang3.StringUtils
 import org.apache.hadoop.conf.{Configuration => HadoopConfiguration}
 import org.apache.hadoop.fs.{FileSystem, Path}
@@ -43,17 +39,22 @@ import org.apache.ivy.core.settings.IvySettings
 import org.apache.ivy.plugins.matcher.GlobPatternMatcher
 import org.apache.ivy.plugins.repository.file.FileRepository
 import org.apache.ivy.plugins.resolver.{ChainResolver, FileSystemResolver, IBiblioResolver}
-
 import org.apache.spark._
 import org.apache.spark.api.r.RUtils
 import org.apache.spark.deploy.rest._
 import org.apache.spark.launcher.SparkLauncher
 import org.apache.spark.util._
 
+import scala.annotation.tailrec
+import scala.collection.mutable.{ArrayBuffer, HashMap, Map}
+import scala.util.Properties
+
 /**
- * Whether to submit, kill, or request the status of an application.
- * The latter two operations are currently supported only for standalone and Mesos cluster modes.
- */
+  * 是否提交、终止或请求应用程序的状态。后两种操作目前仅支持单机和Mesos集群。
+  *
+  * Whether to submit, kill, or request the status of an application.
+  * The latter two operations are currently supported only for standalone and Mesos cluster modes.
+  */
 private[deploy] object SparkSubmitAction extends Enumeration {
     // 提交作业的行为方式枚举
     type SparkSubmitAction = Value
@@ -61,15 +62,18 @@ private[deploy] object SparkSubmitAction extends Enumeration {
 }
 
 /**
- * 启动一个spark作业的主要入口
- * Main gateway of launching a Spark application.
- *
- * 设置spark依赖的相应配置,提供了不同集群管理模式(cluster,local)和部署方式(yarn,standalone..)
- * This program handles setting up the classpath with relevant Spark dependencies and provides
- * a layer over the different cluster managers and deploy modes that Spark supports.
- */
+  * 启动Spark应用程序的主要网关。
+  *
+  * Main gateway of launching a Spark application.
+  *
+  * 这个程序负责设置具有相关Spark依赖项的类路径，并在Spark支持的不同集群管理器和部署模式上提供一个层。
+  *
+  * This program handles setting up the classpath with relevant Spark dependencies and provides
+  * a layer over the different cluster managers and deploy modes that Spark supports.
+  */
 object SparkSubmit extends CommandLineUtils {
 
+    // 集群管理模式
     // Cluster managers
     private val YARN = 1
     private val STANDALONE = 2
@@ -77,11 +81,13 @@ object SparkSubmit extends CommandLineUtils {
     private val LOCAL = 8
     private val ALL_CLUSTER_MGRS = YARN | STANDALONE | MESOS | LOCAL
 
+    // 部署模式
     // Deploy modes
     private val CLIENT = 1
     private val CLUSTER = 2
     private val ALL_DEPLOY_MODES = CLIENT | CLUSTER
 
+    // 一些非jar基础资源名，包括shell等。
     // Special primary resource names that represent shells rather than application jars.
     private val SPARK_SHELL = "spark-shell"
     private val PYSPARK_SHELL = "pyspark-shell"
@@ -89,7 +95,30 @@ object SparkSubmit extends CommandLineUtils {
     private val SPARKR_PACKAGE_ARCHIVE = "sparkr.zip"
     private val R_PACKAGE_ARCHIVE = "rpkg.zip"
 
+    // 未发现类退出异常。
     private val CLASS_NOT_FOUND_EXIT_STATUS = 101
+
+    /**
+      * 程序执行的主入口
+      */
+    override def main(args: Array[String]): Unit = {
+        // 获取参数解析列表
+        val appArgs = new SparkSubmitArguments(args)
+        // 用于确认是否打印一些JVM信息，默认为false。
+        if (appArgs.verbose) {
+            // scalastyle:off println
+            printStream.println(appArgs)
+            // scalastyle:on println
+        }
+        // 提交作业的行为方式
+        appArgs.action match {
+            case SparkSubmitAction.SUBMIT => submit(appArgs) // 提交spark作业
+            case SparkSubmitAction.KILL => kill(appArgs)
+            case SparkSubmitAction.REQUEST_STATUS => requestStatus(appArgs)
+        }
+    }
+
+    // scalastyle:on println
 
     // scalastyle:off println
     // 运行spark-shell命令时候,输出的一些版本信息
@@ -112,54 +141,35 @@ object SparkSubmit extends CommandLineUtils {
         exitFn(0)
     }
 
-    // scalastyle:on println
     /**
-     * 程序执行的主入口
-     */
-    override def main(args: Array[String]): Unit = {
-        // 获取参数解析列表
-        val appArgs = new SparkSubmitArguments(args)
-        // 用于确认是否打印一些JVM信息，默认为false。
-        if (appArgs.verbose) {
-            // scalastyle:off println
-            printStream.println(appArgs)
-            // scalastyle:on println
-        }
-        // 提交作业的行为方式
-        appArgs.action match {
-            case SparkSubmitAction.SUBMIT => submit(appArgs) // 提交spark作业
-            case SparkSubmitAction.KILL => kill(appArgs)
-            case SparkSubmitAction.REQUEST_STATUS => requestStatus(appArgs)
-        }
-    }
-
-    /**
-     * Kill an existing submission using the REST protocol. Standalone and Mesos cluster mode only.
-     */
+      * 使用REST协议杀死一个已存在的提交。
+      * Kill an existing submission using the REST protocol. Standalone and Mesos cluster mode only.
+      */
     private def kill(args: SparkSubmitArguments): Unit = {
         new RestSubmissionClient(args.master)
                 .killSubmission(args.submissionToKill)
     }
 
     /**
-     * Request the status of an existing submission using the REST protocol.
-     * Standalone and Mesos cluster mode only.
-     */
+      * 使用REST协议请求已存在提交的状态。
+      * Request the status of an existing submission using the REST protocol.
+      * Standalone and Mesos cluster mode only.
+      */
     private def requestStatus(args: SparkSubmitArguments): Unit = {
         new RestSubmissionClient(args.master)
                 .requestSubmissionStatus(args.submissionToRequestStatusFor)
     }
 
     /**
-     * 根据提供的参数提交这个app
-     * Submit the application using the provided parameters.
-     *
-     * This runs in two steps. First, we prepare the launch environment by setting up
-     * the appropriate classpath, system properties, and application arguments for
-     * running the child main class based on the cluster manager and the deploy mode.
-     * Second, we use this launch environment to invoke the main method of the child
-     * main class.
-     */
+      * 根据提供的参数提交这个app
+      * Submit the application using the provided parameters.
+      *
+      * This runs in two steps. First, we prepare the launch environment by setting up
+      * the appropriate classpath, system properties, and application arguments for
+      * running the child main class based on the cluster manager and the deploy mode.
+      * Second, we use this launch environment to invoke the main method of the child
+      * main class.
+      */
     @tailrec
     private def submit(args: SparkSubmitArguments): Unit = {
         val (childArgs, childClasspath, sysProps, childMainClass) = prepareSubmitEnvironment(args)
@@ -223,15 +233,15 @@ object SparkSubmit extends CommandLineUtils {
     }
 
     /**
-     * 准备环境，为提交一个Spark作业应用。
-     * Prepare the environment for submitting an application.
-     * This returns a 4-tuple:
-     * (1) the arguments for the child process,子进程的参数
-     * (2) a list of classpath entries for the child, 子程序的类路径条目信息
-     * (3) a map of system properties, and  系统参数配置
-     * (4) the main class for the child 子程序的主类
-     * Exposed for testing.
-     */
+      * 准备环境，为提交一个Spark作业应用。
+      * Prepare the environment for submitting an application.
+      * This returns a 4-tuple:
+      * (1) the arguments for the child process,子进程的参数
+      * (2) a list of classpath entries for the child, 子程序的类路径条目信息
+      * (3) a map of system properties, and  系统参数配置
+      * (4) the main class for the child 子程序的主类
+      * Exposed for testing.
+      */
     private[deploy] def prepareSubmitEnvironment(args: SparkSubmitArguments)
     : (Seq[String], Seq[String], Map[String, String], String) = {
         // Return values
@@ -695,12 +705,12 @@ object SparkSubmit extends CommandLineUtils {
     }
 
     /**
-     * 使用提供的加载环境运行子类的主方法
-     * Run the main method of the child class using the provided launch environment.
-     *
-     * Note that this main class will not be the one provided by the user if we're
-     * running cluster deploy mode or python applications.
-     */
+      * 使用提供的加载环境运行子类的主方法
+      * Run the main method of the child class using the provided launch environment.
+      *
+      * Note that this main class will not be the one provided by the user if we're
+      * running cluster deploy mode or python applications.
+      */
     private def runMain(
                                childArgs: Seq[String],
                                childClasspath: Seq[String],
@@ -797,6 +807,9 @@ object SparkSubmit extends CommandLineUtils {
         }
     }
 
+    /**
+      * 添加jar包到环境变量里。
+      */
     private def addJarToClasspath(localJar: String, loader: MutableURLClassLoader) {
         val uri = Utils.resolveURI(localJar)
         uri.getScheme match {
@@ -813,43 +826,49 @@ object SparkSubmit extends CommandLineUtils {
     }
 
     /**
-     * Return whether the given primary resource represents a user jar.
-     */
+      * 返回给定的主资源是否表示用户jar。
+      * Return whether the given primary resource represents a user jar.
+      */
     private[deploy] def isUserJar(res: String): Boolean = {
         !isShell(res) && !isPython(res) && !isInternal(res) && !isR(res)
     }
 
     /**
-     * Return whether the given primary resource represents a shell.
-     */
+      * 返回给定的资源是否表示一个shell。
+      * Return whether the given primary resource represents a shell.
+      */
     private[deploy] def isShell(res: String): Boolean = {
         (res == SPARK_SHELL || res == PYSPARK_SHELL || res == SPARKR_SHELL)
     }
 
     /**
-     * Return whether the given main class represents a sql shell.
-     */
+      * 返回给定的资源是否表示一个sql shell。
+      * Return whether the given main class represents a sql shell.
+      */
     private[deploy] def isSqlShell(mainClass: String): Boolean = {
         mainClass == "org.apache.spark.sql.hive.thriftserver.SparkSQLCLIDriver"
     }
 
     /**
-     * Return whether the given main class represents a thrift server.
-     */
+      * 返回给定的资源是否表示一个thrift server。
+      * Return whether the given main class represents a thrift server.
+      */
     private def isThriftServer(mainClass: String): Boolean = {
         mainClass == "org.apache.spark.sql.hive.thriftserver.HiveThriftServer2"
     }
 
     /**
-     * Return whether the given primary resource requires running python.
-     */
+      * 返回给定的主资源是否需要运行python。
+      * Return whether the given primary resource requires running python.
+      */
     private[deploy] def isPython(res: String): Boolean = {
         res != null && res.endsWith(".py") || res == PYSPARK_SHELL
     }
 
     /**
-     * Return whether the given primary resource requires running R.
-     */
+      * 返回给定的主资源是否需要运行R。
+      * Return whether the given primary resource requires running R.
+      */
     private[deploy] def isR(res: String): Boolean = {
         res != null && res.endsWith(".R") || res == SPARKR_SHELL
     }
@@ -859,9 +878,11 @@ object SparkSubmit extends CommandLineUtils {
     }
 
     /**
-     * Merge a sequence of comma-separated file lists, some of which may be null to indicate
-     * no files, into a single comma-separated string.
-     */
+      * 将一系列以逗号分隔的文件列表，其中一些列表可能为空，表示没有文件，合并到一个以逗号分隔的字符串中。
+      *
+      * Merge a sequence of comma-separated file lists, some of which may be null to indicate
+      * no files, into a single comma-separated string.
+      */
     private def mergeFileLists(lists: String*): String = {
         val merged = lists.filterNot(StringUtils.isBlank)
                 .flatMap(_.split(","))
@@ -870,12 +891,14 @@ object SparkSubmit extends CommandLineUtils {
     }
 
     /**
-     * Download a list of remote files to temp local files. If the file is local, the original file
-     * will be returned.
-     *
-     * @param fileList A comma separated file list.
-     * @return A comma separated local files list.
-     */
+      * 将远程文件列表下载到临时本地文件。
+      *
+      * Download a list of remote files to temp local files. If the file is local, the original file
+      * will be returned.
+      *
+      * @param fileList A comma separated file list.
+      * @return A comma separated local files list.
+      */
     private[deploy] def downloadFileList(
                                                 fileList: String,
                                                 hadoopConf: HadoopConfiguration): String = {
@@ -884,9 +907,11 @@ object SparkSubmit extends CommandLineUtils {
     }
 
     /**
-     * Download a file from the remote to a local temporary directory. If the input path points to
-     * a local path, returns it with no operation.
-     */
+      * 将文件从远程下载到本地临时目录。
+      *
+      * Download a file from the remote to a local temporary directory. If the input path points to
+      * a local path, returns it with no operation.
+      */
     private[deploy] def downloadFile(path: String, hadoopConf: HadoopConfiguration): String = {
         require(path != null, "path cannot be null.")
         val uri = Utils.resolveURI(path)
@@ -906,61 +931,47 @@ object SparkSubmit extends CommandLineUtils {
     }
 }
 
-/** Provides utility functions to be used inside SparkSubmit. */
+/**
+  * 提供在SparkSubmit中使用的实用函数。
+  *
+  * Provides utility functions to be used inside SparkSubmit.
+  */
 private[spark] object SparkSubmitUtils {
 
     // Exposed for testing
     var printStream = SparkSubmit.printStream
 
     /**
-     * Represents a Maven Coordinate
-     *
-     * @param groupId    the groupId of the coordinate
-     * @param artifactId the artifactId of the coordinate
-     * @param version    the version of the coordinate
-     */
-    private[deploy] case class MavenCoordinate(groupId: String, artifactId: String, version: String) {
-        override def toString: String = s"$groupId:$artifactId:$version"
+      * 使用带有默认解析器的选项构建Ivy设置。
+      *
+      * Build Ivy Settings using options with default resolvers
+      *
+      * @param remoteRepos Comma-delimited string of remote repositories other than maven central
+      * @param ivyPath     The path to the local ivy repository
+      * @return An IvySettings object
+      */
+    def buildIvySettings(remoteRepos: Option[String], ivyPath: Option[String]): IvySettings = {
+        val ivySettings: IvySettings = new IvySettings
+        processIvyPathArg(ivySettings, ivyPath)
+
+        // create a pattern matcher
+        ivySettings.addMatcher(new GlobPatternMatcher)
+        // create the dependency resolvers
+        val repoResolver = createRepoResolvers(ivySettings.getDefaultIvyUserDir)
+        ivySettings.addResolver(repoResolver)
+        ivySettings.setDefaultResolver(repoResolver.getName)
+        processRemoteRepoArg(ivySettings, remoteRepos)
+        ivySettings
     }
 
     /**
-     * Extracts maven coordinates from a comma-delimited string. Coordinates should be provided
-     * in the format `groupId:artifactId:version` or `groupId/artifactId:version`.
-     *
-     * @param coordinates Comma-delimited string of maven coordinates
-     * @return Sequence of Maven coordinates
-     */
-    def extractMavenCoordinates(coordinates: String): Seq[MavenCoordinate] = {
-        coordinates.split(",").map { p =>
-            val splits = p.replace("/", ":").split(":")
-            require(splits.length == 3, s"Provided Maven Coordinates must be in the form " +
-                    s"'groupId:artifactId:version'. The coordinate provided is: $p")
-            require(splits(0) != null && splits(0).trim.nonEmpty, s"The groupId cannot be null or " +
-                    s"be whitespace. The groupId provided is: ${splits(0)}")
-            require(splits(1) != null && splits(1).trim.nonEmpty, s"The artifactId cannot be null or " +
-                    s"be whitespace. The artifactId provided is: ${splits(1)}")
-            require(splits(2) != null && splits(2).trim.nonEmpty, s"The version cannot be null or " +
-                    s"be whitespace. The version provided is: ${splits(2)}")
-            new MavenCoordinate(splits(0), splits(1), splits(2))
-        }
-    }
-
-    /** Path of the local Maven cache. */
-    private[spark] def m2Path: File = {
-        if (Utils.isTesting) {
-            // test builds delete the maven cache, and this can cause flakiness
-            new File("dummy", ".m2" + File.separator + "repository")
-        } else {
-            new File(System.getProperty("user.home"), ".m2" + File.separator + "repository")
-        }
-    }
-
-    /**
-     * Extracts maven coordinates from a comma-delimited string
-     *
-     * @param defaultIvyUserDir The default user path for Ivy
-     * @return A ChainResolver used by Ivy to search for and resolve dependencies.
-     */
+      * 从逗号分隔的字符串中提取maven坐标。
+      *
+      * Extracts maven coordinates from a comma-delimited string
+      *
+      * @param defaultIvyUserDir The default user path for Ivy
+      * @return A ChainResolver used by Ivy to search for and resolve dependencies.
+      */
     def createRepoResolvers(defaultIvyUserDir: File): ChainResolver = {
         // We need a chain resolver if we want to check multiple repositories
         val cr = new ChainResolver
@@ -1003,88 +1014,28 @@ private[spark] object SparkSubmitUtils {
     }
 
     /**
-     * Output a comma-delimited list of paths for the downloaded jars to be added to the classpath
-     * (will append to jars in SparkSubmit).
-     *
-     * @param artifacts      Sequence of dependencies that were resolved and retrieved
-     * @param cacheDirectory directory where jars are cached
-     * @return a comma-delimited list of paths for the dependencies
-     */
-    def resolveDependencyPaths(
-                                      artifacts: Array[AnyRef],
-                                      cacheDirectory: File): String = {
-        artifacts.map { artifactInfo =>
-            val artifact = artifactInfo.asInstanceOf[Artifact].getModuleRevisionId
-            cacheDirectory.getAbsolutePath + File.separator +
-                    s"${artifact.getOrganisation}_${artifact.getName}-${artifact.getRevision}.jar"
-        }.mkString(",")
-    }
-
-    /** Adds the given maven coordinates to Ivy's module descriptor. */
-    def addDependenciesToIvy(
-                                    md: DefaultModuleDescriptor,
-                                    artifacts: Seq[MavenCoordinate],
-                                    ivyConfName: String): Unit = {
-        artifacts.foreach { mvn =>
-            val ri = ModuleRevisionId.newInstance(mvn.groupId, mvn.artifactId, mvn.version)
-            val dd = new DefaultDependencyDescriptor(ri, false, false)
-            dd.addDependencyConfiguration(ivyConfName, ivyConfName + "(runtime)")
-            // scalastyle:off println
-            printStream.println(s"${dd.getDependencyId} added as a dependency")
-            // scalastyle:on println
-            md.addDependency(dd)
-        }
-    }
-
-    /** Add exclusion rules for dependencies already included in the spark-assembly */
-    def addExclusionRules(
-                                 ivySettings: IvySettings,
-                                 ivyConfName: String,
-                                 md: DefaultModuleDescriptor): Unit = {
-        // Add scala exclusion rule
-        md.addExcludeRule(createExclusion("*:scala-library:*", ivySettings, ivyConfName))
-
-        // We need to specify each component explicitly, otherwise we miss spark-streaming-kafka-0-8 and
-        // other spark-streaming utility components. Underscore is there to differentiate between
-        // spark-streaming_2.1x and spark-streaming-kafka-0-8-assembly_2.1x
-        val components = Seq("catalyst_", "core_", "graphx_", "hive_", "mllib_", "repl_",
-            "sql_", "streaming_", "yarn_", "network-common_", "network-shuffle_", "network-yarn_")
-
-        components.foreach { comp =>
-            md.addExcludeRule(createExclusion(s"org.apache.spark:spark-$comp*:*", ivySettings,
-                ivyConfName))
+      * 本地Maven缓存路径。
+      * Path of the local Maven cache.
+      */
+    private[spark] def m2Path: File = {
+        if (Utils.isTesting) {
+            // test builds delete the maven cache, and this can cause flakiness
+            new File("dummy", ".m2" + File.separator + "repository")
+        } else {
+            new File(System.getProperty("user.home"), ".m2" + File.separator + "repository")
         }
     }
 
     /**
-     * Build Ivy Settings using options with default resolvers
-     *
-     * @param remoteRepos Comma-delimited string of remote repositories other than maven central
-     * @param ivyPath     The path to the local ivy repository
-     * @return An IvySettings object
-     */
-    def buildIvySettings(remoteRepos: Option[String], ivyPath: Option[String]): IvySettings = {
-        val ivySettings: IvySettings = new IvySettings
-        processIvyPathArg(ivySettings, ivyPath)
-
-        // create a pattern matcher
-        ivySettings.addMatcher(new GlobPatternMatcher)
-        // create the dependency resolvers
-        val repoResolver = createRepoResolvers(ivySettings.getDefaultIvyUserDir)
-        ivySettings.addResolver(repoResolver)
-        ivySettings.setDefaultResolver(repoResolver.getName)
-        processRemoteRepoArg(ivySettings, remoteRepos)
-        ivySettings
-    }
-
-    /**
-     * Load Ivy settings from a given filename, using supplied resolvers
-     *
-     * @param settingsFile Path to Ivy settings file
-     * @param remoteRepos  Comma-delimited string of remote repositories other than maven central
-     * @param ivyPath      The path to the local ivy repository
-     * @return An IvySettings object
-     */
+      * 使用提供的解析器从给定的文件名加载ivy设置。
+      *
+      * Load Ivy settings from a given filename, using supplied resolvers
+      *
+      * @param settingsFile Path to Ivy settings file
+      * @param remoteRepos  Comma-delimited string of remote repositories other than maven central
+      * @param ivyPath      The path to the local ivy repository
+      * @return An IvySettings object
+      */
     def loadIvySettings(
                                settingsFile: String,
                                remoteRepos: Option[String],
@@ -1104,7 +1055,11 @@ private[spark] object SparkSubmitUtils {
         ivySettings
     }
 
-    /* Set ivy settings for location of cache, if option is supplied */
+    /**
+      * 如果提供选项，则为缓存位置设置ivy设置。
+      *
+      * Set ivy settings for location of cache, if option is supplied
+      */
     private def processIvyPathArg(ivySettings: IvySettings, ivyPath: Option[String]): Unit = {
         ivyPath.filterNot(_.trim.isEmpty).foreach { alternateIvyDir =>
             ivySettings.setDefaultIvyUserDir(new File(alternateIvyDir))
@@ -1112,7 +1067,11 @@ private[spark] object SparkSubmitUtils {
         }
     }
 
-    /* Add any optional additional remote repositories */
+    /**
+      * 添加任何可选的其他远程存储库。
+      *
+      * Add any optional additional remote repositories
+      */
     private def processRemoteRepoArg(ivySettings: IvySettings, remoteRepos: Option[String]): Unit = {
         remoteRepos.filterNot(_.trim.isEmpty).map(_.split(",")).foreach { repositoryList =>
             val cr = new ChainResolver
@@ -1139,19 +1098,17 @@ private[spark] object SparkSubmitUtils {
         }
     }
 
-    /** A nice function to use in tests as well. Values are dummy strings. */
-    def getModuleDescriptor: DefaultModuleDescriptor = DefaultModuleDescriptor.newDefaultInstance(
-        ModuleRevisionId.newInstance("org.apache.spark", "spark-submit-parent", "1.0"))
-
     /**
-     * Resolves any dependencies that were supplied through maven coordinates
-     *
-     * @param coordinates Comma-delimited string of maven coordinates
-     * @param ivySettings An IvySettings containing resolvers to use
-     * @param exclusions  Exclusions to apply when resolving transitive dependencies
-     * @return The comma-delimited path to the jars of the given maven artifacts including their
-     *         transitive dependencies
-     */
+      * 解析通过maven坐标提供的任何依赖项。
+      *
+      * Resolves any dependencies that were supplied through maven coordinates
+      *
+      * @param coordinates Comma-delimited string of maven coordinates
+      * @param ivySettings An IvySettings containing resolvers to use
+      * @param exclusions  Exclusions to apply when resolving transitive dependencies
+      * @return The comma-delimited path to the jars of the given maven artifacts including their
+      *         transitive dependencies
+      */
     def resolveMavenCoordinates(
                                        coordinates: String,
                                        ivySettings: IvySettings,
@@ -1228,6 +1185,70 @@ private[spark] object SparkSubmitUtils {
         }
     }
 
+    /**
+      * 输出以逗号分隔的路径列表，供下载的jar添加到类路径。
+      *
+      * Output a comma-delimited list of paths for the downloaded jars to be added to the classpath
+      * (will append to jars in SparkSubmit).
+      *
+      * @param artifacts      Sequence of dependencies that were resolved and retrieved
+      * @param cacheDirectory directory where jars are cached
+      * @return a comma-delimited list of paths for the dependencies
+      */
+    def resolveDependencyPaths(
+                                      artifacts: Array[AnyRef],
+                                      cacheDirectory: File): String = {
+        artifacts.map { artifactInfo =>
+            val artifact = artifactInfo.asInstanceOf[Artifact].getModuleRevisionId
+            cacheDirectory.getAbsolutePath + File.separator +
+                    s"${artifact.getOrganisation}_${artifact.getName}-${artifact.getRevision}.jar"
+        }.mkString(",")
+    }
+
+    /**
+      * 将给定的maven坐标添加到Ivy的模块描述符中。
+      *
+      * Adds the given maven coordinates to Ivy's module descriptor.
+      */
+    def addDependenciesToIvy(
+                                    md: DefaultModuleDescriptor,
+                                    artifacts: Seq[MavenCoordinate],
+                                    ivyConfName: String): Unit = {
+        artifacts.foreach { mvn =>
+            val ri = ModuleRevisionId.newInstance(mvn.groupId, mvn.artifactId, mvn.version)
+            val dd = new DefaultDependencyDescriptor(ri, false, false)
+            dd.addDependencyConfiguration(ivyConfName, ivyConfName + "(runtime)")
+            // scalastyle:off println
+            printStream.println(s"${dd.getDependencyId} added as a dependency")
+            // scalastyle:on println
+            md.addDependency(dd)
+        }
+    }
+
+    /**
+      * 为已包含在spark程序集中的依赖项添加排除规则。
+      *
+      * Add exclusion rules for dependencies already included in the spark-assembly
+      */
+    def addExclusionRules(
+                                 ivySettings: IvySettings,
+                                 ivyConfName: String,
+                                 md: DefaultModuleDescriptor): Unit = {
+        // Add scala exclusion rule
+        md.addExcludeRule(createExclusion("*:scala-library:*", ivySettings, ivyConfName))
+
+        // We need to specify each component explicitly, otherwise we miss spark-streaming-kafka-0-8 and
+        // other spark-streaming utility components. Underscore is there to differentiate between
+        // spark-streaming_2.1x and spark-streaming-kafka-0-8-assembly_2.1x
+        val components = Seq("catalyst_", "core_", "graphx_", "hive_", "mllib_", "repl_",
+            "sql_", "streaming_", "yarn_", "network-common_", "network-shuffle_", "network-yarn_")
+
+        components.foreach { comp =>
+            md.addExcludeRule(createExclusion(s"org.apache.spark:spark-$comp*:*", ivySettings,
+                ivyConfName))
+        }
+    }
+
     private[deploy] def createExclusion(
                                                coords: String,
                                                ivySettings: IvySettings,
@@ -1239,12 +1260,58 @@ private[spark] object SparkSubmitUtils {
         rule
     }
 
+    /**
+      * 从逗号分隔的字符串中提取maven坐标。
+      *
+      * Extracts maven coordinates from a comma-delimited string. Coordinates should be provided
+      * in the format `groupId:artifactId:version` or `groupId/artifactId:version`.
+      *
+      * @param coordinates Comma-delimited string of maven coordinates
+      * @return Sequence of Maven coordinates
+      */
+    def extractMavenCoordinates(coordinates: String): Seq[MavenCoordinate] = {
+        coordinates.split(",").map { p =>
+            val splits = p.replace("/", ":").split(":")
+            require(splits.length == 3, s"Provided Maven Coordinates must be in the form " +
+                    s"'groupId:artifactId:version'. The coordinate provided is: $p")
+            require(splits(0) != null && splits(0).trim.nonEmpty, s"The groupId cannot be null or " +
+                    s"be whitespace. The groupId provided is: ${splits(0)}")
+            require(splits(1) != null && splits(1).trim.nonEmpty, s"The artifactId cannot be null or " +
+                    s"be whitespace. The artifactId provided is: ${splits(1)}")
+            require(splits(2) != null && splits(2).trim.nonEmpty, s"The version cannot be null or " +
+                    s"be whitespace. The version provided is: ${splits(2)}")
+            new MavenCoordinate(splits(0), splits(1), splits(2))
+        }
+    }
+
+    /**
+      * 在测试中也可以使用一个很好的函数。值是伪字符串。
+      *
+      * A nice function to use in tests as well. Values are dummy strings.
+      */
+    def getModuleDescriptor: DefaultModuleDescriptor = DefaultModuleDescriptor.newDefaultInstance(
+        ModuleRevisionId.newInstance("org.apache.spark", "spark-submit-parent", "1.0"))
+
+    /**
+      * 表示一个Maven的坐标
+      * Represents a Maven Coordinate
+      *
+      * @param groupId    the groupId of the coordinate
+      * @param artifactId the artifactId of the coordinate
+      * @param version    the version of the coordinate
+      */
+    private[deploy] case class MavenCoordinate(groupId: String, artifactId: String, version: String) {
+        override def toString: String = s"$groupId:$artifactId:$version"
+    }
+
 }
 
 /**
- * Provides an indirection layer for passing arguments as system properties or flags to
- * the user's driver program or to downstream launcher tools.
- */
+  * 提供一个间接层，用于将参数作为系统属性传递，标记到用户的驱动程序或下游启动程序工具。
+  *
+  * Provides an indirection layer for passing arguments as system properties or flags to
+  * the user's driver program or to downstream launcher tools.
+  */
 private case class OptionAssigner(
                                          value: String,
                                          clusterManager: Int,

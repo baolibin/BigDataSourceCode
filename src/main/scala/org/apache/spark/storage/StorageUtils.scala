@@ -26,14 +26,16 @@ import sun.nio.ch.DirectBuffer
 import scala.collection.{Map, mutable}
 
 /**
- * 为每个BlockManager存储信息。
- * :: DeveloperApi ::
- * Storage information for each BlockManager.
- *
- * 这个类假定BlockId和BlockStatus是不可变的。这个类的使用者们不能改变源信息。访问不是线程安全的。
- * This class assumes BlockId and BlockStatus are immutable, such that the consumers of this
- * class cannot mutate the source of the information. Accesses are not thread-safe.
- */
+  * 每个BlockManager的存储信息。
+  *
+  * :: DeveloperApi ::
+  * Storage information for each BlockManager.
+  *
+  * 这个类假设BlockId和BlockStatus是不可变的，这样这个类的使用者就不能改变信息的来源。访问不是线程安全的。
+  *
+  * This class assumes BlockId and BlockStatus are immutable, such that the consumers of this
+  * class cannot mutate the source of the information. Accesses are not thread-safe.
+  */
 @DeveloperApi
 @deprecated("This class may be removed or made private in a future release.", "2.2.0")
 class StorageStatus(
@@ -43,12 +45,12 @@ class StorageStatus(
                            val maxOffHeapMem: Option[Long]) {
 
     /**
-     * 在块管理器中数据块存储的内部表示。
-     * Internal representation of the blocks stored in this block manager.
-     *
-     * We store RDD blocks and non-RDD blocks separately to allow quick retrievals of RDD blocks.
-     * These collections should only be mutated through the add/update/removeBlock methods.
-     */
+      * 在块管理器中数据块存储的内部表示。
+      * Internal representation of the blocks stored in this block manager.
+      *
+      * We store RDD blocks and non-RDD blocks separately to allow quick retrievals of RDD blocks.
+      * These collections should only be mutated through the add/update/removeBlock methods.
+      */
     private val _rddBlocks = new mutable.HashMap[Int, mutable.Map[BlockId, BlockStatus]]
     private val _nonRddBlocks = new mutable.HashMap[BlockId, BlockStatus]
     private val _rddStorageInfo = new mutable.HashMap[Int, RddStorageInfo]
@@ -77,87 +79,31 @@ class StorageStatus(
     }
 
     /**
-     * Update the relevant storage info, taking into account any existing status for this block.
-     */
-    private def updateStorageInfo(blockId: BlockId, newBlockStatus: BlockStatus): Unit = {
-        val oldBlockStatus = getBlock(blockId).getOrElse(BlockStatus.empty)
-        val changeInMem = newBlockStatus.memSize - oldBlockStatus.memSize
-        val changeInDisk = newBlockStatus.diskSize - oldBlockStatus.diskSize
-        val level = newBlockStatus.storageLevel
-
-        // Compute new info from old info
-        val (oldMem, oldDisk) = blockId match {
-            case RDDBlockId(rddId, _) =>
-                _rddStorageInfo.get(rddId)
-                        .map { case RddStorageInfo(mem, disk, _) => (mem, disk) }
-                        .getOrElse((0L, 0L))
-            case _ if !level.useOffHeap =>
-                (_nonRddStorageInfo.onHeapUsage, _nonRddStorageInfo.diskUsage)
-            case _ if level.useOffHeap =>
-                (_nonRddStorageInfo.offHeapUsage, _nonRddStorageInfo.diskUsage)
-        }
-        val newMem = math.max(oldMem + changeInMem, 0L)
-        val newDisk = math.max(oldDisk + changeInDisk, 0L)
-
-        // Set the correct info
-        blockId match {
-            case RDDBlockId(rddId, _) =>
-                // If this RDD is no longer persisted, remove it
-                if (newMem + newDisk == 0) {
-                    _rddStorageInfo.remove(rddId)
-                } else {
-                    _rddStorageInfo(rddId) = RddStorageInfo(newMem, newDisk, level)
-                }
-            case _ =>
-                if (!level.useOffHeap) {
-                    _nonRddStorageInfo.onHeapUsage = newMem
-                } else {
-                    _nonRddStorageInfo.offHeapUsage = newMem
-                }
-                _nonRddStorageInfo.diskUsage = newDisk
-        }
-    }
-
-    /**
-     * Return the given block stored in this block manager in O(1) time.
-     *
-     * @note This is much faster than `this.blocks.get`, which is O(blocks) time.
-     */
-    def getBlock(blockId: BlockId): Option[BlockStatus] = {
-        blockId match {
-            case RDDBlockId(rddId, _) =>
-                _rddBlocks.get(rddId).flatMap(_.get(blockId))
-            case _ =>
-                _nonRddBlocks.get(blockId)
-        }
-    }
-
-    /**
-     * Return the blocks stored in this block manager.
-     *
-     * @note This is somewhat expensive, as it involves cloning the underlying maps and then
-     *       concatenating them together. Much faster alternatives exist for common operations such as
-     *       contains, get, and size.
-     */
+      * Return the blocks stored in this block manager.
+      *
+      * @note This is somewhat expensive, as it involves cloning the underlying maps and then
+      *       concatenating them together. Much faster alternatives exist for common operations such as
+      *       contains, get, and size.
+      */
     def blocks: Map[BlockId, BlockStatus] = _nonRddBlocks ++ rddBlocks
 
     /**
-     * Return the RDD blocks stored in this block manager.
-     *
-     * @note This is somewhat expensive, as it involves cloning the underlying maps and then
-     *       concatenating them together. Much faster alternatives exist for common operations such as
-     *       getting the memory, disk, and off-heap memory sizes occupied by this RDD.
-     */
+      * Return the RDD blocks stored in this block manager.
+      *
+      * @note This is somewhat expensive, as it involves cloning the underlying maps and then
+      *       concatenating them together. Much faster alternatives exist for common operations such as
+      *       getting the memory, disk, and off-heap memory sizes occupied by this RDD.
+      */
     def rddBlocks: Map[BlockId, BlockStatus] = _rddBlocks.flatMap { case (_, blocks) => blocks }
 
     /** Return the blocks that belong to the given RDD stored in this block manager. */
     def rddBlocksById(rddId: Int): Map[BlockId, BlockStatus] = _rddBlocks.getOrElse(rddId, Map.empty)
 
     /**
-     * Return whether the given block is stored in this block manager in O(1) time.
-     *
-     * @note This is much faster than `this.blocks.contains`, which is O(blocks) time.
-     */
+      * Return whether the given block is stored in this block manager in O(1) time.
+      *
+      * @note This is much faster than `this.blocks.contains`, which is O(blocks) time.
+      */
     def containsBlock(blockId: BlockId): Boolean = {
         blockId match {
             case RDDBlockId(rddId, _) =>
@@ -168,25 +114,25 @@ class StorageStatus(
     }
 
     /**
-     * Return the number of blocks stored in this block manager in O(RDDs) time.
-     *
-     * @note This is much faster than `this.blocks.size`, which is O(blocks) time.
-     */
+      * Return the number of blocks stored in this block manager in O(RDDs) time.
+      *
+      * @note This is much faster than `this.blocks.size`, which is O(blocks) time.
+      */
     def numBlocks: Int = _nonRddBlocks.size + numRddBlocks
 
     /**
-     * Return the number of RDD blocks stored in this block manager in O(RDDs) time.
-     *
-     * @note This is much faster than `this.rddBlocks.size`, which is O(RDD blocks) time.
-     */
+      * Return the number of RDD blocks stored in this block manager in O(RDDs) time.
+      *
+      * @note This is much faster than `this.rddBlocks.size`, which is O(RDD blocks) time.
+      */
     def numRddBlocks: Int = _rddBlocks.values.map(_.size).sum
 
     /**
-     * Return the number of blocks that belong to the given RDD in O(1) time.
-     *
-     * @note This is much faster than `this.rddBlocksById(rddId).size`, which is
-     *       O(blocks in this RDD) time.
-     */
+      * Return the number of blocks that belong to the given RDD in O(1) time.
+      *
+      * @note This is much faster than `this.rddBlocksById(rddId).size`, which is
+      *       O(blocks in this RDD) time.
+      */
     def numRddBlocksById(rddId: Int): Int = _rddBlocks.get(rddId).map(_.size).getOrElse(0)
 
     /** Return the memory remaining in this block manager. */
@@ -198,8 +144,8 @@ class StorageStatus(
     /** Return the memory used by this block manager. */
     def memUsed: Long = onHeapMemUsed.getOrElse(0L) + offHeapMemUsed.getOrElse(0L)
 
-    /** Return the on-heap memory used by this block manager. */
-    def onHeapMemUsed: Option[Long] = onHeapCacheSize.map(_ + _nonRddStorageInfo.onHeapUsage)
+    /** Return the memory used by caching RDDs */
+    def cacheSize: Long = onHeapCacheSize.getOrElse(0L) + offHeapCacheSize.getOrElse(0L)
 
     /** Return the memory used by on-heap caching RDDs */
     def onHeapCacheSize: Option[Long] = maxOnHeapMem.map { _ =>
@@ -208,12 +154,12 @@ class StorageStatus(
         }.sum
     }
 
-    /** Return the memory used by caching RDDs */
-    def cacheSize: Long = onHeapCacheSize.getOrElse(0L) + offHeapCacheSize.getOrElse(0L)
-
     /** Return the on-heap memory remaining in this block manager. */
     def onHeapMemRemaining: Option[Long] =
         for (m <- maxOnHeapMem; o <- onHeapMemUsed) yield m - o
+
+    /** Return the on-heap memory used by this block manager. */
+    def onHeapMemUsed: Option[Long] = onHeapCacheSize.map(_ + _nonRddStorageInfo.onHeapUsage)
 
     /** Return the off-heap memory remaining in this block manager. */
     def offHeapMemRemaining: Option[Long] =
@@ -267,6 +213,62 @@ class StorageStatus(
         }
     }
 
+    /**
+      * Update the relevant storage info, taking into account any existing status for this block.
+      */
+    private def updateStorageInfo(blockId: BlockId, newBlockStatus: BlockStatus): Unit = {
+        val oldBlockStatus = getBlock(blockId).getOrElse(BlockStatus.empty)
+        val changeInMem = newBlockStatus.memSize - oldBlockStatus.memSize
+        val changeInDisk = newBlockStatus.diskSize - oldBlockStatus.diskSize
+        val level = newBlockStatus.storageLevel
+
+        // Compute new info from old info
+        val (oldMem, oldDisk) = blockId match {
+            case RDDBlockId(rddId, _) =>
+                _rddStorageInfo.get(rddId)
+                        .map { case RddStorageInfo(mem, disk, _) => (mem, disk) }
+                        .getOrElse((0L, 0L))
+            case _ if !level.useOffHeap =>
+                (_nonRddStorageInfo.onHeapUsage, _nonRddStorageInfo.diskUsage)
+            case _ if level.useOffHeap =>
+                (_nonRddStorageInfo.offHeapUsage, _nonRddStorageInfo.diskUsage)
+        }
+        val newMem = math.max(oldMem + changeInMem, 0L)
+        val newDisk = math.max(oldDisk + changeInDisk, 0L)
+
+        // Set the correct info
+        blockId match {
+            case RDDBlockId(rddId, _) =>
+                // If this RDD is no longer persisted, remove it
+                if (newMem + newDisk == 0) {
+                    _rddStorageInfo.remove(rddId)
+                } else {
+                    _rddStorageInfo(rddId) = RddStorageInfo(newMem, newDisk, level)
+                }
+            case _ =>
+                if (!level.useOffHeap) {
+                    _nonRddStorageInfo.onHeapUsage = newMem
+                } else {
+                    _nonRddStorageInfo.offHeapUsage = newMem
+                }
+                _nonRddStorageInfo.diskUsage = newDisk
+        }
+    }
+
+    /**
+      * Return the given block stored in this block manager in O(1) time.
+      *
+      * @note This is much faster than `this.blocks.get`, which is O(blocks) time.
+      */
+    def getBlock(blockId: BlockId): Option[BlockStatus] = {
+        blockId match {
+            case RDDBlockId(rddId, _) =>
+                _rddBlocks.get(rddId).flatMap(_.get(blockId))
+            case _ =>
+                _nonRddBlocks.get(blockId)
+        }
+    }
+
     private case class RddStorageInfo(memoryUsage: Long, diskUsage: Long, level: StorageLevel)
 
     private case class NonRddStorageInfo(var onHeapUsage: Long, var offHeapUsage: Long,
@@ -275,18 +277,18 @@ class StorageStatus(
 }
 
 /**
- * 存储相关对象的帮助方法。
- * Helper methods for storage-related objects.
- */
+  * 存储相关对象的帮助方法。
+  * Helper methods for storage-related objects.
+  */
 private[spark] object StorageUtils extends Logging {
     /**
-     * Attempt to clean up a ByteBuffer if it is direct or memory-mapped. This uses an *unsafe* Sun
-     * API that will cause errors if one attempts to read from the disposed buffer. However, neither
-     * the bytes allocated to direct buffers nor file descriptors opened for memory-mapped buffers put
-     * pressure on the garbage collector. Waiting for garbage collection may lead to the depletion of
-     * off-heap memory or huge numbers of open files. There's unfortunately no standard API to
-     * manually dispose of these kinds of buffers.
-     */
+      * Attempt to clean up a ByteBuffer if it is direct or memory-mapped. This uses an *unsafe* Sun
+      * API that will cause errors if one attempts to read from the disposed buffer. However, neither
+      * the bytes allocated to direct buffers nor file descriptors opened for memory-mapped buffers put
+      * pressure on the garbage collector. Waiting for garbage collection may lead to the depletion of
+      * off-heap memory or huge numbers of open files. There's unfortunately no standard API to
+      * manually dispose of these kinds of buffers.
+      */
     def dispose(buffer: ByteBuffer): Unit = {
         if (buffer != null && buffer.isInstanceOf[MappedByteBuffer]) {
             logTrace(s"Disposing of $buffer")
@@ -302,9 +304,9 @@ private[spark] object StorageUtils extends Logging {
     }
 
     /**
-     * Update the given list of RDDInfo with the given list of storage statuses.
-     * This method overwrites the old values stored in the RDDInfo's.
-     */
+      * Update the given list of RDDInfo with the given list of storage statuses.
+      * This method overwrites the old values stored in the RDDInfo's.
+      */
     def updateRddInfo(rddInfos: Seq[RDDInfo], statuses: Seq[StorageStatus]): Unit = {
         rddInfos.foreach { rddInfo =>
             val rddId = rddInfo.id
@@ -323,8 +325,8 @@ private[spark] object StorageUtils extends Logging {
     }
 
     /**
-     * Return a mapping from block ID to its locations for each block that belongs to the given RDD.
-     */
+      * Return a mapping from block ID to its locations for each block that belongs to the given RDD.
+      */
     def getRddBlockLocations(rddId: Int, statuses: Seq[StorageStatus]): Map[BlockId, Seq[String]] = {
         val blockLocations = new mutable.HashMap[BlockId, mutable.ListBuffer[String]]
         statuses.foreach { status =>

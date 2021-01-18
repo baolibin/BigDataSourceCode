@@ -22,7 +22,8 @@ import java.nio.ByteBuffer
 import org.apache.spark.TaskState.TaskState
 
 /**
-  * Executor可插拔接口，向集群调度发送更新信息。
+  * Executor用来向集群调度程序发送更新的可插入接口。
+  *
   * A pluggable interface used by the Executor to send updates to the cluster scheduler.
   */
 private[spark] trait ExecutorBackend {

@@ -22,23 +22,21 @@ import org.apache.spark.storage.ShuffleBlockId
 
 private[spark]
 /**
- * Implementers of this trait understand how to retrieve block data for a logical shuffle block
- * identifier (i.e. map, reduce, and shuffle). Implementations may use files or file segments to
- * encapsulate shuffle data. This is used by the BlockStore to abstract over different shuffle
- * implementations when shuffle data is retrieved.
- */
-/**
- * shuffle数据块与物理文件的映射。
- * 目前唯一实现为IndexShuffleBlockResolver类。
- */
+  * 这个特性的实现者理解如何为逻辑shuffle块标识符（即map、reduce和shuffle）检索块数据。
+  *
+  * Implementers of this trait understand how to retrieve block data for a logical shuffle block
+  * identifier (i.e. map, reduce, and shuffle). Implementations may use files or file segments to
+  * encapsulate shuffle data. This is used by the BlockStore to abstract over different shuffle
+  * implementations when shuffle data is retrieved.
+  */
 trait ShuffleBlockResolver {
     type ShuffleId = Int
 
     /**
-     * 根据shuffle数据块获取物理文件
-     * Retrieve the data for the specified block. If the data for that block is not available,
-     * throws an unspecified exception.
-     */
+      * 根据shuffle数据块获取物理文件
+      * Retrieve the data for the specified block. If the data for that block is not available,
+      * throws an unspecified exception.
+      */
     def getBlockData(blockId: ShuffleBlockId): ManagedBuffer
 
     def stop(): Unit

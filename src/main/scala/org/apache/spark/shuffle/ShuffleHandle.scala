@@ -21,7 +21,7 @@ import org.apache.spark.annotation.DeveloperApi
 
 
 /**
-  * shuffle的内部操作类,使用ShuffleManager在相关的task之间传递信息.
+  * shuffle的一种不透明句柄，洗牌管理器使用它将信息传递给任务。
   *
   * An opaque handle to a shuffle, used by a ShuffleManager to pass information about it to tasks.
   *

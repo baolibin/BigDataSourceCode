@@ -22,6 +22,8 @@ import org.apache.spark.util.LongAccumulator
 
 
 /**
+  * 写入输出数据的方法，操作不是线程安全的。
+  *
   * :: DeveloperApi ::
   * Method by which output data was written.
   * Operations are not thread-safe.
@@ -34,7 +36,8 @@ object DataWriteMethod extends Enumeration with Serializable {
 
 
 /**
-  * 一批累加器，表示写入外部系统数据的性能。
+  * 一组累加器，表示向外部系统写入数据的度量。
+  *
   * :: DeveloperApi ::
   * A collection of accumulators that represents metrics about writing data to external systems.
   */
@@ -44,11 +47,15 @@ class OutputMetrics private[spark]() extends Serializable {
     private[executor] val _recordsWritten = new LongAccumulator
 
     /**
+      * 写入的字节总数。
+      *
       * Total number of bytes written.
       */
     def bytesWritten: Long = _bytesWritten.sum
 
     /**
+      * 写入的记录总数。
+      *
       * Total number of records written.
       */
     def recordsWritten: Long = _recordsWritten.sum

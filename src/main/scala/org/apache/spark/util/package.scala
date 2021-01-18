@@ -18,6 +18,8 @@
 package org.apache.spark
 
 /**
- * Spark utilities.
- */
+  * Spark实用程序。
+  *
+  * Spark utilities.
+  */
 package object util
