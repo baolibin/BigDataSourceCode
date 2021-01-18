@@ -1,7 +1,7 @@
-
 #### spark core源码阅读
     SparkCore模块源码阅读，版本2.2。
     包括部署Deploy模块、执行Executor模块、内存Memory模块、调度Scheduler模块、经典的Shuffle模块、存储Storage模块等等。
+
 ##### 1、Deploy模块源码
 > [deploy源码](src/main/scala/org/apache/spark/deploy)
 * Client：在standalone cluster模式中，启动和终止执行程序的驱动器。
@@ -45,15 +45,33 @@
 * MemoryPool：管理可调整大小的内存区域的簿记。此类是[[MemoryManager]]的内部类。有关详细信息，请参见子类。
     - StorageMemoryPool：为管理用于存储（缓存）的可调整大小的内存池执行簿记。
     - ExecutionMemoryPool：实现策略和簿记，以便在任务之间共享大小可调的内存池。
-    
+
 -----
 ##### 4、Scheduler模块源码
-> [scheduler源码](src/main/scala/org/apache/spark/scheduler)
+> [scheduler源码](src/main/scala/org/apache/spark/scheduler)：Spark的调度组件。这包括`DAGScheduler`以及lower level级别的`TaskScheduler`。
+* cluster：
+    - CoarseGrainedClusterMessage：粗粒度的集群消息。
+    - CoarseGrainedSchedulerBackend：等待粗粒度executors连接的调度程序后端。
+    - ExecutorData：粗粒度SchedulerBackend使用的executor的数据分组。
+    - ExecutorInfo：存储有关要从调度程序传递到侦听器的执行器的信息。
+    - StandaloneSchedulerBackend：Spark的独立群集管理器的[[SchedulerBackend]]实现。
+* local：
+    - LocalSchedulerBackend：运行Spark的本地版本时使用，其中executor、backend和master都在同一JVM中运行。它位于[[TaskSchedulerImpl]]后面，在本地运行的单个执行器（由[[LocalSchedulerBackend]]创建）上处理启动任务。
 * AccumulableInfo：关于一个[[org.apache.spark.Accumulable]]在task或stage中信息被修改。
 * ActiveJob：DAGScheduler中正在运行的作业。作业可以有两种类型：结果作业（计算ResultState以执行操作）或map阶段作业（在提交任何下游阶段之前计算ShuffleMapStage的映射输出）。
 * ApplicationEventListener：应用程序事件的简单侦听器。
 * BlacklistTracker：BlacklistTracker设计用于跟踪有问题的执行者和节点。它支持将整个应用程序中的执行者和节点列入黑名单（定期过期）。
-
+* DAGScheduler：实现面向stages调度的高级调度层。它为每个作业计算stages的DAG，跟踪哪些rdd和阶段输出被具体化，并找到运行作业的最小调度。
+* DAGSchedulerEvent：DAGScheduler可以处理的事件类型。
+* EventLoggingListener：将事件记录到持久存储的SparkListener。
+* ExecutorFailuresInTaskSet：用于跟踪失败任务以将其列入黑名单的小助手。一个任务集中一个Executor上所有失败的信息。
+* ExecutorLossReason：表示对executor或整个从属服务器失败或退出的解释。
+* ExternalClusterManager：一个集群管理器接口用于插件外部调度程序。
+* InputFormatInfo：解析并保存有关指定参数的inputFormat（和文件）的信息。
+* ：
+* ：
+* ：
+* ：
 
 -----
 ##### 5、Shuffle模块源码

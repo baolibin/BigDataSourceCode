@@ -18,35 +18,38 @@
 package org.apache.spark.scheduler
 
 import com.codahale.metrics.{Gauge, MetricRegistry, Timer}
-
 import org.apache.spark.metrics.source.Source
 
 private[scheduler] class DAGSchedulerSource(val dagScheduler: DAGScheduler)
-    extends Source {
-  override val metricRegistry = new MetricRegistry()
-  override val sourceName = "DAGScheduler"
+        extends Source {
+    override val metricRegistry = new MetricRegistry()
+    override val sourceName = "DAGScheduler"
 
-  metricRegistry.register(MetricRegistry.name("stage", "failedStages"), new Gauge[Int] {
-    override def getValue: Int = dagScheduler.failedStages.size
-  })
+    metricRegistry.register(MetricRegistry.name("stage", "failedStages"), new Gauge[Int] {
+        override def getValue: Int = dagScheduler.failedStages.size
+    })
 
-  metricRegistry.register(MetricRegistry.name("stage", "runningStages"), new Gauge[Int] {
-    override def getValue: Int = dagScheduler.runningStages.size
-  })
+    metricRegistry.register(MetricRegistry.name("stage", "runningStages"), new Gauge[Int] {
+        override def getValue: Int = dagScheduler.runningStages.size
+    })
 
-  metricRegistry.register(MetricRegistry.name("stage", "waitingStages"), new Gauge[Int] {
-    override def getValue: Int = dagScheduler.waitingStages.size
-  })
+    metricRegistry.register(MetricRegistry.name("stage", "waitingStages"), new Gauge[Int] {
+        override def getValue: Int = dagScheduler.waitingStages.size
+    })
 
-  metricRegistry.register(MetricRegistry.name("job", "allJobs"), new Gauge[Int] {
-    override def getValue: Int = dagScheduler.numTotalJobs
-  })
+    metricRegistry.register(MetricRegistry.name("job", "allJobs"), new Gauge[Int] {
+        override def getValue: Int = dagScheduler.numTotalJobs
+    })
 
-  metricRegistry.register(MetricRegistry.name("job", "activeJobs"), new Gauge[Int] {
-    override def getValue: Int = dagScheduler.activeJobs.size
-  })
+    metricRegistry.register(MetricRegistry.name("job", "activeJobs"), new Gauge[Int] {
+        override def getValue: Int = dagScheduler.activeJobs.size
+    })
 
-  /** Timer that tracks the time to process messages in the DAGScheduler's event loop */
-  val messageProcessingTimer: Timer =
-    metricRegistry.timer(MetricRegistry.name("messageProcessingTime"))
+    /**
+      * 跟踪DAGScheduler事件循环中处理消息的时间的计时器。
+      *
+      * Timer that tracks the time to process messages in the DAGScheduler's event loop
+      */
+    val messageProcessingTimer: Timer =
+        metricRegistry.timer(MetricRegistry.name("messageProcessingTime"))
 }
