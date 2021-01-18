@@ -49,8 +49,9 @@
 -----
 ##### 4、Scheduler模块源码
 > [scheduler源码](src/main/scala/org/apache/spark/scheduler)
-* AccumulableInfo:关于一个[[org.apache.spark.Accumulable]]在task或stage中信息被修改。
-* ActiveJob:DAGScheduler中正在运行的作业。作业可以有两种类型：结果作业（计算ResultState以执行操作）或map阶段作业（在提交任何下游阶段之前计算ShuffleMapStage的映射输出）。
+* AccumulableInfo：关于一个[[org.apache.spark.Accumulable]]在task或stage中信息被修改。
+* ActiveJob：DAGScheduler中正在运行的作业。作业可以有两种类型：结果作业（计算ResultState以执行操作）或map阶段作业（在提交任何下游阶段之前计算ShuffleMapStage的映射输出）。
+* ApplicationEventListener：应用程序事件的简单侦听器。
 
 
 -----
