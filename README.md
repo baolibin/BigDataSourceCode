@@ -49,6 +49,9 @@
 -----
 ##### 4、Scheduler模块源码
 > [scheduler源码](src/main/scala/org/apache/spark/scheduler)
+* AccumulableInfo:关于一个[[org.apache.spark.Accumulable]]在task或stage中信息被修改。
+* ActiveJob:DAGScheduler中正在运行的作业。作业可以有两种类型：结果作业（计算ResultState以执行操作）或map阶段作业（在提交任何下游阶段之前计算ShuffleMapStage的映射输出）。
+
 
 -----
 ##### 5、Shuffle模块源码
@@ -104,7 +107,7 @@ Reducers获取此文件的连续区域，以便读取其映射输出部分。
 
 -----
 ##### 7、Util模块源码
-> [storage源码](src/main/scala/org/apache/spark/util)： Spark实用程序。
+> [util源码](src/main/scala/org/apache/spark/util)： Spark实用程序。
 1. util
     1. collection
         1. Sorter：Java实现[[TimSort]]上的简单包装器。Java实现是包私有的，因此不能在包外调用它org.apache.spark网站.使用集合. 这是一个可用于spark的简单包装。
