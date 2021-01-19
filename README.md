@@ -179,7 +179,7 @@ Reducers获取此文件的连续区域，以便读取其映射输出部分。
 * FutureAction：支持取消action结果的future。这是Scala Future接口的扩展，支持取消。
 * HeartbeatReceiver：driver内部从executor端接受心跳信息。
 * InternalAccumulator：与表示任务级度量的内部累加器有关的字段和方法的集合。
-* ：
+* InterruptibleIterator：围绕现有迭代器提供任务终止功能的迭代器。它通过检查[[TaskContext]]中的中断标志来工作。
 * ：
 * ：
 
