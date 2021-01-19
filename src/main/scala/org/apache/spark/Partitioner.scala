@@ -30,7 +30,8 @@ import scala.reflect.ClassTag
 import scala.util.hashing.byteswap32
 
 /**
-  * K-V格式的RDD是怎样的通过K来进行分区的
+  * 定义了键值对RDD中的元素如何按键进行分区的一种对象。将每个键映射到一个分区ID，从0到“numPartitions-1”。
+  *
   * An object that defines how the elements in a key-value pair RDD are partitioned by key.
   * Maps each key to a partition ID, from 0 to `numPartitions - 1`.
   */

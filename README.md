@@ -180,6 +180,20 @@ Reducers获取此文件的连续区域，以便读取其映射输出部分。
 * HeartbeatReceiver：driver内部从executor端接受心跳信息。
 * InternalAccumulator：与表示任务级度量的内部累加器有关的字段和方法的集合。
 * InterruptibleIterator：围绕现有迭代器提供任务终止功能的迭代器。它通过检查[[TaskContext]]中的中断标志来工作。
+* MapOutputStatistics：保存有关map阶段中输出大小的统计信息。将来可能成为DeveloperApi。
+* MapOutputTracker：用于跟踪stage的map输出位置的类。这是抽象的，因为不同版本的MapOutputTracker（驱动程序和执行程序）使用不同的HashMap来存储其元数据。
+* Partition：RDD中分区的标识符。
+* Partitioner：定义了键值对RDD中的元素如何按键进行分区的一种对象。将每个键映射到一个分区ID，从0到“numPartitions-1”。
+* SecurityManager：负责spark安全的类。一般来说，这个类应该由SparkEnv实例化，大多数组件应该从SparkEnv访问它。
+* SparkConf：Spark应用程序的配置。用于将各种Spark参数设置为键值对。
+* SparkContext：Spark功能的主要入口点。SparkContext表示到Spark集群的连接，可用于在该集群上创建RDD、累加器和广播变量。
+* SparkEnv：保存正在运行的Spark实例（主实例或工作实例）的所有运行时环境对象，包括序列化程序、RpcEnv、块管理器、映射输出跟踪器等。
+* SparkFiles：解析通过`SparkContext.addFile文件()`添加的文件的路径。
+* SparkStatusTracker：用于监视job和stage进度的Low-level状态报告API。
+* SSLOptions： SSLOptions类是SSL配置选项的通用容器。它提供了生成特定对象的方法，以便为不同的通信协议配置SSL。
+* ：
+* ：
+* ：
 * ：
 * ：
 

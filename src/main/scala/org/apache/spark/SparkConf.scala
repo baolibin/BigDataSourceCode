@@ -29,26 +29,33 @@ import scala.collection.JavaConverters._
 import scala.collection.mutable.LinkedHashSet
 
 /**
-  * spark应用程序通过KV对，配置作业参数信息。
+  * Spark应用程序的配置。用于将各种Spark参数设置为键值对。
+  *
   * Configuration for a Spark application. Used to set various Spark parameters as key-value pairs.
   *
-  * 可以使用new SparkConf()的set函数来设置spark作业参数，覆盖系统参数。
+  * 大多数情况下，您都会使用“new SparkConf（）`”创建一个SparkConf对象，它也会从应用程序中设置的任何“spark.*` Java系统属性中加载值。
+  * 在本例中，直接在“SparkConf”对象上设置的参数优先于系统属性。
+  *
   * Most of the time, you would create a SparkConf object with `new SparkConf()`, which will load
   * values from any `spark.*` Java system properties set in your application as well. In this case,
   * parameters you set directly on the `SparkConf` object take priority over system properties.
   *
+  * 对于单元测试，您还可以调用'new SparkConf（false）`跳过加载外部设置并获得相同的配置，而不管系统属性是什么。
+  *
   * For unit tests, you can also call `new SparkConf(false)` to skip loading external settings and
   * get the same configuration no matter what the system properties are.
+  *
+  * 此类中的所有setter方法都支持链接。例如，可以编写“new SparkConf（）.setMaster（“local”）.setAppName（“My app”）”。
   *
   * All setter methods in this class support chaining. For example, you can write
   * `new SparkConf().setMaster("local").setAppName("My app")`.
   *
   * @param loadDefaults whether to also load values from Java system properties
   *
-  *                     spark不支持运行中更新sparkConf配置信息
+  * spark不支持运行中更新sparkConf配置信息
   * @note Once a SparkConf object is passed to Spark, it is cloned and can no longer be modified
-  *       by the user. Spark does not support modifying the configuration at runtime.
-  */
+  * by the user. Spark does not support modifying the configuration at runtime.
+  **/
 class SparkConf(loadDefaults: Boolean) extends Cloneable with Logging with Serializable {
 
     import SparkConf._
@@ -100,6 +107,28 @@ class SparkConf(loadDefaults: Boolean) extends Cloneable with Logging with Seria
     def setJars(jars: Seq[String]): SparkConf = {
         for (jar <- jars if (jar == null)) logWarning("null jar passed to SparkContext constructor")
         set("spark.jars", jars.filter(_ != null).mkString(","))
+    }
+
+    /**
+      * 设置KV值
+      * Set a configuration variable.
+      */
+    def set(key: String, value: String): SparkConf = {
+        set(key, value, false)
+    }
+
+    private[spark] def set(key: String, value: String, silent: Boolean): SparkConf = {
+        if (key == null) {
+            throw new NullPointerException("null key")
+        }
+        if (value == null) {
+            throw new NullPointerException("null value for " + key)
+        }
+        if (!silent) {
+            logDeprecationWarning(key)
+        }
+        settings.put(key, value)
+        this
     }
 
     /**
@@ -168,28 +197,6 @@ class SparkConf(loadDefaults: Boolean) extends Cloneable with Logging with Seria
     }
 
     /**
-      * 设置KV值
-      * Set a configuration variable.
-      */
-    def set(key: String, value: String): SparkConf = {
-        set(key, value, false)
-    }
-
-    private[spark] def set(key: String, value: String, silent: Boolean): SparkConf = {
-        if (key == null) {
-            throw new NullPointerException("null key")
-        }
-        if (value == null) {
-            throw new NullPointerException("null value for " + key)
-        }
-        if (!silent) {
-            logDeprecationWarning(key)
-        }
-        settings.put(key, value)
-        this
-    }
-
-    /**
       * Use Kryo serialization and register the given set of Avro schemas so that the generic
       * record serializer can decrease network IO
       */
@@ -205,6 +212,11 @@ class SparkConf(loadDefaults: Boolean) extends Cloneable with Logging with Seria
         getAll.filter { case (k, v) => k.startsWith(avroNamespace) }
                 .map { case (k, v) => (k.substring(avroNamespace.length).toLong, v) }
                 .toMap
+    }
+
+    /** Get all parameters as a list of pairs */
+    def getAll: Array[(String, String)] = {
+        settings.entrySet().asScala.map(x => (x.getKey, x.getValue)).toArray
     }
 
     /**
@@ -291,6 +303,11 @@ class SparkConf(loadDefaults: Boolean) extends Cloneable with Logging with Seria
         Utils.byteStringAsKb(get(key))
     }
 
+    /** Get a parameter; throws a NoSuchElementException if it's not set */
+    def get(key: String): String = {
+        getOption(key).getOrElse(throw new NoSuchElementException(key))
+    }
+
     /**
       * Get a size parameter as Kibibytes, falling back to a default if not set. If no
       * suffix is provided then Kibibytes are assumed.
@@ -325,11 +342,6 @@ class SparkConf(loadDefaults: Boolean) extends Cloneable with Logging with Seria
       */
     def getSizeAsGb(key: String): Long = {
         Utils.byteStringAsGb(get(key))
-    }
-
-    /** Get a parameter; throws a NoSuchElementException if it's not set */
-    def get(key: String): String = {
-        getOption(key).getOrElse(throw new NoSuchElementException(key))
     }
 
     /**
@@ -371,11 +383,6 @@ class SparkConf(loadDefaults: Boolean) extends Cloneable with Logging with Seria
     def getAllWithPrefix(prefix: String): Array[(String, String)] = {
         getAll.filter { case (k, v) => k.startsWith(prefix) }
                 .map { case (k, v) => (k.substring(prefix.length), v) }
-    }
-
-    /** Get all parameters as a list of pairs */
-    def getAll: Array[(String, String)] = {
-        settings.entrySet().asScala.map(x => (x.getKey, x.getValue)).toArray
     }
 
     /**
