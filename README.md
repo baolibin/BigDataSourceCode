@@ -198,3 +198,24 @@ Reducers获取此文件的连续区域，以便读取其映射输出部分。
 * TaskNotSerializableException：无法序列化任务时引发异常。
 * TaskState：task生命周期的6个状态。
 * TestUtils：测试实用程序。包含在主代码库中，因为它被多个项目使用。
+
+-----
+##### 10、RDD源码
+> [RDD源码](src/main/scala/org/apache/spark/rdd)：提供了几个RDD实现。
+* util：工具类
+    - PeriodicRDDCheckpointer：这个类帮助持久化和检查点rdd。
+* AsyncRDDActions：通过隐式转换提供的一组异步RDD操作。
+* CheckpointRDD：从存储器中恢复检查点数据的RDD。
+* ：
+* ：
+
+-----
+##### 11、Rpc通信源码
+> [Rpc通信源码](src/main/scala/org/apache/spark/rpc)：
+* ：
+* ：
+
+-----
+##### 12、IO源码
+> [IO源码](src/main/scala/org/apache/spark/io)：
+
