@@ -191,9 +191,10 @@ Reducers获取此文件的连续区域，以便读取其映射输出部分。
 * SparkFiles：解析通过`SparkContext.addFile文件()`添加的文件的路径。
 * SparkStatusTracker：用于监视job和stage进度的Low-level状态报告API。
 * SSLOptions： SSLOptions类是SSL配置选项的通用容器。它提供了生成特定对象的方法，以便为不同的通信协议配置SSL。
-* ：
-* ：
-* ：
-* ：
-* ：
-
+* TaskContext：Task的上下文信息。
+* TaskContextImpl：[[TaskContext]]实现。
+* TaskEndReason： 任务结束的各种可能原因。low-level的TaskScheduler应该为“短暂”的失败重试几次任务，并且只报告需要重新提交一些旧阶段的失败。
+* TaskKilledException：当任务被显式终止（即，预期任务失败）时引发异常。
+* TaskNotSerializableException：无法序列化任务时引发异常。
+* TaskState：task生命周期的6个状态。
+* TestUtils：测试实用程序。包含在主代码库中，因为它被多个项目使用。

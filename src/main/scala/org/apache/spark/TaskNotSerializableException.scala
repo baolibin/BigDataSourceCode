@@ -18,6 +18,8 @@
 package org.apache.spark
 
 /**
- * Exception thrown when a task cannot be serialized.
- */
+  * 无法序列化任务时引发异常。
+  *
+  * Exception thrown when a task cannot be serialized.
+  */
 private[spark] class TaskNotSerializableException(error: Throwable) extends Exception(error)

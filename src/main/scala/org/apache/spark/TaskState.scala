@@ -18,23 +18,21 @@
 package org.apache.spark
 
 /**
- * task生命周期的6个状态
- */
+  * task生命周期的6个状态。
+  */
 private[spark] object TaskState extends Enumeration {
 
-    /**
-     * LAUNCHING： Task已经从Driver侧发送给了Executor侧。
-     * RUNNING： Executor正在执行Task。
-     * FINISHED： Task在Executor上成功执行完成。
-     * FAILED： Executor执行Task失败。
-     * KILLED： 执行Task的Executor被killed掉。
-     * LOST： 仅用于Mesos fine-grained调度模式。
-     */
-    val LAUNCHING, RUNNING, FINISHED, FAILED, KILLED, LOST = Value
-
-    private val FINISHED_STATES = Set(FINISHED, FAILED, KILLED, LOST)
-
     type TaskState = Value
+    /**
+      * LAUNCHING： Task已经从Driver侧发送给了Executor侧。
+      * RUNNING： Executor正在执行Task。
+      * FINISHED： Task在Executor上成功执行完成。
+      * FAILED： Executor执行Task失败。
+      * KILLED： 执行Task的Executor被killed掉。
+      * LOST： 仅用于Mesos fine-grained调度模式。
+      */
+    val LAUNCHING, RUNNING, FINISHED, FAILED, KILLED, LOST = Value
+    private val FINISHED_STATES = Set(FINISHED, FAILED, KILLED, LOST)
 
     // 是否失败包括2种状态
     def isFailed(state: TaskState): Boolean = (LOST == state) || (FAILED == state)
