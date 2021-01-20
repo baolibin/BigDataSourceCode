@@ -40,22 +40,6 @@ class BlockRDD[T: ClassTag](sc: SparkContext, @transient val blockIds: Array[Blo
         }.toArray
     }
 
-    override def compute(split: Partition, context: TaskContext): Iterator[T] = {
-        assertValid()
-        val blockManager = SparkEnv.get.blockManager
-        val blockId = split.asInstanceOf[BlockRDDPartition].blockId
-        blockManager.get[T](blockId) match {
-            case Some(block) => block.data.asInstanceOf[Iterator[T]]
-            case None =>
-                throw new Exception(s"Could not compute split, block $blockId of RDD $id not found")
-        }
-    }
-
-    override def getPreferredLocations(split: Partition): Seq[String] = {
-        assertValid()
-        _locations(split.asInstanceOf[BlockRDDPartition].blockId)
-    }
-
     /** Check if this BlockRDD is valid. If not valid, exception is thrown. */
     private[spark] def assertValid() {
         if (!isValid) {
@@ -70,6 +54,22 @@ class BlockRDD[T: ClassTag](sc: SparkContext, @transient val blockIds: Array[Blo
       */
     private[spark] def isValid: Boolean = {
         _isValid
+    }
+
+    override def compute(split: Partition, context: TaskContext): Iterator[T] = {
+        assertValid()
+        val blockManager = SparkEnv.get.blockManager
+        val blockId = split.asInstanceOf[BlockRDDPartition].blockId
+        blockManager.get[T](blockId) match {
+            case Some(block) => block.data.asInstanceOf[Iterator[T]]
+            case None =>
+                throw new Exception(s"Could not compute split, block $blockId of RDD $id not found")
+        }
+    }
+
+    override def getPreferredLocations(split: Partition): Seq[String] = {
+        assertValid()
+        _locations(split.asInstanceOf[BlockRDDPartition].blockId)
     }
 
     protected def getBlockIdLocations(): Map[BlockId, Seq[String]] = {

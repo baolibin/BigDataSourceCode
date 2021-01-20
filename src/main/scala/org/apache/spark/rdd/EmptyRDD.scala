@@ -17,19 +17,20 @@
 
 package org.apache.spark.rdd
 
-import scala.reflect.ClassTag
-
 import org.apache.spark.{Partition, SparkContext, TaskContext}
 
+import scala.reflect.ClassTag
+
 /**
-  * 一个RDD没有分区，没有元素。
- * An RDD that has no partitions and no elements.
- */
+  * 没有分区和元素的RDD。
+  *
+  * An RDD that has no partitions and no elements.
+  */
 private[spark] class EmptyRDD[T: ClassTag](sc: SparkContext) extends RDD[T](sc, Nil) {
 
-  override def getPartitions: Array[Partition] = Array.empty
+    override def getPartitions: Array[Partition] = Array.empty
 
-  override def compute(split: Partition, context: TaskContext): Iterator[T] = {
-    throw new UnsupportedOperationException("empty RDD")
-  }
+    override def compute(split: Partition, context: TaskContext): Iterator[T] = {
+        throw new UnsupportedOperationException("empty RDD")
+    }
 }
