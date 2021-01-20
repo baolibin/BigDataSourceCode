@@ -206,7 +206,7 @@ Reducers获取此文件的连续区域，以便读取其映射输出部分。
     - PeriodicRDDCheckpointer：这个类帮助持久化和检查点rdd。
 * AsyncRDDActions：通过隐式转换提供的一组异步RDD操作。
 * CheckpointRDD：从存储器中恢复检查点数据的RDD。
-* ：
+* PartitionCoalescer：PartitionCoalescer定义如何合并给定RDD的分区。
 * ：
 
 -----
