@@ -16,6 +16,8 @@
  */
 
 /**
+ * 提供各种RDD的实现。
+ * <p>
  * Provides implementation's of various RDDs.
  */
 package org.apache.spark.rdd;

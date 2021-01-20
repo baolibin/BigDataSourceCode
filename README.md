@@ -200,8 +200,8 @@ Reducers获取此文件的连续区域，以便读取其映射输出部分。
 * TestUtils：测试实用程序。包含在主代码库中，因为它被多个项目使用。
 
 -----
-##### 10、RDD源码
-> [RDD源码](src/main/scala/org/apache/spark/rdd)：提供了几个RDD实现。
+##### 9、RDD源码
+> [RDD源码](src/main/scala/org/apache/spark/rdd)：提供各种RDD的实现。
 * util：工具类
     - PeriodicRDDCheckpointer：这个类帮助持久化和检查点rdd。
 * AsyncRDDActions：通过隐式转换提供的一组异步RDD操作。
@@ -217,37 +217,37 @@ Reducers获取此文件的连续区域，以便读取其映射输出部分。
 * HadoopRDD：一种RDD，提供使用旧的MapReduceAPI读取Hadoop中存储的数据。
 * InputFileBlockHolder：它保存当前Spark任务的文件名。
 * JdbcRDD：对JDBC连接执行SQL查询并读取结果的RDD。
-* LocalCheckpointRDD：
-* LocalRDDCheckpointData：
-* MapPartitionsRDD：
-* NewHadoopRDD：
-* OrderedRDDFunctions：
-* PairRDDFunctions：
+* LocalCheckpointRDD：一种虚拟的检查点RDD，用于在故障期间提供信息性的错误消息。
+* LocalRDDCheckpointData：在Spark的缓存层上实现的检查点的实现。
+* MapPartitionsRDD：将提供的函数应用于父RDD的每个分区的RDD。
+* NewHadoopRDD：一种RDD，使用新的MapReduceAPI提供读取存储在Hadoop中的数据。
+* OrderedRDDFunctions：（键，值）对的RDD上可用的额外函数，其中键可通过隐式转换进行排序。
+* PairRDDFunctions：通过隐式转换在（键，值）对的RDD上提供的额外函数。
 * ParallelCollectionRDD：
-* PartitionerAwareUnionRDD：
-* PartitionPruningRDD：
-* PartitionwiseSampledRDD：
-* PipedRDD：
-* RDD：
-* RDDCheckpointData：
-* RDDOperationScope：
-* ReliableCheckpointRDD：
-* ReliableRDDCheckpointData：
-* SequenceFileRDDFunctions：
-* ShuffledRDD：
-* SubtractedRDD：
-* UnionRDD：
-* WholeTextFileRDD：
+* PartitionerAwareUnionRDD：类表示一个RDD，该RDD可以接受由同一个分区器分区的多个RDD，并在保留分区器的同时将它们统一为单个RDD。
+* PartitionPruningRDD：一个RDD，用于修剪RDD分区，这样我们就可以避免在所有分区上启动任务。
+* PartitionwiseSampledRDD：从其父RDD分区中采样的RDD。
+* PipedRDD：一种RDD，它通过外部命令（每行打印一个）将每个父分区的内容通过管道传输，并将输出作为字符串集合返回。
+* RDD：一个弹性分布式数据集（RDD），Spark中的基本抽象。表示可以并行操作的不可变的、分区的元素集合。
+* RDDCheckpointData：此类包含与RDD检查点相关的所有信息。这个类的每个实例都与一个RDD相关联。它管理关联RDD的检查点过程，并通过提供检查点RDD的更新分区、迭代器和首选位置来管理检查点后状态。
+* RDDOperationScope：表示实例化RDD的操作的通用命名代码块。
+* ReliableCheckpointRDD：从以前写入可靠存储器的检查点文件中读取数据的一种RDD。
+* ReliableRDDCheckpointData：将RDD数据写入可靠存储器的检查点实现。这允许驱动程序在先前计算的状态出现故障时重新启动。
+* SequenceFileRDDFunctions：（键，值）对的RDD上提供了额外的函数，可以通过隐式转换创建Hadoop SequenceFile。
+* ShuffledRDD：shuffle产生的RDD（例如数据的重新分区）。
+* SubtractedRDD：集差/减法的cogroup优化版本。
+* UnionRDD：并集RDD。
+* WholeTextFileRDD：读入一堆文本文件的RDD，每个文本文件变成一条记录。
 * ZippedPartitionsBaseRDD：
-* ZippedWithIndexRDD：
+* ZippedWithIndexRDD：表示用元素索引压缩的RDD。排序首先基于分区索引，然后是每个分区内项目的排序。
 
 -----
-##### 11、Rpc通信源码
+##### 10、Rpc通信源码
 > [Rpc通信源码](src/main/scala/org/apache/spark/rpc)：
 * ：
 * ：
 
 -----
-##### 12、IO源码
+##### 11、IO源码
 > [IO源码](src/main/scala/org/apache/spark/io)：
 
