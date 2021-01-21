@@ -247,8 +247,8 @@ Reducers获取此文件的连续区域，以便读取其映射输出部分。
 * netty：
     - Dispatcher：消息调度器，负责将RPC消息路由到适当的端点。
 * RpcAddress：RPC环境的地址，带有主机名和端口。
-* ：
-* ：
+* RpcCallContext：[[RpcEndpoint]]可以用来发回消息或失败的回调。它是线程安全的，可以在任何线程中调用。
+* RpcEndpoint：RPC的一个端点，用于定义给定消息要触发的函数。
 * ：
 
 -----
