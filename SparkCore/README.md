@@ -248,8 +248,13 @@ Reducers获取此文件的连续区域，以便读取其映射输出部分。
     - Dispatcher：消息调度器，负责将RPC消息路由到适当的端点。
 * RpcAddress：RPC环境的地址，带有主机名和端口。
 * ：
+* ：
+* ：
 
 -----
 ##### 11、IO源码
 > [IO源码](src/main/scala/org/apache/spark/io)：
+* ：
+* ：
+* ：
 
