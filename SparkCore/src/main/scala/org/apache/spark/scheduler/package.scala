@@ -20,7 +20,7 @@ package org.apache.spark
 /**
   * Spark的调度组件。这包括`DAGScheduler`以及lower level级别的`TaskScheduler`。
   *
-  * Spark's scheduling components. This includes the `org.apache.spark.scheduler.DAGScheduler` and
-  * lower level `org.apache.spark.scheduler.TaskScheduler`.
+  * Spark's scheduling components. This includes the `org.apache.org.apache.spark.scheduler.DAGScheduler` and
+  * lower level `org.apache.org.apache.spark.scheduler.TaskScheduler`.
   */
 package object scheduler

@@ -31,7 +31,7 @@ import scala.collection.Map
 /**
   * 使用spark类路径运行命令的实用工具。
   *
-  * Utilities for running commands with the spark classpath.
+  * Utilities for running commands with the org.apache.spark classpath.
   */
 private[deploy]
 object CommandUtils extends Logging {

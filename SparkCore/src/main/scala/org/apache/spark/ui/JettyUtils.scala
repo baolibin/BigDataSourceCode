@@ -76,8 +76,8 @@ private[spark] object JettyUtils extends Logging {
     // SPARK-10589 avoid frame-related click-jacking vulnerability, using X-Frame-Options
     // (see http://tools.ietf.org/html/rfc7034). By default allow framing only from the
     // same origin, but allow framing for a specific named URI.
-    // Example: spark.ui.allowFramingFrom = https://example.com/
-    val allowFramingFrom = conf.getOption("spark.ui.allowFramingFrom")
+    // Example: org.apache.spark.ui.allowFramingFrom = https://example.com/
+    val allowFramingFrom = conf.getOption("org.apache.spark.ui.allowFramingFrom")
     val xFrameOptionsValue =
       allowFramingFrom.map(uri => s"ALLOW-FROM $uri").getOrElse("SAMEORIGIN")
 
@@ -246,7 +246,7 @@ private[spark] object JettyUtils extends Logging {
 
   /** Add filters, if any, to the given list of ServletContextHandlers */
   def addFilters(handlers: Seq[ServletContextHandler], conf: SparkConf) {
-    val filters: Array[String] = conf.get("spark.ui.filters", "").split(',').map(_.trim())
+    val filters: Array[String] = conf.get("org.apache.spark.ui.filters", "").split(',').map(_.trim())
     filters.foreach {
       case filter : String =>
         if (!filter.isEmpty) {
@@ -254,7 +254,7 @@ private[spark] object JettyUtils extends Logging {
           val holder : FilterHolder = new FilterHolder()
           holder.setClassName(filter)
           // Get any parameters for each filter
-          conf.get("spark." + filter + ".params", "").split(',').map(_.trim()).toSet.foreach {
+          conf.get("org.apache.spark." + filter + ".params", "").split(',').map(_.trim()).toSet.foreach {
             param: String =>
               if (!param.isEmpty) {
                 val parts = param.split("=")
@@ -262,7 +262,7 @@ private[spark] object JettyUtils extends Logging {
              }
           }
 
-          val prefix = s"spark.$filter.param."
+          val prefix = s"org.apache.spark.$filter.param."
           conf.getAll
             .filter { case (k, v) => k.length() > prefix.length() && k.startsWith(prefix) }
             .foreach { case (k, v) => holder.setInitParameter(k.substring(prefix.length()), v) }

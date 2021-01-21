@@ -26,7 +26,7 @@ import org.apache.spark.storage.BlockId
   * A [[MemoryManager]] that statically partitions the heap space into disjoint regions.
   *
   * The sizes of the execution and storage regions are determined through
-  * `spark.shuffle.memoryFraction` and `spark.storage.memoryFraction` respectively. The two
+  * `org.apache.spark.shuffle.memoryFraction` and `org.apache.spark.storage.memoryFraction` respectively. The two
   * regions are cleanly separated such that neither usage can borrow memory from the other.
   */
 private[spark] class StaticMemoryManager(
@@ -42,7 +42,7 @@ private[spark] class StaticMemoryManager(
 
     // Max number of bytes worth of blocks to evict when unrolling
     private val maxUnrollMemory: Long = {
-        (maxOnHeapStorageMemory * conf.getDouble("spark.storage.unrollFraction", 0.2)).toLong
+        (maxOnHeapStorageMemory * conf.getDouble("org.apache.spark.storage.unrollFraction", 0.2)).toLong
     }
 
     // The StaticMemoryManager does not support off-heap storage memory:
@@ -116,11 +116,11 @@ private[spark] object StaticMemoryManager {
       */
     private def getMaxStorageMemory(conf: SparkConf): Long = {
         // 系统最大内存
-        val systemMaxMemory = conf.getLong("spark.testing.memory", Runtime.getRuntime.maxMemory)
+        val systemMaxMemory = conf.getLong("org.apache.spark.testing.memory", Runtime.getRuntime.maxMemory)
         // 存储内存占系统最大内存比例
-        val memoryFraction = conf.getDouble("spark.storage.memoryFraction", 0.6)
+        val memoryFraction = conf.getDouble("org.apache.spark.storage.memoryFraction", 0.6)
         // 避免出现OOM，存储内存会设置一个安全系数
-        val safetyFraction = conf.getDouble("spark.storage.safetyFraction", 0.9)
+        val safetyFraction = conf.getDouble("org.apache.spark.storage.safetyFraction", 0.9)
         (systemMaxMemory * memoryFraction * safetyFraction).toLong
     }
 
@@ -130,25 +130,25 @@ private[spark] object StaticMemoryManager {
       */
     private def getMaxExecutionMemory(conf: SparkConf): Long = {
         // 系统最大内存
-        val systemMaxMemory = conf.getLong("spark.testing.memory", Runtime.getRuntime.maxMemory)
+        val systemMaxMemory = conf.getLong("org.apache.spark.testing.memory", Runtime.getRuntime.maxMemory)
 
         if (systemMaxMemory < MIN_MEMORY_BYTES) {
             throw new IllegalArgumentException(s"System memory $systemMaxMemory must " +
                     s"be at least $MIN_MEMORY_BYTES. Please increase heap size using the --driver-memory " +
-                    s"option or spark.driver.memory in Spark configuration.")
+                    s"option or org.apache.spark.driver.memory in Spark configuration.")
         }
-        if (conf.contains("spark.executor.memory")) {
-            val executorMemory = conf.getSizeAsBytes("spark.executor.memory")
+        if (conf.contains("org.apache.spark.executor.memory")) {
+            val executorMemory = conf.getSizeAsBytes("org.apache.spark.executor.memory")
             if (executorMemory < MIN_MEMORY_BYTES) {
                 throw new IllegalArgumentException(s"Executor memory $executorMemory must be at least " +
                         s"$MIN_MEMORY_BYTES. Please increase executor memory using the " +
-                        s"--executor-memory option or spark.executor.memory in Spark configuration.")
+                        s"--executor-memory option or org.apache.spark.executor.memory in Spark configuration.")
             }
         }
         // 执行内存占系统最大内存比例
-        val memoryFraction = conf.getDouble("spark.shuffle.memoryFraction", 0.2)
+        val memoryFraction = conf.getDouble("org.apache.spark.shuffle.memoryFraction", 0.2)
         // 避免出现OOM，执行内存会设置一个安全系数
-        val safetyFraction = conf.getDouble("spark.shuffle.safetyFraction", 0.8)
+        val safetyFraction = conf.getDouble("org.apache.spark.shuffle.safetyFraction", 0.8)
         (systemMaxMemory * memoryFraction * safetyFraction).toLong
     }
 

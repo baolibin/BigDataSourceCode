@@ -87,7 +87,7 @@ private[scheduler] class BlacklistTracker(
     var nextExpiryTime: Long = Long.MaxValue
     /**
       * Mapping from nodes to all of the executors that have been blacklisted on that node. We do *not*
-      * remove from this when executors are removed from spark, so we can track when we get multiple
+      * remove from this when executors are removed from org.apache.spark, so we can track when we get multiple
       * successive blacklisted executors on one node.  Nonetheless, it will not grow too large because
       * there cannot be many blacklisted executors on one node, before we stop requesting more
       * executors on that node, and we clean up the list of blacklisted executors once an executor has
@@ -183,7 +183,7 @@ private[scheduler] class BlacklistTracker(
                     allocationClient match {
                         case Some(allocationClient) =>
                             logInfo(s"Killing blacklisted executor id $exec " +
-                                s"since spark.blacklist.killBlacklistedExecutors is set.")
+                                s"since org.apache.spark.blacklist.killBlacklistedExecutors is set.")
                             allocationClient.killExecutors(Seq(exec), true, true)
                         case None =>
                             logWarning(s"Not attempting to kill blacklisted executor id $exec " +
@@ -208,7 +208,7 @@ private[scheduler] class BlacklistTracker(
                         allocationClient match {
                             case Some(allocationClient) =>
                                 logInfo(s"Killing all executors on blacklisted host $node " +
-                                    s"since spark.blacklist.killBlacklistedExecutors is set.")
+                                    s"since org.apache.spark.blacklist.killBlacklistedExecutors is set.")
                                 if (allocationClient.killExecutorsOnHost(node) == false) {
                                     logError(s"Killing executors on node $node failed.")
                                 }

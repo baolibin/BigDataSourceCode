@@ -67,19 +67,19 @@ private class ClientEndpoint(
                 // TODO: We could add an env variable here and intercept it in `sc.addJar` that would
                 //       truncate filesystem paths similar to what YARN does. For now, we just require
                 //       people call `addJar` assuming the jar is in the same directory.
-                val mainClass = "org.apache.spark.deploy.worker.DriverWrapper"
+                val mainClass = "org.apache.org.apache.spark.deploy.worker.DriverWrapper"
 
-                val classPathConf = "spark.driver.extraClassPath"
+                val classPathConf = "org.apache.spark.driver.extraClassPath"
                 val classPathEntries = sys.props.get(classPathConf).toSeq.flatMap { cp =>
                     cp.split(java.io.File.pathSeparator)
                 }
 
-                val libraryPathConf = "spark.driver.extraLibraryPath"
+                val libraryPathConf = "org.apache.spark.driver.extraLibraryPath"
                 val libraryPathEntries = sys.props.get(libraryPathConf).toSeq.flatMap { cp =>
                     cp.split(java.io.File.pathSeparator)
                 }
 
-                val extraJavaOptsConf = "spark.driver.extraJavaOptions"
+                val extraJavaOptsConf = "org.apache.spark.driver.extraJavaOptions"
                 val extraJavaOpts = sys.props.get(extraJavaOptsConf)
                         .map(Utils.splitCommandString).getOrElse(Seq.empty)
                 val sparkJavaOpts = Utils.sparkJavaOpts(conf)
@@ -217,15 +217,15 @@ object Client {
         // scalastyle:off println
         if (!sys.props.contains("SPARK_SUBMIT")) {
             println("WARNING: This client is deprecated and will be removed in a future version of Spark")
-            println("Use ./bin/spark-submit with \"--master spark://host:port\"")
+            println("Use ./bin/org.apache.spark-submit with \"--master org.apache.spark://host:port\"")
         }
         // scalastyle:on println
 
         val conf = new SparkConf()
         val driverArgs = new ClientArguments(args)
 
-        if (!conf.contains("spark.rpc.askTimeout")) {
-            conf.set("spark.rpc.askTimeout", "10s")
+        if (!conf.contains("org.apache.spark.rpc.askTimeout")) {
+            conf.set("org.apache.spark.rpc.askTimeout", "10s")
         }
         Logger.getRootLogger.setLevel(driverArgs.logLevel)
 

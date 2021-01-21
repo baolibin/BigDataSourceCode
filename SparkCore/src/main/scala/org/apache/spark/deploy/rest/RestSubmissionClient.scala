@@ -62,9 +62,9 @@ private[spark] class RestSubmissionClient(master: String) extends Logging {
 
     import RestSubmissionClient._
 
-    private val supportedMasterPrefixes = Seq("spark://", "mesos://")
+    private val supportedMasterPrefixes = Seq("org.apache.spark://", "mesos://")
 
-    private val masters: Array[String] = if (master.startsWith("spark://")) {
+    private val masters: Array[String] = if (master.startsWith("org.apache.spark://")) {
         Utils.parseStandaloneMasterUrls(master)
     } else {
         Array(master)
@@ -440,8 +440,8 @@ private[spark] object RestSubmissionClient {
                    appArgs: Array[String],
                    conf: SparkConf,
                    env: Map[String, String] = Map()): SubmitRestProtocolResponse = {
-        val master = conf.getOption("spark.master").getOrElse {
-            throw new IllegalArgumentException("'spark.master' must be set.")
+        val master = conf.getOption("org.apache.spark.master").getOrElse {
+            throw new IllegalArgumentException("'org.apache.spark.master' must be set.")
         }
         val sparkProperties = conf.getAll.toMap
         val client = new RestSubmissionClient(master)
@@ -451,7 +451,7 @@ private[spark] object RestSubmissionClient {
     }
 
     /**
-      * Filter non-spark environment variables from any environment.
+      * Filter non-org.apache.spark environment variables from any environment.
       */
     private[rest] def filterSystemEnvironment(env: Map[String, String]): Map[String, String] = {
         env.filterKeys { k =>

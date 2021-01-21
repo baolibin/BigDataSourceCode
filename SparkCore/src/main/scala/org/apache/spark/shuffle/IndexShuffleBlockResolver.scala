@@ -43,7 +43,7 @@ import org.apache.spark.{SparkConf, SparkEnv}
   *
   */
 // Note: Changes to the format in this file should be kept in sync with
-// org.apache.spark.network.shuffle.ExternalShuffleBlockResolver#getSortBasedShuffleBlockData().
+// org.apache.org.apache.spark.network.shuffle.ExternalShuffleBlockResolver#getSortBasedShuffleBlockData().
 private[spark] class IndexShuffleBlockResolver(
                                                       conf: SparkConf,
                                                       _blockManager: BlockManager = null)

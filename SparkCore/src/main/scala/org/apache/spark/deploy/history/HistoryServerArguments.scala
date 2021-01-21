@@ -61,8 +61,8 @@ private[history] class HistoryServerArguments(conf: SparkConf, args: Array[Strin
 
     private def setLogDirectory(value: String): Unit = {
         logWarning("Setting log directory through the command line is deprecated as of " +
-                "Spark 1.1.0. Please set this through spark.history.fs.logDirectory instead.")
-        conf.set("spark.history.fs.logDirectory", value)
+                "Spark 1.1.0. Please set this through org.apache.spark.history.fs.logDirectory instead.")
+        conf.set("org.apache.spark.history.fs.logDirectory", value)
     }
 
     // This mutates the SparkConf, so all accesses to it must be made after this line
@@ -75,29 +75,29 @@ private[history] class HistoryServerArguments(conf: SparkConf, args: Array[Strin
               |Usage: HistoryServer [options]
               |
               |Options:
-              |  DIR                         Deprecated; set spark.history.fs.logDirectory directly
-              |  --dir DIR (-d DIR)          Deprecated; set spark.history.fs.logDirectory directly
+              |  DIR                         Deprecated; set org.apache.spark.history.fs.logDirectory directly
+              |  --dir DIR (-d DIR)          Deprecated; set org.apache.spark.history.fs.logDirectory directly
               |  --properties-file FILE      Path to a custom Spark properties file.
-              |                              Default is conf/spark-defaults.conf.
+              |                              Default is conf/org.apache.spark-defaults.conf.
               |
               |Configuration options can be set by setting the corresponding JVM system property.
               |History Server options are always available; additional options depend on the provider.
               |
               |History Server options:
               |
-              |  spark.history.ui.port              Port where server will listen for connections
+              |  org.apache.spark.history.ui.port              Port where server will listen for connections
               |                                     (default 18080)
-              |  spark.history.acls.enable          Whether to enable view acls for all applications
+              |  org.apache.spark.history.acls.enable          Whether to enable view acls for all applications
               |                                     (default false)
-              |  spark.history.provider             Name of history provider class (defaults to
+              |  org.apache.spark.history.provider             Name of history provider class (defaults to
               |                                     file system-based provider)
-              |  spark.history.retainedApplications Max number of application UIs to keep loaded in memory
+              |  org.apache.spark.history.retainedApplications Max number of application UIs to keep loaded in memory
               |                                     (default 50)
               |FsHistoryProvider options:
               |
-              |  spark.history.fs.logDirectory      Directory where app logs are stored
-              |                                     (default: file:/tmp/spark-events)
-              |  spark.history.fs.updateInterval    How often to reload log data from storage
+              |  org.apache.spark.history.fs.logDirectory      Directory where app logs are stored
+              |                                     (default: file:/tmp/org.apache.spark-events)
+              |  org.apache.spark.history.fs.updateInterval    How often to reload log data from storage
               |                                     (in seconds, default: 10)
               |""".stripMargin)
         // scalastyle:on println

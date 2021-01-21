@@ -31,7 +31,7 @@ import scala.collection.JavaConverters._
   * 用于使用spark submit启动SparkR应用程序的主类。
   * 它将R作为子进程执行，然后将其连接回JVM以访问系统属性等。
   *
-  * Main class used to launch SparkR applications using spark-submit. It executes R as a
+  * Main class used to launch SparkR applications using org.apache.spark-submit. It executes R as a
   * subprocess and then has it connect back to the JVM to access system properties etc.
   */
 object RRunner {
@@ -43,19 +43,19 @@ object RRunner {
         // Time to wait for SparkR backend to initialize in seconds
         val backendTimeout = sys.env.getOrElse("SPARKR_BACKEND_TIMEOUT", "120").toInt
         val rCommand = {
-            // "spark.sparkr.r.command" is deprecated and replaced by "spark.r.command",
+            // "org.apache.spark.sparkr.r.command" is deprecated and replaced by "org.apache.spark.r.command",
             // but kept here for backward compatibility.
-            var cmd = sys.props.getOrElse("spark.sparkr.r.command", "Rscript")
-            cmd = sys.props.getOrElse("spark.r.command", cmd)
-            if (sys.props.getOrElse("spark.submit.deployMode", "client") == "client") {
-                cmd = sys.props.getOrElse("spark.r.driver.command", cmd)
+            var cmd = sys.props.getOrElse("org.apache.spark.sparkr.r.command", "Rscript")
+            cmd = sys.props.getOrElse("org.apache.spark.r.command", cmd)
+            if (sys.props.getOrElse("org.apache.spark.submit.deployMode", "client") == "client") {
+                cmd = sys.props.getOrElse("org.apache.spark.r.driver.command", cmd)
             }
             cmd
         }
 
         //  Connection timeout set by R process on its connection to RBackend in seconds.
         val backendConnectionTimeout = sys.props.getOrElse(
-            "spark.r.backendConnectionTimeout", SparkRDefaults.DEFAULT_CONNECTION_TIMEOUT.toString)
+            "org.apache.spark.r.backendConnectionTimeout", SparkRDefaults.DEFAULT_CONNECTION_TIMEOUT.toString)
 
         // Check if the file path exists.
         // If not, change directory to current working directory for YARN cluster mode

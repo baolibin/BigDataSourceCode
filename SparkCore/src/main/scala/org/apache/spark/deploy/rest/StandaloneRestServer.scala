@@ -168,26 +168,26 @@ private[rest] class StandaloneSubmitRequestServlet(
 
         // Optional fields
         val sparkProperties = request.sparkProperties
-        val driverMemory = sparkProperties.get("spark.driver.memory")
-        val driverCores = sparkProperties.get("spark.driver.cores")
-        val driverExtraJavaOptions = sparkProperties.get("spark.driver.extraJavaOptions")
-        val driverExtraClassPath = sparkProperties.get("spark.driver.extraClassPath")
-        val driverExtraLibraryPath = sparkProperties.get("spark.driver.extraLibraryPath")
-        val superviseDriver = sparkProperties.get("spark.driver.supervise")
+        val driverMemory = sparkProperties.get("org.apache.spark.driver.memory")
+        val driverCores = sparkProperties.get("org.apache.spark.driver.cores")
+        val driverExtraJavaOptions = sparkProperties.get("org.apache.spark.driver.extraJavaOptions")
+        val driverExtraClassPath = sparkProperties.get("org.apache.spark.driver.extraClassPath")
+        val driverExtraLibraryPath = sparkProperties.get("org.apache.spark.driver.extraLibraryPath")
+        val superviseDriver = sparkProperties.get("org.apache.spark.driver.supervise")
         val appArgs = request.appArgs
         val environmentVariables = request.environmentVariables
 
         // Construct driver description
         val conf = new SparkConf(false)
                 .setAll(sparkProperties)
-                .set("spark.master", masterUrl)
+                .set("org.apache.spark.master", masterUrl)
         val extraClassPath = driverExtraClassPath.toSeq.flatMap(_.split(File.pathSeparator))
         val extraLibraryPath = driverExtraLibraryPath.toSeq.flatMap(_.split(File.pathSeparator))
         val extraJavaOpts = driverExtraJavaOptions.map(Utils.splitCommandString).getOrElse(Seq.empty)
         val sparkJavaOpts = Utils.sparkJavaOpts(conf)
         val javaOpts = sparkJavaOpts ++ extraJavaOpts
         val command = new Command(
-            "org.apache.spark.deploy.worker.DriverWrapper",
+            "org.apache.org.apache.spark.deploy.worker.DriverWrapper",
             Seq("{{WORKER_URL}}", "{{USER_JAR}}", mainClass) ++ appArgs, // args to the DriverWrapper
             environmentVariables, extraClassPath, extraLibraryPath, javaOpts)
         val actualDriverMemory = driverMemory.map(Utils.memoryStringToMb).getOrElse(DEFAULT_MEMORY)

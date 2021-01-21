@@ -52,7 +52,7 @@ object TaskContext {
         }
     }
 
-    // Note: protected[spark] instead of private[spark] to prevent the following two from
+    // Note: protected[org.apache.spark] instead of private[org.apache.spark] to prevent the following two from
     // showing up in JavaDoc.
 
     /**
@@ -78,7 +78,7 @@ object TaskContext {
   * Contextual information about a task which can be read or mutated during
   * execution. To access the TaskContext for a running task, use:
   * {{{
-  *   org.apache.spark.TaskContext.get()
+  *   org.apache.org.apache.spark.TaskContext.get()
   * }}}
   */
 abstract class TaskContext extends Serializable {
@@ -173,7 +173,7 @@ abstract class TaskContext extends Serializable {
 
     /**
       * Get a local property set upstream in the driver, or null if it is missing. See also
-      * `org.apache.spark.SparkContext.setLocalProperty`.
+      * `org.apache.org.apache.spark.SparkContext.setLocalProperty`.
       */
     def getLocalProperty(key: String): String
 
@@ -183,7 +183,7 @@ abstract class TaskContext extends Serializable {
     /**
       * ::DeveloperApi::
       * Returns all metrics sources with the given name which are associated with the instance
-      * which runs the task. For more information see `org.apache.spark.metrics.MetricsSystem`.
+      * which runs the task. For more information see `org.apache.org.apache.spark.metrics.MetricsSystem`.
       */
     @DeveloperApi
     def getMetricsSources(sourceName: String): Seq[Source]

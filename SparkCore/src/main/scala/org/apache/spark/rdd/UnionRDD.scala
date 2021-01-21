@@ -71,7 +71,7 @@ class UnionRDD[T: ClassTag](
 
   // visible for testing
   private[spark] val isPartitionListingParallel: Boolean =
-    rdds.length > conf.getInt("spark.rdd.parallelListingThreshold", 10)
+    rdds.length > conf.getInt("org.apache.spark.rdd.parallelListingThreshold", 10)
 
   override def getPartitions: Array[Partition] = {
     val parRDDs = if (isPartitionListingParallel) {

@@ -31,7 +31,7 @@ import org.apache.spark.internal.Logging
  */
 private[spark] object FixedLengthBinaryInputFormat {
   /** Property name to set in Hadoop JobConfs for record length */
-  val RECORD_LENGTH_PROPERTY = "org.apache.spark.input.FixedLengthBinaryInputFormat.recordLength"
+  val RECORD_LENGTH_PROPERTY = "org.apache.org.apache.spark.input.FixedLengthBinaryInputFormat.recordLength"
 
   /** Retrieves the record length property from a Hadoop configuration */
   def getRecordLength(context: JobContext): Int = {

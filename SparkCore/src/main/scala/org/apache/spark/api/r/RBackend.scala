@@ -48,9 +48,9 @@ private[spark] class RBackend {
   def init(): Int = {
     val conf = new SparkConf()
     val backendConnectionTimeout = conf.getInt(
-      "spark.r.backendConnectionTimeout", SparkRDefaults.DEFAULT_CONNECTION_TIMEOUT)
+      "org.apache.spark.r.backendConnectionTimeout", SparkRDefaults.DEFAULT_CONNECTION_TIMEOUT)
     bossGroup = new NioEventLoopGroup(
-      conf.getInt("spark.r.numRBackendThreads", SparkRDefaults.DEFAULT_NUM_RBACKEND_THREADS))
+      conf.getInt("org.apache.spark.r.numRBackendThreads", SparkRDefaults.DEFAULT_NUM_RBACKEND_THREADS))
     val workerGroup = bossGroup
     val handler = new RBackendHandler(this)
 
@@ -123,7 +123,7 @@ private[spark] object RBackend extends Logging {
       // timeout value to client inside the temp file
       val conf = new SparkConf()
       val backendConnectionTimeout = conf.getInt(
-        "spark.r.backendConnectionTimeout", SparkRDefaults.DEFAULT_CONNECTION_TIMEOUT)
+        "org.apache.spark.r.backendConnectionTimeout", SparkRDefaults.DEFAULT_CONNECTION_TIMEOUT)
 
       // tell the R process via temporary file
       val path = args(0)

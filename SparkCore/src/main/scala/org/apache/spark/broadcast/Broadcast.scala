@@ -39,7 +39,7 @@ import org.apache.spark.util.Utils
  *
  * {{{
  * scala> val broadcastVar = sc.broadcast(Array(1, 2, 3))
- * broadcastVar: org.apache.spark.broadcast.Broadcast[Array[Int]] = Broadcast(0)
+ * broadcastVar: org.apache.org.apache.spark.broadcast.Broadcast[Array[Int]] = Broadcast(0)
  *
  * scala> broadcastVar.value
  * res0: Array[Int] = Array(1, 2, 3)

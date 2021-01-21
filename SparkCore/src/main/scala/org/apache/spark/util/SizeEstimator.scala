@@ -126,8 +126,8 @@ object SizeEstimator extends Logging {
   private def getIsCompressedOops: Boolean = {
     // This is only used by tests to override the detection of compressed oops. The test
     // actually uses a system property instead of a SparkConf, so we'll stick with that.
-    if (System.getProperty("spark.test.useCompressedOops") != null) {
-      return System.getProperty("spark.test.useCompressedOops").toBoolean
+    if (System.getProperty("org.apache.spark.test.useCompressedOops") != null) {
+      return System.getProperty("org.apache.spark.test.useCompressedOops").toBoolean
     }
 
     // java.vm.info provides compressed ref info for IBM JDKs

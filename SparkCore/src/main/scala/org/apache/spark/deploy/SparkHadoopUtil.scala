@@ -87,7 +87,7 @@ class SparkHadoopUtil extends Logging {
     }
 
     /**
-      * Appends S3-specific, spark.hadoop.*, and spark.buffer.size configurations to a Hadoop
+      * Appends S3-specific, org.apache.spark.hadoop.*, and org.apache.spark.buffer.size configurations to a Hadoop
       * configuration.
       */
     def appendS3AndSparkHadoopConfigurations(conf: SparkConf, hadoopConf: Configuration): Unit = {
@@ -110,13 +110,13 @@ class SparkHadoopUtil extends Logging {
                     hadoopConf.set("fs.s3a.session.token", sessionToken)
                 }
             }
-            // Copy any "spark.hadoop.foo=bar" system properties into conf as "foo=bar"
+            // Copy any "org.apache.spark.hadoop.foo=bar" system properties into conf as "foo=bar"
             conf.getAll.foreach { case (key, value) =>
-                if (key.startsWith("spark.hadoop.")) {
-                    hadoopConf.set(key.substring("spark.hadoop.".length), value)
+                if (key.startsWith("org.apache.spark.hadoop.")) {
+                    hadoopConf.set(key.substring("org.apache.spark.hadoop.".length), value)
                 }
             }
-            val bufferSize = conf.get("spark.buffer.size", "65536")
+            val bufferSize = conf.get("org.apache.spark.buffer.size", "65536")
             hadoopConf.set("io.file.buffer.size", bufferSize)
         }
     }
@@ -402,7 +402,7 @@ object SparkHadoopUtil {
 
     private lazy val hadoop = new SparkHadoopUtil
     private lazy val yarn = try {
-        Utils.classForName("org.apache.spark.deploy.yarn.YarnSparkHadoopUtil")
+        Utils.classForName("org.apache.org.apache.spark.deploy.yarn.YarnSparkHadoopUtil")
                 .newInstance()
                 .asInstanceOf[SparkHadoopUtil]
     } catch {

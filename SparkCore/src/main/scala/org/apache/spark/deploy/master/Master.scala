@@ -54,12 +54,12 @@ private[deploy] class Master(
   // For application IDs
   private def createDateFormat = new SimpleDateFormat("yyyyMMddHHmmss", Locale.US)
 
-  private val WORKER_TIMEOUT_MS = conf.getLong("spark.worker.timeout", 60) * 1000
-  private val RETAINED_APPLICATIONS = conf.getInt("spark.deploy.retainedApplications", 200)
-  private val RETAINED_DRIVERS = conf.getInt("spark.deploy.retainedDrivers", 200)
-  private val REAPER_ITERATIONS = conf.getInt("spark.dead.worker.persistence", 15)
-  private val RECOVERY_MODE = conf.get("spark.deploy.recoveryMode", "NONE")
-  private val MAX_EXECUTOR_RETRIES = conf.getInt("spark.deploy.maxExecutorRetries", 10)
+  private val WORKER_TIMEOUT_MS = conf.getLong("org.apache.spark.worker.timeout", 60) * 1000
+  private val RETAINED_APPLICATIONS = conf.getInt("org.apache.spark.deploy.retainedApplications", 200)
+  private val RETAINED_DRIVERS = conf.getInt("org.apache.spark.deploy.retainedDrivers", 200)
+  private val REAPER_ITERATIONS = conf.getInt("org.apache.spark.dead.worker.persistence", 15)
+  private val RECOVERY_MODE = conf.get("org.apache.spark.deploy.recoveryMode", "NONE")
+  private val MAX_EXECUTOR_RETRIES = conf.getInt("org.apache.spark.deploy.maxExecutorRetries", 10)
 
   val workers = new HashSet[WorkerInfo]
   val idToApp = new HashMap[String, ApplicationInfo]
@@ -111,17 +111,17 @@ private[deploy] class Master(
   // As a temporary workaround before better ways of configuring memory, we allow users to set
   // a flag that will perform round-robin scheduling across the nodes (spreading out each app
   // among all the nodes) instead of trying to consolidate each app onto a small # of nodes.
-  private val spreadOutApps = conf.getBoolean("spark.deploy.spreadOut", true)
+  private val spreadOutApps = conf.getBoolean("org.apache.spark.deploy.spreadOut", true)
 
   // Default maxCores for applications that don't specify it (i.e. pass Int.MaxValue)
-  private val defaultCores = conf.getInt("spark.deploy.defaultCores", Int.MaxValue)
-  val reverseProxy = conf.getBoolean("spark.ui.reverseProxy", false)
+  private val defaultCores = conf.getInt("org.apache.spark.deploy.defaultCores", Int.MaxValue)
+  val reverseProxy = conf.getBoolean("org.apache.spark.ui.reverseProxy", false)
   if (defaultCores < 1) {
-    throw new SparkException("spark.deploy.defaultCores must be positive")
+    throw new SparkException("org.apache.spark.deploy.defaultCores must be positive")
   }
 
   // Alternative application submission gateway that is stable across Spark versions
-  private val restServerEnabled = conf.getBoolean("spark.master.rest.enabled", true)
+  private val restServerEnabled = conf.getBoolean("org.apache.spark.master.rest.enabled", true)
   private var restServer: Option[StandaloneRestServer] = None
   private var restServerBoundPort: Option[Int] = None
 
@@ -132,7 +132,7 @@ private[deploy] class Master(
     webUi.bind()
     masterWebUiUrl = "http://" + masterPublicAddress + ":" + webUi.boundPort
     if (reverseProxy) {
-      masterWebUiUrl = conf.get("spark.ui.reverseProxyUrl", masterWebUiUrl)
+      masterWebUiUrl = conf.get("org.apache.spark.ui.reverseProxyUrl", masterWebUiUrl)
       logInfo(s"Spark Master is acting as a reverse proxy. Master, Workers and " +
        s"Applications UIs are available at $masterWebUiUrl")
     }
@@ -143,7 +143,7 @@ private[deploy] class Master(
     }, 0, WORKER_TIMEOUT_MS, TimeUnit.MILLISECONDS)
 
     if (restServerEnabled) {
-      val port = conf.getInt("spark.master.rest.port", 6066)
+      val port = conf.getInt("org.apache.spark.master.rest.port", 6066)
       restServer = Some(new StandaloneRestServer(address.host, port, conf, self, masterUrl))
     }
     restServerBoundPort = restServer.map(_.start())
@@ -168,7 +168,7 @@ private[deploy] class Master(
           new FileSystemRecoveryModeFactory(conf, serializer)
         (fsFactory.createPersistenceEngine(), fsFactory.createLeaderElectionAgent(this))
       case "CUSTOM" =>
-        val clazz = Utils.classForName(conf.get("spark.deploy.recoveryMode.factory"))
+        val clazz = Utils.classForName(conf.get("org.apache.spark.deploy.recoveryMode.factory"))
         val factory = clazz.getConstructor(classOf[SparkConf], classOf[Serializer])
           .newInstance(conf, serializer)
           .asInstanceOf[StandaloneRecoveryModeFactory]
@@ -583,7 +583,7 @@ private[deploy] class Master(
    *
    * It is important to allocate coresPerExecutor on each worker at a time (instead of 1 core
    * at a time). Consider the following example: cluster has 4 workers with 16 cores each.
-   * User requests 3 executors (spark.cores.max = 48, spark.executor.cores = 16). If 1 core is
+   * User requests 3 executors (org.apache.spark.cores.max = 48, org.apache.spark.executor.cores = 16). If 1 core is
    * allocated at a time, 12 cores from each worker would be assigned to each executor.
    * Since 12 < 16, no executors would launch [SPARK-8881].
    */

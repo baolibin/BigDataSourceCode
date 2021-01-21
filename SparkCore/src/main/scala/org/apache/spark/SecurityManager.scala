@@ -44,7 +44,7 @@ import org.apache.spark.util.Utils
   * initialized yet and this class must be instantiated directly.
   *
   * Spark currently supports authentication via a shared secret.
-  * Authentication can be configured to be on via the 'spark.authenticate' configuration
+  * Authentication can be configured to be on via the 'org.apache.spark.authenticate' configuration
   * parameter. This parameter controls whether the Spark communication protocols do
   * authentication using the shared secret. This authentication is a basic handshake to
   * make sure both sides have the same shared secret and are allowed to communicate.
@@ -54,24 +54,24 @@ import org.apache.spark.util.Utils
   * secure the UI if it has data that other users should not be allowed to see. The javax
   * servlet filter specified by the user can authenticate the user and then once the user
   * is logged in, Spark can compare that user versus the view acls to make sure they are
-  * authorized to view the UI. The configs 'spark.acls.enable', 'spark.ui.view.acls' and
-  * 'spark.ui.view.acls.groups' control the behavior of the acls. Note that the person who
+  * authorized to view the UI. The configs 'org.apache.spark.acls.enable', 'org.apache.spark.ui.view.acls' and
+  * 'org.apache.spark.ui.view.acls.groups' control the behavior of the acls. Note that the person who
   * started the application always has view access to the UI.
   *
-  * Spark has a set of individual and group modify acls (`spark.modify.acls`) and
-  * (`spark.modify.acls.groups`) that controls which users and groups have permission to
+  * Spark has a set of individual and group modify acls (`org.apache.spark.modify.acls`) and
+  * (`org.apache.spark.modify.acls.groups`) that controls which users and groups have permission to
   * modify a single application. This would include things like killing the application.
   * By default the person who started the application has modify access. For modify access
   * through the UI, you must have a filter that does authentication in place for the modify
   * acls to work properly.
   *
-  * Spark also has a set of individual and group admin acls (`spark.admin.acls`) and
-  * (`spark.admin.acls.groups`) which is a set of users/administrators and admin groups
+  * Spark also has a set of individual and group admin acls (`org.apache.spark.admin.acls`) and
+  * (`org.apache.spark.admin.acls.groups`) which is a set of users/administrators and admin groups
   * who always have permission to view or modify the Spark application.
   *
   * Starting from version 1.3, Spark has partial support for encrypted connections with SSL.
   *
-  * At this point spark has multiple communication protocols that need to be secured and
+  * At this point org.apache.spark has multiple communication protocols that need to be secured and
   * different underlying mechanisms are used depending on the protocol:
   *
   *  - HTTP for broadcast and file server (via HttpServer) ->  Spark currently uses Jetty
@@ -140,7 +140,7 @@ import org.apache.spark.util.Utils
   * authorization against the view acls.
   *
   * For other Spark deployments, the shared secret must be specified via the
-  *  spark.authenticate.secret config.
+  *  org.apache.spark.authenticate.secret config.
   * All the nodes (Master and Workers) and the applications need to have the same shared secret.
   * This again is not ideal as one user could potentially affect another users application.
   * This should be enhanced in the future to provide better protection.
@@ -150,7 +150,7 @@ import org.apache.spark.util.Utils
   * can take place.
   *
   * When authentication is being used, encryption can also be enabled by setting the option
-  *  spark.authenticate.enableSaslEncryption to true. This is only supported by communication
+  *  org.apache.spark.authenticate.enableSaslEncryption to true. This is only supported by communication
   * channels that use the network-common library, and can be used as an alternative to SSL in those
   * cases.
   *
@@ -160,10 +160,10 @@ import org.apache.spark.util.Utils
   * common settings for all the protocols without disabling the ability to configure each one
   * individually.
   *
-  * All the SSL settings like `spark.ssl.xxx` where `xxx` is a particular configuration property,
+  * All the SSL settings like `org.apache.spark.ssl.xxx` where `xxx` is a particular configuration property,
   * denote the global configuration for all the supported protocols. In order to override the global
   * configuration for the particular protocol, the properties must be overwritten in the
-  * protocol-specific namespace. Use `spark.ssl.yyy.xxx` settings to overwrite the global
+  * protocol-specific namespace. Use `org.apache.spark.ssl.yyy.xxx` settings to overwrite the global
   * configuration for particular protocol denoted by `yyy`. Currently `yyy` can be only`fs` for
   * broadcast and file server.
   *
@@ -182,7 +182,7 @@ import org.apache.spark.util.Utils
   * In standalone deployment, the user needs to provide key-stores and configuration
   * options for master and workers. In this mode, the user may allow the executors to use the SSL
   * settings inherited from the worker which spawned that executor. It can be accomplished by
-  * setting `spark.ssl.useNodeLocalConf` to `true`.
+  * setting `org.apache.spark.ssl.useNodeLocalConf` to `true`.
   */
 
 private[spark] class SecurityManager(
@@ -223,7 +223,7 @@ private[spark] class SecurityManager(
         })
 
         require(fileServerSSLOptions.protocol.isDefined,
-            "spark.ssl.protocol is required when enabling SSL connections.")
+            "org.apache.spark.ssl.protocol is required when enabling SSL connections.")
 
         val sslContext = SSLContext.getInstance(fileServerSSLOptions.protocol.get)
         sslContext.init(null, trustStoreManagers.getOrElse(credulousTrustStoreManagers), null)
@@ -244,22 +244,22 @@ private[spark] class SecurityManager(
         Utils.getCurrentUserName())
     private val secretKey = generateSecretKey()
     // the default SSL configuration - it will be used by all communication layers unless overwritten
-    private val defaultSSLOptions = SSLOptions.parse(sparkConf, "spark.ssl", defaults = None)
-    // keep spark.ui.acls.enable for backwards compatibility with 1.0
+    private val defaultSSLOptions = SSLOptions.parse(sparkConf, "org.apache.spark.ssl", defaults = None)
+    // keep org.apache.spark.ui.acls.enable for backwards compatibility with 1.0
     private var aclsOn =
-        sparkConf.getBoolean("spark.acls.enable", sparkConf.getBoolean("spark.ui.acls.enable", false))
+        sparkConf.getBoolean("org.apache.spark.acls.enable", sparkConf.getBoolean("org.apache.spark.ui.acls.enable", false))
     // admin acls should be set before view or modify acls
     private var adminAcls: Set[String] =
-        stringToSet(sparkConf.get("spark.admin.acls", ""))
+        stringToSet(sparkConf.get("org.apache.spark.admin.acls", ""))
     // admin group acls should be set before view or modify group acls
     private var adminAclsGroups: Set[String] =
-        stringToSet(sparkConf.get("spark.admin.acls.groups", ""))
+        stringToSet(sparkConf.get("org.apache.spark.admin.acls.groups", ""))
 
-    setViewAcls(defaultAclUsers, sparkConf.get("spark.ui.view.acls", ""))
-    setModifyAcls(defaultAclUsers, sparkConf.get("spark.modify.acls", ""))
+    setViewAcls(defaultAclUsers, sparkConf.get("org.apache.spark.ui.view.acls", ""))
+    setModifyAcls(defaultAclUsers, sparkConf.get("org.apache.spark.modify.acls", ""))
 
-    setViewAclsGroups(sparkConf.get("spark.ui.view.acls.groups", ""));
-    setModifyAclsGroups(sparkConf.get("spark.modify.acls.groups", ""));
+    setViewAclsGroups(sparkConf.get("org.apache.spark.ui.view.acls.groups", ""));
+    setModifyAclsGroups(sparkConf.get("org.apache.spark.modify.acls.groups", ""));
     private var viewAcls: Set[String] = _
     logInfo("SecurityManager: authentication " + (if (authOn) "enabled" else "disabled") +
             "; ui acls " + (if (aclsOn) "enabled" else "disabled") +
@@ -293,7 +293,7 @@ private[spark] class SecurityManager(
     private var modifyAclsGroups: Set[String] = _
 
     def getSSLOptions(module: String): SSLOptions = {
-        val opts = SSLOptions.parse(sparkConf, s"spark.ssl.$module", Some(defaultSSLOptions))
+        val opts = SSLOptions.parse(sparkConf, s"org.apache.spark.ssl.$module", Some(defaultSSLOptions))
         logDebug(s"Created SSL options for $module: $opts")
         opts
     }
@@ -411,7 +411,7 @@ private[spark] class SecurityManager(
     /**
       * Checks the given user against the view acl and groups list to see if they have
       * authorization to view the UI. If the UI acls are disabled
-      * via spark.acls.enable, all users have view access. If the user is null
+      * via org.apache.spark.acls.enable, all users have view access. If the user is null
       * it is assumed authentication is off and all users have access. Also if any one of the
       * UI acls or groups specify the WILDCARD(*) then all users have view access.
       *
@@ -440,7 +440,7 @@ private[spark] class SecurityManager(
     /**
       * Checks the given user against the modify acl and groups list to see if they have
       * authorization to modify the application. If the modify acls are disabled
-      * via spark.acls.enable, all users have modify access. If the user is null
+      * via org.apache.spark.acls.enable, all users have modify access. If the user is null
       * it is assumed authentication isn't turned on and all users have access. Also if any one
       * of the modify acls or groups specify the WILDCARD(*) then all users have modify access.
       *
@@ -516,7 +516,7 @@ private[spark] class SecurityManager(
             if (secretKey == null || secretKey.length == 0) {
                 logDebug("generateSecretKey: yarn mode, secret key from credentials is null")
                 val rnd = new SecureRandom()
-                val length = sparkConf.getInt("spark.authenticate.secretBitLength", 256) / JByte.SIZE
+                val length = sparkConf.getInt("org.apache.spark.authenticate.secretBitLength", 256) / JByte.SIZE
                 val secret = new Array[Byte](length)
                 rnd.nextBytes(secret)
 
@@ -527,7 +527,7 @@ private[spark] class SecurityManager(
                 new Text(secretKey).toString
             }
         } else {
-            // user must have set spark.authenticate.secret config
+            // user must have set org.apache.spark.authenticate.secret config
             // For Master/Worker, auth secret is in conf; for Executors, it is in env variable
             Option(sparkConf.getenv(SecurityManager.ENV_AUTH_SECRET))
                     .orElse(sparkConf.getOption(SecurityManager.SPARK_AUTH_SECRET_CONF)) match {
@@ -550,13 +550,13 @@ private[spark] class SecurityManager(
 
 private[spark] object SecurityManager {
 
-    val SPARK_AUTH_CONF: String = "spark.authenticate"
-    val SPARK_AUTH_SECRET_CONF: String = "spark.authenticate.secret"
+    val SPARK_AUTH_CONF: String = "org.apache.spark.authenticate"
+    val SPARK_AUTH_SECRET_CONF: String = "org.apache.spark.authenticate.secret"
     // This is used to set auth secret to an executor's env variable. It should have the same
     // value as SPARK_AUTH_SECRET_CONF set in SparkConf
     val ENV_AUTH_SECRET = "_SPARK_AUTH_SECRET"
 
-    // key used to store the spark secret in the Hadoop UGI
+    // key used to store the org.apache.spark secret in the Hadoop UGI
     val SECRET_LOOKUP_KEY = "sparkCookie"
 
 }

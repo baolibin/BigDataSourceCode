@@ -99,9 +99,9 @@ private[r] class RBackendHandler(server: RBackend)
       }
       val conf = new SparkConf()
       val heartBeatInterval = conf.getInt(
-        "spark.r.heartBeatInterval", SparkRDefaults.DEFAULT_HEARTBEAT_INTERVAL)
+        "org.apache.spark.r.heartBeatInterval", SparkRDefaults.DEFAULT_HEARTBEAT_INTERVAL)
       val backendConnectionTimeout = conf.getInt(
-        "spark.r.backendConnectionTimeout", SparkRDefaults.DEFAULT_CONNECTION_TIMEOUT)
+        "org.apache.spark.r.backendConnectionTimeout", SparkRDefaults.DEFAULT_CONNECTION_TIMEOUT)
       val interval = Math.min(heartBeatInterval, backendConnectionTimeout - 1)
 
       execService.scheduleAtFixedRate(pingRunner, interval, interval, TimeUnit.SECONDS)

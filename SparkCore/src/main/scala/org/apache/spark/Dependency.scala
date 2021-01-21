@@ -63,7 +63,7 @@ abstract class NarrowDependency[T](_rdd: RDD[T]) extends Dependency[T] {
   * @param _rdd           the parent RDD
   * @param partitioner    partitioner used to partition the shuffle output
   * @param serializer     [[org.apache.spark.serializer.Serializer Serializer]] to use. If not set
-  *                       explicitly then the default serializer, as specified by `spark.serializer`
+  *                       explicitly then the default serializer, as specified by `org.apache.spark.serializer`
   *                       config option, will be used.
   * @param keyOrdering    key ordering for RDD's shuffles
   * @param aggregator     map/reduce-side aggregator for RDD's shuffle

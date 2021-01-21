@@ -30,7 +30,7 @@ import org.apache.spark.internal.Logging
  */
 private[spark] trait ListenerBus[L <: AnyRef, E] extends Logging {
 
-  // Marked `private[spark]` for access in tests.
+  // Marked `private[org.apache.spark]` for access in tests.
   private[spark] val listeners = new CopyOnWriteArrayList[L]
 
   /**

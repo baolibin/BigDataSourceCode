@@ -30,8 +30,8 @@ import org.apache.spark.scheduler.TaskSchedulerImpl
   * `getStageInfo` could potentially return `None` for a valid stage id.
   *
   * To limit memory usage, these APIs only provide information on recent jobs / stages.  These APIs
-  * will provide information for the last `spark.ui.retainedStages` stages and
-  * `spark.ui.retainedJobs` jobs.
+  * will provide information for the last `org.apache.spark.ui.retainedStages` stages and
+  * `org.apache.spark.ui.retainedJobs` jobs.
   *
   * NOTE: this class's constructor should be considered private and may be subject to change.
   */

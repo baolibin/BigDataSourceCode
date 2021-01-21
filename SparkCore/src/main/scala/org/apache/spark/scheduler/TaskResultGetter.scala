@@ -51,7 +51,7 @@ private[spark] class TaskResultGetter(sparkEnv: SparkEnv, scheduler: TaskSchedul
             sparkEnv.serializer.newInstance()
         }
     }
-    private val THREADS = sparkEnv.conf.getInt("spark.resultGetter.threads", 4)
+    private val THREADS = sparkEnv.conf.getInt("org.apache.spark.resultGetter.threads", 4)
 
     def enqueueSuccessfulTask(
                                      taskSetManager: TaskSetManager,

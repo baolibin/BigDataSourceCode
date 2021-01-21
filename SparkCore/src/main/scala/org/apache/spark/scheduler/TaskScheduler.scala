@@ -34,7 +34,7 @@ import org.apache.spark.util.AccumulatorV2
   */
 private[spark] trait TaskScheduler {
 
-    private val appId = "spark-application-" + System.currentTimeMillis
+    private val appId = "org.apache.spark-application-" + System.currentTimeMillis
 
     def rootPool: Pool
 
@@ -42,7 +42,7 @@ private[spark] trait TaskScheduler {
 
     def start(): Unit
 
-    // Invoked after system has successfully initialized (typically in spark context).
+    // Invoked after system has successfully initialized (typically in org.apache.spark context).
     // Yarn uses this to bootstrap allocation of resources based on preferred locations,
     // wait for slave registrations, etc.
     def postStartHook() {}

@@ -72,9 +72,9 @@ import org.apache.spark.shuffle._
   */
 private[spark] class SortShuffleManager(conf: SparkConf) extends ShuffleManager with Logging {
 
-    if (!conf.getBoolean("spark.shuffle.spill", true)) {
+    if (!conf.getBoolean("org.apache.spark.shuffle.spill", true)) {
         logWarning(
-            "spark.shuffle.spill was set to false, but this configuration is ignored as of Spark 1.6+." +
+            "org.apache.spark.shuffle.spill was set to false, but this configuration is ignored as of Spark 1.6+." +
                     " Shuffle will continue to spill to disk when necessary.")
     }
 
@@ -92,7 +92,7 @@ private[spark] class SortShuffleManager(conf: SparkConf) extends ShuffleManager 
                                                  numMaps: Int,
                                                  dependency: ShuffleDependency[K, V, C]): ShuffleHandle = {
         if (SortShuffleWriter.shouldBypassMergeSort(conf, dependency)) {
-            // If there are fewer than spark.shuffle.sort.bypassMergeThreshold partitions and we don't
+            // If there are fewer than org.apache.spark.shuffle.sort.bypassMergeThreshold partitions and we don't
             // need map-side aggregation, then write numPartitions files directly and just concatenate
             // them at the end. This avoids doing serialization and deserialization twice to merge
             // together the spilled files, which would happen with the normal code path. The downside is

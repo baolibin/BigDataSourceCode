@@ -53,8 +53,8 @@ private[master] class MasterArguments(args: Array[String], conf: SparkConf) exte
   // This mutates the SparkConf, so all accesses to it must be made after this line
   propertiesFile = Utils.loadDefaultSparkProperties(conf, propertiesFile)
 
-  if (conf.contains("spark.master.ui.port")) {
-    webUiPort = conf.get("spark.master.ui.port").toInt
+  if (conf.contains("org.apache.spark.master.ui.port")) {
+    webUiPort = conf.get("org.apache.spark.master.ui.port").toInt
   }
 
   @tailrec
@@ -104,7 +104,7 @@ private[master] class MasterArguments(args: Array[String], conf: SparkConf) exte
       "  -p PORT, --port PORT   Port to listen on (default: 7077)\n" +
       "  --webui-port PORT      Port for web UI (default: 8080)\n" +
       "  --properties-file FILE Path to a custom Spark properties file.\n" +
-      "                         Default is conf/spark-defaults.conf.")
+      "                         Default is conf/org.apache.spark-defaults.conf.")
     // scalastyle:on println
     System.exit(exitCode)
   }

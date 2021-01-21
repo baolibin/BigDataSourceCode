@@ -61,8 +61,8 @@ private[worker] class WorkerArguments(args: Array[String], conf: SparkConf) {
     // This mutates the SparkConf, so all accesses to it must be made after this line
     propertiesFile = Utils.loadDefaultSparkProperties(conf, propertiesFile)
 
-    if (conf.contains("spark.worker.ui.port")) {
-        webUiPort = conf.get("spark.worker.ui.port").toInt
+    if (conf.contains("org.apache.spark.worker.ui.port")) {
+        webUiPort = conf.get("org.apache.spark.worker.ui.port").toInt
     }
 
     checkWorkerMemory()
@@ -75,7 +75,7 @@ private[worker] class WorkerArguments(args: Array[String], conf: SparkConf) {
         System.err.println(
             "Usage: Worker [options] <master>\n" +
                     "\n" +
-                    "Master must be a URL of the form spark://hostname:port\n" +
+                    "Master must be a URL of the form org.apache.spark://hostname:port\n" +
                     "\n" +
                     "Options:\n" +
                     "  -c CORES, --cores CORES  Number of cores to use\n" +
@@ -86,7 +86,7 @@ private[worker] class WorkerArguments(args: Array[String], conf: SparkConf) {
                     "  -p PORT, --port PORT     Port to listen on (default: random)\n" +
                     "  --webui-port PORT        Port for web UI (default: 8081)\n" +
                     "  --properties-file FILE   Path to a custom Spark properties file.\n" +
-                    "                           Default is conf/spark-defaults.conf.")
+                    "                           Default is conf/org.apache.spark-defaults.conf.")
         // scalastyle:on println
         System.exit(exitCode)
     }

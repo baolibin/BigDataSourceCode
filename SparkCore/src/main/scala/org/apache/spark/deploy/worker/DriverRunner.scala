@@ -52,7 +52,7 @@ private[deploy] class DriverRunner(
 
     // Timeout to wait for when trying to terminate a driver.
     private val DRIVER_TERMINATE_TIMEOUT_MS =
-        conf.getTimeAsMs("spark.worker.driverTerminateTimeout", "10s")
+        conf.getTimeAsMs("org.apache.spark.worker.driverTerminateTimeout", "10s")
     @volatile private var process: Option[Process] = None
     @volatile private var killed = false
     // Populated once finished

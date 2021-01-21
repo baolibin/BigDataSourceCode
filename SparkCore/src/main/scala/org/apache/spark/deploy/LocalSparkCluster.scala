@@ -30,7 +30,7 @@ import scala.collection.mutable.ArrayBuffer
   * 在集群中创建Spark独立进程的测试类。
   *
   * Testing class that creates a Spark standalone process in-cluster (that is, running the
-  * spark.deploy.master.Master and spark.deploy.worker.Workers in the same JVMs). Executors launched
+  * org.apache.spark.deploy.master.Master and org.apache.spark.deploy.worker.Workers in the same JVMs). Executors launched
   * by the Workers still run in separate JVMs. This can be used to test distributed operation and
   * fault recovery without spinning up a lot of processes.
   */
@@ -53,14 +53,14 @@ class LocalSparkCluster(
 
         // Disable REST server on Master in this mode unless otherwise specified
         val _conf = conf.clone()
-                .setIfMissing("spark.master.rest.enabled", "false")
-                .set("spark.shuffle.service.enabled", "false")
+                .setIfMissing("org.apache.spark.master.rest.enabled", "false")
+                .set("org.apache.spark.shuffle.service.enabled", "false")
 
         /* Start the Master */
         val (rpcEnv, webUiPort, _) = Master.startRpcEnvAndEndpoint(localHostname, 0, 0, _conf)
         masterWebUIPort = webUiPort
         masterRpcEnvs += rpcEnv
-        val masterUrl = "spark://" + Utils.localHostNameForURI() + ":" + rpcEnv.address.port
+        val masterUrl = "org.apache.spark://" + Utils.localHostNameForURI() + ":" + rpcEnv.address.port
         val masters = Array(masterUrl)
 
         /* Start the Workers */

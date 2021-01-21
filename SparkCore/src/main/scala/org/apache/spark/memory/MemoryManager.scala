@@ -50,11 +50,11 @@ private[spark] abstract class MemoryManager(
       * sun.misc.Unsafe.
       */
     final val tungstenMemoryMode: MemoryMode = {
-        if (conf.getBoolean("spark.memory.offHeap.enabled", false)) {
-            require(conf.getSizeAsBytes("spark.memory.offHeap.size", 0) > 0,
-                "spark.memory.offHeap.size must be > 0 when spark.memory.offHeap.enabled == true")
+        if (conf.getBoolean("org.apache.spark.memory.offHeap.enabled", false)) {
+            require(conf.getSizeAsBytes("org.apache.spark.memory.offHeap.size", 0) > 0,
+                "org.apache.spark.memory.offHeap.size must be > 0 when org.apache.spark.memory.offHeap.enabled == true")
             require(Platform.unaligned(),
-                "No support for unaligned Unsafe. Set spark.memory.offHeap.enabled to false.")
+                "No support for unaligned Unsafe. Set org.apache.spark.memory.offHeap.enabled to false.")
             MemoryMode.OFF_HEAP
         } else {
             MemoryMode.ON_HEAP
@@ -72,7 +72,7 @@ private[spark] abstract class MemoryManager(
     /**
       * The default page size, in bytes.
       *
-      * If user didn't explicitly set "spark.buffer.pageSize", we figure out the default value
+      * If user didn't explicitly set "org.apache.spark.buffer.pageSize", we figure out the default value
       * by looking at the number of cores available to the process, and the total amount of memory,
       * and then divide it by a factor of safety.
       */
@@ -88,7 +88,7 @@ private[spark] abstract class MemoryManager(
         }
         val size = ByteArrayMethods.nextPowerOf2(maxTungstenMemory / cores / safetyFactor)
         val default = math.min(maxPageSize, math.max(minPageSize, size))
-        conf.getSizeAsBytes("spark.buffer.pageSize", default)
+        conf.getSizeAsBytes("org.apache.spark.buffer.pageSize", default)
     }
     @GuardedBy("this")
     protected val onHeapStorageMemoryPool = new StorageMemoryPool(this, MemoryMode.ON_HEAP)
@@ -105,10 +105,10 @@ private[spark] abstract class MemoryManager(
     @GuardedBy("this")
     protected val offHeapExecutionMemoryPool = new ExecutionMemoryPool(this, MemoryMode.OFF_HEAP)
     // 堆外内存参数由spark.memory.offHeap.enabled决定，开启了堆外内存大小等于spark.memory.offHeap.size的值
-    protected[this] val maxOffHeapMemory = conf.getSizeAsBytes("spark.memory.offHeap.size", 0)
+    protected[this] val maxOffHeapMemory = conf.getSizeAsBytes("org.apache.spark.memory.offHeap.size", 0)
     // 存储内存等于参数spark.memory.storageFraction和总内存的乘积
     protected[this] val offHeapStorageMemory =
-        (maxOffHeapMemory * conf.getDouble("spark.memory.storageFraction", 0.5)).toLong
+        (maxOffHeapMemory * conf.getDouble("org.apache.spark.memory.storageFraction", 0.5)).toLong
 
     /**
       * 最大堆内存储内存

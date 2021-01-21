@@ -35,9 +35,9 @@ package object config {
     ConfigBuilder(SparkLauncher.DRIVER_EXTRA_LIBRARY_PATH).stringConf.createOptional
 
   private[spark] val DRIVER_USER_CLASS_PATH_FIRST =
-    ConfigBuilder("spark.driver.userClassPathFirst").booleanConf.createWithDefault(false)
+    ConfigBuilder("org.apache.spark.driver.userClassPathFirst").booleanConf.createWithDefault(false)
 
-  private[spark] val DRIVER_MEMORY = ConfigBuilder("spark.driver.memory")
+  private[spark] val DRIVER_MEMORY = ConfigBuilder("org.apache.spark.driver.memory")
     .bytesConf(ByteUnit.MiB)
     .createWithDefaultString("1g")
 
@@ -51,188 +51,188 @@ package object config {
     ConfigBuilder(SparkLauncher.EXECUTOR_EXTRA_LIBRARY_PATH).stringConf.createOptional
 
   private[spark] val EXECUTOR_USER_CLASS_PATH_FIRST =
-    ConfigBuilder("spark.executor.userClassPathFirst").booleanConf.createWithDefault(false)
+    ConfigBuilder("org.apache.spark.executor.userClassPathFirst").booleanConf.createWithDefault(false)
 
-  private[spark] val EXECUTOR_MEMORY = ConfigBuilder("spark.executor.memory")
+  private[spark] val EXECUTOR_MEMORY = ConfigBuilder("org.apache.spark.executor.memory")
     .bytesConf(ByteUnit.MiB)
     .createWithDefaultString("1g")
 
-  private[spark] val IS_PYTHON_APP = ConfigBuilder("spark.yarn.isPython").internal()
+  private[spark] val IS_PYTHON_APP = ConfigBuilder("org.apache.spark.yarn.isPython").internal()
     .booleanConf.createWithDefault(false)
 
-  private[spark] val CPUS_PER_TASK = ConfigBuilder("spark.task.cpus").intConf.createWithDefault(1)
+  private[spark] val CPUS_PER_TASK = ConfigBuilder("org.apache.spark.task.cpus").intConf.createWithDefault(1)
 
   private[spark] val DYN_ALLOCATION_MIN_EXECUTORS =
-    ConfigBuilder("spark.dynamicAllocation.minExecutors").intConf.createWithDefault(0)
+    ConfigBuilder("org.apache.spark.dynamicAllocation.minExecutors").intConf.createWithDefault(0)
 
   private[spark] val DYN_ALLOCATION_INITIAL_EXECUTORS =
-    ConfigBuilder("spark.dynamicAllocation.initialExecutors")
+    ConfigBuilder("org.apache.spark.dynamicAllocation.initialExecutors")
       .fallbackConf(DYN_ALLOCATION_MIN_EXECUTORS)
 
   private[spark] val DYN_ALLOCATION_MAX_EXECUTORS =
-    ConfigBuilder("spark.dynamicAllocation.maxExecutors").intConf.createWithDefault(Int.MaxValue)
+    ConfigBuilder("org.apache.spark.dynamicAllocation.maxExecutors").intConf.createWithDefault(Int.MaxValue)
 
   private[spark] val SHUFFLE_SERVICE_ENABLED =
-    ConfigBuilder("spark.shuffle.service.enabled").booleanConf.createWithDefault(false)
+    ConfigBuilder("org.apache.spark.shuffle.service.enabled").booleanConf.createWithDefault(false)
 
-  private[spark] val KEYTAB = ConfigBuilder("spark.yarn.keytab")
+  private[spark] val KEYTAB = ConfigBuilder("org.apache.spark.yarn.keytab")
     .doc("Location of user's keytab.")
     .stringConf.createOptional
 
-  private[spark] val PRINCIPAL = ConfigBuilder("spark.yarn.principal")
+  private[spark] val PRINCIPAL = ConfigBuilder("org.apache.spark.yarn.principal")
     .doc("Name of the Kerberos principal.")
     .stringConf.createOptional
 
-  private[spark] val EXECUTOR_INSTANCES = ConfigBuilder("spark.executor.instances")
+  private[spark] val EXECUTOR_INSTANCES = ConfigBuilder("org.apache.spark.executor.instances")
     .intConf
     .createOptional
 
-  private[spark] val PY_FILES = ConfigBuilder("spark.submit.pyFiles")
+  private[spark] val PY_FILES = ConfigBuilder("org.apache.spark.submit.pyFiles")
     .internal()
     .stringConf
     .toSequence
     .createWithDefault(Nil)
 
   private[spark] val MAX_TASK_FAILURES =
-    ConfigBuilder("spark.task.maxFailures")
+    ConfigBuilder("org.apache.spark.task.maxFailures")
       .intConf
       .createWithDefault(4)
 
   // Blacklist confs
   private[spark] val BLACKLIST_ENABLED =
-    ConfigBuilder("spark.blacklist.enabled")
+    ConfigBuilder("org.apache.spark.blacklist.enabled")
       .booleanConf
       .createOptional
 
   private[spark] val MAX_TASK_ATTEMPTS_PER_EXECUTOR =
-    ConfigBuilder("spark.blacklist.task.maxTaskAttemptsPerExecutor")
+    ConfigBuilder("org.apache.spark.blacklist.task.maxTaskAttemptsPerExecutor")
       .intConf
       .createWithDefault(1)
 
   private[spark] val MAX_TASK_ATTEMPTS_PER_NODE =
-    ConfigBuilder("spark.blacklist.task.maxTaskAttemptsPerNode")
+    ConfigBuilder("org.apache.spark.blacklist.task.maxTaskAttemptsPerNode")
       .intConf
       .createWithDefault(2)
 
   private[spark] val MAX_FAILURES_PER_EXEC =
-    ConfigBuilder("spark.blacklist.application.maxFailedTasksPerExecutor")
+    ConfigBuilder("org.apache.spark.blacklist.application.maxFailedTasksPerExecutor")
       .intConf
       .createWithDefault(2)
 
   private[spark] val MAX_FAILURES_PER_EXEC_STAGE =
-    ConfigBuilder("spark.blacklist.stage.maxFailedTasksPerExecutor")
+    ConfigBuilder("org.apache.spark.blacklist.stage.maxFailedTasksPerExecutor")
       .intConf
       .createWithDefault(2)
 
   private[spark] val MAX_FAILED_EXEC_PER_NODE =
-    ConfigBuilder("spark.blacklist.application.maxFailedExecutorsPerNode")
+    ConfigBuilder("org.apache.spark.blacklist.application.maxFailedExecutorsPerNode")
       .intConf
       .createWithDefault(2)
 
   private[spark] val MAX_FAILED_EXEC_PER_NODE_STAGE =
-    ConfigBuilder("spark.blacklist.stage.maxFailedExecutorsPerNode")
+    ConfigBuilder("org.apache.spark.blacklist.stage.maxFailedExecutorsPerNode")
       .intConf
       .createWithDefault(2)
 
   private[spark] val BLACKLIST_TIMEOUT_CONF =
-    ConfigBuilder("spark.blacklist.timeout")
+    ConfigBuilder("org.apache.spark.blacklist.timeout")
       .timeConf(TimeUnit.MILLISECONDS)
       .createOptional
 
   private[spark] val BLACKLIST_KILL_ENABLED =
-    ConfigBuilder("spark.blacklist.killBlacklistedExecutors")
+    ConfigBuilder("org.apache.spark.blacklist.killBlacklistedExecutors")
       .booleanConf
       .createWithDefault(false)
 
   private[spark] val BLACKLIST_LEGACY_TIMEOUT_CONF =
-    ConfigBuilder("spark.scheduler.executorTaskBlacklistTime")
+    ConfigBuilder("org.apache.spark.scheduler.executorTaskBlacklistTime")
       .internal()
       .timeConf(TimeUnit.MILLISECONDS)
       .createOptional
   // End blacklist confs
 
   private[spark] val LISTENER_BUS_EVENT_QUEUE_SIZE =
-    ConfigBuilder("spark.scheduler.listenerbus.eventqueue.size")
+    ConfigBuilder("org.apache.spark.scheduler.listenerbus.eventqueue.size")
       .intConf
       .createWithDefault(10000)
 
   // This property sets the root namespace for metrics reporting
-  private[spark] val METRICS_NAMESPACE = ConfigBuilder("spark.metrics.namespace")
+  private[spark] val METRICS_NAMESPACE = ConfigBuilder("org.apache.spark.metrics.namespace")
     .stringConf
     .createOptional
 
-  private[spark] val PYSPARK_DRIVER_PYTHON = ConfigBuilder("spark.pyspark.driver.python")
+  private[spark] val PYSPARK_DRIVER_PYTHON = ConfigBuilder("org.apache.spark.pyspark.driver.python")
     .stringConf
     .createOptional
 
-  private[spark] val PYSPARK_PYTHON = ConfigBuilder("spark.pyspark.python")
+  private[spark] val PYSPARK_PYTHON = ConfigBuilder("org.apache.spark.pyspark.python")
     .stringConf
     .createOptional
 
   // To limit memory usage, we only track information for a fixed number of tasks
-  private[spark] val UI_RETAINED_TASKS = ConfigBuilder("spark.ui.retainedTasks")
+  private[spark] val UI_RETAINED_TASKS = ConfigBuilder("org.apache.spark.ui.retainedTasks")
     .intConf
     .createWithDefault(100000)
 
   // To limit how many applications are shown in the History Server summary ui
   private[spark] val HISTORY_UI_MAX_APPS =
-    ConfigBuilder("spark.history.ui.maxApplications").intConf.createWithDefault(Integer.MAX_VALUE)
+    ConfigBuilder("org.apache.spark.history.ui.maxApplications").intConf.createWithDefault(Integer.MAX_VALUE)
 
-  private[spark] val IO_ENCRYPTION_ENABLED = ConfigBuilder("spark.io.encryption.enabled")
+  private[spark] val IO_ENCRYPTION_ENABLED = ConfigBuilder("org.apache.spark.io.encryption.enabled")
     .booleanConf
     .createWithDefault(false)
 
   private[spark] val IO_ENCRYPTION_KEYGEN_ALGORITHM =
-    ConfigBuilder("spark.io.encryption.keygen.algorithm")
+    ConfigBuilder("org.apache.spark.io.encryption.keygen.algorithm")
       .stringConf
       .createWithDefault("HmacSHA1")
 
-  private[spark] val IO_ENCRYPTION_KEY_SIZE_BITS = ConfigBuilder("spark.io.encryption.keySizeBits")
+  private[spark] val IO_ENCRYPTION_KEY_SIZE_BITS = ConfigBuilder("org.apache.spark.io.encryption.keySizeBits")
     .intConf
     .checkValues(Set(128, 192, 256))
     .createWithDefault(128)
 
   private[spark] val IO_CRYPTO_CIPHER_TRANSFORMATION =
-    ConfigBuilder("spark.io.crypto.cipher.transformation")
+    ConfigBuilder("org.apache.spark.io.crypto.cipher.transformation")
       .internal()
       .stringConf
       .createWithDefaultString("AES/CTR/NoPadding")
 
-  private[spark] val DRIVER_HOST_ADDRESS = ConfigBuilder("spark.driver.host")
+  private[spark] val DRIVER_HOST_ADDRESS = ConfigBuilder("org.apache.spark.driver.host")
     .doc("Address of driver endpoints.")
     .stringConf
     .createWithDefault(Utils.localHostName())
 
-  private[spark] val DRIVER_BIND_ADDRESS = ConfigBuilder("spark.driver.bindAddress")
+  private[spark] val DRIVER_BIND_ADDRESS = ConfigBuilder("org.apache.spark.driver.bindAddress")
     .doc("Address where to bind network listen sockets on the driver.")
     .fallbackConf(DRIVER_HOST_ADDRESS)
 
-  private[spark] val BLOCK_MANAGER_PORT = ConfigBuilder("spark.blockManager.port")
+  private[spark] val BLOCK_MANAGER_PORT = ConfigBuilder("org.apache.spark.blockManager.port")
     .doc("Port to use for the block manager when a more specific setting is not provided.")
     .intConf
     .createWithDefault(0)
 
-  private[spark] val DRIVER_BLOCK_MANAGER_PORT = ConfigBuilder("spark.driver.blockManager.port")
+  private[spark] val DRIVER_BLOCK_MANAGER_PORT = ConfigBuilder("org.apache.spark.driver.blockManager.port")
     .doc("Port to use for the block manager on the driver.")
     .fallbackConf(BLOCK_MANAGER_PORT)
 
-  private[spark] val IGNORE_CORRUPT_FILES = ConfigBuilder("spark.files.ignoreCorruptFiles")
+  private[spark] val IGNORE_CORRUPT_FILES = ConfigBuilder("org.apache.spark.files.ignoreCorruptFiles")
     .doc("Whether to ignore corrupt files. If true, the Spark jobs will continue to run when " +
       "encountering corrupted or non-existing files and contents that have been read will still " +
       "be returned.")
     .booleanConf
     .createWithDefault(false)
 
-  private[spark] val APP_CALLER_CONTEXT = ConfigBuilder("spark.log.callerContext")
+  private[spark] val APP_CALLER_CONTEXT = ConfigBuilder("org.apache.spark.log.callerContext")
     .stringConf
     .createOptional
 
-  private[spark] val FILES_MAX_PARTITION_BYTES = ConfigBuilder("spark.files.maxPartitionBytes")
+  private[spark] val FILES_MAX_PARTITION_BYTES = ConfigBuilder("org.apache.spark.files.maxPartitionBytes")
     .doc("The maximum number of bytes to pack into a single partition when reading files.")
     .longConf
     .createWithDefault(128 * 1024 * 1024)
 
-  private[spark] val FILES_OPEN_COST_IN_BYTES = ConfigBuilder("spark.files.openCostInBytes")
+  private[spark] val FILES_OPEN_COST_IN_BYTES = ConfigBuilder("org.apache.spark.files.openCostInBytes")
     .doc("The estimated cost to open a file, measured by the number of bytes could be scanned in" +
       " the same time. This is used when putting multiple files into a partition. It's better to" +
       " over estimate, then the partitions with small files will be faster than partitions with" +
@@ -241,7 +241,7 @@ package object config {
     .createWithDefault(4 * 1024 * 1024)
 
   private[spark] val SECRET_REDACTION_PATTERN =
-    ConfigBuilder("spark.redaction.regex")
+    ConfigBuilder("org.apache.spark.redaction.regex")
       .doc("Regex to decide which Spark configuration properties and environment variables in " +
         "driver and executor environments contain sensitive information. When this regex matches " +
         "a property key or value, the value is redacted from the environment UI and various logs " +
@@ -250,7 +250,7 @@ package object config {
       .createWithDefault("(?i)secret|password".r)
 
   private[spark] val STRING_REDACTION_PATTERN =
-    ConfigBuilder("spark.redaction.string.regex")
+    ConfigBuilder("org.apache.spark.redaction.string.regex")
       .doc("Regex to decide which parts of strings produced by Spark contain sensitive " +
         "information. When this regex matches a string part, that string part is replaced by a " +
         "dummy value. This is currently used to redact the output of SQL explain commands.")
@@ -258,29 +258,29 @@ package object config {
       .createOptional
 
   private[spark] val NETWORK_AUTH_ENABLED =
-    ConfigBuilder("spark.authenticate")
+    ConfigBuilder("org.apache.spark.authenticate")
       .booleanConf
       .createWithDefault(false)
 
   private[spark] val SASL_ENCRYPTION_ENABLED =
-    ConfigBuilder("spark.authenticate.enableSaslEncryption")
+    ConfigBuilder("org.apache.spark.authenticate.enableSaslEncryption")
       .booleanConf
       .createWithDefault(false)
 
   private[spark] val NETWORK_ENCRYPTION_ENABLED =
-    ConfigBuilder("spark.network.crypto.enabled")
+    ConfigBuilder("org.apache.spark.network.crypto.enabled")
       .booleanConf
       .createWithDefault(false)
 
   private[spark] val CHECKPOINT_COMPRESS =
-    ConfigBuilder("spark.checkpoint.compress")
+    ConfigBuilder("org.apache.spark.checkpoint.compress")
       .doc("Whether to compress RDD checkpoints. Generally a good idea. Compression will use " +
-        "spark.io.compression.codec.")
+        "org.apache.spark.io.compression.codec.")
       .booleanConf
       .createWithDefault(false)
 
   private[spark] val SHUFFLE_ACCURATE_BLOCK_THRESHOLD =
-    ConfigBuilder("spark.shuffle.accurateBlockThreshold")
+    ConfigBuilder("org.apache.spark.shuffle.accurateBlockThreshold")
       .doc("When we compress the size of shuffle blocks in HighlyCompressedMapStatus, we will " +
         "record the size accurately if it's above this config. This helps to prevent OOM by " +
         "avoiding underestimating shuffle block size when fetch shuffle blocks.")
@@ -288,7 +288,7 @@ package object config {
       .createWithDefault(100 * 1024 * 1024)
 
   private[spark] val REDUCER_MAX_REQ_SIZE_SHUFFLE_TO_MEM =
-    ConfigBuilder("spark.reducer.maxReqSizeShuffleToMem")
+    ConfigBuilder("org.apache.spark.reducer.maxReqSizeShuffleToMem")
       .internal()
       .doc("The blocks of a shuffle request will be fetched to disk when size of the request is " +
         "above this threshold. This is to avoid a giant request takes too much memory.")

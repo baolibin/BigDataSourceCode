@@ -158,10 +158,10 @@ object SparkEnv extends Logging {
                                               mockOutputCommitCoordinator: Option[OutputCommitCoordinator] = None): SparkEnv = {
         assert(conf.contains(DRIVER_HOST_ADDRESS),
             s"${DRIVER_HOST_ADDRESS.key} is not set on the driver!")
-        assert(conf.contains("spark.driver.port"), "spark.driver.port is not set on the driver!")
+        assert(conf.contains("org.apache.spark.driver.port"), "org.apache.spark.driver.port is not set on the driver!")
         val bindAddress = conf.get(DRIVER_BIND_ADDRESS)
         val advertiseAddress = conf.get(DRIVER_HOST_ADDRESS)
-        val port = conf.get("spark.driver.port").toInt
+        val port = conf.get("org.apache.spark.driver.port").toInt
         val ioEncryptionKey = if (conf.get(IO_ENCRYPTION_ENABLED)) {
             Some(CryptoStreamUtils.createKey(conf))
         } else {
@@ -219,10 +219,10 @@ object SparkEnv extends Logging {
         // In the non-driver case, the RPC env's address may be null since it may not be listening
         // for incoming connections.
         if (isDriver) {
-            conf.set("spark.driver.port", rpcEnv.address.port.toString)
+            conf.set("org.apache.spark.driver.port", rpcEnv.address.port.toString)
         } else if (rpcEnv.address != null) {
-            conf.set("spark.executor.port", rpcEnv.address.port.toString)
-            logInfo(s"Setting spark.executor.port to: ${rpcEnv.address.port.toString}")
+            conf.set("org.apache.spark.executor.port", rpcEnv.address.port.toString)
+            logInfo(s"Setting org.apache.spark.executor.port to: ${rpcEnv.address.port.toString}")
         }
 
         // Create an instance of the class with the given name, possibly initializing it with our conf
@@ -252,7 +252,7 @@ object SparkEnv extends Logging {
         }
 
         val serializer = instantiateClassFromConf[Serializer](
-            "spark.serializer", "org.apache.spark.serializer.JavaSerializer")
+            "org.apache.spark.serializer", "org.apache.org.apache.spark.serializer.JavaSerializer")
         logDebug(s"Using serializer: ${serializer.getClass}")
 
         val serializerManager = new SerializerManager(serializer, conf, ioEncryptionKey)
@@ -288,12 +288,12 @@ object SparkEnv extends Logging {
         val shortShuffleMgrNames = Map(
             "sort" -> classOf[org.apache.spark.shuffle.sort.SortShuffleManager].getName,
             "tungsten-sort" -> classOf[org.apache.spark.shuffle.sort.SortShuffleManager].getName)
-        val shuffleMgrName = conf.get("spark.shuffle.manager", "sort")
+        val shuffleMgrName = conf.get("org.apache.spark.shuffle.manager", "sort")
         val shuffleMgrClass =
             shortShuffleMgrNames.getOrElse(shuffleMgrName.toLowerCase(Locale.ROOT), shuffleMgrName)
         val shuffleManager = instantiateClass[ShuffleManager](shuffleMgrClass)
 
-        val useLegacyMemoryManager = conf.getBoolean("spark.memory.useLegacyMode", false)
+        val useLegacyMemoryManager = conf.getBoolean("org.apache.spark.memory.useLegacyMode", false)
         val memoryManager: MemoryManager =
             if (useLegacyMemoryManager) {
                 new StaticMemoryManager(conf, numUsableCores)
@@ -330,7 +330,7 @@ object SparkEnv extends Logging {
             // We need to set the executor ID before the MetricsSystem is created because sources and
             // sinks specified in the metrics configuration file will want to incorporate this executor's
             // ID into the metrics they report.
-            conf.set("spark.executor.id", executorId)
+            conf.set("org.apache.spark.executor.id", executorId)
             val ms = MetricsSystem.createMetricsSystem("executor", conf, securityManager)
             ms.start()
             ms
@@ -422,8 +422,8 @@ object SparkEnv extends Logging {
         // Spark properties
         // This includes the scheduling mode whether or not it is configured (used by SparkUI)
         val schedulerMode =
-        if (!conf.contains("spark.scheduler.mode")) {
-            Seq(("spark.scheduler.mode", schedulingMode))
+        if (!conf.contains("org.apache.spark.scheduler.mode")) {
+            Seq(("org.apache.spark.scheduler.mode", schedulingMode))
         } else {
             Seq[(String, String)]()
         }
@@ -432,7 +432,7 @@ object SparkEnv extends Logging {
         // System properties that are not java classpaths
         val systemProperties = Utils.getSystemProperties.toSeq
         val otherProperties = systemProperties.filter { case (k, _) =>
-            k != "java.class.path" && !k.startsWith("spark.")
+            k != "java.class.path" && !k.startsWith("org.apache.spark.")
         }.sorted
 
         // Class paths including all added jars and files

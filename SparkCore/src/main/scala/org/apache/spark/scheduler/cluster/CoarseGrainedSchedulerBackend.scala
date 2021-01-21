@@ -40,7 +40,7 @@ import scala.concurrent.Future
   * executors whenever a task is done and asking the scheduler to launch a new executor for
   * each new task. Executors may be launched in a variety of ways, such as Mesos tasks for the
   * coarse-grained Mesos mode or standalone processes for Spark's standalone deploy mode
-  * (spark.deploy.*).
+  * (org.apache.spark.deploy.*).
   */
 private[spark]
 class CoarseGrainedSchedulerBackend(scheduler: TaskSchedulerImpl, val rpcEnv: RpcEnv)
@@ -55,11 +55,11 @@ class CoarseGrainedSchedulerBackend(scheduler: TaskSchedulerImpl, val rpcEnv: Rp
     // Submit tasks only after (registered resources / total expected resources)
     // is equal to at least this value, that is double between 0 and 1.
     private val _minRegisteredRatio =
-    math.min(1, conf.getDouble("spark.scheduler.minRegisteredResourcesRatio", 0))
+    math.min(1, conf.getDouble("org.apache.spark.scheduler.minRegisteredResourcesRatio", 0))
     // Submit tasks after maxRegisteredWaitingTime milliseconds
     // if minRegisteredRatio has not yet been reached
     private val maxRegisteredWaitingTimeMs =
-    conf.getTimeAsMs("spark.scheduler.maxRegisteredResourcesWaitingTime", "30s")
+    conf.getTimeAsMs("org.apache.spark.scheduler.maxRegisteredResourcesWaitingTime", "30s")
     private val createTime = System.currentTimeMillis()
 
     // Accessing `executorDataMap` in `DriverEndpoint.receive/receiveAndReply` doesn't need any
@@ -283,7 +283,7 @@ class CoarseGrainedSchedulerBackend(scheduler: TaskSchedulerImpl, val rpcEnv: Rp
     override def start() {
         val properties = new ArrayBuffer[(String, String)]
         for ((key, value) <- scheduler.sc.conf.getAll) {
-            if (key.startsWith("spark.")) {
+            if (key.startsWith("org.apache.spark.")) {
                 properties += ((key, value))
             }
         }
@@ -335,7 +335,7 @@ class CoarseGrainedSchedulerBackend(scheduler: TaskSchedulerImpl, val rpcEnv: Rp
     }
 
     override def defaultParallelism(): Int = {
-        conf.getInt("spark.default.parallelism", math.max(totalCoreCount.get(), 2))
+        conf.getInt("org.apache.spark.default.parallelism", math.max(totalCoreCount.get(), 2))
     }
 
     override def isReady(): Boolean = {
@@ -403,7 +403,7 @@ class CoarseGrainedSchedulerBackend(scheduler: TaskSchedulerImpl, val rpcEnv: Rp
 
         override def onStart() {
             // Periodically revive offers to allow delay scheduling to work
-            val reviveIntervalMs = conf.getTimeAsMs("spark.scheduler.revive.interval", "1s")
+            val reviveIntervalMs = conf.getTimeAsMs("org.apache.spark.scheduler.revive.interval", "1s")
 
             reviveThread.scheduleAtFixedRate(new Runnable {
                 override def run(): Unit = Utils.tryLogNonFatalError {
@@ -475,8 +475,8 @@ class CoarseGrainedSchedulerBackend(scheduler: TaskSchedulerImpl, val rpcEnv: Rp
                     scheduler.taskIdToTaskSetManager.get(task.taskId).foreach { taskSetMgr =>
                         try {
                             var msg = "Serialized task %s:%d was %d bytes, which exceeds max allowed: " +
-                                    "spark.rpc.message.maxSize (%d bytes). Consider increasing " +
-                                    "spark.rpc.message.maxSize or using broadcast variables for large values."
+                                    "org.apache.spark.rpc.message.maxSize (%d bytes). Consider increasing " +
+                                    "org.apache.spark.rpc.message.maxSize or using broadcast variables for large values."
                             msg = msg.format(task.taskId, task.index, serializedTask.limit, maxRpcMessageSize)
                             taskSetMgr.abort(msg)
                         } catch {

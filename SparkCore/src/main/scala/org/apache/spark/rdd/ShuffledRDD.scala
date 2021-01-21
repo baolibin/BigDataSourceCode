@@ -52,7 +52,7 @@ class ShuffledRDD[K: ClassTag, V: ClassTag, C: ClassTag](
     private var aggregator: Option[Aggregator[K, V, C]] = None
     private var mapSideCombine: Boolean = false
 
-    /** Set a serializer for this RDD's shuffle, or null to use the default (spark.serializer) */
+    /** Set a serializer for this RDD's shuffle, or null to use the default (org.apache.spark.serializer) */
     def setSerializer(serializer: Serializer): ShuffledRDD[K, V, C] = {
         this.userSpecifiedSerializer = Option(serializer)
         this

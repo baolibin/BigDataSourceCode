@@ -141,7 +141,7 @@ private[serializer] class GenericAvroSerializer(schemas: Map[Long, String])
               throw new SparkException(
                 "Error reading attempting to read avro data -- encountered an unknown " +
                   s"fingerprint: $fingerprint, not sure what schema to use.  This could happen " +
-                  "if you registered additional schemas after starting your spark context.")
+                  "if you registered additional schemas after starting your org.apache.spark context.")
           }
         })
       } else {

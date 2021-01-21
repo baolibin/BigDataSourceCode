@@ -164,12 +164,12 @@ class DAGScheduler(
     // This is only safe because DAGScheduler runs in a single thread.
     private val closureSerializer = SparkEnv.get.closureSerializer.newInstance()
     /** If enabled, FetchFailed will not cause stage retry, in order to surface the problem. */
-    private val disallowStageRetryForTest = sc.getConf.getBoolean("spark.test.noStageRetry", false)
+    private val disallowStageRetryForTest = sc.getConf.getBoolean("org.apache.spark.test.noStageRetry", false)
     /**
       * Number of consecutive stage attempts allowed before a stage is aborted.
       */
     private[scheduler] val maxConsecutiveStageAttempts =
-        sc.getConf.getInt("spark.stage.maxConsecutiveAttempts",
+        sc.getConf.getInt("org.apache.spark.stage.maxConsecutiveAttempts",
             DAGScheduler.DEFAULT_MAX_CONSECUTIVE_STAGE_ATTEMPTS)
     private val messageScheduler =
         ThreadUtils.newDaemonSingleThreadScheduledExecutor("dag-scheduler-message")

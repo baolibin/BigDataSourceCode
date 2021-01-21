@@ -21,9 +21,9 @@ package org.apache.spark.security
  * This Spark trait is used for mapping a given userName to a set of groups which it belongs to.
  * This is useful for specifying a common group of admins/developers to provide them admin, modify
  * and/or view access rights. Based on whether access control checks are enabled using
- * spark.acls.enable, every time a user tries to access or modify the application, the
+ * org.apache.spark.acls.enable, every time a user tries to access or modify the application, the
  * SecurityManager gets the corresponding groups a user belongs to from the instance of the groups
- * mapping provider specified by the entry spark.user.groups.mapping.
+ * mapping provider specified by the entry org.apache.spark.user.groups.mapping.
  */
 
 trait GroupMappingServiceProvider {

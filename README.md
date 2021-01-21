@@ -252,3 +252,7 @@ Reducers获取此文件的连续区域，以便读取其映射输出部分。
 ##### 11、IO源码
 > [IO源码](src/main/scala/org/apache/spark/io)：
 
+
+---
+### 一、spark sql源码阅读
+    SparkSql模块源码阅读，版本2.2。

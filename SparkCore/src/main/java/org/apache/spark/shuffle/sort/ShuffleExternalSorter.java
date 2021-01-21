@@ -116,12 +116,12 @@ final class ShuffleExternalSorter extends MemoryConsumer {
     this.taskContext = taskContext;
     this.numPartitions = numPartitions;
     // Use getSizeAsKb (not bytes) to maintain backwards compatibility if no units are provided
-    this.fileBufferSizeBytes = (int) conf.getSizeAsKb("spark.shuffle.file.buffer", "32k") * 1024;
+    this.fileBufferSizeBytes = (int) conf.getSizeAsKb("org.apache.spark.shuffle.file.buffer", "32k") * 1024;
     this.numElementsForSpillThreshold =
-      conf.getLong("spark.shuffle.spill.numElementsForceSpillThreshold", 1024 * 1024 * 1024);
+      conf.getLong("org.apache.spark.shuffle.spill.numElementsForceSpillThreshold", 1024 * 1024 * 1024);
     this.writeMetrics = writeMetrics;
     this.inMemSorter = new ShuffleInMemorySorter(
-      this, initialSize, conf.getBoolean("spark.shuffle.sort.useRadixSort", true));
+      this, initialSize, conf.getBoolean("org.apache.spark.shuffle.sort.useRadixSort", true));
     this.peakMemoryUsedBytes = getMemoryUsage();
   }
 
@@ -158,7 +158,7 @@ final class ShuffleExternalSorter extends MemoryConsumer {
     final byte[] writeBuffer = new byte[DISK_WRITE_BUFFER_SIZE];
 
     // Because this output will be read during shuffle, its compression codec must be controlled by
-    // spark.shuffle.compress instead of spark.shuffle.spill.compress, so we need to use
+    // org.apache.spark.shuffle.compress instead of org.apache.spark.shuffle.spill.compress, so we need to use
     // createTempShuffleBlock here; see SPARK-3426 for more details.
     final Tuple2<TempShuffleBlockId, File> spilledFileInfo =
       blockManager.diskBlockManager().createTempShuffleBlock();

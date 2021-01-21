@@ -42,7 +42,7 @@ private[spark] object CryptoStreamUtils extends Logging {
   // The initialization vector length in bytes.
   val IV_LENGTH_IN_BYTES = 16
   // The prefix of IO encryption related configurations in Spark configuration.
-  val SPARK_IO_ENCRYPTION_COMMONS_CONFIG_PREFIX = "spark.io.encryption.commons.config."
+  val SPARK_IO_ENCRYPTION_COMMONS_CONFIG_PREFIX = "org.apache.spark.io.encryption.commons.config."
 
   /**
    * Helper method to wrap `OutputStream` with `CryptoOutputStream` for encryption.

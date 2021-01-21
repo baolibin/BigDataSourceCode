@@ -115,7 +115,7 @@ private[spark] class LocalSchedulerBackend(
       * @param conf Spark configuration.
       */
     def getUserClasspath(conf: SparkConf): Seq[URL] = {
-        val userClassPathStr = conf.getOption("spark.executor.extraClassPath")
+        val userClassPathStr = conf.getOption("org.apache.spark.executor.extraClassPath")
         userClassPathStr.map(_.split(File.pathSeparator)).toSeq.flatten.map(new File(_).toURI.toURL)
     }
 
@@ -151,7 +151,7 @@ private[spark] class LocalSchedulerBackend(
     }
 
     override def defaultParallelism(): Int =
-        scheduler.conf.getInt("spark.default.parallelism", totalCores)
+        scheduler.conf.getInt("org.apache.spark.default.parallelism", totalCores)
 
     override def killTask(
                                  taskId: Long, executorId: String, interruptThread: Boolean, reason: String) {

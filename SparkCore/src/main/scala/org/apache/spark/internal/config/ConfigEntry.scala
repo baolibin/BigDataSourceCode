@@ -20,7 +20,7 @@ package org.apache.spark.internal.config
 /**
  * An entry contains all meta information for a configuration.
  *
- * When applying variable substitution to config values, only references starting with "spark." are
+ * When applying variable substitution to config values, only references starting with "org.apache.spark." are
  * considered in the default namespace. For known Spark configuration keys (i.e. those created using
  * `ConfigBuilder`), references will also consider the default value when it exists.
  *

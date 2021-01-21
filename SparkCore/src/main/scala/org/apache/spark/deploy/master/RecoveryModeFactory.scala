@@ -52,7 +52,7 @@ abstract class StandaloneRecoveryModeFactory(conf: SparkConf, serializer: Serial
 private[master] class FileSystemRecoveryModeFactory(conf: SparkConf, serializer: Serializer)
   extends StandaloneRecoveryModeFactory(conf, serializer) with Logging {
 
-  val RECOVERY_DIR = conf.get("spark.deploy.recoveryDirectory", "")
+  val RECOVERY_DIR = conf.get("org.apache.spark.deploy.recoveryDirectory", "")
 
   def createPersistenceEngine(): PersistenceEngine = {
     logInfo("Persisting recovery state to directory: " + RECOVERY_DIR)

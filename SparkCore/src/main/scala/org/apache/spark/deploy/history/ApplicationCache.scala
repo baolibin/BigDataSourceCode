@@ -145,7 +145,7 @@ private[history] class ApplicationCache(
     }
 
     /**
-      * Get the associated spark UI.
+      * Get the associated org.apache.spark UI.
       *
       * Cache fetch/refresh will have taken place by the time this method returns.
       *
@@ -276,7 +276,7 @@ private[history] class ApplicationCache(
                 case Some(LoadedAppUI(ui, updateState)) =>
                     val completed = ui.getApplicationInfoList.exists(_.attempts.last.completed)
                     if (completed) {
-                        // completed spark UIs are attached directly
+                        // completed org.apache.spark UIs are attached directly
                         operations.attachSparkUI(appId, attemptId, ui, completed)
                     } else {
                         // incomplete UIs have the cache-check filter put in front of them.
@@ -603,7 +603,7 @@ private[history] object ApplicationCacheCheckFilterRelay extends Logging {
     val ATTEMPT_ID = "attemptId"
 
     // name of the filter to register
-    val FILTER_NAME = "org.apache.spark.deploy.history.ApplicationCacheCheckFilter"
+    val FILTER_NAME = "org.apache.org.apache.spark.deploy.history.ApplicationCacheCheckFilter"
 
     /** the application cache to relay requests to */
     @volatile

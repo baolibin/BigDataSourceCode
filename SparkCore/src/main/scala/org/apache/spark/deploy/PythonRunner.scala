@@ -84,7 +84,7 @@ object PythonRunner {
         // This is equivalent to setting the -u flag; we use it because ipython doesn't support -u:
         env.put("PYTHONUNBUFFERED", "YES") // value is needed to be set to a non-empty string
         env.put("PYSPARK_GATEWAY_PORT", "" + gatewayServer.getListeningPort)
-        // pass conf spark.pyspark.python to python process, the only way to pass info to
+        // pass conf org.apache.spark.pyspark.python to python process, the only way to pass info to
         // python process is through environment variable.
         sparkConf.get(PYSPARK_PYTHON).foreach(env.put("PYSPARK_PYTHON", _))
         sys.env.get("PYTHONHASHSEED").foreach(env.put("PYTHONHASHSEED", _))
@@ -124,7 +124,7 @@ object PythonRunner {
     def formatPath(path: String, testWindows: Boolean = false): String = {
         if (Utils.nonLocalPaths(path, testWindows).nonEmpty) {
             throw new IllegalArgumentException("Launching Python applications through " +
-                    s"spark-submit is currently only supported for local files: $path")
+                    s"org.apache.spark-submit is currently only supported for local files: $path")
         }
         // get path when scheme is file.
         val uri = Try(new URI(path)).getOrElse(new File(path).toURI)

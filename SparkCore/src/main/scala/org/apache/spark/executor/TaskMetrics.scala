@@ -198,7 +198,7 @@ class TaskMetrics private[spark] () extends Serializable {
   }
 
   // Only used for test
-  private[spark] val testAccum = sys.props.get("spark.testing").map(_ => new LongAccumulator)
+  private[spark] val testAccum = sys.props.get("org.apache.spark.testing").map(_ => new LongAccumulator)
 
 
   import InternalAccumulator._

@@ -118,7 +118,7 @@ private[r] object RRDD {
     } else {
       // If conf has no master set it to "local" to maintain
       // backwards compatibility
-      sparkConf.setIfMissing("spark.master", "local")
+      sparkConf.setIfMissing("org.apache.spark.master", "local")
     }
 
     for ((name, value) <- sparkEnvirMap.asScala) {
@@ -128,11 +128,11 @@ private[r] object RRDD {
       sparkConf.setExecutorEnv(name.toString, value.toString)
     }
 
-    if (sparkEnvirMap.containsKey("spark.r.sql.derby.temp.dir") &&
+    if (sparkEnvirMap.containsKey("org.apache.spark.r.sql.derby.temp.dir") &&
         System.getProperty("derby.stream.error.file") == null) {
       // This must be set before SparkContext is instantiated.
       System.setProperty("derby.stream.error.file",
-                         Seq(sparkEnvirMap.get("spark.r.sql.derby.temp.dir").toString, "derby.log")
+                         Seq(sparkEnvirMap.get("org.apache.spark.r.sql.derby.temp.dir").toString, "derby.log")
                          .mkString(File.separator))
     }
 

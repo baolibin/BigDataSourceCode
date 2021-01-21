@@ -66,17 +66,17 @@ class DefaultTopologyMapper(conf: SparkConf) extends TopologyMapper(conf) with L
   * 一个简单的基于文件的拓扑映射器。
   * A simple file based topology mapper. This expects topology information provided as a
   * `java.util.Properties` file. The name of the file is obtained from SparkConf property
-  * `spark.storage.replication.topologyFile`. To use this topology mapper, set the
-  * `spark.storage.replication.topologyMapper` property to
+  * `org.apache.spark.storage.replication.topologyFile`. To use this topology mapper, set the
+  * `org.apache.spark.storage.replication.topologyMapper` property to
   * [[org.apache.spark.storage.FileBasedTopologyMapper]]
   *
   * @param conf SparkConf object
   */
 @DeveloperApi
 class FileBasedTopologyMapper(conf: SparkConf) extends TopologyMapper(conf) with Logging {
-    val topologyFile = conf.getOption("spark.storage.replication.topologyFile")
+    val topologyFile = conf.getOption("org.apache.spark.storage.replication.topologyFile")
     require(topologyFile.isDefined, "Please specify topology file via " +
-            "spark.storage.replication.topologyFile for FileBasedTopologyMapper.")
+            "org.apache.spark.storage.replication.topologyFile for FileBasedTopologyMapper.")
     val topologyMap = Utils.getPropertiesFromFile(topologyFile.get)
 
     override def getTopologyForHost(hostname: String): Option[String] = {

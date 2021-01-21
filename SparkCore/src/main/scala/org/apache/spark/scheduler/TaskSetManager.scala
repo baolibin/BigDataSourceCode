@@ -62,11 +62,11 @@ private[spark] class TaskSetManager(
                                            clock: Clock = new SystemClock()) extends Schedulable with Logging {
 
     // Quantile of tasks at which to start speculation
-    val SPECULATION_QUANTILE = conf.getDouble("spark.speculation.quantile", 0.75)
-    val SPECULATION_MULTIPLIER = conf.getDouble("spark.speculation.multiplier", 1.5)
+    val SPECULATION_QUANTILE = conf.getDouble("org.apache.spark.speculation.quantile", 0.75)
+    val SPECULATION_MULTIPLIER = conf.getDouble("org.apache.spark.speculation.multiplier", 1.5)
     // Limit of bytes for total size of results (default is 1GB)
     val maxResultSize = Utils.getMaxResultSize(conf)
-    val speculationEnabled = conf.getBoolean("spark.speculation", false)
+    val speculationEnabled = conf.getBoolean("org.apache.spark.speculation", false)
     // Serializer for closures and tasks.
     val env = SparkEnv.get
     val ser = env.closureSerializer.newInstance()
@@ -87,7 +87,7 @@ private[spark] class TaskSetManager(
     val successfulTaskDurations = new MedianHeap()
     // How frequently to reprint duplicate exceptions in full, in milliseconds
     val EXCEPTION_PRINT_INTERVAL =
-        conf.getLong("spark.logging.exceptionPrintInterval", 10000)
+        conf.getLong("org.apache.spark.logging.exceptionPrintInterval", 10000)
     // Figure out the current map output tracker epoch and set it on all tasks
     val epoch = sched.mapOutputTracker.getEpoch
     private val conf = sched.sc.conf
@@ -557,7 +557,7 @@ private[spark] class TaskSetManager(
         calculatedTasks += 1
         if (maxResultSize > 0 && totalResultSize > maxResultSize) {
             val msg = s"Total size of serialized results of ${calculatedTasks} tasks " +
-                    s"(${Utils.bytesToString(totalResultSize)}) is bigger than spark.driver.maxResultSize " +
+                    s"(${Utils.bytesToString(totalResultSize)}) is bigger than org.apache.spark.driver.maxResultSize " +
                     s"(${Utils.bytesToString(maxResultSize)})"
             logError(msg)
             abort(msg)
@@ -882,11 +882,11 @@ private[spark] class TaskSetManager(
     }
 
     private def getLocalityWait(level: TaskLocality.TaskLocality): Long = {
-        val defaultWait = conf.get("spark.locality.wait", "3s")
+        val defaultWait = conf.get("org.apache.spark.locality.wait", "3s")
         val localityWaitKey = level match {
-            case TaskLocality.PROCESS_LOCAL => "spark.locality.wait.process"
-            case TaskLocality.NODE_LOCAL => "spark.locality.wait.node"
-            case TaskLocality.RACK_LOCAL => "spark.locality.wait.rack"
+            case TaskLocality.PROCESS_LOCAL => "org.apache.spark.locality.wait.process"
+            case TaskLocality.NODE_LOCAL => "org.apache.spark.locality.wait.node"
+            case TaskLocality.RACK_LOCAL => "org.apache.spark.locality.wait.rack"
             case _ => null
         }
 
@@ -930,7 +930,7 @@ private[spark] class TaskSetManager(
       *
       * It is possible that this taskset has become impossible to schedule *anywhere* due to the
       * blacklist.  The most common scenario would be if there are fewer executors than
-      * spark.task.maxFailures. We need to detect this so we can fail the task set, otherwise the job
+      * org.apache.spark.task.maxFailures. We need to detect this so we can fail the task set, otherwise the job
       * will hang.
       *
       * There's a tradeoff here: we could make sure all tasks in the task set are schedulable, but that
@@ -990,7 +990,7 @@ private[spark] class TaskSetManager(
                         val partition = tasks(indexInTaskSet).partitionId
                         abort(s"Aborting $taskSet because task $indexInTaskSet (partition $partition) " +
                                 s"cannot run anywhere due to node and executor blacklist.  Blacklisting behavior " +
-                                s"can be configured via spark.blacklist.*.")
+                                s"can be configured via org.apache.spark.blacklist.*.")
                     }
                 }
             }

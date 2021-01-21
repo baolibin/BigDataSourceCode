@@ -120,10 +120,10 @@ private[spark] class Executor(
     }
 
     // Whether to load classes in user jars before those in Spark jars
-    private val userClassPathFirst = conf.getBoolean("spark.executor.userClassPathFirst", false)
+    private val userClassPathFirst = conf.getBoolean("org.apache.spark.executor.userClassPathFirst", false)
 
     // Whether to monitor killed / interrupted tasks
-    private val taskReaperEnabled = conf.getBoolean("spark.task.reaper.enabled", false)
+    private val taskReaperEnabled = conf.getBoolean("org.apache.spark.task.reaper.enabled", false)
 
     // Create our ClassLoader
     // do this after SparkEnv creation so can access the SecurityManager
@@ -136,7 +136,7 @@ private[spark] class Executor(
     // Max size of direct result. If task result is bigger than this, we use the block manager
     // to send the result back.
     private val maxDirectResultSize = Math.min(
-        conf.getSizeAsBytes("spark.task.maxDirectResultSize", 1L << 20),
+        conf.getSizeAsBytes("org.apache.spark.task.maxDirectResultSize", 1L << 20),
         RpcUtils.maxMessageSizeBytes(conf))
 
     // Limit of bytes for total size of results (default is 1GB)
@@ -158,7 +158,7 @@ private[spark] class Executor(
       * times, it should kill itself. The default value is 60. It means we will retry to send
       * heartbeats about 10 minutes because the heartbeat interval is 10s.
       */
-    private val HEARTBEAT_MAX_FAILURES = conf.getInt("spark.executor.heartbeat.maxFailures", 60)
+    private val HEARTBEAT_MAX_FAILURES = conf.getInt("org.apache.spark.executor.heartbeat.maxFailures", 60)
 
     /**
       * Count the failure times of heartbeat. It should only be accessed in the heartbeat thread. Each
@@ -263,19 +263,19 @@ private[spark] class Executor(
       * new classes defined by the REPL as the user types code
       */
     private def addReplClassLoaderIfNeeded(parent: ClassLoader): ClassLoader = {
-        val classUri = conf.get("spark.repl.class.uri", null)
+        val classUri = conf.get("org.apache.spark.repl.class.uri", null)
         if (classUri != null) {
             logInfo("Using REPL class URI: " + classUri)
             try {
                 val _userClassPathFirst: java.lang.Boolean = userClassPathFirst
-                val klass = Utils.classForName("org.apache.spark.repl.ExecutorClassLoader")
+                val klass = Utils.classForName("org.apache.org.apache.spark.repl.ExecutorClassLoader")
                         .asInstanceOf[Class[_ <: ClassLoader]]
                 val constructor = klass.getConstructor(classOf[SparkConf], classOf[SparkEnv],
                     classOf[String], classOf[ClassLoader], classOf[Boolean])
                 constructor.newInstance(conf, env, classUri, parent, _userClassPathFirst)
             } catch {
                 case _: ClassNotFoundException =>
-                    logError("Could not find org.apache.spark.repl.ExecutorClassLoader on classpath!")
+                    logError("Could not find org.apache.org.apache.spark.repl.ExecutorClassLoader on classpath!")
                     System.exit(1)
                     null
             }
@@ -327,7 +327,7 @@ private[spark] class Executor(
       * Schedules a task to report heartbeat and partial metrics for active tasks to driver.
       */
     private def startDriverHeartbeater(): Unit = {
-        val intervalMs = conf.getTimeAsMs("spark.executor.heartbeatInterval", "10s")
+        val intervalMs = conf.getTimeAsMs("org.apache.spark.executor.heartbeatInterval", "10s")
 
         // Wait a random interval so the heartbeats don't end up in sync
         val initialDelay = intervalMs + (math.random * intervalMs).asInstanceOf[Int]
@@ -359,7 +359,7 @@ private[spark] class Executor(
         val message = Heartbeat(executorId, accumUpdates.toArray, env.blockManager.blockManagerId)
         try {
             val response = heartbeatReceiverRef.askSync[HeartbeatResponse](
-                message, RpcTimeout(conf, "spark.executor.heartbeatInterval", "10s"))
+                message, RpcTimeout(conf, "org.apache.spark.executor.heartbeatInterval", "10s"))
             if (response.reregisterBlockManager) {
                 logInfo("Told to re-register on heartbeat")
                 env.blockManager.reregister()
@@ -486,7 +486,7 @@ private[spark] class Executor(
 
                     if (freedMemory > 0 && !threwException) {
                         val errMsg = s"Managed memory leak detected; size = $freedMemory bytes, TID = $taskId"
-                        if (conf.getBoolean("spark.unsafe.exceptionOnMemoryLeak", false)) {
+                        if (conf.getBoolean("org.apache.spark.unsafe.exceptionOnMemoryLeak", false)) {
                             throw new SparkException(errMsg)
                         } else {
                             logWarning(errMsg)
@@ -497,7 +497,7 @@ private[spark] class Executor(
                         val errMsg =
                             s"${releasedLocks.size} block locks were not released by TID = $taskId:\n" +
                                     releasedLocks.mkString("[", ", ", "]")
-                        if (conf.getBoolean("spark.storage.exceptionOnPinLeak", false)) {
+                        if (conf.getBoolean("org.apache.spark.storage.exceptionOnPinLeak", false)) {
                             throw new SparkException(errMsg)
                         } else {
                             logInfo(errMsg)
@@ -676,7 +676,7 @@ private[spark] class Executor(
       *
       * The TaskReaper was introduced in SPARK-18761 as a mechanism to monitor and clean up zombie
       * tasks. For backwards-compatibility / backportability this component is disabled by default
-      * and must be explicitly enabled by setting `spark.task.reaper.enabled=true`.
+      * and must be explicitly enabled by setting `org.apache.spark.task.reaper.enabled=true`.
       *
       * A TaskReaper is created for a particular task when that task is killed / cancelled. Typically
       * a task will have only one TaskReaper, but it's possible for a task to have up to two reapers
@@ -684,7 +684,7 @@ private[spark] class Executor(
       *
       * Once created, a TaskReaper will run until its supervised task has finished running. If the
       * TaskReaper has not been configured to kill the JVM after a timeout (i.e. if
-      * `spark.task.reaper.killTimeout < 0`) then this implies that the TaskReaper may run indefinitely
+      * `org.apache.spark.task.reaper.killTimeout < 0`) then this implies that the TaskReaper may run indefinitely
       * if the supervised task never exits.
       */
     private class TaskReaper(
@@ -696,12 +696,12 @@ private[spark] class Executor(
         private[this] val taskId: Long = taskRunner.taskId
 
         private[this] val killPollingIntervalMs: Long =
-            conf.getTimeAsMs("spark.task.reaper.pollingInterval", "10s")
+            conf.getTimeAsMs("org.apache.spark.task.reaper.pollingInterval", "10s")
 
-        private[this] val killTimeoutMs: Long = conf.getTimeAsMs("spark.task.reaper.killTimeout", "-1")
+        private[this] val killTimeoutMs: Long = conf.getTimeAsMs("org.apache.spark.task.reaper.killTimeout", "-1")
 
         private[this] val takeThreadDump: Boolean =
-            conf.getBoolean("spark.task.reaper.threadDump", true)
+            conf.getBoolean("org.apache.spark.task.reaper.threadDump", true)
 
         override def run(): Unit = {
             val startTimeMs = System.currentTimeMillis()

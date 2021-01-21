@@ -38,9 +38,9 @@ private[spark] case class RpcEndpointAddress(rpcAddress: RpcAddress, name: Strin
   }
 
   override val toString = if (rpcAddress != null) {
-      s"spark://$name@${rpcAddress.host}:${rpcAddress.port}"
+      s"org.apache.spark://$name@${rpcAddress.host}:${rpcAddress.port}"
     } else {
-      s"spark-client://$name"
+      s"org.apache.spark-client://$name"
     }
 }
 
@@ -56,7 +56,7 @@ private[spark] object RpcEndpointAddress {
       val host = uri.getHost
       val port = uri.getPort
       val name = uri.getUserInfo
-      if (uri.getScheme != "spark" ||
+      if (uri.getScheme != "org/apache/spark" ||
           host == null ||
           port < 0 ||
           name == null ||

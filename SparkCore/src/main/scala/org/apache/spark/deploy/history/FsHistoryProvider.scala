@@ -82,29 +82,29 @@ private[history] class FsHistoryProvider(conf: SparkConf, clock: Clock)
     val initThread = initialize()
     // Interval between safemode checks.
     private val SAFEMODE_CHECK_INTERVAL_S = conf.getTimeAsSeconds(
-        "spark.history.fs.safemodeCheck.interval", "5s")
+        "org.apache.spark.history.fs.safemodeCheck.interval", "5s")
     // Interval between each check for event log updates
-    private val UPDATE_INTERVAL_S = conf.getTimeAsSeconds("spark.history.fs.update.interval", "10s")
+    private val UPDATE_INTERVAL_S = conf.getTimeAsSeconds("org.apache.spark.history.fs.update.interval", "10s")
     // Interval between each cleaner checks for event logs to delete
-    private val CLEAN_INTERVAL_S = conf.getTimeAsSeconds("spark.history.fs.cleaner.interval", "1d")
+    private val CLEAN_INTERVAL_S = conf.getTimeAsSeconds("org.apache.spark.history.fs.cleaner.interval", "1d")
     // Number of threads used to replay event logs.
     private val NUM_PROCESSING_THREADS = conf.getInt(SPARK_HISTORY_FS_NUM_REPLAY_THREADS,
         Math.ceil(Runtime.getRuntime.availableProcessors() / 4f).toInt)
-    private val logDir = conf.getOption("spark.history.fs.logDirectory")
+    private val logDir = conf.getOption("org.apache.spark.history.fs.logDirectory")
             .getOrElse(DEFAULT_LOG_DIR)
-    private val HISTORY_UI_ACLS_ENABLE = conf.getBoolean("spark.history.ui.acls.enable", false)
-    private val HISTORY_UI_ADMIN_ACLS = conf.get("spark.history.ui.admin.acls", "")
+    private val HISTORY_UI_ACLS_ENABLE = conf.getBoolean("org.apache.spark.history.ui.acls.enable", false)
+    private val HISTORY_UI_ADMIN_ACLS = conf.get("org.apache.spark.history.ui.admin.acls", "")
     logInfo(s"History server ui acls " + (if (HISTORY_UI_ACLS_ENABLE) "enabled" else "disabled") +
             "; users with admin permissions: " + HISTORY_UI_ADMIN_ACLS.toString +
             "; groups with admin permissions" + HISTORY_UI_ADMIN_ACLS_GROUPS.toString)
-    private val HISTORY_UI_ADMIN_ACLS_GROUPS = conf.get("spark.history.ui.admin.acls.groups", "")
+    private val HISTORY_UI_ADMIN_ACLS_GROUPS = conf.get("org.apache.spark.history.ui.admin.acls.groups", "")
     private val hadoopConf = SparkHadoopUtil.get.newConfiguration(conf)
     private val fs = new Path(logDir).getFileSystem(hadoopConf)
     // Used by check event thread and clean log thread.
     // Scheduled thread pool size must be one, otherwise it will have concurrent issues about fs
     // and applications between check task and clean task.
     private val pool = Executors.newScheduledThreadPool(1, new ThreadFactoryBuilder()
-            .setNameFormat("spark-history-task-%d").setDaemon(true).build())
+            .setNameFormat("org.apache.spark-history-task-%d").setDaemon(true).build())
     // The modification time of the newest log detected during the last scan.   Currently only
     // used for logging msgs (logs are re-scanned based on file size, rather than modtime)
     private val lastScanTime = new java.util.concurrent.atomic.AtomicLong(-1)
@@ -113,7 +113,7 @@ private[history] class FsHistoryProvider(conf: SparkConf, clock: Clock)
       * Fixed size thread pool to fetch and parse log files.
       */
     private val replayExecutor: ExecutorService = {
-        if (!conf.contains("spark.testing")) {
+        if (!conf.contains("org.apache.spark.testing")) {
             ThreadUtils.newDaemonFixedThreadPool(NUM_PROCESSING_THREADS, "log-replay-executor")
         } else {
             MoreExecutors.sameThreadExecutor()
@@ -526,18 +526,18 @@ private[history] class FsHistoryProvider(conf: SparkConf, clock: Clock)
             case f: FileNotFoundException =>
                 var msg = s"Log directory specified does not exist: $logDir"
                 if (logDir == DEFAULT_LOG_DIR) {
-                    msg += " Did you configure the correct one through spark.history.fs.logDirectory?"
+                    msg += " Did you configure the correct one through org.apache.spark.history.fs.logDirectory?"
                 }
                 throw new FileNotFoundException(msg).initCause(f)
         }
 
         // Disable the background thread during tests.
-        if (!conf.contains("spark.testing")) {
+        if (!conf.contains("org.apache.spark.testing")) {
             // A task that periodically checks for event log updates on disk.
             logDebug(s"Scheduling update thread every $UPDATE_INTERVAL_S seconds")
             pool.scheduleWithFixedDelay(getRunner(checkForLogs), 0, UPDATE_INTERVAL_S, TimeUnit.SECONDS)
 
-            if (conf.getBoolean("spark.history.fs.cleaner.enabled", false)) {
+            if (conf.getBoolean("org.apache.spark.history.fs.cleaner.enabled", false)) {
                 // A task that periodically cleans event logs on disk.
                 pool.scheduleWithFixedDelay(getRunner(cleanLogs), 0, CLEAN_INTERVAL_S, TimeUnit.SECONDS)
             }
@@ -645,7 +645,7 @@ private[history] class FsHistoryProvider(conf: SparkConf, clock: Clock)
       */
     private[history] def cleanLogs(): Unit = {
         try {
-            val maxAge = conf.getTimeAsSeconds("spark.history.fs.cleaner.maxAge", "7d") * 1000
+            val maxAge = conf.getTimeAsSeconds("org.apache.spark.history.fs.cleaner.maxAge", "7d") * 1000
 
             val now = clock.getTimeMillis()
             val appsToRetain = new mutable.LinkedHashMap[String, FsApplicationHistoryInfo]()
@@ -720,11 +720,11 @@ private[history] class FsHistoryProvider(conf: SparkConf, clock: Clock)
 }
 
 private[history] object FsHistoryProvider {
-    val DEFAULT_LOG_DIR = "file:/tmp/spark-events"
+    val DEFAULT_LOG_DIR = "file:/tmp/org.apache.spark-events"
 
     private val NOT_STARTED = "<Not Started>"
 
-    private val SPARK_HISTORY_FS_NUM_REPLAY_THREADS = "spark.history.fs.numReplayThreads"
+    private val SPARK_HISTORY_FS_NUM_REPLAY_THREADS = "org.apache.spark.history.fs.numReplayThreads"
 
     private val APPL_START_EVENT_PREFIX = "{\"Event\":\"SparkListenerApplicationStart\""
 

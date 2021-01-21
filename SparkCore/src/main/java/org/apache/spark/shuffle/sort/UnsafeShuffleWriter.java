@@ -124,8 +124,8 @@ public class UnsafeShuffleWriter<K, V> extends ShuffleWriter<K, V> {
     this.writeMetrics = taskContext.taskMetrics().shuffleWriteMetrics();
     this.taskContext = taskContext;
     this.sparkConf = sparkConf;
-    this.transferToEnabled = sparkConf.getBoolean("spark.file.transferTo", true);
-    this.initialSortBufferSize = sparkConf.getInt("spark.shuffle.sort.initialBufferSize",
+    this.transferToEnabled = sparkConf.getBoolean("org.apache.spark.file.transferTo", true);
+    this.initialSortBufferSize = sparkConf.getInt("org.apache.spark.shuffle.sort.initialBufferSize",
                                                   DEFAULT_INITIAL_SORT_BUFFER_SIZE);
     open();
   }
@@ -261,10 +261,10 @@ public class UnsafeShuffleWriter<K, V> extends ShuffleWriter<K, V> {
    * @return the partition lengths in the merged file.
    */
   private long[] mergeSpills(SpillInfo[] spills, File outputFile) throws IOException {
-    final boolean compressionEnabled = sparkConf.getBoolean("spark.shuffle.compress", true);
+    final boolean compressionEnabled = sparkConf.getBoolean("org.apache.spark.shuffle.compress", true);
     final CompressionCodec compressionCodec = CompressionCodec$.MODULE$.createCodec(sparkConf);
     final boolean fastMergeEnabled =
-      sparkConf.getBoolean("spark.shuffle.unsafe.fastMergeEnabled", true);
+      sparkConf.getBoolean("org.apache.spark.shuffle.unsafe.fastMergeEnabled", true);
     final boolean fastMergeIsSupported = !compressionEnabled ||
       CompressionCodec$.MODULE$.supportsConcatenationOfSerializedStreams(compressionCodec);
     final boolean encryptionEnabled = blockManager.serializerManager().encryptionEnabled();
@@ -446,7 +446,7 @@ public class UnsafeShuffleWriter<K, V> extends ShuffleWriter<K, V> {
           "Current position " + mergedFileOutputChannel.position() + " does not equal expected " +
             "position " + bytesWrittenToMergedFile + " after transferTo. Please check your kernel" +
             " version to see if it is 2.6.32, as there is a kernel bug which will lead to " +
-            "unexpected behavior when using transferTo. You can set spark.file.transferTo=false " +
+            "unexpected behavior when using transferTo. You can set org.apache.spark.file.transferTo=false " +
             "to disable this NIO feature."
         );
       }

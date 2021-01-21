@@ -129,7 +129,7 @@ private[spark] class CompressedMapStatus(
 
 /**
   * A [[MapStatus]] implementation that stores the accurate size of huge blocks, which are larger
-  * than spark.shuffle.accurateBlockThreshold. It stores the average size of other non-empty blocks,
+  * than org.apache.spark.shuffle.accurateBlockThreshold. It stores the average size of other non-empty blocks,
   * plus a bitmap for tracking which blocks are empty.
   *
   * @param loc               location where the task is being executed

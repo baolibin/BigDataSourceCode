@@ -68,7 +68,7 @@ private[ui] class StagePage(parent: StagesTab) extends WebUIPage("stage") {
 
   // TODO: We should consider increasing the number of this parameter over time
   // if we find that it's okay.
-  private val MAX_TIMELINE_TASKS = parent.conf.getInt("spark.ui.timeline.tasks.maximum", 1000)
+  private val MAX_TIMELINE_TASKS = parent.conf.getInt("org.apache.spark.ui.timeline.tasks.maximum", 1000)
 
   private def getLocalitySummaryString(stageData: StageUIData): String = {
     val localities = stageData.taskData.values.map(_.taskInfo.taskLocality)

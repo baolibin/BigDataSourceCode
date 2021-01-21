@@ -140,7 +140,7 @@ private[spark] abstract class RpcEnv(conf: SparkConf) {
 
   /**
    * Open a channel to download a file from the given URI. If the URIs returned by the
-   * RpcEnvFileServer use the "spark" scheme, this method will be called by the Utils class to
+   * RpcEnvFileServer use the "org.apache.spark" scheme, this method will be called by the Utils class to
    * retrieve the files.
    *
    * @param uri URI with location of the file.
@@ -152,7 +152,7 @@ private[spark] abstract class RpcEnv(conf: SparkConf) {
  * A server used by the RpcEnv to server files to other processes owned by the application.
  *
  * The file server can return URIs handled by common libraries (such as "http" or "hdfs"), or
- * it can return "spark" URIs which will be handled by `RpcEnv#fetchFile`.
+ * it can return "org.apache.spark" URIs which will be handled by `RpcEnv#fetchFile`.
  */
 private[spark] trait RpcEnvFileServer {
 

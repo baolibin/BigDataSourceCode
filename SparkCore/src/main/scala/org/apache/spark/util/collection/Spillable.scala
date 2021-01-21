@@ -50,12 +50,12 @@ private[spark] abstract class Spillable[C](taskMemoryManager: TaskMemoryManager)
   // Initial threshold for the size of a collection before we start tracking its memory usage
   // For testing only
   private[this] val initialMemoryThreshold: Long =
-    SparkEnv.get.conf.getLong("spark.shuffle.spill.initialMemoryThreshold", 5 * 1024 * 1024)
+    SparkEnv.get.conf.getLong("org.apache.spark.shuffle.spill.initialMemoryThreshold", 5 * 1024 * 1024)
 
   // Force this collection to spill when there are this many elements in memory
   // For testing only
   private[this] val numElementsForceSpillThreshold: Long =
-    SparkEnv.get.conf.getLong("spark.shuffle.spill.numElementsForceSpillThreshold", Long.MaxValue)
+    SparkEnv.get.conf.getLong("org.apache.spark.shuffle.spill.numElementsForceSpillThreshold", Long.MaxValue)
 
   // Threshold for this collection's size in bytes before we start tracking its memory usage
   // To avoid a large number of small spills, initialize this to a value orders of magnitude > 0

@@ -26,7 +26,7 @@ import org.apache.spark.deploy.Command
 
 /**
  * This class is used by CommandUtils. It uses some package-private APIs in SparkLauncher, and since
- * Java doesn't have a feature similar to `private[spark]`, and we don't want that class to be
+ * Java doesn't have a feature similar to `private[org.apache.spark]`, and we don't want that class to be
  * public, needs to live in the same package as the rest of the library.
  */
 private[spark] class WorkerCommandBuilder(sparkHome: String, memoryMb: Int, command: Command)

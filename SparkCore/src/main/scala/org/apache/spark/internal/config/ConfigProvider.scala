@@ -55,7 +55,7 @@ private[spark] class SparkConfigProvider(conf: JMap[String, String]) extends Con
   import ConfigEntry._
 
   override def get(key: String): Option[String] = {
-    if (key.startsWith("spark.")) {
+    if (key.startsWith("org.apache.spark.")) {
       Option(conf.get(key)).orElse(defaultValueString(key))
     } else {
       None

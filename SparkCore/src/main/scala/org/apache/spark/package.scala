@@ -66,7 +66,7 @@ package object spark {
                 spark_build_date: String) = {
 
             val resourceStream = Thread.currentThread().getContextClassLoader.
-                    getResourceAsStream("spark-version-info.properties")
+                    getResourceAsStream("org.apache.spark-version-info.properties")
 
             try {
                 val unknownProp = "<unknown>"
@@ -82,16 +82,16 @@ package object spark {
                 )
             } catch {
                 case npe: NullPointerException =>
-                    throw new SparkException("Error while locating file spark-version-info.properties", npe)
+                    throw new SparkException("Error while locating file org.apache.spark-version-info.properties", npe)
                 case e: Exception =>
-                    throw new SparkException("Error loading properties from spark-version-info.properties", e)
+                    throw new SparkException("Error loading properties from org.apache.spark-version-info.properties", e)
             } finally {
                 if (resourceStream != null) {
                     try {
                         resourceStream.close()
                     } catch {
                         case e: Exception =>
-                            throw new SparkException("Error closing spark build info resource stream", e)
+                            throw new SparkException("Error closing org.apache.spark build info resource stream", e)
                     }
                 }
             }

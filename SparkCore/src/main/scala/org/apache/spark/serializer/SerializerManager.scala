@@ -59,13 +59,13 @@ private[spark] class SerializerManager(
   }
 
   // Whether to compress broadcast variables that are stored
-  private[this] val compressBroadcast = conf.getBoolean("spark.broadcast.compress", true)
+  private[this] val compressBroadcast = conf.getBoolean("org.apache.spark.broadcast.compress", true)
   // Whether to compress shuffle output that are stored
-  private[this] val compressShuffle = conf.getBoolean("spark.shuffle.compress", true)
+  private[this] val compressShuffle = conf.getBoolean("org.apache.spark.shuffle.compress", true)
   // Whether to compress RDD partitions that are stored serialized
-  private[this] val compressRdds = conf.getBoolean("spark.rdd.compress", false)
+  private[this] val compressRdds = conf.getBoolean("org.apache.spark.rdd.compress", false)
   // Whether to compress shuffle output temporarily spilled to disk
-  private[this] val compressShuffleSpill = conf.getBoolean("spark.shuffle.spill.compress", true)
+  private[this] val compressShuffleSpill = conf.getBoolean("org.apache.spark.shuffle.spill.compress", true)
 
   /* The compression codec to use. Note that the "lazy" val is necessary because we want to delay
    * the initialization of the compression codec until it is first used. The reason is that a Spark

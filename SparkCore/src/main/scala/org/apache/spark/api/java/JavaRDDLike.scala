@@ -325,7 +325,7 @@ trait JavaRDDLike[T, This <: JavaRDDLike[T, This]] extends Serializable {
   /**
    * Zips this RDD with generated unique Long ids. Items in the kth partition will get ids k, n+k,
    * 2*n+k, ..., where n is the number of partitions. So there may exist gaps, but this method
-   * won't trigger a spark job, which is different from [[org.apache.spark.rdd.RDD#zipWithIndex]].
+   * won't trigger a org.apache.spark job, which is different from [[org.apache.spark.rdd.RDD#zipWithIndex]].
    */
   def zipWithUniqueId(): JavaPairRDD[T, jl.Long] = {
     JavaPairRDD.fromRDD(rdd.zipWithUniqueId()).asInstanceOf[JavaPairRDD[T, jl.Long]]
@@ -336,7 +336,7 @@ trait JavaRDDLike[T, This <: JavaRDDLike[T, This]] extends Serializable {
    * and then the ordering of items within each partition. So the first item in the first
    * partition gets index 0, and the last item in the last partition receives the largest index.
    * This is similar to Scala's zipWithIndex but it uses Long instead of Int as the index type.
-   * This method needs to trigger a spark job when this RDD contains more than one partitions.
+   * This method needs to trigger a org.apache.spark job when this RDD contains more than one partitions.
    */
   def zipWithIndex(): JavaPairRDD[T, jl.Long] = {
     JavaPairRDD.fromRDD(rdd.zipWithIndex()).asInstanceOf[JavaPairRDD[T, jl.Long]]
@@ -393,7 +393,7 @@ trait JavaRDDLike[T, This <: JavaRDDLike[T, This]] extends Serializable {
   def treeReduce(f: JFunction2[T, T, T], depth: Int): T = rdd.treeReduce(f, depth)
 
   /**
-   * `org.apache.spark.api.java.JavaRDDLike.treeReduce` with suggested depth 2.
+   * `org.apache.org.apache.spark.api.java.JavaRDDLike.treeReduce` with suggested depth 2.
    */
   def treeReduce(f: JFunction2[T, T, T]): T = treeReduce(f, 2)
 
@@ -440,7 +440,7 @@ trait JavaRDDLike[T, This <: JavaRDDLike[T, This]] extends Serializable {
   }
 
   /**
-   * `org.apache.spark.api.java.JavaRDDLike.treeAggregate` with suggested depth 2.
+   * `org.apache.org.apache.spark.api.java.JavaRDDLike.treeAggregate` with suggested depth 2.
    */
   def treeAggregate[U](
       zeroValue: U,

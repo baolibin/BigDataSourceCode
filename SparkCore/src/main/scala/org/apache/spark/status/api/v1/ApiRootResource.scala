@@ -31,7 +31,7 @@ import org.apache.spark.SecurityManager
 import org.apache.spark.ui.SparkUI
 
 /**
- * Main entry point for serving spark application metrics as json, using JAX-RS.
+ * Main entry point for serving org.apache.spark application metrics as json, using JAX-RS.
  *
  * Each resource should have endpoints that return **public** classes defined in api.scala.  Mima
  * binary compatibility checks ensure that we don't inadvertently make changes that break the api.
@@ -235,7 +235,7 @@ private[spark] object ApiRootResource {
     val jerseyContext = new ServletContextHandler(ServletContextHandler.NO_SESSIONS)
     jerseyContext.setContextPath("/api")
     val holder: ServletHolder = new ServletHolder(classOf[ServletContainer])
-    holder.setInitParameter(ServerProperties.PROVIDER_PACKAGES, "org.apache.spark.status.api.v1")
+    holder.setInitParameter(ServerProperties.PROVIDER_PACKAGES, "org.apache.org.apache.spark.status.api.v1")
     UIRootFromServletContext.setUiRoot(jerseyContext, uiRoot)
     jerseyContext.addServlet(holder, "/*")
     jerseyContext
@@ -289,7 +289,7 @@ private[v1] trait ApiRequestContext {
 
 
   /**
-   * Get the spark UI with the given appID, and apply a function
+   * Get the org.apache.spark UI with the given appID, and apply a function
    * to it.  If there is no such app, throw an appropriate exception
    */
   def withSparkUI[T](appId: String, attemptId: Option[String])(f: SparkUI => T): T = {

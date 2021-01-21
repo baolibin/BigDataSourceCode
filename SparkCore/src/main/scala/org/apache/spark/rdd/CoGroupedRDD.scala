@@ -92,7 +92,7 @@ class CoGroupedRDD[K: ClassTag](
     override val partitioner: Some[Partitioner] = Some(part)
     private var serializer: Serializer = SparkEnv.get.serializer
 
-    /** Set a serializer for this RDD's shuffle, or null to use the default (spark.serializer) */
+    /** Set a serializer for this RDD's shuffle, or null to use the default (org.apache.spark.serializer) */
     def setSerializer(serializer: Serializer): CoGroupedRDD[K] = {
         this.serializer = serializer
         this

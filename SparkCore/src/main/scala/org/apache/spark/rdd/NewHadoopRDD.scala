@@ -64,7 +64,7 @@ private[spark] class NewHadoopPartition(
   * @param keyClass         Class of the key associated with the inputFormatClass.
   * @param valueClass       Class of the value associated with the inputFormatClass.
   * @note Instantiating this class directly is not recommended, please use
-  *       `org.apache.spark.SparkContext.newAPIHadoopRDD()`
+  *       `org.apache.org.apache.spark.SparkContext.newAPIHadoopRDD()`
   */
 @DeveloperApi
 class NewHadoopRDD[K, V](
@@ -83,7 +83,7 @@ class NewHadoopRDD[K, V](
         val formatter = new SimpleDateFormat("yyyyMMddHHmmss", Locale.US)
         formatter.format(new Date())
     }
-    private val shouldCloneJobConf = sparkContext.conf.getBoolean("spark.hadoop.cloneConf", false)
+    private val shouldCloneJobConf = sparkContext.conf.getBoolean("org.apache.spark.hadoop.cloneConf", false)
 
     private val ignoreCorruptFiles = sparkContext.conf.get(IGNORE_CORRUPT_FILES)
 

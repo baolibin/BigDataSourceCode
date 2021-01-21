@@ -44,7 +44,7 @@ import java.util.Comparator;
  * This has been kept in Java with the original style in order to match very closely with the
  * Android source code, and thus be easy to verify correctness. The class is package private. We put
  * a simple Scala wrapper {@link org.apache.spark.util.collection.Sorter}, which is available to
- * package org.apache.spark.
+ * package org.apache.org.apache.spark.
  *
  * The purpose of the port is to generalize the interface to the sort to accept input data formats
  * besides simple arrays where every element is sorted individually. For instance, the AppendOnlyMap

@@ -45,7 +45,7 @@ class BlockManagerMasterEndpoint(
                                         conf: SparkConf,
                                         listenerBus: LiveListenerBus)
         extends ThreadSafeRpcEndpoint with Logging {
-    val proactivelyReplicate = conf.get("spark.storage.replication.proactive", "false").toBoolean
+    val proactivelyReplicate = conf.get("org.apache.spark.storage.replication.proactive", "false").toBoolean
     // Mapping from block manager id to the block manager's information.
     private val blockManagerInfo = new mutable.HashMap[BlockManagerId, BlockManagerInfo]
     // Mapping from executor ID to block manager ID.
@@ -56,7 +56,7 @@ class BlockManagerMasterEndpoint(
     private val askThreadPool = ThreadUtils.newDaemonCachedThreadPool("block-manager-ask-thread-pool")
     private val topologyMapper = {
         val topologyMapperClassName = conf.get(
-            "spark.storage.replication.topologyMapper", classOf[DefaultTopologyMapper].getName)
+            "org.apache.spark.storage.replication.topologyMapper", classOf[DefaultTopologyMapper].getName)
         val clazz = Utils.classForName(topologyMapperClassName)
         val mapper =
             clazz.getConstructor(classOf[SparkConf]).newInstance(conf).asInstanceOf[TopologyMapper]

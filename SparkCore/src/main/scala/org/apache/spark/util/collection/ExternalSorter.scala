@@ -41,7 +41,7 @@ import org.apache.spark.storage.{BlockId, DiskBlockObjectWriter}
  *
  * Note: Although ExternalSorter is a fairly generic sorter, some of its configuration is tied
  * to its use in sort-based shuffle (for example, its block compression is controlled by
- * `spark.shuffle.compress`).  We may need to revisit this if ExternalSorter is used in other
+ * `org.apache.spark.shuffle.compress`).  We may need to revisit this if ExternalSorter is used in other
  * non-shuffle contexts where we might want to use different configuration settings.
  *
  * @param aggregator optional Aggregator with combine functions to use for merging data
@@ -109,7 +109,7 @@ private[spark] class ExternalSorter[K, V, C](
   private val serInstance = serializer.newInstance()
 
   // Use getSizeAsKb (not bytes) to maintain backwards compatibility if no units are provided
-  private val fileBufferSize = conf.getSizeAsKb("spark.shuffle.file.buffer", "32k").toInt * 1024
+  private val fileBufferSize = conf.getSizeAsKb("org.apache.spark.shuffle.file.buffer", "32k").toInt * 1024
 
   // Size of object batches when reading/writing from serializers.
   //
@@ -118,7 +118,7 @@ private[spark] class ExternalSorter[K, V, C](
   //
   // NOTE: Setting this too low can cause excessive copying when serializing, since some serializers
   // grow internal data structures by growing + copying every time the number of objects doubles.
-  private val serializerBatchSize = conf.getLong("spark.shuffle.spill.batchSize", 10000)
+  private val serializerBatchSize = conf.getLong("org.apache.spark.shuffle.spill.batchSize", 10000)
 
   // Data structures to store in-memory objects before we spill. Depending on whether we have an
   // Aggregator set, we either put objects into an AppendOnlyMap where we combine them, or we
@@ -265,7 +265,7 @@ private[spark] class ExternalSorter[K, V, C](
   private[this] def spillMemoryIteratorToDisk(inMemoryIterator: WritablePartitionedIterator)
       : SpilledFile = {
     // Because these files may be read during shuffle, their compression must be controlled by
-    // spark.shuffle.compress instead of spark.shuffle.spill.compress, so we need to use
+    // org.apache.spark.shuffle.compress instead of org.apache.spark.shuffle.spill.compress, so we need to use
     // createTempShuffleBlock here; see SPARK-3426 for more context.
     val (blockId, file) = diskBlockManager.createTempShuffleBlock()
 

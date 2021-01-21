@@ -36,7 +36,7 @@ import scala.reflect.ClassTag
   * ordering that is in the closest scope will be used.
   *
   * {{{
-  *   import org.apache.spark.SparkContext._
+  *   import org.apache.org.apache.spark.SparkContext._
   *
   *   val rdd: RDD[(String, Int)] = ...
   *   implicit val caseInsensitiveOrdering = new Ordering[String] {

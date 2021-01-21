@@ -31,16 +31,16 @@ import org.apache.spark.util.{ShutdownHookManager, Utils}
   * Creates and maintains the logical mapping between logical blocks and physical on-disk
   * locations. One block is mapped to one file with a name given by its BlockId.
   *
-  * Block files are hashed among the directories listed in spark.local.dir (or in
+  * Block files are hashed among the directories listed in org.apache.spark.local.dir (or in
   * SPARK_LOCAL_DIRS, if it's set).
   */
 private[spark] class DiskBlockManager(conf: SparkConf, deleteFilesOnStop: Boolean) extends Logging {
     // 每个存储目录下面子目录最大数量
-    private[spark] val subDirsPerLocalDir = conf.getInt("spark.diskStore.subDirectories", 64)
+    private[spark] val subDirsPerLocalDir = conf.getInt("org.apache.spark.diskStore.subDirectories", 64)
 
     /**
       * 本地存储数据的数组
-      * Create one local directory for each path mentioned in spark.local.dir; then, inside this
+      * Create one local directory for each path mentioned in org.apache.spark.local.dir; then, inside this
       * directory, create multiple subdirectories that we will hash files into, in order to avoid
       * having really large inodes at the top level.
       */
@@ -71,7 +71,7 @@ private[spark] class DiskBlockManager(conf: SparkConf, deleteFilesOnStop: Boolea
       * Looks up a file by hashing it into one of our local subdirectories.
       */
     // This method should be kept in sync with
-    // org.apache.spark.network.shuffle.ExternalShuffleBlockResolver#getFile().
+    // org.apache.org.apache.spark.network.shuffle.ExternalShuffleBlockResolver#getFile().
     def getFile(filename: String): File = {
         // 计算出文件名哈希码的绝对值
         // Figure out which local directory it hashes to, and which subdirectory in that
@@ -188,7 +188,7 @@ private[spark] class DiskBlockManager(conf: SparkConf, deleteFilesOnStop: Boolea
                         }
                     } catch {
                         case e: Exception =>
-                            logError(s"Exception while deleting local spark dir: $localDir", e)
+                            logError(s"Exception while deleting local org.apache.spark dir: $localDir", e)
                     }
                 }
             }

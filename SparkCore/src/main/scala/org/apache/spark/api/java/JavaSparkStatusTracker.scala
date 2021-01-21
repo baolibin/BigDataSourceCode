@@ -28,8 +28,8 @@ import org.apache.spark.{SparkContext, SparkJobInfo, SparkStageInfo}
  * `getStageInfo` could potentially return `null` for a valid stage id.
  *
  * To limit memory usage, these APIs only provide information on recent jobs / stages.  These APIs
- * will provide information for the last `spark.ui.retainedStages` stages and
- * `spark.ui.retainedJobs` jobs.
+ * will provide information for the last `org.apache.spark.ui.retainedStages` stages and
+ * `org.apache.spark.ui.retainedJobs` jobs.
  *
  * @note This class's constructor should be considered private and may be subject to change.
  */

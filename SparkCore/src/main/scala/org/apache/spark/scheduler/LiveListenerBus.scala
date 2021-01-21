@@ -210,7 +210,7 @@ private[spark] class LiveListenerBus(val sparkContext: SparkContext) extends Spa
     private def validateAndGetQueueSize(): Int = {
         val queueSize = sparkContext.conf.get(LISTENER_BUS_EVENT_QUEUE_SIZE)
         if (queueSize <= 0) {
-            throw new SparkException("spark.scheduler.listenerbus.eventqueue.size must be > 0!")
+            throw new SparkException("org.apache.spark.scheduler.listenerbus.eventqueue.size must be > 0!")
         }
         queueSize
     }

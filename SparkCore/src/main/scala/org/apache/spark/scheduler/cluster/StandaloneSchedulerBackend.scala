@@ -49,7 +49,7 @@ private[spark] class StandaloneSchedulerBackend(
         override protected def onStopRequest(): Unit = stop(SparkAppHandle.State.KILLED)
     }
     private val registrationBarrier = new Semaphore(0)
-    private val maxCores = conf.getOption("spark.cores.max").map(_.toInt)
+    private val maxCores = conf.getOption("org.apache.spark.cores.max").map(_.toInt)
     private val totalExpectedCores = maxCores.getOrElse(0)
     @volatile var shutdownCallback: StandaloneSchedulerBackend => Unit = _
     private var client: StandaloneAppClient = null
@@ -67,8 +67,8 @@ private[spark] class StandaloneSchedulerBackend(
 
         // The endpoint for executors to talk to us
         val driverUrl = RpcEndpointAddress(
-            sc.conf.get("spark.driver.host"),
-            sc.conf.get("spark.driver.port").toInt,
+            sc.conf.get("org.apache.spark.driver.host"),
+            sc.conf.get("org.apache.spark.driver.port").toInt,
             CoarseGrainedSchedulerBackend.ENDPOINT_NAME).toString
         val args = Seq(
             "--driver-url", driverUrl,
@@ -77,18 +77,18 @@ private[spark] class StandaloneSchedulerBackend(
             "--cores", "{{CORES}}",
             "--app-id", "{{APP_ID}}",
             "--worker-url", "{{WORKER_URL}}")
-        val extraJavaOpts = sc.conf.getOption("spark.executor.extraJavaOptions")
+        val extraJavaOpts = sc.conf.getOption("org.apache.spark.executor.extraJavaOptions")
                 .map(Utils.splitCommandString).getOrElse(Seq.empty)
-        val classPathEntries = sc.conf.getOption("spark.executor.extraClassPath")
+        val classPathEntries = sc.conf.getOption("org.apache.spark.executor.extraClassPath")
                 .map(_.split(java.io.File.pathSeparator).toSeq).getOrElse(Nil)
-        val libraryPathEntries = sc.conf.getOption("spark.executor.extraLibraryPath")
+        val libraryPathEntries = sc.conf.getOption("org.apache.spark.executor.extraLibraryPath")
                 .map(_.split(java.io.File.pathSeparator).toSeq).getOrElse(Nil)
 
         // When testing, expose the parent class path to the child. This is processed by
         // compute-classpath.{cmd,sh} and makes all needed jars available to child processes
         // when the assembly is built with the "*-provided" profiles enabled.
         val testingClassPath =
-        if (sys.props.contains("spark.testing")) {
+        if (sys.props.contains("org.apache.spark.testing")) {
             sys.props("java.class.path").split(java.io.File.pathSeparator).toSeq
         } else {
             Nil
@@ -97,10 +97,10 @@ private[spark] class StandaloneSchedulerBackend(
         // Start executors with a few necessary configs for registering with the scheduler
         val sparkJavaOpts = Utils.sparkJavaOpts(conf, SparkConf.isExecutorStartupConf)
         val javaOpts = sparkJavaOpts ++ extraJavaOpts
-        val command = Command("org.apache.spark.executor.CoarseGrainedExecutorBackend",
+        val command = Command("org.apache.org.apache.spark.executor.CoarseGrainedExecutorBackend",
             args, sc.executorEnvs, classPathEntries ++ testingClassPath, libraryPathEntries, javaOpts)
         val webUrl = sc.ui.map(_.webUrl).getOrElse("")
-        val coresPerExecutor = conf.getOption("spark.executor.cores").map(_.toInt)
+        val coresPerExecutor = conf.getOption("org.apache.spark.executor.cores").map(_.toInt)
         // If we're using dynamic allocation, set our initial executor limit to 0 for now.
         // ExecutorAllocationManager will send the real initial limit to the Master later.
         val initialExecutorLimit =

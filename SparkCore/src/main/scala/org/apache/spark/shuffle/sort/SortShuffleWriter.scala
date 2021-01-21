@@ -110,7 +110,7 @@ private[spark] object SortShuffleWriter {
       require(dep.aggregator.isDefined, "Map-side combine without Aggregator specified!")
       false
     } else {
-      val bypassMergeThreshold: Int = conf.getInt("spark.shuffle.sort.bypassMergeThreshold", 200)
+      val bypassMergeThreshold: Int = conf.getInt("org.apache.spark.shuffle.sort.bypassMergeThreshold", 200)
       dep.partitioner.numPartitions <= bypassMergeThreshold
     }
   }

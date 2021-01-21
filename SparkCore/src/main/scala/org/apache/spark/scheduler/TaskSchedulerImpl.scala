@@ -65,15 +65,15 @@ private[spark] class TaskSchedulerImpl private[scheduler](
 
     val conf = sc.conf
     // How often to check for speculative tasks
-    val SPECULATION_INTERVAL_MS = conf.getTimeAsMs("spark.speculation.interval", "100ms")
+    val SPECULATION_INTERVAL_MS = conf.getTimeAsMs("org.apache.spark.speculation.interval", "100ms")
     // Duplicate copies of a task will only be launched if the original copy has been running for
     // at least this amount of time. This is to avoid the overhead of launching speculative copies
     // of tasks that are very short.
     val MIN_TIME_TO_SPECULATION = 100
     // Threshold above which we warn user initial TaskSet may be starved
-    val STARVATION_TIMEOUT_MS = conf.getTimeAsMs("spark.starvation.timeout", "15s")
+    val STARVATION_TIMEOUT_MS = conf.getTimeAsMs("org.apache.spark.starvation.timeout", "15s")
     // CPUs to request per task
-    val CPUS_PER_TASK = conf.getInt("spark.task.cpus", 1)
+    val CPUS_PER_TASK = conf.getInt("org.apache.spark.task.cpus", 1)
     val taskIdToExecutorId = new HashMap[Long, String]
     // Incrementing task IDs
     val nextTaskId = new AtomicLong(0)
@@ -156,7 +156,7 @@ private[spark] class TaskSchedulerImpl private[scheduler](
     override def start() {
         backend.start()
 
-        if (!isLocal && conf.getBoolean("spark.speculation", false)) {
+        if (!isLocal && conf.getBoolean("org.apache.spark.speculation", false)) {
             logInfo("Starting speculative execution thread")
             speculationScheduler.scheduleWithFixedDelay(new Runnable {
                 override def run(): Unit = Utils.tryOrStopSparkContext(sc) {
@@ -688,7 +688,7 @@ private[spark] class TaskSchedulerImpl private[scheduler](
 
 private[spark] object TaskSchedulerImpl {
 
-    val SCHEDULER_MODE_PROPERTY = "spark.scheduler.mode"
+    val SCHEDULER_MODE_PROPERTY = "org.apache.spark.scheduler.mode"
 
     /**
       * Used to balance containers across hosts.

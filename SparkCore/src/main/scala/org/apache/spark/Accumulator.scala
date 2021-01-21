@@ -38,7 +38,7 @@ package org.apache.spark
   *
   * {{{
   * scala> val accum = sc.accumulator(0)
-  * accum: org.apache.spark.Accumulator[Int] = 0
+  * accum: org.apache.org.apache.spark.Accumulator[Int] = 0
   *
   * scala> sc.parallelize(Array(1, 2, 3, 4)).foreach(x => accum += x)
   * ...

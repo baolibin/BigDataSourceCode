@@ -35,7 +35,7 @@ import scala.io.Source
 /**
   * 解析和封装spark submit脚本中的参数。env参数用于测试。
   *
-  * Parses and encapsulates arguments from the spark-submit script.
+  * Parses and encapsulates arguments from the org.apache.spark-submit script.
   * The env argument is used for testing.
   */
 private[deploy] class SparkSubmitArguments(args: Seq[String], env: Map[String, String] = sys.env)
@@ -108,7 +108,7 @@ private[deploy] class SparkSubmitArguments(args: Seq[String], env: Map[String, S
     }
     // Populate `sparkProperties` map from properties file
     mergeDefaultSparkProperties()
-    // Remove keys that don't start with "spark." from `sparkProperties`.
+    // Remove keys that don't start with "org.apache.spark." from `sparkProperties`.
     ignoreNonSparkProperties()
     // Use `sparkProperties` map along with env vars to fill in any missing parameters
     loadEnvironmentArguments()
@@ -116,7 +116,7 @@ private[deploy] class SparkSubmitArguments(args: Seq[String], env: Map[String, S
     validateArguments()
 
     def isStandaloneCluster: Boolean = {
-        master.startsWith("spark://") && deployMode == "cluster"
+        master.startsWith("org.apache.spark://") && deployMode == "cluster"
     }
 
     override def toString: String = {
@@ -285,17 +285,17 @@ private[deploy] class SparkSubmitArguments(args: Seq[String], env: Map[String, S
             outStream.println("Unknown/unsupported param " + unknownParam)
         }
         val command = sys.env.get("_SPARK_CMD_USAGE").getOrElse(
-            """Usage: spark-submit [options] <app jar | python file> [app arguments]
-              |Usage: spark-submit --kill [submission ID] --master [spark://...]
-              |Usage: spark-submit --status [submission ID] --master [spark://...]
-              |Usage: spark-submit run-example [options] example-class [example args]""".stripMargin)
+            """Usage: org.apache.spark-submit [options] <app jar | python file> [app arguments]
+              |Usage: org.apache.spark-submit --kill [submission ID] --master [org.apache.spark://...]
+              |Usage: org.apache.spark-submit --status [submission ID] --master [org.apache.spark://...]
+              |Usage: org.apache.spark-submit run-example [options] example-class [example args]""".stripMargin)
         outStream.println(command)
 
         val mem_mb = Utils.DEFAULT_DRIVER_MEM_MB
         outStream.println(
             s"""
                |Options:
-               |  --master MASTER_URL         spark://host:port, mesos://host:port, yarn, or local.
+               |  --master MASTER_URL         org.apache.spark://host:port, mesos://host:port, yarn, or local.
                |  --deploy-mode DEPLOY_MODE   Whether to launch the driver program locally ("client") or
                |                              on one of the worker machines inside the cluster ("cluster")
                |                              (Default: client).
@@ -321,7 +321,7 @@ private[deploy] class SparkSubmitArguments(args: Seq[String], env: Map[String, S
                |
                |  --conf PROP=VALUE           Arbitrary Spark configuration property.
                |  --properties-file FILE      Path to a file from which to load extra properties. If not
-               |                              specified, this will look for conf/spark-defaults.conf.
+               |                              specified, this will look for conf/org.apache.spark-defaults.conf.
                |
                |  --driver-memory MEM         Memory for driver (e.g. 1000M, 2G) (Default: ${mem_mb}M).
                |  --driver-java-options       Extra Java options to pass to the driver.
@@ -480,15 +480,15 @@ private[deploy] class SparkSubmitArguments(args: Seq[String], env: Map[String, S
     }
 
     /**
-      * 从“SparkProperty”中删除不以“spark.”开头的键`。
+      * 从“SparkProperty”中删除不以“org.apache.spark.”开头的键`。
       *
-      * Remove keys that don't start with "spark." from `sparkProperties`.
+      * Remove keys that don't start with "org.apache.spark." from `sparkProperties`.
       **/
     private def ignoreNonSparkProperties(): Unit = {
         sparkProperties.foreach { case (k, v) =>
-            if (!k.startsWith("spark.")) {
+            if (!k.startsWith("org.apache.spark.")) {
                 sparkProperties -= k
-                SparkSubmit.printWarning(s"Ignoring non-spark config property: $k=$v")
+                SparkSubmit.printWarning(s"Ignoring non-org.apache.spark config property: $k=$v")
             }
         }
     }
@@ -500,52 +500,52 @@ private[deploy] class SparkSubmitArguments(args: Seq[String], env: Map[String, S
       */
     private def loadEnvironmentArguments(): Unit = {
         master = Option(master)
-                .orElse(sparkProperties.get("spark.master"))
+                .orElse(sparkProperties.get("org.apache.spark.master"))
                 .orElse(env.get("MASTER"))
                 .orNull
         driverExtraClassPath = Option(driverExtraClassPath)
-                .orElse(sparkProperties.get("spark.driver.extraClassPath"))
+                .orElse(sparkProperties.get("org.apache.spark.driver.extraClassPath"))
                 .orNull
         driverExtraJavaOptions = Option(driverExtraJavaOptions)
-                .orElse(sparkProperties.get("spark.driver.extraJavaOptions"))
+                .orElse(sparkProperties.get("org.apache.spark.driver.extraJavaOptions"))
                 .orNull
         driverExtraLibraryPath = Option(driverExtraLibraryPath)
-                .orElse(sparkProperties.get("spark.driver.extraLibraryPath"))
+                .orElse(sparkProperties.get("org.apache.spark.driver.extraLibraryPath"))
                 .orNull
         driverMemory = Option(driverMemory)
-                .orElse(sparkProperties.get("spark.driver.memory"))
+                .orElse(sparkProperties.get("org.apache.spark.driver.memory"))
                 .orElse(env.get("SPARK_DRIVER_MEMORY"))
                 .orNull
         driverCores = Option(driverCores)
-                .orElse(sparkProperties.get("spark.driver.cores"))
+                .orElse(sparkProperties.get("org.apache.spark.driver.cores"))
                 .orNull
         executorMemory = Option(executorMemory)
-                .orElse(sparkProperties.get("spark.executor.memory"))
+                .orElse(sparkProperties.get("org.apache.spark.executor.memory"))
                 .orElse(env.get("SPARK_EXECUTOR_MEMORY"))
                 .orNull
         executorCores = Option(executorCores)
-                .orElse(sparkProperties.get("spark.executor.cores"))
+                .orElse(sparkProperties.get("org.apache.spark.executor.cores"))
                 .orElse(env.get("SPARK_EXECUTOR_CORES"))
                 .orNull
         totalExecutorCores = Option(totalExecutorCores)
-                .orElse(sparkProperties.get("spark.cores.max"))
+                .orElse(sparkProperties.get("org.apache.spark.cores.max"))
                 .orNull
-        name = Option(name).orElse(sparkProperties.get("spark.app.name")).orNull
-        jars = Option(jars).orElse(sparkProperties.get("spark.jars")).orNull
-        files = Option(files).orElse(sparkProperties.get("spark.files")).orNull
-        ivyRepoPath = sparkProperties.get("spark.jars.ivy").orNull
-        packages = Option(packages).orElse(sparkProperties.get("spark.jars.packages")).orNull
+        name = Option(name).orElse(sparkProperties.get("org.apache.spark.app.name")).orNull
+        jars = Option(jars).orElse(sparkProperties.get("org.apache.spark.jars")).orNull
+        files = Option(files).orElse(sparkProperties.get("org.apache.spark.files")).orNull
+        ivyRepoPath = sparkProperties.get("org.apache.spark.jars.ivy").orNull
+        packages = Option(packages).orElse(sparkProperties.get("org.apache.spark.jars.packages")).orNull
         packagesExclusions = Option(packagesExclusions)
-                .orElse(sparkProperties.get("spark.jars.excludes")).orNull
+                .orElse(sparkProperties.get("org.apache.spark.jars.excludes")).orNull
         deployMode = Option(deployMode)
-                .orElse(sparkProperties.get("spark.submit.deployMode"))
+                .orElse(sparkProperties.get("org.apache.spark.submit.deployMode"))
                 .orElse(env.get("DEPLOY_MODE"))
                 .orNull
         numExecutors = Option(numExecutors)
-                .getOrElse(sparkProperties.get("spark.executor.instances").orNull)
-        queue = Option(queue).orElse(sparkProperties.get("spark.yarn.queue")).orNull
-        keytab = Option(keytab).orElse(sparkProperties.get("spark.yarn.keytab")).orNull
-        principal = Option(principal).orElse(sparkProperties.get("spark.yarn.principal")).orNull
+                .getOrElse(sparkProperties.get("org.apache.spark.executor.instances").orNull)
+        queue = Option(queue).orElse(sparkProperties.get("org.apache.spark.yarn.queue")).orNull
+        keytab = Option(keytab).orElse(sparkProperties.get("org.apache.spark.yarn.keytab")).orNull
+        principal = Option(principal).orElse(sparkProperties.get("org.apache.spark.yarn.principal")).orNull
 
         // Try to set main class from JAR if no --class argument is given
         if (mainClass == null && !isPython && !isR && primaryResource != null) {
@@ -628,7 +628,7 @@ private[deploy] class SparkSubmitArguments(args: Seq[String], env: Map[String, S
     }
 
     private def validateKillArguments(): Unit = {
-        if (!master.startsWith("spark://") && !master.startsWith("mesos://")) {
+        if (!master.startsWith("org.apache.spark://") && !master.startsWith("mesos://")) {
             SparkSubmit.printErrorAndExit(
                 "Killing submissions is only supported in standalone or Mesos mode!")
         }
@@ -638,7 +638,7 @@ private[deploy] class SparkSubmitArguments(args: Seq[String], env: Map[String, S
     }
 
     private def validateStatusRequestArguments(): Unit = {
-        if (!master.startsWith("spark://") && !master.startsWith("mesos://")) {
+        if (!master.startsWith("org.apache.spark://") && !master.startsWith("mesos://")) {
             SparkSubmit.printErrorAndExit(
                 "Requesting submission statuses is only supported in standalone or Mesos mode!")
         }

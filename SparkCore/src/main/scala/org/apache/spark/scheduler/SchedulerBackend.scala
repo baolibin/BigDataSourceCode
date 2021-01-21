@@ -26,7 +26,7 @@ package org.apache.spark.scheduler
   * machines become available and can launch tasks on them.
   */
 private[spark] trait SchedulerBackend {
-    private val appId = "spark-application-" + System.currentTimeMillis
+    private val appId = "org.apache.spark-application-" + System.currentTimeMillis
 
     def start(): Unit
 

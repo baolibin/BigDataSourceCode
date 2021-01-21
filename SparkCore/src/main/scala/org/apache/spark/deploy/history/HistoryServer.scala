@@ -58,7 +58,7 @@ class HistoryServer(
     // and its metrics, for testing as well as monitoring
     val cacheMetrics = appCache.metrics
     // How many applications to retain
-    private val retainedApplications = conf.getInt("spark.history.retainedApplications", 50)
+    private val retainedApplications = conf.getInt("org.apache.spark.history.retainedApplications", 50)
     // How many applications the summary ui displays
     private[history] val maxApplications = conf.get(HISTORY_UI_MAX_APPS);
     // application
@@ -257,7 +257,7 @@ class HistoryServer(
   * as well as any other relevant history server configuration, should be specified via
   * the $SPARK_HISTORY_OPTS environment variable. For example:
   *
-  * export SPARK_HISTORY_OPTS="-Dspark.history.fs.logDirectory=/tmp/spark-events"
+  * export SPARK_HISTORY_OPTS="-Dspark.history.fs.logDirectory=/tmp/org.apache.spark-events"
   * ./sbin/start-history-server.sh
   *
   * This launches the HistoryServer as a Spark daemon.
@@ -272,14 +272,14 @@ object HistoryServer extends Logging {
         initSecurity()
         val securityManager = createSecurityManager(conf)
 
-        val providerName = conf.getOption("spark.history.provider")
+        val providerName = conf.getOption("org.apache.spark.history.provider")
                 .getOrElse(classOf[FsHistoryProvider].getName())
         val provider = Utils.classForName(providerName)
                 .getConstructor(classOf[SparkConf])
                 .newInstance(conf)
                 .asInstanceOf[ApplicationHistoryProvider]
 
-        val port = conf.getInt("spark.history.ui.port", 18080)
+        val port = conf.getInt("org.apache.spark.history.ui.port", 18080)
 
         val server = new HistoryServer(conf, provider, securityManager, port)
         server.bind()
@@ -306,11 +306,11 @@ object HistoryServer extends Logging {
             config.set(SecurityManager.SPARK_AUTH_CONF, "false")
         }
 
-        if (config.getBoolean("spark.acls.enable", config.getBoolean("spark.ui.acls.enable", false))) {
-            logInfo("Either spark.acls.enable or spark.ui.acls.enable is configured, clearing it and " +
-                    "only using spark.history.ui.acl.enable")
-            config.set("spark.acls.enable", "false")
-            config.set("spark.ui.acls.enable", "false")
+        if (config.getBoolean("org.apache.spark.acls.enable", config.getBoolean("org.apache.spark.ui.acls.enable", false))) {
+            logInfo("Either org.apache.spark.acls.enable or org.apache.spark.ui.acls.enable is configured, clearing it and " +
+                    "only using org.apache.spark.history.ui.acl.enable")
+            config.set("org.apache.spark.acls.enable", "false")
+            config.set("org.apache.spark.ui.acls.enable", "false")
         }
 
         new SecurityManager(config)
@@ -321,10 +321,10 @@ object HistoryServer extends Logging {
         // from a keytab file so that we can access HDFS beyond the kerberos ticket expiration.
         // As long as it is using Hadoop rpc (hdfs://), a relogin will automatically
         // occur from the keytab.
-        if (conf.getBoolean("spark.history.kerberos.enabled", false)) {
+        if (conf.getBoolean("org.apache.spark.history.kerberos.enabled", false)) {
             // if you have enabled kerberos the following 2 params must be set
-            val principalName = conf.get("spark.history.kerberos.principal")
-            val keytabFilename = conf.get("spark.history.kerberos.keytab")
+            val principalName = conf.get("org.apache.spark.history.kerberos.principal")
+            val keytabFilename = conf.get("org.apache.spark.history.kerberos.keytab")
             SparkHadoopUtil.get.loginUserFromKeytab(principalName, keytabFilename)
         }
     }

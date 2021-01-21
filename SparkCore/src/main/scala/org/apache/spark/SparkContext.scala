@@ -96,7 +96,7 @@ class SparkContext(config: SparkConf) extends Logging {
     private val creationSite: CallSite = Utils.getCallSite()
     // If true, log warnings instead of throwing exceptions when multiple SparkContexts are active
     private val allowMultipleContexts: Boolean =
-        config.getBoolean("spark.driver.allowMultipleContexts", false)
+        config.getBoolean("org.apache.spark.driver.allowMultipleContexts", false)
     private[spark] val stopped: AtomicBoolean = new AtomicBoolean(false)
     // An asynchronous listener bus for Spark events
     private[spark] val listenerBus = new LiveListenerBus(this)
@@ -160,14 +160,14 @@ class SparkContext(config: SparkConf) extends Logging {
 
     /**
       * Create a SparkContext that loads settings from system properties (for instance, when
-      * launching with ./bin/spark-submit).
+      * launching with ./bin/org.apache.spark-submit).
       */
     def this() = this(new SparkConf())
 
     /**
       * Alternative constructor that allows setting common Spark properties directly
       *
-      * @param master  Cluster URL to connect to (e.g. mesos://host:port, spark://host:port, local[4]).
+      * @param master  Cluster URL to connect to (e.g. mesos://host:port, org.apache.spark://host:port, local[4]).
       * @param appName A name for your application, to display on the cluster web UI
       * @param conf    a [[org.apache.spark.SparkConf]] object specifying other Spark parameters
       */
@@ -177,7 +177,7 @@ class SparkContext(config: SparkConf) extends Logging {
     /**
       * Alternative constructor that allows setting common Spark properties directly
       *
-      * @param master      Cluster URL to connect to (e.g. mesos://host:port, spark://host:port, local[4]).
+      * @param master      Cluster URL to connect to (e.g. mesos://host:port, org.apache.spark://host:port, local[4]).
       * @param appName     A name for your application, to display on the cluster web UI.
       * @param sparkHome   Location where Spark is installed on cluster nodes.
       * @param jars        Collection of JARs to send to the cluster. These can be paths on the local file
@@ -203,7 +203,7 @@ class SparkContext(config: SparkConf) extends Logging {
 
     def files: Seq[String] = _files
 
-    def deployMode: String = _conf.getOption("spark.submit.deployMode").getOrElse("client")
+    def deployMode: String = _conf.getOption("org.apache.spark.submit.deployMode").getOrElse("client")
 
     /**
       * @return true if context is stopped or in the midst of stopping.
@@ -241,7 +241,7 @@ class SparkContext(config: SparkConf) extends Logging {
       * Application programmers can use this method to group all those jobs together and give a
       * group description. Once set, the Spark web UI will associate such jobs with this group.
       *
-      * The application can also use `org.apache.spark.SparkContext.cancelJobGroup` to cancel all
+      * The application can also use `org.apache.org.apache.spark.SparkContext.cancelJobGroup` to cancel all
       * running jobs in this group. For example,
       * {{{
       * // In the main thread:
@@ -371,7 +371,7 @@ class SparkContext(config: SparkConf) extends Logging {
 
     /**
       * Execute a block of code in a scope such that all new RDDs created in this body will
-      * be part of the same scope. For more detail, see {{org.apache.spark.rdd.RDDOperationScope}}.
+      * be part of the same scope. For more detail, see {{org.apache.org.apache.spark.rdd.RDDOperationScope}}.
       *
       * @note Return statements are NOT allowed in the given body.
       */
@@ -884,7 +884,7 @@ class SparkContext(config: SparkConf) extends Logging {
     /**
       * Default min number of partitions for Hadoop RDDs when not given by user
       * Notice that we use math.min so the "defaultMinPartitions" cannot be higher than 2.
-      * The reasons for this are discussed in https://github.com/mesos/spark/pull/718
+      * The reasons for this are discussed in https://github.com/mesos/org.apache.spark/pull/718
       */
     def defaultMinPartitions: Int = math.min(defaultParallelism, 2)
 
@@ -898,40 +898,40 @@ class SparkContext(config: SparkConf) extends Logging {
         _conf = config.clone()
         _conf.validateSettings()
 
-        if (!_conf.contains("spark.master")) {
+        if (!_conf.contains("org.apache.spark.master")) {
             throw new SparkException("A master URL must be set in your configuration")
         }
-        if (!_conf.contains("spark.app.name")) {
+        if (!_conf.contains("org.apache.spark.app.name")) {
             throw new SparkException("An application name must be set in your configuration")
         }
 
-        // log out spark.app.name in the Spark driver logs
+        // log out org.apache.spark.app.name in the Spark driver logs
         logInfo(s"Submitted application: $appName")
 
-        // System property spark.yarn.app.id must be set if user code ran by AM on a YARN cluster
-        if (master == "yarn" && deployMode == "cluster" && !_conf.contains("spark.yarn.app.id")) {
+        // System property org.apache.spark.yarn.app.id must be set if user code ran by AM on a YARN cluster
+        if (master == "yarn" && deployMode == "cluster" && !_conf.contains("org.apache.spark.yarn.app.id")) {
             throw new SparkException("Detected yarn cluster mode, but isn't running on a cluster. " +
-                    "Deployment to YARN is not supported directly by SparkContext. Please use spark-submit.")
+                    "Deployment to YARN is not supported directly by SparkContext. Please use org.apache.spark-submit.")
         }
 
-        if (_conf.getBoolean("spark.logConf", false)) {
+        if (_conf.getBoolean("org.apache.spark.logConf", false)) {
             logInfo("Spark configuration:\n" + _conf.toDebugString)
         }
 
         // Set Spark driver host and port system properties. This explicitly sets the configuration
         // instead of relying on the default value of the config constant.
         _conf.set(DRIVER_HOST_ADDRESS, _conf.get(DRIVER_HOST_ADDRESS))
-        _conf.setIfMissing("spark.driver.port", "0")
+        _conf.setIfMissing("org.apache.spark.driver.port", "0")
 
-        _conf.set("spark.executor.id", SparkContext.DRIVER_IDENTIFIER)
+        _conf.set("org.apache.spark.executor.id", SparkContext.DRIVER_IDENTIFIER)
 
         _jars = Utils.getUserJars(_conf)
-        _files = _conf.getOption("spark.files").map(_.split(",")).map(_.filter(_.nonEmpty))
+        _files = _conf.getOption("org.apache.spark.files").map(_.split(",")).map(_.filter(_.nonEmpty))
                 .toSeq.flatten
 
         _eventLogDir =
                 if (isEventLogEnabled) {
-                    val unresolvedDir = conf.get("spark.eventLog.dir", EventLoggingListener.DEFAULT_LOG_DIR)
+                    val unresolvedDir = conf.get("org.apache.spark.eventLog.dir", EventLoggingListener.DEFAULT_LOG_DIR)
                             .stripSuffix("/")
                     Some(Utils.resolveURI(unresolvedDir))
                 } else {
@@ -939,7 +939,7 @@ class SparkContext(config: SparkConf) extends Logging {
                 }
 
         _eventLogCodec = {
-            val compress = _conf.getBoolean("spark.eventLog.compress", false)
+            val compress = _conf.getBoolean("org.apache.spark.eventLog.compress", false)
             if (compress && isEventLogEnabled) {
                 Some(CompressionCodec.getCodecName(_conf)).map(CompressionCodec.getShortName)
             } else {
@@ -959,22 +959,22 @@ class SparkContext(config: SparkConf) extends Logging {
         SparkEnv.set(_env)
 
         // If running the REPL, register the repl's output dir with the file server.
-        _conf.getOption("spark.repl.class.outputDir").foreach { path =>
+        _conf.getOption("org.apache.spark.repl.class.outputDir").foreach { path =>
             val replUri = _env.rpcEnv.fileServer.addDirectory("/classes", new File(path))
-            _conf.set("spark.repl.class.uri", replUri)
+            _conf.set("org.apache.spark.repl.class.uri", replUri)
         }
 
         _statusTracker = new SparkStatusTracker(this)
 
         _progressBar =
-                if (_conf.getBoolean("spark.ui.showConsoleProgress", true) && !log.isInfoEnabled) {
+                if (_conf.getBoolean("org.apache.spark.ui.showConsoleProgress", true) && !log.isInfoEnabled) {
                     Some(new ConsoleProgressBar(this))
                 } else {
                     None
                 }
 
         _ui =
-                if (conf.getBoolean("spark.ui.enabled", true)) {
+                if (conf.getBoolean("org.apache.spark.ui.enabled", true)) {
                     Some(SparkUI.createLiveUI(this, _conf, listenerBus, _jobProgressListener,
                         _env.securityManager, appName, startTime = startTime))
                 } else {
@@ -996,7 +996,7 @@ class SparkContext(config: SparkConf) extends Logging {
             files.foreach(addFile)
         }
 
-        _executorMemory = _conf.getOption("spark.executor.memory")
+        _executorMemory = _conf.getOption("org.apache.spark.executor.memory")
                 .orElse(Option(System.getenv("SPARK_EXECUTOR_MEMORY")))
                 .orElse(Option(System.getenv("SPARK_MEM"))
                         .map(warnSparkMem))
@@ -1005,7 +1005,7 @@ class SparkContext(config: SparkConf) extends Logging {
 
         // Convert java options to env vars as a work around
         // since we can't set env vars directly in sbt.
-        for {(envKey, propKey) <- Seq(("SPARK_TESTING", "spark.testing"))
+        for {(envKey, propKey) <- Seq(("SPARK_TESTING", "org.apache.spark.testing"))
              value <- Option(System.getenv(envKey)).orElse(Option(System.getProperty(propKey)))} {
             executorEnvs(envKey) = value
         }
@@ -1036,15 +1036,15 @@ class SparkContext(config: SparkConf) extends Logging {
 
         _applicationId = _taskScheduler.applicationId()
         _applicationAttemptId = taskScheduler.applicationAttemptId()
-        _conf.set("spark.app.id", _applicationId)
-        if (_conf.getBoolean("spark.ui.reverseProxy", false)) {
-            System.setProperty("spark.ui.proxyBase", "/proxy/" + _applicationId)
+        _conf.set("org.apache.spark.app.id", _applicationId)
+        if (_conf.getBoolean("org.apache.spark.ui.reverseProxy", false)) {
+            System.setProperty("org.apache.spark.ui.proxyBase", "/proxy/" + _applicationId)
         }
         _ui.foreach(_.setAppId(_applicationId))
         _env.blockManager.initialize(_applicationId)
 
-        // The metrics system for Driver need to be set spark.app.id to app ID.
-        // So it should start after we get app ID from the task scheduler and set spark.app.id.
+        // The metrics system for Driver need to be set org.apache.spark.app.id to app ID.
+        // So it should start after we get app ID from the task scheduler and set org.apache.spark.app.id.
         _env.metricsSystem.start()
         // Attach the driver metrics servlet handler to the web ui after the metrics system is started.
         _env.metricsSystem.getServletHandlers.foreach(handler => ui.foreach(_.attachHandler(handler)))
@@ -1078,7 +1078,7 @@ class SparkContext(config: SparkConf) extends Logging {
         _executorAllocationManager.foreach(_.start())
 
         _cleaner =
-                if (_conf.getBoolean("spark.cleaner.referenceTracking", true)) {
+                if (_conf.getBoolean("org.apache.spark.cleaner.referenceTracking", true)) {
                     Some(new ContextCleaner(this))
                 } else {
                     None
@@ -1759,7 +1759,7 @@ class SparkContext(config: SparkConf) extends Logging {
         val callSite = getCallSite
         val cleanedFunc = clean(func)
         logInfo("Starting job: " + callSite.shortForm)
-        if (conf.getBoolean("spark.logLineage", false)) {
+        if (conf.getBoolean("org.apache.spark.logLineage", false)) {
             logInfo("RDD's recursive dependencies:\n" + rdd.toDebugString)
         }
         dagScheduler.runJob(rdd, cleanedFunc, partitions, callSite, resultHandler, localProperties.get)
@@ -1907,7 +1907,7 @@ class SparkContext(config: SparkConf) extends Logging {
     }
 
     /**
-      * Cancel active jobs for the specified group. See `org.apache.spark.SparkContext.setJobGroup`
+      * Cancel active jobs for the specified group. See `org.apache.org.apache.spark.SparkContext.setJobGroup`
       * for more information.
       */
     def cancelJobGroup(groupId: String) {
@@ -2015,7 +2015,7 @@ class SparkContext(config: SparkConf) extends Logging {
     /**
       * Alternative constructor that allows setting common Spark properties directly
       *
-      * @param master  Cluster URL to connect to (e.g. mesos://host:port, spark://host:port, local[4]).
+      * @param master  Cluster URL to connect to (e.g. mesos://host:port, org.apache.spark://host:port, local[4]).
       * @param appName A name for your application, to display on the cluster web UI.
       */
     private[spark] def this(master: String, appName: String) =
@@ -2024,7 +2024,7 @@ class SparkContext(config: SparkConf) extends Logging {
     /**
       * Alternative constructor that allows setting common Spark properties directly
       *
-      * @param master    Cluster URL to connect to (e.g. mesos://host:port, spark://host:port, local[4]).
+      * @param master    Cluster URL to connect to (e.g. mesos://host:port, org.apache.spark://host:port, local[4]).
       * @param appName   A name for your application, to display on the cluster web UI.
       * @param sparkHome Location where Spark is installed on cluster nodes.
       */
@@ -2034,7 +2034,7 @@ class SparkContext(config: SparkConf) extends Logging {
     /**
       * Alternative constructor that allows setting common Spark properties directly
       *
-      * @param master    Cluster URL to connect to (e.g. mesos://host:port, spark://host:port, local[4]).
+      * @param master    Cluster URL to connect to (e.g. mesos://host:port, org.apache.spark://host:port, local[4]).
       * @param appName   A name for your application, to display on the cluster web UI.
       * @param sparkHome Location where Spark is installed on cluster nodes.
       * @param jars      Collection of JARs to send to the cluster. These can be paths on the local file
@@ -2043,7 +2043,7 @@ class SparkContext(config: SparkConf) extends Logging {
     private[spark] def this(master: String, appName: String, sparkHome: String, jars: Seq[String]) =
         this(master, appName, sparkHome, jars, Map())
 
-    private[spark] def isEventLogEnabled: Boolean = _conf.getBoolean("spark.eventLog.enabled", false)
+    private[spark] def isEventLogEnabled: Boolean = _conf.getBoolean("org.apache.spark.eventLog.enabled", false)
 
     private[spark] def eventLogDir: Option[URI] = _eventLogDir
 
@@ -2057,7 +2057,7 @@ class SparkContext(config: SparkConf) extends Logging {
         SparkEnv.createDriverEnv(conf, isLocal, listenerBus, SparkContext.numDriverCores(master))
     }
 
-    def master: String = _conf.get("spark.master")
+    def master: String = _conf.get("org.apache.spark.master")
 
     private[spark] def jobProgressListener: JobProgressListener = _jobProgressListener
 
@@ -2072,7 +2072,7 @@ class SparkContext(config: SparkConf) extends Logging {
 
     private def warnSparkMem(value: String): String = {
         logWarning("Using SPARK_MEM to set amount of memory to use per executor process is " +
-                "deprecated, please use spark.executor.memory instead.")
+                "deprecated, please use org.apache.spark.executor.memory instead.")
         value
     }
 
@@ -2180,7 +2180,7 @@ class SparkContext(config: SparkConf) extends Logging {
       * SparkContext instead.
       */
     private[spark] def stopInNewThread(): Unit = {
-        new Thread("stop-spark-context") {
+        new Thread("stop-org.apache.spark-context") {
             setDaemon(true)
 
             override def run(): Unit = {
@@ -2197,11 +2197,11 @@ class SparkContext(config: SparkConf) extends Logging {
 
     /**
       * Get Spark's home location from either a value set through the constructor,
-      * or the spark.home Java property, or the SPARK_HOME environment variable
+      * or the org.apache.spark.home Java property, or the SPARK_HOME environment variable
       * (in that order of preference). If neither of these is set, return None.
       */
     private[spark] def getSparkHome(): Option[String] = {
-        conf.getOption("spark.home").orElse(Option(System.getenv("SPARK_HOME")))
+        conf.getOption("org.apache.spark.home").orElse(Option(System.getenv("SPARK_HOME")))
     }
 
     /**
@@ -2243,7 +2243,7 @@ class SparkContext(config: SparkConf) extends Logging {
 
     /**
       * Get a local property set in this thread, or null if it is missing. See
-      * `org.apache.spark.SparkContext.setLocalProperty`.
+      * `org.apache.org.apache.spark.SparkContext.setLocalProperty`.
       */
     def getLocalProperty(key: String): String =
         Option(localProperties.get).map(_.getProperty(key)).orNull
@@ -2263,15 +2263,15 @@ class SparkContext(config: SparkConf) extends Logging {
     private[spark] def newRddId(): Int = nextRddId.getAndIncrement()
 
     /**
-      * Registers listeners specified in spark.extraListeners, then starts the listener bus.
+      * Registers listeners specified in org.apache.spark.extraListeners, then starts the listener bus.
       * This should be called after all internal listeners have been registered with the listener bus
       * (e.g. after the web UI and event logging listeners have been registered).
       */
     private def setupAndStartListenerBus(): Unit = {
-        // Use reflection to instantiate listeners specified via `spark.extraListeners`
+        // Use reflection to instantiate listeners specified via `org.apache.spark.extraListeners`
         try {
             val listenerClassNames: Seq[String] =
-                conf.get("spark.extraListeners", "").split(',').map(_.trim).filter(_ != "")
+                conf.get("org.apache.spark.extraListeners", "").split(',').map(_.trim).filter(_ != "")
             for (className <- listenerClassNames) {
                 // Use reflection to find the right constructor
                 val constructors = {
@@ -2405,13 +2405,13 @@ class SparkContext(config: SparkConf) extends Logging {
             startTime, sparkUser, applicationAttemptId, schedulerBackend.getDriverLogUrls))
     }
 
-    def appName: String = _conf.get("spark.app.name")
+    def appName: String = _conf.get("org.apache.spark.app.name")
 
     /**
       * A unique identifier for the Spark application.
       * Its format depends on the scheduler implementation.
       * (i.e.
-      * in case of local spark app something like 'local-1433865536131'
+      * in case of local org.apache.spark app something like 'local-1433865536131'
       * in case of YARN something like 'application_1433865536131_34483'
       * )
       */
@@ -2445,11 +2445,11 @@ object SparkContext extends Logging {
       */
     private val activeContext: AtomicReference[SparkContext] =
         new AtomicReference[SparkContext](null)
-    private[spark] val SPARK_JOB_DESCRIPTION = "spark.job.description"
-    private[spark] val SPARK_JOB_GROUP_ID = "spark.jobGroup.id"
-    private[spark] val SPARK_JOB_INTERRUPT_ON_CANCEL = "spark.job.interruptOnCancel"
-    private[spark] val RDD_SCOPE_KEY = "spark.rdd.scope"
-    private[spark] val RDD_SCOPE_NO_OVERRIDE_KEY = "spark.rdd.scope.noOverride"
+    private[spark] val SPARK_JOB_DESCRIPTION = "org.apache.spark.job.description"
+    private[spark] val SPARK_JOB_GROUP_ID = "org.apache.spark.jobGroup.id"
+    private[spark] val SPARK_JOB_INTERRUPT_ON_CANCEL = "org.apache.spark.job.interruptOnCancel"
+    private[spark] val RDD_SCOPE_KEY = "org.apache.spark.rdd.scope"
+    private[spark] val RDD_SCOPE_NO_OVERRIDE_KEY = "org.apache.spark.rdd.scope.noOverride"
     /**
       * Executor id for the driver.  In earlier versions of Spark, this was `<driver>`, but this was
       * changed to `driver` because the angle brackets caused escaping issues in URLs and XML (see
@@ -2605,7 +2605,7 @@ object SparkContext extends Logging {
         SPARK_CONTEXT_CONSTRUCTOR_LOCK.synchronized {
             Option(activeContext.get()).filter(_ ne sc).foreach { ctx =>
                 val errMsg = "Only one SparkContext may be running in this JVM (see SPARK-2243)." +
-                        " To ignore this error, set spark.driver.allowMultipleContexts = true. " +
+                        " To ignore this error, set org.apache.spark.driver.allowMultipleContexts = true. " +
                         s"The currently running SparkContext was created at:\n${ctx.creationSite.longForm}"
                 val exception = new SparkException(errMsg)
                 if (allowMultipleContexts) {
@@ -2728,7 +2728,7 @@ object SparkContext extends Logging {
 
             case SPARK_REGEX(sparkUrl) =>
                 val scheduler = new TaskSchedulerImpl(sc)
-                val masterUrls = sparkUrl.split(",").map("spark://" + _)
+                val masterUrls = sparkUrl.split(",").map("org.apache.spark://" + _)
                 val backend = new StandaloneSchedulerBackend(scheduler, sc, masterUrls)
                 scheduler.initialize(backend)
                 (backend, scheduler)
@@ -2794,7 +2794,7 @@ private object SparkMasterRegex {
     // Regular expression for simulating a Spark cluster of [N, cores, memory] locally
     val LOCAL_CLUSTER_REGEX = """local-cluster\[\s*([0-9]+)\s*,\s*([0-9]+)\s*,\s*([0-9]+)\s*]""".r
     // Regular expression for connecting to Spark deploy clusters
-    val SPARK_REGEX = """spark://(.*)""".r
+    val SPARK_REGEX = """org.apache.spark://(.*)""".r
 }
 
 /**

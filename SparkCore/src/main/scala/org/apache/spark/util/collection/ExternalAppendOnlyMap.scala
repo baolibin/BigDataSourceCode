@@ -95,7 +95,7 @@ class ExternalAppendOnlyMap[K, V, C](
    * NOTE: Setting this too low can cause excessive copying when serializing, since some serializers
    * grow internal data structures by growing + copying every time the number of objects doubles.
    */
-  private val serializerBatchSize = sparkConf.getLong("spark.shuffle.spill.batchSize", 10000)
+  private val serializerBatchSize = sparkConf.getLong("org.apache.spark.shuffle.spill.batchSize", 10000)
 
   // Number of bytes spilled in total
   private var _diskBytesSpilled = 0L
@@ -103,7 +103,7 @@ class ExternalAppendOnlyMap[K, V, C](
 
   // Use getSizeAsKb (not bytes) to maintain backwards compatibility if no units are provided
   private val fileBufferSize =
-    sparkConf.getSizeAsKb("spark.shuffle.file.buffer", "32k").toInt * 1024
+    sparkConf.getSizeAsKb("org.apache.spark.shuffle.file.buffer", "32k").toInt * 1024
 
   // Write metrics
   private val writeMetrics: ShuffleWriteMetrics = new ShuffleWriteMetrics()

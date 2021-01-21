@@ -58,9 +58,9 @@ private[deploy] class Worker(
     val finishedDrivers = new LinkedHashMap[String, DriverRunner]
     val appDirectories = new HashMap[String, Seq[String]]
     val finishedApps = new HashSet[String]
-    val retainedExecutors = conf.getInt("spark.worker.ui.retainedExecutors",
+    val retainedExecutors = conf.getInt("org.apache.spark.worker.ui.retainedExecutors",
         WorkerWebUI.DEFAULT_RETAINED_EXECUTORS)
-    val retainedDrivers = conf.getInt("spark.worker.ui.retainedDrivers",
+    val retainedDrivers = conf.getInt("org.apache.spark.worker.ui.retainedDrivers",
         WorkerWebUI.DEFAULT_RETAINED_DRIVERS)
     private val host = rpcEnv.address.host
     private val port = rpcEnv.address.port
@@ -72,7 +72,7 @@ private[deploy] class Worker(
     private val cleanupThreadExecutor = ExecutionContext.fromExecutorService(
         ThreadUtils.newDaemonSingleThreadExecutor("worker-cleanup-thread"))
     // Send a heartbeat every (heartbeat timeout) / 4 milliseconds
-    private val HEARTBEAT_MILLIS = conf.getLong("spark.worker.timeout", 60) * 1000 / 4
+    private val HEARTBEAT_MILLIS = conf.getLong("org.apache.spark.worker.timeout", 60) * 1000 / 4
     // Model retries to connect to the master, after Hadoop's model.
     // The first six attempts to reconnect are in shorter intervals (between 5 and 15 seconds)
     // Afterwards, the next 10 attempts are between 30 and 90 seconds.
@@ -89,26 +89,26 @@ private[deploy] class Worker(
             REGISTRATION_RETRY_FUZZ_MULTIPLIER))
     private val PROLONGED_REGISTRATION_RETRY_INTERVAL_SECONDS = (math.round(60
             * REGISTRATION_RETRY_FUZZ_MULTIPLIER))
-    private val CLEANUP_ENABLED = conf.getBoolean("spark.worker.cleanup.enabled", false)
+    private val CLEANUP_ENABLED = conf.getBoolean("org.apache.spark.worker.cleanup.enabled", false)
     // How often worker will clean up old app folders
     private val CLEANUP_INTERVAL_MILLIS =
-        conf.getLong("spark.worker.cleanup.interval", 60 * 30) * 1000
+        conf.getLong("org.apache.spark.worker.cleanup.interval", 60 * 30) * 1000
     // TTL for app folders/data;  after TTL expires it will be cleaned up
     private val APP_DATA_RETENTION_SECONDS =
-        conf.getLong("spark.worker.cleanup.appDataTtl", 7 * 24 * 3600)
-    private val testing: Boolean = sys.props.contains("spark.testing")
+        conf.getLong("org.apache.spark.worker.cleanup.appDataTtl", 7 * 24 * 3600)
+    private val testing: Boolean = sys.props.contains("org.apache.spark.testing")
     /**
       * Whether to use the master address in `masterRpcAddresses` if possible. If it's disabled, Worker
       * will just use the address received from Master.
       */
     private val preferConfiguredMasterAddress =
-        conf.getBoolean("spark.worker.preferConfiguredMasterAddress", false)
+        conf.getBoolean("org.apache.spark.worker.preferConfiguredMasterAddress", false)
     private val workerUri = RpcEndpointAddress(rpcEnv.address, endpointName).toString
     private val workerId = generateWorkerId()
     private val sparkHome =
         if (testing) {
-            assert(sys.props.contains("spark.test.home"), "spark.test.home is not set!")
-            new File(sys.props("spark.test.home"))
+            assert(sys.props.contains("org.apache.spark.test.home"), "org.apache.spark.test.home is not set!")
+            new File(sys.props("org.apache.spark.test.home"))
         } else {
             new File(sys.env.get("SPARK_HOME").getOrElse("."))
         }
@@ -476,7 +476,7 @@ private[deploy] class Worker(
         masterAddressToConnect = Some(masterAddress)
         master = Some(masterRef)
         connected = true
-        if (conf.getBoolean("spark.ui.reverseProxy", false)) {
+        if (conf.getBoolean("org.apache.spark.ui.reverseProxy", false)) {
             logInfo(s"WorkerWebUI is available at $activeMasterWebUiUrl/proxy/$workerId")
         }
         // Cancel any outstanding re-registration attempts because we found a new master
@@ -753,8 +753,8 @@ private[deploy] object Worker extends Logging {
     }
 
     def maybeUpdateSSLSettings(cmd: Command, conf: SparkConf): Command = {
-        val prefix = "spark.ssl."
-        val useNLC = "spark.ssl.useNodeLocalConf"
+        val prefix = "org.apache.spark.ssl."
+        val useNLC = "org.apache.spark.ssl.useNodeLocalConf"
         if (isUseLocalNodeSSLConfig(cmd)) {
             val newJavaOpts = cmd.javaOpts
                     .filter(opt => !opt.startsWith(s"-D$prefix")) ++

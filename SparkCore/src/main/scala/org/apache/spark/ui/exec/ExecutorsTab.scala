@@ -29,7 +29,7 @@ private[ui] class ExecutorsTab(parent: SparkUI) extends SparkUITab(parent, "exec
   val listener = parent.executorsListener
   val sc = parent.sc
   val threadDumpEnabled =
-    sc.isDefined && parent.conf.getBoolean("spark.ui.threadDumpsEnabled", true)
+    sc.isDefined && parent.conf.getBoolean("org.apache.spark.ui.threadDumpsEnabled", true)
 
   attachPage(new ExecutorsPage(this, threadDumpEnabled))
   if (threadDumpEnabled) {
@@ -68,8 +68,8 @@ class ExecutorsListener(storageStatusListener: StorageStatusListener, conf: Spar
   val executorToTaskSummary = LinkedHashMap[String, ExecutorTaskSummary]()
   var executorEvents = new ListBuffer[SparkListenerEvent]()
 
-  private val maxTimelineExecutors = conf.getInt("spark.ui.timeline.executors.maximum", 1000)
-  private val retainedDeadExecutors = conf.getInt("spark.ui.retainedDeadExecutors", 100)
+  private val maxTimelineExecutors = conf.getInt("org.apache.spark.ui.timeline.executors.maximum", 1000)
+  private val retainedDeadExecutors = conf.getInt("org.apache.spark.ui.retainedDeadExecutors", 100)
 
   def activeStorageStatusList: Seq[StorageStatus] = storageStatusListener.storageStatusList
 
@@ -81,7 +81,7 @@ class ExecutorsListener(storageStatusListener: StorageStatusListener, conf: Spar
     val taskSummary = executorToTaskSummary.getOrElseUpdate(eid, ExecutorTaskSummary(eid))
     taskSummary.executorLogs = executorAdded.executorInfo.logUrlMap
     taskSummary.totalCores = executorAdded.executorInfo.totalCores
-    taskSummary.tasksMax = taskSummary.totalCores / conf.getInt("spark.task.cpus", 1)
+    taskSummary.tasksMax = taskSummary.totalCores / conf.getInt("org.apache.spark.task.cpus", 1)
     executorEvents += executorAdded
     if (executorEvents.size > maxTimelineExecutors) {
       executorEvents.remove(0)

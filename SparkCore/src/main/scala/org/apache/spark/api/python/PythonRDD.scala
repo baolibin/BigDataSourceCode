@@ -47,8 +47,8 @@ private[spark] class PythonRDD(
     preservePartitoning: Boolean)
   extends RDD[Array[Byte]](parent) {
 
-  val bufferSize = conf.getInt("spark.buffer.size", 65536)
-  val reuse_worker = conf.getBoolean("spark.python.worker.reuse", true)
+  val bufferSize = conf.getInt("org.apache.spark.buffer.size", 65536)
+  val reuse_worker = conf.getBoolean("org.apache.spark.python.worker.reuse", true)
 
   override def getPartitions: Array[Partition] = firstParent.partitions
 
@@ -343,7 +343,7 @@ private[spark] class PythonRunner(
 
         case e: Exception =>
           // We must avoid throwing exceptions here, because the thread uncaught exception handler
-          // will kill the whole executor (see org.apache.spark.executor.Executor).
+          // will kill the whole executor (see org.apache.org.apache.spark.executor.Executor).
           _exception = e
           if (!worker.isClosed) {
             Utils.tryLog(worker.shutdownOutput())
@@ -881,7 +881,7 @@ private[spark] class PythonAccumulatorV2(
 
   Utils.checkHost(serverHost, "Expected hostname")
 
-  val bufferSize = SparkEnv.get.conf.getInt("spark.buffer.size", 65536)
+  val bufferSize = SparkEnv.get.conf.getInt("org.apache.spark.buffer.size", 65536)
 
   /**
    * We try to reuse a single Socket to transfer accumulator updates, as they are all added

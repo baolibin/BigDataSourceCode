@@ -48,7 +48,7 @@ class JavaSparkContext(val sc: SparkContext)
 
   /**
    * Create a JavaSparkContext that loads settings from system properties (for instance, when
-   * launching with ./bin/spark-submit).
+   * launching with ./bin/org.apache.spark-submit).
    */
   def this() = this(new SparkContext())
 
@@ -58,13 +58,13 @@ class JavaSparkContext(val sc: SparkContext)
   def this(conf: SparkConf) = this(new SparkContext(conf))
 
   /**
-   * @param master Cluster URL to connect to (e.g. mesos://host:port, spark://host:port, local[4]).
+   * @param master Cluster URL to connect to (e.g. mesos://host:port, org.apache.spark://host:port, local[4]).
    * @param appName A name for your application, to display on the cluster web UI
    */
   def this(master: String, appName: String) = this(new SparkContext(master, appName))
 
   /**
-   * @param master Cluster URL to connect to (e.g. mesos://host:port, spark://host:port, local[4]).
+   * @param master Cluster URL to connect to (e.g. mesos://host:port, org.apache.spark://host:port, local[4]).
    * @param appName A name for your application, to display on the cluster web UI
    * @param conf a [[org.apache.spark.SparkConf]] object specifying other Spark parameters
    */
@@ -72,7 +72,7 @@ class JavaSparkContext(val sc: SparkContext)
     this(conf.setMaster(master).setAppName(appName))
 
   /**
-   * @param master Cluster URL to connect to (e.g. mesos://host:port, spark://host:port, local[4]).
+   * @param master Cluster URL to connect to (e.g. mesos://host:port, org.apache.spark://host:port, local[4]).
    * @param appName A name for your application, to display on the cluster web UI
    * @param sparkHome The SPARK_HOME directory on the slave nodes
    * @param jarFile JAR file to send to the cluster. This can be a path on the local file system
@@ -82,7 +82,7 @@ class JavaSparkContext(val sc: SparkContext)
     this(new SparkContext(master, appName, sparkHome, Seq(jarFile)))
 
   /**
-   * @param master Cluster URL to connect to (e.g. mesos://host:port, spark://host:port, local[4]).
+   * @param master Cluster URL to connect to (e.g. mesos://host:port, org.apache.spark://host:port, local[4]).
    * @param appName A name for your application, to display on the cluster web UI
    * @param sparkHome The SPARK_HOME directory on the slave nodes
    * @param jars Collection of JARs to send to the cluster. These can be paths on the local file
@@ -92,7 +92,7 @@ class JavaSparkContext(val sc: SparkContext)
     this(new SparkContext(master, appName, sparkHome, jars.toSeq))
 
   /**
-   * @param master Cluster URL to connect to (e.g. mesos://host:port, spark://host:port, local[4]).
+   * @param master Cluster URL to connect to (e.g. mesos://host:port, org.apache.spark://host:port, local[4]).
    * @param appName A name for your application, to display on the cluster web UI
    * @param sparkHome The SPARK_HOME directory on the slave nodes
    * @param jars Collection of JARs to send to the cluster. These can be paths on the local file
@@ -658,7 +658,7 @@ class JavaSparkContext(val sc: SparkContext)
 
   /**
    * Get Spark's home location from either a value set through the constructor,
-   * or the spark.home Java property, or the SPARK_HOME environment variable
+   * or the org.apache.spark.home Java property, or the SPARK_HOME environment variable
    * (in that order of preference). If neither of these is set, return None.
    */
   def getSparkHome(): Optional[String] = JavaUtils.optionToOptional(sc.getSparkHome())
@@ -753,7 +753,7 @@ class JavaSparkContext(val sc: SparkContext)
 
   /**
    * Get a local property set in this thread, or null if it is missing. See
-   * `org.apache.spark.api.java.JavaSparkContext.setLocalProperty`.
+   * `org.apache.org.apache.spark.api.java.JavaSparkContext.setLocalProperty`.
    */
   def getLocalProperty(key: String): String = sc.getLocalProperty(key)
 
@@ -773,7 +773,7 @@ class JavaSparkContext(val sc: SparkContext)
    * Application programmers can use this method to group all those jobs together and give a
    * group description. Once set, the Spark web UI will associate such jobs with this group.
    *
-   * The application can also use `org.apache.spark.api.java.JavaSparkContext.cancelJobGroup`
+   * The application can also use `org.apache.org.apache.spark.api.java.JavaSparkContext.cancelJobGroup`
    * to cancel all running jobs in this group. For example,
    * {{{
    * // In the main thread:
@@ -806,7 +806,7 @@ class JavaSparkContext(val sc: SparkContext)
 
   /**
    * Cancel active jobs for the specified group. See
-   * `org.apache.spark.api.java.JavaSparkContext.setJobGroup` for more information.
+   * `org.apache.org.apache.spark.api.java.JavaSparkContext.setJobGroup` for more information.
    */
   def cancelJobGroup(groupId: String): Unit = sc.cancelJobGroup(groupId)
 

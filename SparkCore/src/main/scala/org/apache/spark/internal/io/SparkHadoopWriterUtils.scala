@@ -63,7 +63,7 @@ object SparkHadoopWriterUtils {
   // setting can take effect:
   def isOutputSpecValidationEnabled(conf: SparkConf): Boolean = {
     val validationDisabled = disableOutputSpecValidation.value
-    val enabledInConf = conf.getBoolean("spark.hadoop.validateOutputSpecs", true)
+    val enabledInConf = conf.getBoolean("org.apache.spark.hadoop.validateOutputSpecs", true)
     enabledInConf && !validationDisabled
   }
 
@@ -86,7 +86,7 @@ object SparkHadoopWriterUtils {
   }
 
   /**
-   * Allows for the `spark.hadoop.validateOutputSpecs` checks to be disabled on a case-by-case
+   * Allows for the `org.apache.spark.hadoop.validateOutputSpecs` checks to be disabled on a case-by-case
    * basis; see SPARK-4835 for more details.
    */
   val disableOutputSpecValidation: DynamicVariable[Boolean] = new DynamicVariable[Boolean](false)

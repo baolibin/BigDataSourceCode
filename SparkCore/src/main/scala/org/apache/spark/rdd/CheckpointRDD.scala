@@ -44,7 +44,7 @@ private[spark] abstract class CheckpointRDD[T: ClassTag](sc: SparkContext)
     override def compute(p: Partition, tc: TaskContext): Iterator[T] = ???
 
     // Note: There is a bug in MiMa that complains about `AbstractMethodProblem`s in the
-    // base [[org.apache.spark.rdd.RDD]] class if we do not override the following methods.
+    // base [[org.apache.org.apache.spark.rdd.RDD]] class if we do not override the following methods.
     // scalastyle:off
     protected override def getPartitions: Array[Partition] = ???
 

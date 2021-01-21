@@ -64,19 +64,19 @@ import scala.util.control.ControlThrowable
   *
   * The relevant Spark properties include the following:
   *
-  *   spark.dynamicAllocation.enabled - Whether this feature is enabled
-  *   spark.dynamicAllocation.minExecutors - Lower bound on the number of executors
-  *   spark.dynamicAllocation.maxExecutors - Upper bound on the number of executors
-  *   spark.dynamicAllocation.initialExecutors - Number of executors to start with
+  *   org.apache.spark.dynamicAllocation.enabled - Whether this feature is enabled
+  *   org.apache.spark.dynamicAllocation.minExecutors - Lower bound on the number of executors
+  *   org.apache.spark.dynamicAllocation.maxExecutors - Upper bound on the number of executors
+  *   org.apache.spark.dynamicAllocation.initialExecutors - Number of executors to start with
   *
-  *   spark.dynamicAllocation.schedulerBacklogTimeout (M) -
+  *   org.apache.spark.dynamicAllocation.schedulerBacklogTimeout (M) -
   * If there are backlogged tasks for this duration, add new executors
   *
-  *   spark.dynamicAllocation.sustainedSchedulerBacklogTimeout (N) -
+  *   org.apache.spark.dynamicAllocation.sustainedSchedulerBacklogTimeout (N) -
   * If the backlog is sustained for this duration, add more executors
   * This is used only after the initial backlog timeout is exceeded
   *
-  *   spark.dynamicAllocation.executorIdleTimeout (K) -
+  *   org.apache.spark.dynamicAllocation.executorIdleTimeout (K) -
   * If an executor has been idle for this duration, remove it
   */
 private[spark] class ExecutorAllocationManager(
@@ -97,24 +97,24 @@ private[spark] class ExecutorAllocationManager(
     private val initialNumExecutors = Utils.getDynamicAllocationInitialExecutors(conf)
     // How long there must be backlogged tasks for before an addition is triggered (seconds)
     private val schedulerBacklogTimeoutS = conf.getTimeAsSeconds(
-        "spark.dynamicAllocation.schedulerBacklogTimeout", "1s")
+        "org.apache.spark.dynamicAllocation.schedulerBacklogTimeout", "1s")
     // Same as above, but used only after `schedulerBacklogTimeoutS` is exceeded
     private val sustainedSchedulerBacklogTimeoutS = conf.getTimeAsSeconds(
-        "spark.dynamicAllocation.sustainedSchedulerBacklogTimeout", s"${schedulerBacklogTimeoutS}s")
+        "org.apache.spark.dynamicAllocation.sustainedSchedulerBacklogTimeout", s"${schedulerBacklogTimeoutS}s")
     // How long an executor must be idle for before it is removed (seconds)
     private val executorIdleTimeoutS = conf.getTimeAsSeconds(
-        "spark.dynamicAllocation.executorIdleTimeout", "60s")
+        "org.apache.spark.dynamicAllocation.executorIdleTimeout", "60s")
     private val cachedExecutorIdleTimeoutS = conf.getTimeAsSeconds(
-        "spark.dynamicAllocation.cachedExecutorIdleTimeout", s"${Integer.MAX_VALUE}s")
+        "org.apache.spark.dynamicAllocation.cachedExecutorIdleTimeout", s"${Integer.MAX_VALUE}s")
     // During testing, the methods to actually kill and add executors are mocked out
-    private val testing = conf.getBoolean("spark.dynamicAllocation.testing", false)
+    private val testing = conf.getBoolean("org.apache.spark.dynamicAllocation.testing", false)
 
     validateSettings()
-    // TODO: The default value of 1 for spark.executor.cores works right now because dynamic
+    // TODO: The default value of 1 for org.apache.spark.executor.cores works right now because dynamic
     // allocation is only supported for YARN and the default number of cores per executor in YARN is
     // 1, but it might need to be attained differently for different cluster managers
     private val tasksPerExecutor =
-    conf.getInt("spark.executor.cores", 1) / conf.getInt("spark.task.cpus", 1)
+    conf.getInt("org.apache.spark.executor.cores", 1) / conf.getInt("org.apache.spark.task.cpus", 1)
     // Executors that have been requested to be removed but have not been killed yet
     private val executorsPendingToRemove = new mutable.HashSet[String]
     // All known executors
@@ -128,7 +128,7 @@ private[spark] class ExecutorAllocationManager(
     private val listener = new ExecutorAllocationListener
     // Executor that handles the scheduling task.
     private val executor =
-        ThreadUtils.newDaemonSingleThreadScheduledExecutor("spark-dynamic-executor-allocation")
+        ThreadUtils.newDaemonSingleThreadScheduledExecutor("org.apache.spark-dynamic-executor-allocation")
     // Number of executors to add in the next round
     private var numExecutorsToAdd = 1
     // The desired number of executors at this moment in time. If all our executors were to die, this
@@ -351,33 +351,33 @@ private[spark] class ExecutorAllocationManager(
       */
     private def validateSettings(): Unit = {
         if (minNumExecutors < 0 || maxNumExecutors < 0) {
-            throw new SparkException("spark.dynamicAllocation.{min/max}Executors must be positive!")
+            throw new SparkException("org.apache.spark.dynamicAllocation.{min/max}Executors must be positive!")
         }
         if (maxNumExecutors == 0) {
-            throw new SparkException("spark.dynamicAllocation.maxExecutors cannot be 0!")
+            throw new SparkException("org.apache.spark.dynamicAllocation.maxExecutors cannot be 0!")
         }
         if (minNumExecutors > maxNumExecutors) {
-            throw new SparkException(s"spark.dynamicAllocation.minExecutors ($minNumExecutors) must " +
-                    s"be less than or equal to spark.dynamicAllocation.maxExecutors ($maxNumExecutors)!")
+            throw new SparkException(s"org.apache.spark.dynamicAllocation.minExecutors ($minNumExecutors) must " +
+                    s"be less than or equal to org.apache.spark.dynamicAllocation.maxExecutors ($maxNumExecutors)!")
         }
         if (schedulerBacklogTimeoutS <= 0) {
-            throw new SparkException("spark.dynamicAllocation.schedulerBacklogTimeout must be > 0!")
+            throw new SparkException("org.apache.spark.dynamicAllocation.schedulerBacklogTimeout must be > 0!")
         }
         if (sustainedSchedulerBacklogTimeoutS <= 0) {
             throw new SparkException(
-                "spark.dynamicAllocation.sustainedSchedulerBacklogTimeout must be > 0!")
+                "org.apache.spark.dynamicAllocation.sustainedSchedulerBacklogTimeout must be > 0!")
         }
         if (executorIdleTimeoutS <= 0) {
-            throw new SparkException("spark.dynamicAllocation.executorIdleTimeout must be > 0!")
+            throw new SparkException("org.apache.spark.dynamicAllocation.executorIdleTimeout must be > 0!")
         }
         // Require external shuffle service for dynamic allocation
         // Otherwise, we may lose shuffle files when killing executors
-        if (!conf.getBoolean("spark.shuffle.service.enabled", false) && !testing) {
+        if (!conf.getBoolean("org.apache.spark.shuffle.service.enabled", false) && !testing) {
             throw new SparkException("Dynamic allocation of executors requires the external " +
-                    "shuffle service. You may enable this through spark.shuffle.service.enabled.")
+                    "shuffle service. You may enable this through org.apache.spark.shuffle.service.enabled.")
         }
         if (tasksPerExecutor == 0) {
-            throw new SparkException("spark.executor.cores must not be less than spark.task.cpus.")
+            throw new SparkException("org.apache.spark.executor.cores must not be less than org.apache.spark.task.cpus.")
         }
     }
 

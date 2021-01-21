@@ -35,7 +35,7 @@ private[master] class ZooKeeperPersistenceEngine(conf: SparkConf, val serializer
   extends PersistenceEngine
   with Logging {
 
-  private val WORKING_DIR = conf.get("spark.deploy.zookeeper.dir", "/spark") + "/master_status"
+  private val WORKING_DIR = conf.get("org.apache.spark.deploy.zookeeper.dir", "/org/apache/spark") + "/master_status"
   private val zk: CuratorFramework = SparkCuratorUtil.newClient(conf)
 
   SparkCuratorUtil.mkdir(zk, WORKING_DIR)

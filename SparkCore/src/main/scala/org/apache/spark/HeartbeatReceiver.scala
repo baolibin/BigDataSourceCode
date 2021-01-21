@@ -31,12 +31,12 @@ import scala.concurrent.Future
 /**
   * 从执行者到驱动者的心跳。这是多个内部组件使用的共享消息，用于传递正在进行的任务的活动性或执行信息。
   * 它也将使那些spark.network.timeout超时，没有心跳的主机失效。
-  * spark.executor.heartbeatInterval应明显小于spark.network.timeout超时。
+  * org.apache.spark.executor.heartbeatInterval应明显小于spark.network.timeout超时。
   *
   * A heartbeat from executors to the driver. This is a shared message used by several internal
   * components to convey liveness or execution information for in-progress tasks. It will also
-  * expire the hosts that have not heartbeated for more than spark.network.timeout.
-  * spark.executor.heartbeatInterval should be significantly less than spark.network.timeout.
+  * expire the hosts that have not heartbeated for more than org.apache.spark.network.timeout.
+  * org.apache.spark.executor.heartbeatInterval should be significantly less than org.apache.spark.network.timeout.
   */
 private[spark] case class Heartbeat(
                                            executorId: String,
@@ -70,18 +70,18 @@ private[spark] class HeartbeatReceiver(sc: SparkContext, clock: Clock)
     sc.addSparkListener(this)
     // executor ID -> timestamp of when the last heartbeat from this executor was received
     private val executorLastSeen = new mutable.HashMap[String, Long]
-    // "spark.network.timeout" uses "seconds", while `spark.storage.blockManagerSlaveTimeoutMs` uses
+    // "org.apache.spark.network.timeout" uses "seconds", while `org.apache.spark.storage.blockManagerSlaveTimeoutMs` uses
     // "milliseconds"
     private val slaveTimeoutMs =
-    sc.conf.getTimeAsMs("spark.storage.blockManagerSlaveTimeoutMs", "120s")
+    sc.conf.getTimeAsMs("org.apache.spark.storage.blockManagerSlaveTimeoutMs", "120s")
     private val executorTimeoutMs =
-        sc.conf.getTimeAsSeconds("spark.network.timeout", s"${slaveTimeoutMs}ms") * 1000
-    // "spark.network.timeoutInterval" uses "seconds", while
-    // "spark.storage.blockManagerTimeoutIntervalMs" uses "milliseconds"
+        sc.conf.getTimeAsSeconds("org.apache.spark.network.timeout", s"${slaveTimeoutMs}ms") * 1000
+    // "org.apache.spark.network.timeoutInterval" uses "seconds", while
+    // "org.apache.spark.storage.blockManagerTimeoutIntervalMs" uses "milliseconds"
     private val timeoutIntervalMs =
-    sc.conf.getTimeAsMs("spark.storage.blockManagerTimeoutIntervalMs", "60s")
+    sc.conf.getTimeAsMs("org.apache.spark.storage.blockManagerTimeoutIntervalMs", "60s")
     private val checkTimeoutIntervalMs =
-        sc.conf.getTimeAsSeconds("spark.network.timeoutInterval", s"${timeoutIntervalMs}ms") * 1000
+        sc.conf.getTimeAsSeconds("org.apache.spark.network.timeoutInterval", s"${timeoutIntervalMs}ms") * 1000
     // "eventLoopThread" is used to run some pretty fast actions. The actions running in it should not
     // block the thread for a long time.
     private val eventLoopThread =

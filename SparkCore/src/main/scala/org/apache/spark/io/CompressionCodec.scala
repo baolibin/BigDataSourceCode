@@ -46,7 +46,7 @@ trait CompressionCodec {
 
 private[spark] object CompressionCodec {
 
-  private val configKey = "spark.io.compression.codec"
+  private val configKey = "org.apache.spark.io.compression.codec"
 
   private[spark] def supportsConcatenationOfSerializedStreams(codec: CompressionCodec): Boolean = {
     (codec.isInstanceOf[SnappyCompressionCodec] || codec.isInstanceOf[LZFCompressionCodec]
@@ -101,7 +101,7 @@ private[spark] object CompressionCodec {
 /**
  * :: DeveloperApi ::
  * LZ4 implementation of [[org.apache.spark.io.CompressionCodec]].
- * Block size can be configured by `spark.io.compression.lz4.blockSize`.
+ * Block size can be configured by `org.apache.spark.io.compression.lz4.blockSize`.
  *
  * @note The wire protocol for this codec is not guaranteed to be compatible across versions
  * of Spark. This is intended for use as an internal compression utility within a single Spark
@@ -111,7 +111,7 @@ private[spark] object CompressionCodec {
 class LZ4CompressionCodec(conf: SparkConf) extends CompressionCodec {
 
   override def compressedOutputStream(s: OutputStream): OutputStream = {
-    val blockSize = conf.getSizeAsBytes("spark.io.compression.lz4.blockSize", "32k").toInt
+    val blockSize = conf.getSizeAsBytes("org.apache.spark.io.compression.lz4.blockSize", "32k").toInt
     new LZ4BlockOutputStream(s, blockSize)
   }
 
@@ -141,7 +141,7 @@ class LZFCompressionCodec(conf: SparkConf) extends CompressionCodec {
 /**
  * :: DeveloperApi ::
  * Snappy implementation of [[org.apache.spark.io.CompressionCodec]].
- * Block size can be configured by `spark.io.compression.snappy.blockSize`.
+ * Block size can be configured by `org.apache.spark.io.compression.snappy.blockSize`.
  *
  * @note The wire protocol for this codec is not guaranteed to be compatible across versions
  * of Spark. This is intended for use as an internal compression utility within a single Spark
@@ -152,7 +152,7 @@ class SnappyCompressionCodec(conf: SparkConf) extends CompressionCodec {
   val version = SnappyCompressionCodec.version
 
   override def compressedOutputStream(s: OutputStream): OutputStream = {
-    val blockSize = conf.getSizeAsBytes("spark.io.compression.snappy.blockSize", "32k").toInt
+    val blockSize = conf.getSizeAsBytes("org.apache.spark.io.compression.snappy.blockSize", "32k").toInt
     new SnappyOutputStreamWrapper(new SnappyOutputStream(s, blockSize))
   }
 

@@ -218,7 +218,7 @@ private[spark] object CoarseGrainedExecutorBackend extends Logging {
                     appId = value
                     argv = tail
                 case ("--worker-url") :: value :: tail =>
-                    // Worker url is used in spark standalone mode to enforce fate-sharing with worker
+                    // Worker url is used in org.apache.spark standalone mode to enforce fate-sharing with worker
                     workerUrl = Some(value)
                     argv = tail
                 case ("--user-class-path") :: value :: tail =>
@@ -270,7 +270,7 @@ private[spark] object CoarseGrainedExecutorBackend extends Logging {
 
             // Bootstrap to fetch the driver's Spark properties.
             val executorConf = new SparkConf
-            val port = executorConf.getInt("spark.executor.port", 0)
+            val port = executorConf.getInt("org.apache.spark.executor.port", 0)
             val fetcher = RpcEnv.create(
                 "driverPropsFetcher",
                 hostname,
@@ -280,7 +280,7 @@ private[spark] object CoarseGrainedExecutorBackend extends Logging {
                 clientMode = true)
             val driver = fetcher.setupEndpointRefByURI(driverUrl)
             val cfg = driver.askSync[SparkAppConfig](RetrieveSparkAppConfig)
-            val props = cfg.sparkProperties ++ Seq[(String, String)](("spark.app.id", appId))
+            val props = cfg.sparkProperties ++ Seq[(String, String)](("org.apache.spark.app.id", appId))
             fetcher.shutdown()
 
             // Create SparkEnv using properties we fetched from the driver.
@@ -293,9 +293,9 @@ private[spark] object CoarseGrainedExecutorBackend extends Logging {
                     driverConf.set(key, value)
                 }
             }
-            if (driverConf.contains("spark.yarn.credentials.file")) {
+            if (driverConf.contains("org.apache.spark.yarn.credentials.file")) {
                 logInfo("Will periodically update credentials from: " +
-                        driverConf.get("spark.yarn.credentials.file"))
+                        driverConf.get("org.apache.spark.yarn.credentials.file"))
                 SparkHadoopUtil.get.startCredentialUpdater(driverConf)
             }
 

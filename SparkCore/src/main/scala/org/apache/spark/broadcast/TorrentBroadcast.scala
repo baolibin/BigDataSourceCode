@@ -71,14 +71,14 @@ private[spark] class TorrentBroadcast[T: ClassTag](obj: T, id: Long)
   @transient private var blockSize: Int = _
 
   private def setConf(conf: SparkConf) {
-    compressionCodec = if (conf.getBoolean("spark.broadcast.compress", true)) {
+    compressionCodec = if (conf.getBoolean("org.apache.spark.broadcast.compress", true)) {
       Some(CompressionCodec.createCodec(conf))
     } else {
       None
     }
     // Note: use getSizeAsKb (not bytes) to maintain compatibility if no units are provided
-    blockSize = conf.getSizeAsKb("spark.broadcast.blockSize", "4m").toInt * 1024
-    checksumEnabled = conf.getBoolean("spark.broadcast.checksum", true)
+    blockSize = conf.getSizeAsKb("org.apache.spark.broadcast.blockSize", "4m").toInt * 1024
+    checksumEnabled = conf.getBoolean("org.apache.spark.broadcast.checksum", true)
   }
   setConf(SparkEnv.get.conf)
 

@@ -28,7 +28,7 @@ import org.apache.spark.scheduler.SchedulingMode
 /**
  * Continuously generates jobs that expose various features of the WebUI (internal testing tool).
  *
- * Usage: ./bin/spark-class org.apache.spark.ui.UIWorkloadGenerator [master] [FIFO|FAIR] [#job set (4 jobs per set)]
+ * Usage: ./bin/org.apache.spark-class org.apache.org.apache.spark.ui.UIWorkloadGenerator [master] [FIFO|FAIR] [#job set (4 jobs per set)]
  */
 // scalastyle:on
 private[spark] object UIWorkloadGenerator {
@@ -40,7 +40,7 @@ private[spark] object UIWorkloadGenerator {
     if (args.length < 3) {
       // scalastyle:off println
       println(
-        "Usage: ./bin/spark-class org.apache.spark.ui.UIWorkloadGenerator " +
+        "Usage: ./bin/org.apache.spark-class org.apache.org.apache.spark.ui.UIWorkloadGenerator " +
           "[master] [FIFO|FAIR] [#job set (4 jobs per set)]")
       // scalastyle:on println
       System.exit(1)
@@ -50,14 +50,14 @@ private[spark] object UIWorkloadGenerator {
 
     val schedulingMode = SchedulingMode.withName(args(1))
     if (schedulingMode == SchedulingMode.FAIR) {
-      conf.set("spark.scheduler.mode", "FAIR")
+      conf.set("org.apache.spark.scheduler.mode", "FAIR")
     }
     val nJobSet = args(2).toInt
     val sc = new SparkContext(conf)
 
     def setProperties(s: String): Unit = {
       if (schedulingMode == SchedulingMode.FAIR) {
-        sc.setLocalProperty("spark.scheduler.pool", s)
+        sc.setLocalProperty("org.apache.spark.scheduler.pool", s)
       }
       sc.setLocalProperty(SparkContext.SPARK_JOB_DESCRIPTION, s)
     }

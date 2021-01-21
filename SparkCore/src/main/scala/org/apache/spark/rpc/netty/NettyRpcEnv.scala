@@ -47,9 +47,9 @@ private[netty] class NettyRpcEnv(
     securityManager: SecurityManager) extends RpcEnv(conf) with Logging {
 
   private[netty] val transportConf = SparkTransportConf.fromSparkConf(
-    conf.clone.set("spark.rpc.io.numConnectionsPerPeer", "1"),
+    conf.clone.set("org.apache.spark.rpc.io.numConnectionsPerPeer", "1"),
     "rpc",
-    conf.getInt("spark.rpc.io.threads", 0))
+    conf.getInt("org.apache.spark.rpc.io.threads", 0))
 
   private val dispatcher: Dispatcher = new Dispatcher(this)
 
@@ -86,7 +86,7 @@ private[netty] class NettyRpcEnv(
   // TODO: a non-blocking TransportClientFactory.createClient in future
   private[netty] val clientConnectionExecutor = ThreadUtils.newDaemonCachedThreadPool(
     "netty-rpc-connection",
-    conf.getInt("spark.rpc.connect.threads", 64))
+    conf.getInt("org.apache.spark.rpc.connect.threads", 64))
 
   @volatile private var server: TransportServer = _
 
@@ -346,18 +346,18 @@ private[netty] class NettyRpcEnv(
     if (fileDownloadFactory == null) synchronized {
       if (fileDownloadFactory == null) {
         val module = "files"
-        val prefix = "spark.rpc.io."
+        val prefix = "org.apache.spark.rpc.io."
         val clone = conf.clone()
 
-        // Copy any RPC configuration that is not overridden in the spark.files namespace.
+        // Copy any RPC configuration that is not overridden in the org.apache.spark.files namespace.
         conf.getAll.foreach { case (key, value) =>
           if (key.startsWith(prefix)) {
             val opt = key.substring(prefix.length())
-            clone.setIfMissing(s"spark.$module.io.$opt", value)
+            clone.setIfMissing(s"org.apache.spark.$module.io.$opt", value)
           }
         }
 
-        val ioThreads = clone.getInt("spark.files.io.threads", 1)
+        val ioThreads = clone.getInt("org.apache.spark.files.io.threads", 1)
         val downloadConf = SparkTransportConf.fromSparkConf(clone, module, ioThreads)
         val downloadContext = new TransportContext(downloadConf, new NoOpRpcHandler(), true)
         fileDownloadFactory = downloadContext.createClientFactory(createClientBootstraps())

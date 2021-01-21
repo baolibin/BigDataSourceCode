@@ -126,23 +126,23 @@ private[spark] class MetricsSystem private (
    *         application, executor/driver and metric source.
    */
   private[spark] def buildRegistryName(source: Source): String = {
-    val metricsNamespace = conf.get(METRICS_NAMESPACE).orElse(conf.getOption("spark.app.id"))
+    val metricsNamespace = conf.get(METRICS_NAMESPACE).orElse(conf.getOption("org.apache.spark.app.id"))
 
-    val executorId = conf.getOption("spark.executor.id")
+    val executorId = conf.getOption("org.apache.spark.executor.id")
     val defaultName = MetricRegistry.name(source.sourceName)
 
     if (instance == "driver" || instance == "executor") {
       if (metricsNamespace.isDefined && executorId.isDefined) {
         MetricRegistry.name(metricsNamespace.get, executorId.get, source.sourceName)
       } else {
-        // Only Driver and Executor set spark.app.id and spark.executor.id.
+        // Only Driver and Executor set org.apache.spark.app.id and org.apache.spark.executor.id.
         // Other instance types, e.g. Master and Worker, are not related to a specific application.
         if (metricsNamespace.isEmpty) {
           logWarning(s"Using default name $defaultName for source because neither " +
-            s"${METRICS_NAMESPACE.key} nor spark.app.id is set.")
+            s"${METRICS_NAMESPACE.key} nor org.apache.spark.app.id is set.")
         }
         if (executorId.isEmpty) {
-          logWarning(s"Using default name $defaultName for source because spark.executor.id is " +
+          logWarning(s"Using default name $defaultName for source because org.apache.spark.executor.id is " +
             s"not set.")
         }
         defaultName

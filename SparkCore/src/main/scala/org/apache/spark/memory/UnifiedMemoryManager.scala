@@ -27,8 +27,8 @@ import org.apache.spark.storage.BlockId
   * either side can borrow memory from the other.
   *
   * The region shared between execution and storage is a fraction of (the total heap space - 300MB)
-  * configurable through `spark.memory.fraction` (default 0.6). The position of the boundary
-  * within this space is further determined by `spark.memory.storageFraction` (default 0.5).
+  * configurable through `org.apache.spark.memory.fraction` (default 0.6). The position of the boundary
+  * within this space is further determined by `org.apache.spark.memory.storageFraction` (default 0.5).
   * This means the size of the storage region is 0.6 * 0.5 = 0.3 of the heap space by default.
   *
   * Storage can borrow as much execution memory as is free until execution reclaims its space.
@@ -192,7 +192,7 @@ private[spark] class UnifiedMemoryManager private[memory](
 object UnifiedMemoryManager {
 
     // Set aside a fixed amount of memory for non-storage, non-execution purposes.
-    // This serves a function similar to `spark.memory.fraction`, but guarantees that we reserve
+    // This serves a function similar to `org.apache.spark.memory.fraction`, but guarantees that we reserve
     // sufficient memory for the system even for small heaps. E.g. if we have a 1GB JVM, then
     // the memory used for execution and storage will be (1024 - 300) * 0.6 = 434MB by default.
     // 预留内存大小，默认300M
@@ -204,7 +204,7 @@ object UnifiedMemoryManager {
             conf,
             maxHeapMemory = maxMemory,
             onHeapStorageRegionSize =
-                    (maxMemory * conf.getDouble("spark.memory.storageFraction", 0.5)).toLong,
+                    (maxMemory * conf.getDouble("org.apache.spark.memory.storageFraction", 0.5)).toLong,
             numCores = numCores)
     }
 
@@ -213,28 +213,28 @@ object UnifiedMemoryManager {
       */
     private def getMaxMemory(conf: SparkConf): Long = {
         // 系统内存
-        val systemMemory = conf.getLong("spark.testing.memory", Runtime.getRuntime.maxMemory)
+        val systemMemory = conf.getLong("org.apache.spark.testing.memory", Runtime.getRuntime.maxMemory)
         // 预留内存，默认300M
-        val reservedMemory = conf.getLong("spark.testing.reservedMemory",
-            if (conf.contains("spark.testing")) 0 else RESERVED_SYSTEM_MEMORY_BYTES)
+        val reservedMemory = conf.getLong("org.apache.spark.testing.reservedMemory",
+            if (conf.contains("org.apache.spark.testing")) 0 else RESERVED_SYSTEM_MEMORY_BYTES)
         val minSystemMemory = (reservedMemory * 1.5).ceil.toLong
         if (systemMemory < minSystemMemory) {
             throw new IllegalArgumentException(s"System memory $systemMemory must " +
                     s"be at least $minSystemMemory. Please increase heap size using the --driver-memory " +
-                    s"option or spark.driver.memory in Spark configuration.")
+                    s"option or org.apache.spark.driver.memory in Spark configuration.")
         }
         // SPARK-12759 Check executor memory to fail fast if memory is insufficient
-        if (conf.contains("spark.executor.memory")) {
-            val executorMemory = conf.getSizeAsBytes("spark.executor.memory")
+        if (conf.contains("org.apache.spark.executor.memory")) {
+            val executorMemory = conf.getSizeAsBytes("org.apache.spark.executor.memory")
             if (executorMemory < minSystemMemory) {
                 throw new IllegalArgumentException(s"Executor memory $executorMemory must be at least " +
                         s"$minSystemMemory. Please increase executor memory using the " +
-                        s"--executor-memory option or spark.executor.memory in Spark configuration.")
+                        s"--executor-memory option or org.apache.spark.executor.memory in Spark configuration.")
             }
         }
         // 可用内存
         val usableMemory = systemMemory - reservedMemory
-        val memoryFraction = conf.getDouble("spark.memory.fraction", 0.6)
+        val memoryFraction = conf.getDouble("org.apache.spark.memory.fraction", 0.6)
         // 执行内存和存储内存占比内存大小
         (usableMemory * memoryFraction).toLong
     }

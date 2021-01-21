@@ -90,7 +90,7 @@ private[spark] class HadoopPartition(rddId: Int, override val index: Int, s: Inp
   * @param valueClass              Class of the value associated with the inputFormatClass.
   * @param minPartitions           Minimum number of HadoopRDD partitions (Hadoop Splits) to generate.
   * @note Instantiating this class directly is not recommended, please use
-  *       `org.apache.spark.SparkContext.hadoopRDD()`
+  *       `org.apache.org.apache.spark.SparkContext.hadoopRDD()`
   */
 @DeveloperApi
 class HadoopRDD[K, V](
@@ -111,7 +111,7 @@ class HadoopRDD[K, V](
     protected val inputFormatCacheKey: String = "rdd_%d_input_format".format(id)
     // used to build JobTracker ID
     private val createTime = new Date()
-    private val shouldCloneJobConf = sparkContext.conf.getBoolean("spark.hadoop.cloneConf", false)
+    private val shouldCloneJobConf = sparkContext.conf.getBoolean("org.apache.spark.hadoop.cloneConf", false)
     private val ignoreCorruptFiles = sparkContext.conf.get(IGNORE_CORRUPT_FILES)
 
     def this(

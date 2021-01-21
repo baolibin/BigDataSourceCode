@@ -48,10 +48,10 @@ object Partitioner {
       *
       * 默认使用Hash分区策略
       * Otherwise, we use a default HashPartitioner. For the number of partitions, if
-      * spark.default.parallelism is set, then we'll use the value from SparkContext
+      * org.apache.spark.default.parallelism is set, then we'll use the value from SparkContext
       * defaultParallelism, otherwise we'll use the max number of upstream partitions.
       *
-      * Unless spark.default.parallelism is set, the number of partitions will be the
+      * Unless org.apache.spark.default.parallelism is set, the number of partitions will be the
       * same as the number of partitions in the largest upstream RDD, as this should
       * be least likely to cause out-of-memory errors.
       *
@@ -63,7 +63,7 @@ object Partitioner {
         if (hasPartitioner.nonEmpty) {
             hasPartitioner.maxBy(_.partitions.length).partitioner.get
         } else {
-            if (rdd.context.conf.contains("spark.default.parallelism")) {
+            if (rdd.context.conf.contains("org.apache.spark.default.parallelism")) {
                 new HashPartitioner(rdd.context.defaultParallelism)
             } else {
                 new HashPartitioner(rdds.map(_.partitions.length).max)

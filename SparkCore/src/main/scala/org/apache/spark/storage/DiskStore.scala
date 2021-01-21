@@ -45,7 +45,7 @@ private[spark] class DiskStore(
                                       diskManager: DiskBlockManager,
                                       securityManager: SecurityManager) extends Logging {
 
-    private val minMemoryMapBytes = conf.getSizeAsBytes("spark.storage.memoryMapThreshold", "2m")
+    private val minMemoryMapBytes = conf.getSizeAsBytes("org.apache.spark.storage.memoryMapThreshold", "2m")
     private val blockSizes = new ConcurrentHashMap[String, Long]()
 
     def putBytes(blockId: BlockId, bytes: ChunkedByteBuffer): Unit = {

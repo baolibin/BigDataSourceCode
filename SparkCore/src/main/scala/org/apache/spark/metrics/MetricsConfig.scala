@@ -38,7 +38,7 @@ private[spark] class MetricsConfig(conf: SparkConf) extends Logging {
   private[metrics] var perInstanceSubProperties: mutable.HashMap[String, Properties] = null
 
   private def setDefaultProperties(prop: Properties) {
-    prop.setProperty("*.sink.servlet.class", "org.apache.spark.metrics.sink.MetricsServlet")
+    prop.setProperty("*.sink.servlet.class", "org.apache.org.apache.spark.metrics.sink.MetricsServlet")
     prop.setProperty("*.sink.servlet.path", "/metrics/json")
     prop.setProperty("master.sink.servlet.path", "/metrics/master/json")
     prop.setProperty("applications.sink.servlet.path", "/metrics/applications/json")
@@ -52,10 +52,10 @@ private[spark] class MetricsConfig(conf: SparkConf) extends Logging {
     // Add default properties in case there's no properties file
     setDefaultProperties(properties)
 
-    loadPropertiesFromFile(conf.getOption("spark.metrics.conf"))
+    loadPropertiesFromFile(conf.getOption("org.apache.spark.metrics.conf"))
 
     // Also look for the properties in provided Spark configuration
-    val prefix = "spark.metrics.conf."
+    val prefix = "org.apache.spark.metrics.conf."
     conf.getAll.foreach {
       case (k, v) if k.startsWith(prefix) =>
         properties.setProperty(k.substring(prefix.length()), v)

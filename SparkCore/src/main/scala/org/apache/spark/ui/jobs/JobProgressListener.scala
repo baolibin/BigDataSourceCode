@@ -93,8 +93,8 @@ class JobProgressListener(conf: SparkConf) extends SparkListener with Logging {
   // To limit the total memory usage of JobProgressListener, we only track information for a fixed
   // number of non-active jobs and stages (there is no limit for active jobs and stages):
 
-  val retainedStages = conf.getInt("spark.ui.retainedStages", SparkUI.DEFAULT_RETAINED_STAGES)
-  val retainedJobs = conf.getInt("spark.ui.retainedJobs", SparkUI.DEFAULT_RETAINED_JOBS)
+  val retainedStages = conf.getInt("org.apache.spark.ui.retainedStages", SparkUI.DEFAULT_RETAINED_STAGES)
+  val retainedJobs = conf.getInt("org.apache.spark.ui.retainedJobs", SparkUI.DEFAULT_RETAINED_JOBS)
   val retainedTasks = conf.get(UI_RETAINED_TASKS)
 
   // We can test for memory leaks by ensuring that collections that track non-active jobs and
@@ -115,8 +115,8 @@ class JobProgressListener(conf: SparkConf) extends SparkListener with Logging {
     )
   }
 
-  // These collections should stop growing once we have run at least `spark.ui.retainedStages`
-  // stages and `spark.ui.retainedJobs` jobs:
+  // These collections should stop growing once we have run at least `org.apache.spark.ui.retainedStages`
+  // stages and `org.apache.spark.ui.retainedJobs` jobs:
   private[spark] def getSizesOfHardSizeLimitedCollections: Map[String, Int] = {
     Map(
       "completedJobs" -> completedJobs.size,
@@ -128,7 +128,7 @@ class JobProgressListener(conf: SparkConf) extends SparkListener with Logging {
   }
 
   // These collections may grow arbitrarily, but once Spark becomes idle they should shrink back to
-  // some bound based on the `spark.ui.retainedStages` and `spark.ui.retainedJobs` settings:
+  // some bound based on the `org.apache.spark.ui.retainedStages` and `org.apache.spark.ui.retainedJobs` settings:
   private[spark] def getSizesOfSoftSizeLimitedCollections: Map[String, Int] = {
     Map(
       "jobIdToData" -> jobIdToData.size,
@@ -300,7 +300,7 @@ class JobProgressListener(conf: SparkConf) extends SparkListener with Logging {
     activeStages(stage.stageId) = stage
     pendingStages.remove(stage.stageId)
     val poolName = Option(stageSubmitted.properties).map {
-      p => p.getProperty("spark.scheduler.pool", SparkUI.DEFAULT_POOL_NAME)
+      p => p.getProperty("org.apache.spark.scheduler.pool", SparkUI.DEFAULT_POOL_NAME)
     }.getOrElse(SparkUI.DEFAULT_POOL_NAME)
 
     stageIdToInfo(stage.stageId) = stage
@@ -542,7 +542,7 @@ class JobProgressListener(conf: SparkConf) extends SparkListener with Logging {
     synchronized {
       schedulingMode = environmentUpdate
         .environmentDetails("Spark Properties").toMap
-        .get("spark.scheduler.mode")
+        .get("org.apache.spark.scheduler.mode")
         .map(SchedulingMode.withName)
     }
   }

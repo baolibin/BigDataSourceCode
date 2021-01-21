@@ -63,7 +63,7 @@ private[spark] class PipedRDD[T: ClassTag](
             currentEnvVars.putAll(hadoopSplit.getPipeEnvVars().asJava)
         }
 
-        // When spark.worker.separated.working.directory option is turned on, each
+        // When org.apache.spark.worker.separated.working.directory option is turned on, each
         // task will be run in separate directory. This should be resolve file
         // access conflict issue
         val taskDirectory = "tasks" + File.separator + java.util.UUID.randomUUID.toString

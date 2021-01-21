@@ -95,11 +95,11 @@ private[spark] class ContextCleaner(sc: SparkContext) extends Logging {
       * lead to executors running out of disk space after a while.
       */
     private val periodicGCInterval =
-        sc.conf.getTimeAsSeconds("spark.cleaner.periodicGC.interval", "30min")
+        sc.conf.getTimeAsSeconds("org.apache.spark.cleaner.periodicGC.interval", "30min")
 
     /**
       * Whether the cleaning thread will block on cleanup tasks (other than shuffle, which
-      * is controlled by the `spark.cleaner.referenceTracking.blocking.shuffle` parameter).
+      * is controlled by the `org.apache.spark.cleaner.referenceTracking.blocking.shuffle` parameter).
       *
       * Due to SPARK-3015, this is set to true by default. This is intended to be only a temporary
       * workaround for the issue, which is ultimately caused by the way the BlockManager endpoints
@@ -108,7 +108,7 @@ private[spark] class ContextCleaner(sc: SparkContext) extends Logging {
       * longer in scope.
       */
     private val blockOnCleanupTasks = sc.conf.getBoolean(
-        "spark.cleaner.referenceTracking.blocking", true)
+        "org.apache.spark.cleaner.referenceTracking.blocking", true)
 
     /**
       * Whether the cleaning thread will block on shuffle cleanup tasks.
@@ -121,7 +121,7 @@ private[spark] class ContextCleaner(sc: SparkContext) extends Logging {
       * resolved.
       */
     private val blockOnShuffleCleanupTasks = sc.conf.getBoolean(
-        "spark.cleaner.referenceTracking.blocking.shuffle", false)
+        "org.apache.spark.cleaner.referenceTracking.blocking.shuffle", false)
 
     @volatile private var stopped = false
 

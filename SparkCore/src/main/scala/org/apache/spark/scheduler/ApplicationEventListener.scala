@@ -53,10 +53,10 @@ private[spark] class ApplicationEventListener extends SparkListener {
         synchronized {
             val environmentDetails = environmentUpdate.environmentDetails
             val allProperties = environmentDetails("Spark Properties").toMap
-            viewAcls = allProperties.get("spark.ui.view.acls")
-            adminAcls = allProperties.get("spark.admin.acls")
-            viewAclsGroups = allProperties.get("spark.ui.view.acls.groups")
-            adminAclsGroups = allProperties.get("spark.admin.acls.groups")
+            viewAcls = allProperties.get("org.apache.spark.ui.view.acls")
+            adminAcls = allProperties.get("org.apache.spark.admin.acls")
+            viewAclsGroups = allProperties.get("org.apache.spark.ui.view.acls.groups")
+            adminAclsGroups = allProperties.get("org.apache.spark.admin.acls.groups")
         }
     }
 }

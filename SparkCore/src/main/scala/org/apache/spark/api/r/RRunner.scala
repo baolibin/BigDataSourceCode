@@ -118,7 +118,7 @@ private[spark] class RRunner[U](
       partitionIndex: Int): Unit = {
     val env = SparkEnv.get
     val taskContext = TaskContext.get()
-    val bufferSize = System.getProperty("spark.buffer.size", "65536").toInt
+    val bufferSize = System.getProperty("org.apache.spark.buffer.size", "65536").toInt
     val stream = new BufferedOutputStream(output, bufferSize)
 
     new Thread("writer for R") {
@@ -327,14 +327,14 @@ private[r] object RRunner {
   }
 
   private def createRProcess(port: Int, script: String): BufferedStreamThread = {
-    // "spark.sparkr.r.command" is deprecated and replaced by "spark.r.command",
+    // "org.apache.spark.sparkr.r.command" is deprecated and replaced by "org.apache.spark.r.command",
     // but kept here for backward compatibility.
     val sparkConf = SparkEnv.get.conf
-    var rCommand = sparkConf.get("spark.sparkr.r.command", "Rscript")
-    rCommand = sparkConf.get("spark.r.command", rCommand)
+    var rCommand = sparkConf.get("org.apache.spark.sparkr.r.command", "Rscript")
+    rCommand = sparkConf.get("org.apache.spark.r.command", rCommand)
 
     val rConnectionTimeout = sparkConf.getInt(
-      "spark.r.backendConnectionTimeout", SparkRDefaults.DEFAULT_CONNECTION_TIMEOUT)
+      "org.apache.spark.r.backendConnectionTimeout", SparkRDefaults.DEFAULT_CONNECTION_TIMEOUT)
     val rOptions = "--vanilla"
     val rLibDir = RUtils.sparkRPackagePath(isDriver = false)
     val rExecScript = rLibDir(0) + "/SparkR/worker/" + script
@@ -359,7 +359,7 @@ private[r] object RRunner {
    * ProcessBuilder used to launch worker R processes.
    */
   def createRWorker(port: Int): BufferedStreamThread = {
-    val useDaemon = SparkEnv.get.conf.getBoolean("spark.sparkr.use.daemon", true)
+    val useDaemon = SparkEnv.get.conf.getBoolean("org.apache.spark.sparkr.use.daemon", true)
     if (!Utils.isWindows && useDaemon) {
       synchronized {
         if (daemonChannel == null) {

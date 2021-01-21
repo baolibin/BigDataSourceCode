@@ -103,7 +103,7 @@ private[spark] class MemoryStore(
 
     // Initial memory to request before unrolling any block
     private val unrollMemoryThreshold: Long =
-        conf.getLong("spark.storage.unrollMemoryThreshold", 1024 * 1024)
+        conf.getLong("org.apache.spark.storage.unrollMemoryThreshold", 1024 * 1024)
 
     def getSize(blockId: BlockId): Long = {
         entries.synchronized {

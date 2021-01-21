@@ -56,7 +56,7 @@ private[spark] class SparkUI private (
   with Logging
   with UIRoot {
 
-  val killEnabled = sc.map(_.conf.getBoolean("spark.ui.killEnabled", true)).getOrElse(false)
+  val killEnabled = sc.map(_.conf.getBoolean("org.apache.spark.ui.killEnabled", true)).getOrElse(false)
 
   var appId: String = _
 
@@ -149,7 +149,7 @@ private[spark] object SparkUI {
   val DEFAULT_RETAINED_JOBS = 1000
 
   def getUIPort(conf: SparkConf): Int = {
-    conf.getInt("spark.ui.port", SparkUI.DEFAULT_PORT)
+    conf.getInt("org.apache.spark.ui.port", SparkUI.DEFAULT_PORT)
   }
 
   def createLiveUI(

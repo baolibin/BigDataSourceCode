@@ -37,7 +37,7 @@ class MasterWebUI(
     requestedPort, master.conf, name = "MasterUI") with Logging {
 
   val masterEndpointRef = master.self
-  val killEnabled = master.conf.getBoolean("spark.ui.killEnabled", true)
+  val killEnabled = master.conf.getBoolean("org.apache.spark.ui.killEnabled", true)
   private val proxyHandlers = new HashMap[String, ServletContextHandler]
 
   initialize()

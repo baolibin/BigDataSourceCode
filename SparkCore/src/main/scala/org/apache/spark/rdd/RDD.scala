@@ -479,7 +479,7 @@ abstract class RDD[T: ClassTag](
 
     /**
       * Execute a block of code in a scope such that all new RDDs created in this body will
-      * be part of the same scope. For more detail, see {{org.apache.spark.rdd.RDDOperationScope}}.
+      * be part of the same scope. For more detail, see {{org.apache.org.apache.spark.rdd.RDDOperationScope}}.
       *
       * Note: Return statements are NOT allowed in the given body.
       */
@@ -1159,7 +1159,7 @@ abstract class RDD[T: ClassTag](
       * partition gets index 0, and the last item in the last partition receives the largest index.
       *
       * This is similar to Scala's zipWithIndex but it uses Long instead of Int as the index type.
-      * This method needs to trigger a spark job when this RDD contains more than one partitions.
+      * This method needs to trigger a org.apache.spark job when this RDD contains more than one partitions.
       *
       * @note Some RDDs, such as those returned by groupBy(), do not guarantee order of
       *       elements in a partition. The index assigned to each element is therefore not guaranteed,
@@ -1173,7 +1173,7 @@ abstract class RDD[T: ClassTag](
     /**
       * Zips this RDD with generated unique Long ids. Items in the kth partition will get ids k, n+k,
       * 2*n+k, ..., where n is the number of partitions. So there may exist gaps, but this method
-      * won't trigger a spark job, which is different from [[org.apache.spark.rdd.RDD#zipWithIndex]].
+      * won't trigger a org.apache.spark job, which is different from [[org.apache.spark.rdd.RDD#zipWithIndex]].
       *
       * @note Some RDDs, such as those returned by groupBy(), do not guarantee order of
       *       elements in a partition. The unique ID assigned to each element is therefore not guaranteed,
@@ -1201,7 +1201,7 @@ abstract class RDD[T: ClassTag](
       *       an exception if called on an RDD of `Nothing` or `Null`.
       */
     def take(num: Int): Array[T] = withScope {
-        val scaleUpFactor = Math.max(conf.getInt("spark.rdd.limit.scaleUpFactor", 4), 2)
+        val scaleUpFactor = Math.max(conf.getInt("org.apache.spark.rdd.limit.scaleUpFactor", 4), 2)
         if (num == 0) {
             new Array[T](0)
         } else {
@@ -1471,16 +1471,16 @@ abstract class RDD[T: ClassTag](
       *
       * This is NOT safe to use with dynamic allocation, which removes executors along
       * with their cached blocks. If you must use both features, you are advised to set
-      * `spark.dynamicAllocation.cachedExecutorIdleTimeout` to a high value.
+      * `org.apache.spark.dynamicAllocation.cachedExecutorIdleTimeout` to a high value.
       *
       * The checkpoint directory set through `SparkContext#setCheckpointDir` is not used.
       */
     def localCheckpoint(): this.type = RDDCheckpointData.synchronized {
-        if (conf.getBoolean("spark.dynamicAllocation.enabled", false) &&
-                conf.contains("spark.dynamicAllocation.cachedExecutorIdleTimeout")) {
+        if (conf.getBoolean("org.apache.spark.dynamicAllocation.enabled", false) &&
+                conf.contains("org.apache.spark.dynamicAllocation.cachedExecutorIdleTimeout")) {
             logWarning("Local checkpointing is NOT safe to use with dynamic allocation, " +
                     "which removes executors along with their cached blocks. If you must use both " +
-                    "features, you are advised to set `spark.dynamicAllocation.cachedExecutorIdleTimeout` " +
+                    "features, you are advised to set `org.apache.spark.dynamicAllocation.cachedExecutorIdleTimeout` " +
                     "to a high value. E.g. If you plan to use the RDD for 1 hour, set the timeout to " +
                     "at least 1 hour.")
         }
@@ -1850,7 +1850,7 @@ abstract class RDD[T: ClassTag](
 object RDD {
 
     private[spark] val CHECKPOINT_ALL_MARKED_ANCESTORS =
-        "spark.checkpoint.checkpointAllMarkedAncestors"
+        "org.apache.spark.checkpoint.checkpointAllMarkedAncestors"
 
     // The following implicit functions were in SparkContext before 1.3 and users had to
     // `import SparkContext._` to enable them. Now we move them here to make the compiler find

@@ -1024,7 +1024,7 @@ class PairRDDFunctions[K, V](self: RDD[(K, V)])
 
         // When speculation is on and output committer class name contains "Direct", we should warn
         // users that they may loss data if they are using a direct output committer.
-        val speculationEnabled = self.conf.getBoolean("spark.speculation", false)
+        val speculationEnabled = self.conf.getBoolean("org.apache.spark.speculation", false)
         val outputCommitterClass = hadoopConf.get("mapred.output.committer.class", "")
         if (speculationEnabled && outputCommitterClass.contains("Direct")) {
             val warningMessage =

@@ -30,7 +30,7 @@ import org.apache.commons.lang3.StringEscapeUtils
 import org.apache.spark.internal.Logging
 import org.apache.spark.ui.scope.RDDOperationGraph
 
-/** Utility functions for generating XML pages with spark content. */
+/** Utility functions for generating XML pages with org.apache.spark content. */
 private[spark] object UIUtils extends Logging {
   val TABLE_CLASS_NOT_STRIPED = "table table-bordered table-condensed"
   val TABLE_CLASS_STRIPED = TABLE_CLASS_NOT_STRIPED + " table-striped"
@@ -150,7 +150,7 @@ private[spark] object UIUtils extends Logging {
   // Yarn has to go through a proxy so the base uri is provided and has to be on all links
   def uiRoot: String = {
     // SPARK-11484 - Use the proxyBase set by the AM, if not found then use env.
-    sys.props.get("spark.ui.proxyBase")
+    sys.props.get("org.apache.spark.ui.proxyBase")
       .orElse(sys.env.get("APPLICATION_WEB_PROXY_BASE"))
       .getOrElse("")
   }
@@ -179,11 +179,11 @@ private[spark] object UIUtils extends Logging {
   }
 
   def vizHeaderNodes: Seq[Node] = {
-    <link rel="stylesheet" href={prependBaseUri("/static/spark-dag-viz.css")} type="text/css" />
+    <link rel="stylesheet" href={prependBaseUri("/static/org.apache.spark-dag-viz.css")} type="text/css" />
     <script src={prependBaseUri("/static/d3.min.js")}></script>
     <script src={prependBaseUri("/static/dagre-d3.min.js")}></script>
     <script src={prependBaseUri("/static/graphlib-dot.min.js")}></script>
-    <script src={prependBaseUri("/static/spark-dag-viz.js")}></script>
+    <script src={prependBaseUri("/static/org.apache.spark-dag-viz.js")}></script>
   }
 
   def dataTablesHeaderNodes: Seq[Node] = {
@@ -200,7 +200,7 @@ private[spark] object UIUtils extends Logging {
     <script src={prependBaseUri("/static/jquery.mustache.js")}></script>
   }
 
-  /** Returns a spark page with correctly formatted headers */
+  /** Returns a org.apache.spark page with correctly formatted headers */
   def headerSparkPage(
       title: String,
       content: => Seq[Node],
@@ -231,7 +231,7 @@ private[spark] object UIUtils extends Logging {
           <div class="navbar-inner">
             <div class="brand">
               <a href={prependBaseUri("/")} class="brand">
-                <img src={prependBaseUri("/static/spark-logo-77x50px-hd.png")} />
+                <img src={prependBaseUri("/static/org.apache.spark-logo-77x50px-hd.png")} />
                 <span class="version">{org.apache.spark.SPARK_VERSION}</span>
               </a>
             </div>
@@ -256,7 +256,7 @@ private[spark] object UIUtils extends Logging {
     </html>
   }
 
-  /** Returns a page with the spark css/js and a simple format. Used for scheduler UI. */
+  /** Returns a page with the org.apache.spark css/js and a simple format. Used for scheduler UI. */
   def basicSparkPage(
       content: => Seq[Node],
       title: String,
@@ -273,7 +273,7 @@ private[spark] object UIUtils extends Logging {
             <div class="span12">
               <h3 style="vertical-align: middle; display: inline-block;">
                 <a style="text-decoration: none" href={prependBaseUri("/")}>
-                  <img src={prependBaseUri("/static/spark-logo-77x50px-hd.png")} />
+                  <img src={prependBaseUri("/static/org.apache.spark-logo-77x50px-hd.png")} />
                   <span class="version"
                         style="margin-right: 15px;">{org.apache.spark.SPARK_VERSION}</span>
                 </a>
@@ -382,7 +382,7 @@ private[spark] object UIUtils extends Logging {
    * Return a "DAG visualization" DOM element that expands into a visualization on the UI.
    *
    * This populates metadata necessary for generating the visualization on the front-end in
-   * a format that is expected by spark-dag-viz.js. Any changes in the format here must be
+   * a format that is expected by org.apache.spark-dag-viz.js. Any changes in the format here must be
    * reflected there.
    */
   private def showDagViz(graphs: Seq[RDDOperationGraph], forJob: Boolean): Seq[Node] = {

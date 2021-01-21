@@ -42,11 +42,11 @@ import scala.collection.mutable.ArrayBuffer
   * A SparkListener that logs events to persistent storage.
   *
   * Event logging is specified by the following configurable parameters:
-  *   spark.eventLog.enabled - Whether event logging is enabled.
-  *   spark.eventLog.compress - Whether to compress logged events
-  *   spark.eventLog.overwrite - Whether to overwrite any existing files.
-  *   spark.eventLog.dir - Path to the directory in which events are logged.
-  *   spark.eventLog.buffer.kb - Buffer size to use when writing to output streams
+  *   org.apache.spark.eventLog.enabled - Whether event logging is enabled.
+  *   org.apache.spark.eventLog.compress - Whether to compress logged events
+  *   org.apache.spark.eventLog.overwrite - Whether to overwrite any existing files.
+  *   org.apache.spark.eventLog.dir - Path to the directory in which events are logged.
+  *   org.apache.spark.eventLog.buffer.kb - Buffer size to use when writing to output streams
   */
 private[spark] class EventLoggingListener(
                                                  appId: String,
@@ -58,10 +58,10 @@ private[spark] class EventLoggingListener(
 
     import EventLoggingListener._
 
-    private val shouldCompress = sparkConf.getBoolean("spark.eventLog.compress", false)
-    private val shouldOverwrite = sparkConf.getBoolean("spark.eventLog.overwrite", false)
-    private val testing = sparkConf.getBoolean("spark.eventLog.testing", false)
-    private val outputBufferSize = sparkConf.getInt("spark.eventLog.buffer.kb", 100) * 1024
+    private val shouldCompress = sparkConf.getBoolean("org.apache.spark.eventLog.compress", false)
+    private val shouldOverwrite = sparkConf.getBoolean("org.apache.spark.eventLog.overwrite", false)
+    private val testing = sparkConf.getBoolean("org.apache.spark.eventLog.testing", false)
+    private val outputBufferSize = sparkConf.getInt("org.apache.spark.eventLog.buffer.kb", 100) * 1024
     private val fileSystem = Utils.getHadoopFileSystem(logBaseDir, hadoopConf)
     private val compressionCodec =
         if (shouldCompress) {
@@ -268,7 +268,7 @@ private[spark] class EventLoggingListener(
 private[spark] object EventLoggingListener extends Logging {
     // Suffix applied to the names of files still being written by applications.
     val IN_PROGRESS = ".inprogress"
-    val DEFAULT_LOG_DIR = "/tmp/spark-events"
+    val DEFAULT_LOG_DIR = "/tmp/org.apache.spark-events"
 
     private val LOG_FILE_PERMISSIONS = new FsPermission(Integer.parseInt("770", 8).toShort)
 

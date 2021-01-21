@@ -57,33 +57,33 @@ class KryoSerializer(conf: SparkConf)
   with Logging
   with Serializable {
 
-  private val bufferSizeKb = conf.getSizeAsKb("spark.kryoserializer.buffer", "64k")
+  private val bufferSizeKb = conf.getSizeAsKb("org.apache.spark.kryoserializer.buffer", "64k")
 
   if (bufferSizeKb >= ByteUnit.GiB.toKiB(2)) {
-    throw new IllegalArgumentException("spark.kryoserializer.buffer must be less than " +
+    throw new IllegalArgumentException("org.apache.spark.kryoserializer.buffer must be less than " +
       s"2048 mb, got: + ${ByteUnit.KiB.toMiB(bufferSizeKb)} mb.")
   }
   private val bufferSize = ByteUnit.KiB.toBytes(bufferSizeKb).toInt
 
-  val maxBufferSizeMb = conf.getSizeAsMb("spark.kryoserializer.buffer.max", "64m").toInt
+  val maxBufferSizeMb = conf.getSizeAsMb("org.apache.spark.kryoserializer.buffer.max", "64m").toInt
   if (maxBufferSizeMb >= ByteUnit.GiB.toMiB(2)) {
-    throw new IllegalArgumentException("spark.kryoserializer.buffer.max must be less than " +
+    throw new IllegalArgumentException("org.apache.spark.kryoserializer.buffer.max must be less than " +
       s"2048 mb, got: + $maxBufferSizeMb mb.")
   }
   private val maxBufferSize = ByteUnit.MiB.toBytes(maxBufferSizeMb).toInt
 
-  private val referenceTracking = conf.getBoolean("spark.kryo.referenceTracking", true)
-  private val registrationRequired = conf.getBoolean("spark.kryo.registrationRequired", false)
-  private val userRegistrators = conf.get("spark.kryo.registrator", "")
+  private val referenceTracking = conf.getBoolean("org.apache.spark.kryo.referenceTracking", true)
+  private val registrationRequired = conf.getBoolean("org.apache.spark.kryo.registrationRequired", false)
+  private val userRegistrators = conf.get("org.apache.spark.kryo.registrator", "")
     .split(',').map(_.trim)
     .filter(!_.isEmpty)
-  private val classesToRegister = conf.get("spark.kryo.classesToRegister", "")
+  private val classesToRegister = conf.get("org.apache.spark.kryo.classesToRegister", "")
     .split(',').map(_.trim)
     .filter(!_.isEmpty)
 
   private val avroSchemas = conf.getAvroSchema
   // whether to use unsafe based IO for serialization
-  private val useUnsafe = conf.getBoolean("spark.kryo.unsafe", false)
+  private val useUnsafe = conf.getBoolean("org.apache.spark.kryo.unsafe", false)
 
   def newKryoOutput(): KryoOutput =
     if (useUnsafe) {
@@ -127,10 +127,10 @@ class KryoSerializer(conf: SparkConf)
       // scalastyle:off classforname
       // Use the default classloader when calling the user registrator.
       Thread.currentThread.setContextClassLoader(classLoader)
-      // Register classes given through spark.kryo.classesToRegister.
+      // Register classes given through org.apache.spark.kryo.classesToRegister.
       classesToRegister
         .foreach { className => kryo.register(Class.forName(className, true, classLoader)) }
-      // Allow the user to register their own classes by setting spark.kryo.registrator.
+      // Allow the user to register their own classes by setting org.apache.spark.kryo.registrator.
       userRegistrators
         .map(Class.forName(_, true, classLoader).newInstance().asInstanceOf[KryoRegistrator])
         .foreach { reg => reg.registerClasses(kryo) }
@@ -317,7 +317,7 @@ private[spark] class KryoSerializerInstance(ks: KryoSerializer, useUnsafe: Boole
     } catch {
       case e: KryoException if e.getMessage.startsWith("Buffer overflow") =>
         throw new SparkException(s"Kryo serialization failed: ${e.getMessage}. To avoid this, " +
-          "increase spark.kryoserializer.buffer.max value.", e)
+          "increase org.apache.spark.kryoserializer.buffer.max value.", e)
     } finally {
       releaseKryo(kryo)
     }

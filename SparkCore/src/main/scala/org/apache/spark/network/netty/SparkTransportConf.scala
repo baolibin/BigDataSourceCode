@@ -55,8 +55,8 @@ object SparkTransportConf {
     // assuming we have all the machine's cores).
     // NB: Only set if serverThreads/clientThreads not already set.
     val numThreads = defaultNumThreads(numUsableCores)
-    conf.setIfMissing(s"spark.$module.io.serverThreads", numThreads.toString)
-    conf.setIfMissing(s"spark.$module.io.clientThreads", numThreads.toString)
+    conf.setIfMissing(s"org.apache.spark.$module.io.serverThreads", numThreads.toString)
+    conf.setIfMissing(s"org.apache.spark.$module.io.clientThreads", numThreads.toString)
 
     new TransportConf(module, new ConfigProvider {
       override def get(name: String): String = conf.get(name)

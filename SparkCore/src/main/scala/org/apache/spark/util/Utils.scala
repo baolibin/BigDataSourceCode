@@ -88,13 +88,13 @@ private[spark] object Utils extends Logging {
   /**
    * The performance overhead of creating and logging strings for wide schemas can be large. To
    * limit the impact, we bound the number of fields to include by default. This can be overridden
-   * by setting the 'spark.debug.maxToStringFields' conf in SparkEnv.
+   * by setting the 'org.apache.spark.debug.maxToStringFields' conf in SparkEnv.
    */
   val DEFAULT_MAX_TO_STRING_FIELDS = 25
 
   private def maxNumToStringFields = {
     if (SparkEnv.get != null) {
-      SparkEnv.get.conf.getInt("spark.debug.maxToStringFields", DEFAULT_MAX_TO_STRING_FIELDS)
+      SparkEnv.get.conf.getInt("org.apache.spark.debug.maxToStringFields", DEFAULT_MAX_TO_STRING_FIELDS)
     } else {
       DEFAULT_MAX_TO_STRING_FIELDS
     }
@@ -119,7 +119,7 @@ private[spark] object Utils extends Logging {
       if (truncationWarningPrinted.compareAndSet(false, true)) {
         logWarning(
           "Truncated the string representation of a plan since it was too large. This " +
-          "behavior can be adjusted by setting 'spark.debug.maxToStringFields' in SparkEnv.conf.")
+          "behavior can be adjusted by setting 'org.apache.spark.debug.maxToStringFields' in SparkEnv.conf.")
       }
       val numFields = math.max(0, maxNumFields - 1)
       seq.take(numFields).mkString(
@@ -280,7 +280,7 @@ private[spark] object Utils extends Logging {
    * Create a directory inside the given parent directory. The directory is guaranteed to be
    * newly created, and is not marked for automatic deletion.
    */
-  def createDirectory(root: String, namePrefix: String = "spark"): File = {
+  def createDirectory(root: String, namePrefix: String = "org/apache/spark"): File = {
     var attempts = 0
     val maxAttempts = MAX_DIR_CREATION_ATTEMPTS
     var dir: File = null
@@ -307,7 +307,7 @@ private[spark] object Utils extends Logging {
    */
   def createTempDir(
       root: String = System.getProperty("java.io.tmpdir"),
-      namePrefix: String = "spark"): File = {
+      namePrefix: String = "org/apache/spark"): File = {
     val dir = createDirectory(root, namePrefix)
     ShutdownHookManager.registerShutdownDeleteDir(dir)
     dir
@@ -316,7 +316,7 @@ private[spark] object Utils extends Logging {
   /**
    * Copy all data from an InputStream to an OutputStream. NIO way of file stream to file stream
    * copying is disabled by default unless explicitly set transferToEnabled as true,
-   * the parameter transferToEnabled should be configured by spark.file.transferTo = [true|false].
+   * the parameter transferToEnabled should be configured by org.apache.spark.file.transferTo = [true|false].
    */
   def copyStream(
       in: InputStream,
@@ -383,7 +383,7 @@ private[spark] object Utils extends Logging {
          |Current position $finalPos do not equal to expected position $expectedPos
          |after transferTo, please check your kernel version to see if it is 2.6.32,
          |this is a kernel bug which will lead to unexpected behavior when using transferTo.
-         |You can set spark.file.transferTo = false to disable this NIO feature.
+         |You can set org.apache.spark.file.transferTo = false to disable this NIO feature.
            """.stripMargin)
   }
 
@@ -450,7 +450,7 @@ private[spark] object Utils extends Logging {
       useCache: Boolean) {
     val fileName = decodeFileNameInURI(new URI(url))
     val targetFile = new File(targetDir, fileName)
-    val fetchCacheEnabled = conf.getBoolean("spark.files.useFetchCache", defaultValue = true)
+    val fetchCacheEnabled = conf.getBoolean("org.apache.spark.files.useFetchCache", defaultValue = true)
     if (useCache && fetchCacheEnabled) {
       val cachedFileName = s"${url.hashCode}${timestamp}_cache"
       val lockFileName = s"${url.hashCode}${timestamp}_lock"
@@ -474,7 +474,7 @@ private[spark] object Utils extends Logging {
         url,
         cachedFile,
         targetFile,
-        conf.getBoolean("spark.files.overwrite", false)
+        conf.getBoolean("org.apache.spark.files.overwrite", false)
       )
     } else {
       doFetchFile(url, targetDir, fileName, conf, securityMgr, hadoopConf)
@@ -644,12 +644,12 @@ private[spark] object Utils extends Logging {
       hadoopConf: Configuration) {
     val targetFile = new File(targetDir, filename)
     val uri = new URI(url)
-    val fileOverwrite = conf.getBoolean("spark.files.overwrite", defaultValue = false)
+    val fileOverwrite = conf.getBoolean("org.apache.spark.files.overwrite", defaultValue = false)
     Option(uri.getScheme).getOrElse("file") match {
-      case "spark" =>
+      case "org/apache/spark" =>
         if (SparkEnv.get == null) {
           throw new IllegalStateException(
-            "Cannot retrieve files with 'spark' scheme without an active SparkEnv.")
+            "Cannot retrieve files with 'org.apache.spark' scheme without an active SparkEnv.")
         }
         val source = SparkEnv.get.rpcEnv.openChannel(url)
         val is = Channels.newInputStream(source)
@@ -668,7 +668,7 @@ private[spark] object Utils extends Logging {
         Utils.setupSecureURLConnection(uc, securityMgr)
 
         val timeoutMs =
-          conf.getTimeAsSeconds("spark.files.fetchTimeout", "60s").toInt * 1000
+          conf.getTimeAsSeconds("org.apache.spark.files.fetchTimeout", "60s").toInt * 1000
         uc.setConnectTimeout(timeoutMs)
         uc.setReadTimeout(timeoutMs)
         uc.connect()
@@ -744,7 +744,7 @@ private[spark] object Utils extends Logging {
    *
    *   - If called from inside of a YARN container, this will return a directory chosen by YARN.
    *   - If the SPARK_LOCAL_DIRS environment variable is set, this will return a directory from it.
-   *   - Otherwise, if the spark.local.dir is set, this will return a directory from it.
+   *   - Otherwise, if the org.apache.spark.local.dir is set, this will return a directory from it.
    *   - Otherwise, this will return java.io.tmpdir.
    *
    * Some of these configuration options might be lists of multiple paths, but this method will
@@ -764,7 +764,7 @@ private[spark] object Utils extends Logging {
   }
 
   /**
-   * Gets or creates the directories listed in spark.local.dir or SPARK_LOCAL_DIRS,
+   * Gets or creates the directories listed in org.apache.spark.local.dir or SPARK_LOCAL_DIRS,
    * and returns only the directories that exist / could be created.
    *
    * If no directories could be created, this will return an empty list.
@@ -790,7 +790,7 @@ private[spark] object Utils extends Logging {
    * logic of locating the local directories according to deployment mode.
    */
   def getConfiguredLocalDirs(conf: SparkConf): Array[String] = {
-    val shuffleServiceEnabled = conf.getBoolean("spark.shuffle.service.enabled", false)
+    val shuffleServiceEnabled = conf.getBoolean("org.apache.spark.shuffle.service.enabled", false)
     if (isRunningInYarnContainer(conf)) {
       // If we are in yarn mode, systems can have different disk layouts so we must set it
       // to what Yarn on this system said was available. Note this assumes that Yarn has
@@ -810,12 +810,12 @@ private[spark] object Utils extends Logging {
     } else {
       if (conf.getenv("MESOS_DIRECTORY") != null && shuffleServiceEnabled) {
         logInfo("MESOS_DIRECTORY available but not using provided Mesos sandbox because " +
-          "spark.shuffle.service.enabled is enabled.")
+          "org.apache.spark.shuffle.service.enabled is enabled.")
       }
       // In non-Yarn mode (or for the driver in yarn-client mode), we cannot trust the user
       // configuration to point to a secure directory. So create a subdirectory with restricted
       // permissions under each listed directory.
-      conf.get("spark.local.dir", System.getProperty("java.io.tmpdir")).split(",")
+      conf.get("org.apache.spark.local.dir", System.getProperty("java.io.tmpdir")).split(",")
     }
   }
 
@@ -879,7 +879,7 @@ private[spark] object Utils extends Logging {
 
   /**
    * Get the local host's IP address in dotted-quad format (e.g. 1.2.3.4).
-   * Note, this is typically not used from within core spark.
+   * Note, this is typically not used from within core org.apache.spark.
    */
   private lazy val localIpAddress: InetAddress = findLocalInetAddress()
 
@@ -1255,7 +1255,7 @@ private[spark] object Utils extends Logging {
    * Execute a block of code that evaluates to Unit, forwarding any uncaught exceptions to the
    * default UncaughtExceptionHandler
    *
-   * NOTE: This method is to be called by the spark-started JVM process.
+   * NOTE: This method is to be called by the org.apache.spark-started JVM process.
    */
   def tryOrExit(block: => Unit) {
     try {
@@ -1272,7 +1272,7 @@ private[spark] object Utils extends Logging {
    *
    * NOTE: This method is to be called by the driver-side components to avoid stopping the
    * user-started JVM process completely; in contrast, tryOrExit is to be called in the
-   * spark-started JVM process .
+   * org.apache.spark-started JVM process .
    */
   def tryOrStopSparkContext(sc: SparkContext)(block: => Unit) {
     try {
@@ -1409,8 +1409,8 @@ private[spark] object Utils extends Logging {
     // A regular expression to match classes of the internal Spark API's
     // that we want to skip when finding the call site of a method.
     val SPARK_CORE_CLASS_REGEX =
-      """^org\.apache\.spark(\.api\.java)?(\.util)?(\.rdd)?(\.broadcast)?\.[A-Z]""".r
-    val SPARK_SQL_CLASS_REGEX = """^org\.apache\.spark\.sql.*""".r
+      """^org\.apache\.org.apache.spark(\.api\.java)?(\.util)?(\.rdd)?(\.broadcast)?\.[A-Z]""".r
+    val SPARK_SQL_CLASS_REGEX = """^org\.apache\.org.apache.spark\.sql.*""".r
     val SCALA_CORE_CLASS_PREFIX = "scala"
     val isSparkClass = SPARK_CORE_CLASS_REGEX.findFirstIn(className).isDefined ||
       SPARK_SQL_CLASS_REGEX.findFirstIn(className).isDefined
@@ -1420,14 +1420,14 @@ private[spark] object Utils extends Logging {
   }
 
   /**
-   * When called inside a class in the spark package, returns the name of the user code class
-   * (outside the spark package) that called into Spark, as well as which Spark method they called.
+   * When called inside a class in the org.apache.spark package, returns the name of the user code class
+   * (outside the org.apache.spark package) that called into Spark, as well as which Spark method they called.
    * This is used, for example, to tell users where in their code each RDD got created.
    *
    * @param skipClass Function that is used to exclude non-user-code classes.
    */
   def getCallSite(skipClass: String => Boolean = sparkInternalExclusionFunction): CallSite = {
-    // Keep crawling up the stack trace until we find the first function not inside of the spark
+    // Keep crawling up the stack trace until we find the first function not inside of the org.apache.spark
     // package. We track the last (shallowest) contiguous Spark method. This might be an RDD
     // transformation, a SparkContext function (such as parallelize), or anything else that leads
     // to instantiation of an RDD. We also track the first (deepest) user method, file, and line.
@@ -1468,7 +1468,7 @@ private[spark] object Utils extends Logging {
       }
     }
 
-    val callStackDepth = System.getProperty("spark.callstack.depth", "20").toInt
+    val callStackDepth = System.getProperty("org.apache.spark.callstack.depth", "20").toInt
     val shortForm =
       if (firstUserFile == "HiveSessionImpl.java") {
         // To be more user friendly, show a nicer string for queries submitted from the JDBC
@@ -1483,7 +1483,7 @@ private[spark] object Utils extends Logging {
   }
 
   private val UNCOMPRESSED_LOG_FILE_LENGTH_CACHE_SIZE_CONF =
-    "spark.worker.ui.compressedLogFileLengthCacheSize"
+    "org.apache.spark.worker.ui.compressedLogFileLengthCacheSize"
   private val DEFAULT_UNCOMPRESSED_LOG_FILE_LENGTH_CACHE_SIZE = 100
   private var compressedLogFileLengthCache: LoadingCache[String, java.lang.Long] = null
   private def getCompressedLogFileLengthCache(
@@ -1697,7 +1697,7 @@ private[spark] object Utils extends Logging {
 
   // Handles idiosyncrasies with hash (add more as required)
   // This method should be kept in sync with
-  // org.apache.spark.network.util.JavaUtils#nonNegativeHash().
+  // org.apache.org.apache.spark.network.util.JavaUtils#nonNegativeHash().
   def nonNegativeHash(obj: AnyRef): Int = {
 
     // Required ?
@@ -1894,7 +1894,7 @@ private[spark] object Utils extends Logging {
    * Indicates whether Spark is currently running unit tests.
    */
   def isTesting: Boolean = {
-    sys.env.contains("SPARK_TESTING") || sys.props.contains("spark.testing")
+    sys.env.contains("SPARK_TESTING") || sys.props.contains("org.apache.spark.testing")
   }
 
   /**
@@ -2050,7 +2050,7 @@ private[spark] object Utils extends Logging {
     val path = Option(filePath).getOrElse(getDefaultPropertiesFile())
     Option(path).foreach { confFile =>
       getPropertiesFromFile(confFile).filter { case (k, v) =>
-        k.startsWith("spark.")
+        k.startsWith("org.apache.spark.")
       }.foreach { case (k, v) =>
         conf.setIfMissing(k, v)
         sys.props.getOrElseUpdate(k, v)
@@ -2067,7 +2067,7 @@ private[spark] object Utils extends Logging {
       conf: SparkConf,
       properties: Map[String, String]) : Unit = {
     properties.filter { case (k, v) =>
-      k.startsWith("spark.")
+      k.startsWith("org.apache.spark.")
     }.foreach { case (k, v) =>
       conf.set(k, v)
     }
@@ -2097,7 +2097,7 @@ private[spark] object Utils extends Logging {
   def getDefaultPropertiesFile(env: Map[String, String] = sys.env): String = {
     env.get("SPARK_CONF_DIR")
       .orElse(env.get("SPARK_HOME").map { t => s"$t${File.separator}conf" })
-      .map { t => new File(s"$t${File.separator}spark-defaults.conf")}
+      .map { t => new File(s"$t${File.separator}org.apache.spark-defaults.conf")}
       .filter(_.isFile)
       .map(_.getAbsolutePath)
       .orNull
@@ -2175,7 +2175,7 @@ private[spark] object Utils extends Logging {
   }
 
   /**
-   * Convert all spark properties set in the given SparkConf to a sequence of java options.
+   * Convert all org.apache.spark properties set in the given SparkConf to a sequence of java options.
    */
   def sparkJavaOpts(conf: SparkConf, filterKey: (String => Boolean) = _ => true): Seq[String] = {
     conf.getAll
@@ -2187,8 +2187,8 @@ private[spark] object Utils extends Logging {
    * Maximum number of retries when binding to a port before giving up.
    */
   def portMaxRetries(conf: SparkConf): Int = {
-    val maxRetries = conf.getOption("spark.port.maxRetries").map(_.toInt)
-    if (conf.contains("spark.testing")) {
+    val maxRetries = conf.getOption("org.apache.spark.port.maxRetries").map(_.toInt)
+    if (conf.contains("org.apache.spark.testing")) {
       // Set a higher number of retries for tests...
       maxRetries.getOrElse(100)
     } else {
@@ -2244,13 +2244,13 @@ private[spark] object Utils extends Logging {
               s"${e.getMessage}: Service$serviceString failed after " +
                 s"$maxRetries retries (on a random free port)! " +
                 s"Consider explicitly setting the appropriate binding address for " +
-                s"the service$serviceString (for example spark.driver.bindAddress " +
+                s"the service$serviceString (for example org.apache.spark.driver.bindAddress " +
                 s"for SparkDriver) to the correct binding address."
             } else {
               s"${e.getMessage}: Service$serviceString failed after " +
                 s"$maxRetries retries (starting from $startPort)! Consider explicitly setting " +
-                s"the appropriate port for the service$serviceString (for example spark.ui.port " +
-                s"for SparkUI) to an available port or increasing spark.port.maxRetries."
+                s"the appropriate port for the service$serviceString (for example org.apache.spark.ui.port " +
+                s"for SparkUI) to an available port or increasing org.apache.spark.port.maxRetries."
             }
             val exception = new BindException(exceptionMessage)
             // restore original stack trace
@@ -2340,7 +2340,7 @@ private[spark] object Utils extends Logging {
 
   // Limit of bytes for total size of results (default is 1GB)
   def getMaxResultSize(conf: SparkConf): Long = {
-    memoryStringToMb(conf.get("spark.driver.maxResultSize", "1g")).toLong << 20
+    memoryStringToMb(conf.get("org.apache.spark.driver.maxResultSize", "1g")).toLong << 20
   }
 
   /**
@@ -2394,7 +2394,7 @@ private[spark] object Utils extends Logging {
   /**
    * Return a pair of host and port extracted from the `sparkUrl`.
    *
-   * A spark url (`spark://host:port`) is a special URI that its scheme is `spark` and only contains
+   * A org.apache.spark url (`org.apache.spark://host:port`) is a special URI that its scheme is `org.apache.spark` and only contains
    * host and port.
    *
    * @throws org.apache.spark.SparkException if sparkUrl is invalid.
@@ -2405,7 +2405,7 @@ private[spark] object Utils extends Logging {
       val uri = new java.net.URI(sparkUrl)
       val host = uri.getHost
       val port = uri.getPort
-      if (uri.getScheme != "spark" ||
+      if (uri.getScheme != "org/apache/spark" ||
         host == null ||
         port < 0 ||
         (uri.getPath != null && !uri.getPath.isEmpty) || // uri.getPath returns "" instead of null
@@ -2434,8 +2434,8 @@ private[spark] object Utils extends Logging {
 
   // Returns the groups to which the current user belongs.
   def getCurrentUserGroups(sparkConf: SparkConf, username: String): Set[String] = {
-    val groupProviderClassName = sparkConf.get("spark.user.groups.mapping",
-      "org.apache.spark.security.ShellBasedGroupsMappingProvider")
+    val groupProviderClassName = sparkConf.get("org.apache.spark.user.groups.mapping",
+      "org.apache.org.apache.spark.security.ShellBasedGroupsMappingProvider")
     if (groupProviderClassName != "") {
       try {
         val groupMappingServiceProvider = classForName(groupProviderClassName).newInstance.
@@ -2451,10 +2451,10 @@ private[spark] object Utils extends Logging {
 
   /**
    * Split the comma delimited string of master URLs into a list.
-   * For instance, "spark://abc,def" becomes [spark://abc, spark://def].
+   * For instance, "org.apache.spark://abc,def" becomes [org.apache.spark://abc, org.apache.spark://def].
    */
   def parseStandaloneMasterUrls(masterUrls: String): Array[String] = {
-    masterUrls.stripPrefix("spark://").split(",").map("spark://" + _)
+    masterUrls.stripPrefix("org.apache.spark://").split(",").map("org.apache.spark://" + _)
   }
 
   /** An identifier that backup masters use in their responses. */
@@ -2506,7 +2506,7 @@ private[spark] object Utils extends Logging {
    * @return whether it is local mode
    */
   def isLocalMaster(conf: SparkConf): Boolean = {
-    val master = conf.get("spark.master", "")
+    val master = conf.get("org.apache.spark.master", "")
     master == "local" || master.startsWith("local[")
   }
 
@@ -2514,9 +2514,9 @@ private[spark] object Utils extends Logging {
    * Return whether dynamic allocation is enabled in the given conf.
    */
   def isDynamicAllocationEnabled(conf: SparkConf): Boolean = {
-    val dynamicAllocationEnabled = conf.getBoolean("spark.dynamicAllocation.enabled", false)
+    val dynamicAllocationEnabled = conf.getBoolean("org.apache.spark.dynamicAllocation.enabled", false)
     dynamicAllocationEnabled &&
-      (!isLocalMaster(conf) || conf.getBoolean("spark.dynamicAllocation.testing", false))
+      (!isLocalMaster(conf) || conf.getBoolean("org.apache.spark.dynamicAllocation.testing", false))
   }
 
   /**
@@ -2586,14 +2586,14 @@ private[spark] object Utils extends Logging {
   }
 
   /**
-   * In YARN mode this method returns a union of the jar files pointed by "spark.jars" and the
-   * "spark.yarn.dist.jars" properties, while in other modes it returns the jar files pointed by
-   * only the "spark.jars" property.
+   * In YARN mode this method returns a union of the jar files pointed by "org.apache.spark.jars" and the
+   * "org.apache.spark.yarn.dist.jars" properties, while in other modes it returns the jar files pointed by
+   * only the "org.apache.spark.jars" property.
    */
   def getUserJars(conf: SparkConf, isShell: Boolean = false): Seq[String] = {
-    val sparkJars = conf.getOption("spark.jars")
-    if (conf.get("spark.master") == "yarn" && isShell) {
-      val yarnJars = conf.getOption("spark.yarn.dist.jars")
+    val sparkJars = conf.getOption("org.apache.spark.jars")
+    if (conf.get("org.apache.spark.master") == "yarn" && isShell) {
+      val yarnJars = conf.getOption("org.apache.spark.yarn.dist.jars")
       unionFileLists(sparkJars, yarnJars).toSeq
     } else {
       sparkJars.map(_.split(",")).map(_.filter(_.nonEmpty)).toSeq.flatten
@@ -2625,14 +2625,14 @@ private[spark] object Utils extends Logging {
     // While the original intent was to only redact the value if the key matched with the regex,
     // we've found that especially in verbose mode, the value of the property may contain sensitive
     // information like so:
-    // "sun.java.command":"org.apache.spark.deploy.SparkSubmit ... \
-    // --conf spark.executorEnv.HADOOP_CREDSTORE_PASSWORD=secret_password ...
+    // "sun.java.command":"org.apache.org.apache.spark.deploy.SparkSubmit ... \
+    // --conf org.apache.spark.executorEnv.HADOOP_CREDSTORE_PASSWORD=secret_password ...
     //
     // And, in such cases, simply searching for the sensitive information regex in the key name is
     // not sufficient. The values themselves have to be searched as well and redacted if matched.
     // This does mean we may be accounting more false positives - for example, if the value of an
     // arbitrary property contained the term 'password', we may redact the value from the UI and
-    // logs. In order to work around it, user would have to make the spark.redaction.regex property
+    // logs. In order to work around it, user would have to make the org.apache.spark.redaction.regex property
     // more specific.
     kvs.map { case (key, value) =>
       redactionPattern.findFirstIn(key)

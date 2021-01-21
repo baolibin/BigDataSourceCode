@@ -42,11 +42,11 @@ import scala.sys.process._
   * This suite tests the fault tolerance of the Spark standalone scheduler, mainly the Master.
   * In order to mimic a real distributed cluster more closely, Docker is used.
   * Execute using
-  * ./bin/spark-class org.apache.spark.deploy.FaultToleranceTest
+  * ./bin/org.apache.spark-class org.apache.org.apache.spark.deploy.FaultToleranceTest
   *
   * Make sure that the environment includes the following properties in SPARK_DAEMON_JAVA_OPTS:
-  *   - spark.deploy.recoveryMode=ZOOKEEPER
-  *   - spark.deploy.zookeeper.url=172.17.42.1:2181
+  *   - org.apache.spark.deploy.recoveryMode=ZOOKEEPER
+  *   - org.apache.spark.deploy.zookeeper.url=172.17.42.1:2181
   * Note that 172.17.42.1 is the default docker ip for the host and 2181 is the default ZK port.
   *
   * In case of failure, make sure to kill off prior docker containers before restarting:
@@ -55,26 +55,26 @@ import scala.sys.process._
   * Unfortunately, due to the Docker dependency this suite cannot be run automatically without a
   * working installation of Docker. In addition to having Docker, the following are assumed:
   *   - Docker can run without sudo (see http://docs.docker.io/en/latest/use/basics/)
-  *   - The docker images tagged spark-test-master and spark-test-worker are built from the
-  * docker/ directory. Run 'docker/spark-test/build' to generate these.
+  *   - The docker images tagged org.apache.spark-test-master and org.apache.spark-test-worker are built from the
+  * docker/ directory. Run 'docker/org.apache.spark-test/build' to generate these.
   */
 private object FaultToleranceTest extends App with Logging {
 
     private val conf = new SparkConf()
-    private val ZK_DIR = conf.get("spark.deploy.zookeeper.dir", "/spark")
+    private val ZK_DIR = conf.get("org.apache.spark.deploy.zookeeper.dir", "/org/apache/spark")
 
     private val masters = ListBuffer[TestMasterInfo]()
     private val workers = ListBuffer[TestWorkerInfo]()
     private val zk = SparkCuratorUtil.newClient(conf)
     private val sparkHome = System.getenv("SPARK_HOME")
-    private val containerSparkHome = "/opt/spark"
+    private val containerSparkHome = "/opt/org.apache.spark"
     private val dockerMountDir = "%s:%s".format(sparkHome, containerSparkHome)
     private var sc: SparkContext = _
     assertTrue(sparkHome != null, "Run with a valid SPARK_HOME")
     private var numPassed = 0
     private var numFailed = 0
 
-    System.setProperty("spark.driver.host", "172.17.42.1") // default docker host ip
+    System.setProperty("org.apache.spark.driver.host", "172.17.42.1") // default docker host ip
 
     private def test(name: String)(fn: => Unit) {
         try {
@@ -223,12 +223,12 @@ private object FaultToleranceTest extends App with Logging {
         }
         // Counter-hack: Because of a hack in SparkEnv#create() that changes this
         // property, we need to reset it.
-        System.setProperty("spark.driver.port", "0")
+        System.setProperty("org.apache.spark.driver.port", "0")
         sc = new SparkContext(getMasterUrls(masters), "fault-tolerance", containerSparkHome)
     }
 
     private def getMasterUrls(masters: Seq[TestMasterInfo]): String = {
-        "spark://" + masters.map(master => master.ip + ":7077").mkString(",")
+        "org.apache.spark://" + masters.map(master => master.ip + ":7077").mkString(",")
     }
 
     private def killLeader(): Unit = {
@@ -398,7 +398,7 @@ private class TestWorkerInfo(val ip: String, val dockerId: DockerId, val logFile
 
 private object SparkDocker {
     def startMaster(mountDir: String): TestMasterInfo = {
-        val cmd = Docker.makeRunCmd("spark-test-master", mountDir = mountDir)
+        val cmd = Docker.makeRunCmd("org.apache.spark-test-master", mountDir = mountDir)
         val (ip, id, outFile) = startNode(cmd)
         new TestMasterInfo(ip, id, outFile)
     }
@@ -425,7 +425,7 @@ private object SparkDocker {
     }
 
     def startWorker(mountDir: String, masters: String): TestWorkerInfo = {
-        val cmd = Docker.makeRunCmd("spark-test-worker", args = masters, mountDir = mountDir)
+        val cmd = Docker.makeRunCmd("org.apache.spark-test-worker", args = masters, mountDir = mountDir)
         val (ip, id, outFile) = startNode(cmd)
         new TestWorkerInfo(ip, id, outFile)
     }

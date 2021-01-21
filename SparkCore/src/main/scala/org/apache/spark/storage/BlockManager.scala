@@ -146,7 +146,7 @@ private[spark] class BlockManager(
         new DiskBlockManager(conf, deleteFilesOnStop)
     }
     private[spark] val externalShuffleServiceEnabled =
-        conf.getBoolean("spark.shuffle.service.enabled", false)
+        conf.getBoolean("org.apache.spark.shuffle.service.enabled", false)
     // Visible for testing
     private[storage] val blockInfoManager = new BlockInfoManager
 
@@ -169,12 +169,12 @@ private[spark] class BlockManager(
     // Port used by the external shuffle service. In Yarn mode, this may be already be
     // set through the Hadoop configuration as the server is launched in the Yarn NM.
     private val externalShuffleServicePort = {
-        val tmpPort = Utils.getSparkOrYarnConfig(conf, "spark.shuffle.service.port", "7337").toInt
+        val tmpPort = Utils.getSparkOrYarnConfig(conf, "org.apache.spark.shuffle.service.port", "7337").toInt
         if (tmpPort == 0) {
-            // for testing, we set "spark.shuffle.service.port" to 0 in the yarn config, so yarn finds
-            // an open port.  But we still need to tell our spark apps the right port to use.  So
-            // only if the yarn config has the port set to 0, we prefer the value in the spark config
-            conf.get("spark.shuffle.service.port").toInt
+            // for testing, we set "org.apache.spark.shuffle.service.port" to 0 in the yarn config, so yarn finds
+            // an open port.  But we still need to tell our org.apache.spark apps the right port to use.  So
+            // only if the yarn config has the port set to 0, we prefer the value in the org.apache.spark config
+            conf.get("org.apache.spark.shuffle.service.port").toInt
         } else {
             tmpPort
         }
@@ -189,7 +189,7 @@ private[spark] class BlockManager(
     }
     // Max number of failures before this block manager refreshes the block locations from the driver
     private val maxFailuresBeforeLocationRefresh =
-        conf.getInt("spark.block.failures.beforeLocationRefresh", 5)
+        conf.getInt("org.apache.spark.block.failures.beforeLocationRefresh", 5)
     private val slaveEndpoint = rpcEnv.setupEndpoint(
         "BlockManagerEndpoint" + BlockManager.ID_GENERATOR.next,
         new BlockManagerSlaveEndpoint(rpcEnv, this, mapOutputTracker))
@@ -223,7 +223,7 @@ private[spark] class BlockManager(
 
         blockReplicationPolicy = {
             val priorityClass = conf.get(
-                "spark.storage.replication.policy", classOf[RandomBlockReplicationPolicy].getName)
+                "org.apache.spark.storage.replication.policy", classOf[RandomBlockReplicationPolicy].getName)
             val clazz = Utils.classForName(priorityClass)
             val ret = clazz.newInstance.asInstanceOf[BlockReplicationPolicy]
             logInfo(s"Using $priorityClass for block replication policy")
@@ -477,7 +477,7 @@ private[spark] class BlockManager(
                              serializerInstance: SerializerInstance,
                              bufferSize: Int,
                              writeMetrics: ShuffleWriteMetrics): DiskBlockObjectWriter = {
-        val syncWrites = conf.getBoolean("spark.shuffle.sync", false)
+        val syncWrites = conf.getBoolean("org.apache.spark.shuffle.sync", false)
         new DiskBlockObjectWriter(file, serializerManager, serializerInstance, bufferSize,
             syncWrites, writeMetrics, blockId)
     }
@@ -576,7 +576,7 @@ private[spark] class BlockManager(
       */
     private def getPeers(forceFetch: Boolean): Seq[BlockManagerId] = {
         peerFetchLock.synchronized {
-            val cachedPeersTtl = conf.getInt("spark.storage.cachedPeersTtl", 60 * 1000) // milliseconds
+            val cachedPeersTtl = conf.getInt("org.apache.spark.storage.cachedPeersTtl", 60 * 1000) // milliseconds
             val timeout = System.currentTimeMillis - lastPeerFetchTime > cachedPeersTtl
             if (cachedPeers == null || forceFetch || timeout) {
                 cachedPeers = master.getPeers(blockManagerId).sortBy(_.hashCode)
@@ -598,7 +598,7 @@ private[spark] class BlockManager(
                                  classTag: ClassTag[_],
                                  existingReplicas: Set[BlockManagerId] = Set.empty): Unit = {
 
-        val maxReplicationFailures = conf.getInt("spark.storage.maxReplicationFailures", 1)
+        val maxReplicationFailures = conf.getInt("org.apache.spark.storage.maxReplicationFailures", 1)
         val tLevel = StorageLevel(
             useDisk = level.useDisk,
             useMemory = level.useMemory,

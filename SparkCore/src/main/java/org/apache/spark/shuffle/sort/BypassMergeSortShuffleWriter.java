@@ -62,7 +62,7 @@ import org.apache.spark.util.Utils;
  *    <li>no Ordering is specified,</li>
  *    <li>no Aggregator is specified, and</li>
  *    <li>the number of partitions is less than
- *      <code>spark.shuffle.sort.bypassMergeThreshold</code>.</li>
+ *      <code>org.apache.spark.shuffle.sort.bypassMergeThreshold</code>.</li>
  * </ul>
  *
  * This code used to be part of {@link org.apache.spark.util.collection.ExternalSorter} but was
@@ -106,8 +106,8 @@ final class BypassMergeSortShuffleWriter<K, V> extends ShuffleWriter<K, V> {
       TaskContext taskContext,
       SparkConf conf) {
     // Use getSizeAsKb (not bytes) to maintain backwards compatibility if no units are provided
-    this.fileBufferSize = (int) conf.getSizeAsKb("spark.shuffle.file.buffer", "32k") * 1024;
-    this.transferToEnabled = conf.getBoolean("spark.file.transferTo", true);
+    this.fileBufferSize = (int) conf.getSizeAsKb("org.apache.spark.shuffle.file.buffer", "32k") * 1024;
+    this.transferToEnabled = conf.getBoolean("org.apache.spark.file.transferTo", true);
     this.blockManager = blockManager;
     final ShuffleDependency<K, V, V> dep = handle.dependency();
     this.mapId = mapId;

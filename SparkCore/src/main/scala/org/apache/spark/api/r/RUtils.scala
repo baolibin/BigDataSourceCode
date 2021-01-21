@@ -23,15 +23,15 @@ import java.util.Arrays
 import org.apache.spark.{SparkEnv, SparkException}
 
 private[spark] object RUtils {
-  // Local path where R binary packages built from R source code contained in the spark
+  // Local path where R binary packages built from R source code contained in the org.apache.spark
   // packages specified with "--packages" or "--jars" command line option reside.
   var rPackages: Option[String] = None
 
   /**
-   * Get the SparkR package path in the local spark distribution.
+   * Get the SparkR package path in the local org.apache.spark distribution.
    */
   def localSparkRPackagePath: Option[String] = {
-    val sparkHome = sys.env.get("SPARK_HOME").orElse(sys.props.get("spark.test.home"))
+    val sparkHome = sys.env.get("SPARK_HOME").orElse(sys.props.get("org.apache.spark.test.home"))
     sparkHome.map(
       Seq(_, "R", "lib").mkString(File.separator)
     )
@@ -52,16 +52,16 @@ private[spark] object RUtils {
    * part of Spark Packages, if any exist. Spark Packages can be provided through the
    *  "--packages" or "--jars" command line options.
    *
-   * This assumes that Spark properties `spark.master` and `spark.submit.deployMode`
+   * This assumes that Spark properties `org.apache.spark.master` and `org.apache.spark.submit.deployMode`
    * and environment variable `SPARK_HOME` are set.
    */
   def sparkRPackagePath(isDriver: Boolean): Seq[String] = {
     val (master, deployMode) =
       if (isDriver) {
-        (sys.props("spark.master"), sys.props("spark.submit.deployMode"))
+        (sys.props("org.apache.spark.master"), sys.props("org.apache.spark.submit.deployMode"))
       } else {
         val sparkConf = SparkEnv.get.conf
-        (sparkConf.get("spark.master"), sparkConf.get("spark.submit.deployMode", "client"))
+        (sparkConf.get("org.apache.spark.master"), sparkConf.get("org.apache.spark.submit.deployMode", "client"))
       }
 
     val isYarnCluster = master != null && master.contains("yarn") && deployMode == "cluster"
