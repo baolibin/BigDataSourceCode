@@ -34,7 +34,7 @@
     <properties>
         <sbt.project.name>sql</sbt.project.name>
         <scala.binary.version>2.11</scala.binary.version>
-        <fasterxml.jackson.version>2.6.5</fasterxml.jackson.version>
+        <fasterxml.jackson.version>2.9.10.7</fasterxml.jackson.version>
         <parquet.version>1.8.2</parquet.version>
         <hive.parquet.version>1.6.0</hive.parquet.version>
     </properties>
