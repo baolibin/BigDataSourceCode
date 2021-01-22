@@ -21,27 +21,33 @@ import org.apache.spark.annotation.{DeveloperApi, InterfaceStability}
 import org.apache.spark.sql.execution.SparkStrategy
 
 /**
- * Allows the execution of relational queries, including those expressed in SQL using Spark.
- *
- *  @groupname dataType Data types
- *  @groupdesc Spark SQL data types.
- *  @groupprio dataType -3
- *  @groupname field Field
- *  @groupprio field -2
- *  @groupname row Row
- *  @groupprio row -1
- */
+  * 允许执行关系查询，包括使用Spark在SQL中表示的查询。
+  *
+  * Allows the execution of relational queries, including those expressed in SQL using Spark.
+  *
+  * @groupname dataType Data types
+  * @groupdesc Spark SQL data types.
+  * @groupprio dataType -3
+  * @groupname field Field
+  * @groupprio field -2
+  * @groupname row Row
+  * @groupprio row -1
+  */
 package object sql {
 
-  /**
-   * Converts a logical plan into zero or more SparkPlans.  This API is exposed for experimenting
-   * with the query planner and is not designed to be stable across spark releases.  Developers
-   * writing libraries should instead consider using the stable APIs provided in
-   * [[org.apache.spark.sql.sources]]
-   */
-  @DeveloperApi
-  @InterfaceStability.Unstable
-  type Strategy = SparkStrategy
+    /**
+      * 将逻辑计划转换为零个或多个SparkPlan。
+      * 这个API是为了试验queryplanner而公开的，并不是为了在spark版本中保持稳定而设计的。
+      * 编写库的开发人员应该考虑使用中提供的稳定api[[org.apache.spark.sql.sources]]
+      *
+      * Converts a logical plan into zero or more SparkPlans.  This API is exposed for experimenting
+      * with the query planner and is not designed to be stable across spark releases.  Developers
+      * writing libraries should instead consider using the stable APIs provided in
+      * [[org.apache.spark.sql.sources]]
+      */
+    @DeveloperApi
+    @InterfaceStability.Unstable
+    type Strategy = SparkStrategy
 
-  type DataFrame = Dataset[Row]
+    type DataFrame = Dataset[Row]
 }

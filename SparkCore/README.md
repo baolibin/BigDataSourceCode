@@ -3,7 +3,7 @@
     包括部署Deploy模块、执行Executor模块、内存Memory模块、调度Scheduler模块、经典的Shuffle模块、存储Storage模块等等。
 
 ##### 1、Deploy模块源码
-> [deploy源码](src2/main/scala/org/apache/spark/deploy)
+> [deploy源码](src/main/org/apache/spark/deploy)
 * Client：在standalone cluster模式中，启动和终止执行程序的驱动器。
 * ClientArguments：驱动程序客户端的命令行解析器。
 * DeployMessages：包含在调度程序终结点节点之间发送的消息。
@@ -22,7 +22,7 @@
 
 -----
 ##### 2、Executor模块源码
-> [executor源码](src2/main/scala/org/apache/spark/executor)：与各种集群管理器一起使用的Executor组件。
+> [executor源码](src/main/scala/org/apache/spark/executor)：与各种集群管理器一起使用的Executor组件。
 * CoarseGrainedExecutorBackend：在worker中为app启动executor的jvm进程
 * CommitDeniedException：当任务尝试将输出提交到HDFS但被驱动程序拒绝时引发异常。
 * Executor：Spark executor，由线程池支持以运行任务。
@@ -37,7 +37,7 @@
 
 -----
 ##### 3、Memory模块源码
-> [memory源码](src2/main/scala/org/apache/spark/memory)：
+> [memory源码](src/main/scala/org/apache/spark/memory)：
 >**这个软件包实现了Spark的内存管理系统。这个系统由两个主要组件组成，一个JVM范围的内存管理器和一个每个任务的内存管理器。**
 * MemoryManager：一种抽象内存管理器，用于施行execution和storage之间如何共享内存。
     - StaticMemoryManager：静态内存管理，它将堆空间静态地划分为不相交的区域。一种[[MemoryManager]]。
@@ -48,7 +48,7 @@
 
 -----
 ##### 4、Scheduler模块源码
-> [scheduler源码](src2/main/scala/org/apache/spark/scheduler)：Spark的调度组件。这包括`DAGScheduler`以及lower level级别的`TaskScheduler`。
+> [scheduler源码](src/main/scala/org/apache/spark/scheduler)：Spark的调度组件。这包括`DAGScheduler`以及lower level级别的`TaskScheduler`。
 * cluster：
     - CoarseGrainedClusterMessage：粗粒度的集群消息。
     - CoarseGrainedSchedulerBackend：等待粗粒度executors连接的调度程序后端。
@@ -103,7 +103,7 @@
 
 -----
 ##### 5、Shuffle模块源码
-> [shuffle源码](src2/main/scala/org/apache/spark/shuffle)
+> [shuffle源码](src/main/scala/org/apache/spark/shuffle)
 * ShuffleManager：shuffle系统的可插拔接口。在SparkEnv中，在driver和每个executor上创建一个ShuffleManager。
 基于spark.shuffle.manager设置，driver向它注册shuffle，executors（或在driver中本地运行的任务）可以请求读写数据。
     - SortShuffleManager：在基于排序的shuffle中，传入的记录根据其目标分区ID进行排序，然后写入单个映射输出文件。
@@ -124,7 +124,7 @@ Reducers获取此文件的连续区域，以便读取其映射输出部分。
 
 -----
 ##### 6、Storage模块源码
-> [storage源码](src2/main/scala/org/apache/spark/storage)
+> [storage源码](src/main/scala/org/apache/spark/storage)
 * MemoryStore：将块存储在内存中，可以是反序列化Java对象的数组，也可以是序列化ByteBuffers。
 * BlockId：标识特定的数据块，通常与单个文件关联。
 * BlockManager：在每个节点（驱动程序和执行程序）上运行的管理器，它提供接口，用于在本地和远程将块放入和检索到各种存储（内存、磁盘和堆外）。
@@ -154,7 +154,7 @@ Reducers获取此文件的连续区域，以便读取其映射输出部分。
 
 -----
 ##### 7、Util模块源码
-> [util源码](src2/main/scala/org/apache/spark/util)： Spark实用程序。
+> [util源码](src/main/scala/org/apache/spark/util)： Spark实用程序。
 1. util
     1. collection
         1. Sorter：Java实现[[TimSort]]上的简单包装器。Java实现是包私有的，因此不能在包外调用它org.apache.spark网站.使用集合. 这是一个可用于spark的简单包装。
@@ -168,7 +168,7 @@ Reducers获取此文件的连续区域，以便读取其映射输出部分。
 
 -----
 ##### 8、核心Spark功能模块源码
-> [核心Spark功能模块源码](src2/main/scala/org/apache/spark)： 核心Spark功能，[[org.apache.org.apache.spark.SparkContext]]是Spark的主要入口，而[[org.apache.org.apache.spark.rdd。rdd]]表示分布式集合的数据类型，并提供大多数并行操作。
+> [核心Spark功能模块源码](src/main/scala/org/apache/spark)： 核心Spark功能，[[org.apache.org.apache.spark.SparkContext]]是Spark的主要入口，而[[org.apache.org.apache.spark.rdd。rdd]]表示分布式集合的数据类型，并提供大多数并行操作。
 * Accumulable：一种可以累加的数据类型，即有一个可交换的和相联的“加法”运算，但结果类型“R”可能与所加的元素类型“T”不同。该操作不是线程安全的。 
 * Accumulator：一个更简单的值[[Accumulable]]，其中累加的结果类型与合并的元素类型相同，即仅通过关联和交换操作“添加”到的变量，因此可以有效地并行支持。
 * Aggregator：用于聚合数据的一组函数。
@@ -201,7 +201,7 @@ Reducers获取此文件的连续区域，以便读取其映射输出部分。
 
 -----
 ##### 9、RDD源码
-> [RDD源码](src2/main/scala/org/apache/spark/rdd)：提供各种RDD的实现。
+> [RDD源码](src/main/scala/org/apache/spark/rdd)：提供各种RDD的实现。
 * util：工具类
     - PeriodicRDDCheckpointer：这个类帮助持久化和检查点rdd。
 * AsyncRDDActions：通过隐式转换提供的一组异步RDD操作。
@@ -243,11 +243,11 @@ Reducers获取此文件的连续区域，以便读取其映射输出部分。
 
 -----
 ##### 10、Rpc通信源码
-> [Rpc通信源码](src2/main/scala/org/apache/spark/rpc)：
+> [Rpc通信源码](src/main/scala/org/apache/spark/rpc)：
 * ：
 * ：
 
 -----
 ##### 11、IO源码
-> [IO源码](src2/main/scala/org/apache/spark/io)：
+> [IO源码](src/main/scala/org/apache/spark/io)：
 
