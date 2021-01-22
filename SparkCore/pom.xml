@@ -34,6 +34,10 @@
 
     <properties>
         <sbt.project.name>core</sbt.project.name>
+        <scala.binary.version>2.11</scala.binary.version>
+        <avro.mapred.classifier>hadoop2</avro.mapred.classifier>
+        <javaxservlet.version>3.1.0</javaxservlet.version>
+        <oro.version>2.0.8</oro.version>
     </properties>
 
     <dependencies>
@@ -384,13 +388,13 @@
                         <phase>generate-resources</phase>
                         <configuration>
                             <!-- Execute the shell script to generate the org.apache.spark build information. -->
-                            <target>
+                            <!--<target>
                                 <exec executable="bash">
                                     <arg value="${project.basedir}/../build/org.apache.spark-build-info"/>
                                     <arg value="${project.build.directory}/extra-resources"/>
                                     <arg value="${project.version}"/>
                                 </exec>
-                            </target>
+                            </target>-->
                         </configuration>
                         <goals>
                             <goal>run</goal>
