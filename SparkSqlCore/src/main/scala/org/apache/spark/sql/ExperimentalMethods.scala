@@ -22,34 +22,36 @@ import org.apache.spark.sql.catalyst.plans.logical.LogicalPlan
 import org.apache.spark.sql.catalyst.rules.Rule
 
 /**
- * :: Experimental ::
- * Holder for experimental methods for the bravest. We make NO guarantee about the stability
- * regarding binary compatibility and source compatibility of methods here.
- *
- * {{{
- *   spark.experimental.extraStrategies += ...
- * }}}
- *
- * @since 1.3.0
- */
+  * 最勇敢的实验方法的持有者。我们不能保证方法的二进制兼容性和源代码兼容性的稳定性。
+  *
+  * :: Experimental ::
+  * Holder for experimental methods for the bravest. We make NO guarantee about the stability
+  * regarding binary compatibility and source compatibility of methods here.
+  *
+  * {{{
+  *   spark.experimental.extraStrategies += ...
+  * }}}
+  *
+  * @since 1.3.0
+  */
 @Experimental
 @InterfaceStability.Unstable
 class ExperimentalMethods private[sql]() {
 
-  /**
-   * Allows extra strategies to be injected into the query planner at runtime.  Note this API
-   * should be considered experimental and is not intended to be stable across releases.
-   *
-   * @since 1.3.0
-   */
-  @volatile var extraStrategies: Seq[Strategy] = Nil
+    /**
+      * Allows extra strategies to be injected into the query planner at runtime.  Note this API
+      * should be considered experimental and is not intended to be stable across releases.
+      *
+      * @since 1.3.0
+      */
+    @volatile var extraStrategies: Seq[Strategy] = Nil
 
-  @volatile var extraOptimizations: Seq[Rule[LogicalPlan]] = Nil
+    @volatile var extraOptimizations: Seq[Rule[LogicalPlan]] = Nil
 
-  override def clone(): ExperimentalMethods = {
-    val result = new ExperimentalMethods
-    result.extraStrategies = extraStrategies
-    result.extraOptimizations = extraOptimizations
-    result
-  }
+    override def clone(): ExperimentalMethods = {
+        val result = new ExperimentalMethods
+        result.extraStrategies = extraStrategies
+        result.extraOptimizations = extraOptimizations
+        result
+    }
 }
