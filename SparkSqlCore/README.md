@@ -1,4 +1,3 @@
-
 #### org.apache.spark sql源码阅读
     SparkSQL模块源码阅读，版本2.2。
 
@@ -28,4 +27,18 @@
 ##### 2、Util模块源码
 > [核心SparkSQL功能模块源码](src/main/scala/org/apache/spark/sql/util)：查询异常监听器。
 * QueryExecutionListener：查询执行监听器的接口，可用于分析执行度量。
+
+-----
+##### 3、Expressions功能模块源码
+> [expressions功能模块源码](src/main/scala/org/apache/spark/sql/expressions):
+* scalalang
+    - typed：Scala中可用于“Dataset”操作的类型安全函数。
+* Aggregator：于用户定义聚合的基类，可在“数据集”操作中使用，以获取组中的所有元素并将其缩减为单个值。
+* ReduceAggregator：一种聚合器，它使用一个结合的和可交换的归约函数。此reduce函数可用于遍历所有输入值，并将它们缩减为单个值。
+* UserDefinedAggregateFunction(udaf)：实现用户定义聚合函数UDAF(user-defined aggregate functions)的基类。
+* UserDefinedFunction：用户定义的函数。要创建一个，请使用“functions”中的“udf”函数。
+* Window：用于在DataFrames中定义窗口的实用函数。
+* WindowSpec：定义分区、排序和frame边界的窗口规范。
+
+
 
