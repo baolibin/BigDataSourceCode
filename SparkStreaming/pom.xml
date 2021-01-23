@@ -15,7 +15,7 @@
         <scala.version>2.11.8</scala.version>
         <scala.binary.version>2.11</scala.binary.version>
         <sbt.project.name>streaming</sbt.project.name>
-        <jetty.version>9.3.11.v20160721</jetty.version>
+        <jetty.version>11.0.0</jetty.version>
         <selenium.version>2.52.0</selenium.version>
     </properties>
 
