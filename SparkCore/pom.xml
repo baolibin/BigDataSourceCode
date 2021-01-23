@@ -50,7 +50,7 @@
         <selenium.version>2.52.0</selenium.version>
         <ivy.version>2.4.0</ivy.version>
         <derby.version>10.12.1.1</derby.version>
-        <fasterxml.jackson.version>2.6.5</fasterxml.jackson.version>
+        <fasterxml.jackson.version>2.12.1</fasterxml.jackson.version>
         <codahale.metrics.version>3.1.2</codahale.metrics.version>
         <jersey.version>2.22.2</jersey.version>
         <scala.version>2.11.8</scala.version>
