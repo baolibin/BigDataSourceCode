@@ -18,6 +18,8 @@
 package org.apache.spark.sql
 
 /**
- * Contains API classes that are specific to a single language (i.e. Java).
- */
+  * 包含特定于单一语言（即Java）的API类。
+  *
+  * Contains API classes that are specific to a single language (i.e. Java).
+  */
 package object api

@@ -4,7 +4,7 @@
 
 -----
 ##### 1、核心SparkSQL功能模块源码
-> [核心SparkSQL功能模块源码](src/main/scala/org/apache/spark)： 允许执行关系查询，包括使用Spark在SQL中表示的查询。
+> [核心SparkSQL功能模块源码](src/main/scala/org/apache/spark/sql)： 允许执行关系查询，包括使用Spark在SQL中表示的查询。
 * Column：基于“DataFrame”中的数据计算的列。
 * DataFrameNaFunctions：用于处理“DataFrame”中缺少的数据的功能。
 * DataFrameReader：用于从外部存储系统（如文件系统、键值存储等）加载[[Dataset]]的接口。
@@ -23,4 +23,9 @@
 * SQLContext：Spark 1.x中处理结构化数据（行和列）的入口点。
 * SQLImplicits：用于将常见Scala对象转换为[[Dataset]]的隐式方法的集合。
 * UDFRegistration：用于注册用户定义函数的函数。
+
+-----
+##### 2、Util模块源码
+> [核心SparkSQL功能模块源码](src/main/scala/org/apache/spark/sql/util)：查询异常监听器。
+* QueryExecutionListener：查询执行监听器的接口，可用于分析执行度量。
 

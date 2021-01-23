@@ -21,45 +21,48 @@ import org.apache.spark.sql.catalyst.util.{ArrayData, GenericArrayData}
 import org.apache.spark.sql.types._
 
 /**
- * An example class to demonstrate UDT in Scala, Java, and Python.
- * @param x x coordinate
- * @param y y coordinate
- */
+  * 用Scala、Java和Python演示UDT的示例类。
+  *
+  * An example class to demonstrate UDT in Scala, Java, and Python.
+  *
+  * @param x x coordinate
+  * @param y y coordinate
+  */
 @SQLUserDefinedType(udt = classOf[ExamplePointUDT])
 private[sql] class ExamplePoint(val x: Double, val y: Double) extends Serializable {
 
-  override def hashCode(): Int = 31 * (31 * x.hashCode()) + y.hashCode()
+    override def hashCode(): Int = 31 * (31 * x.hashCode()) + y.hashCode()
 
-  override def equals(other: Any): Boolean = other match {
-    case that: ExamplePoint => this.x == that.x && this.y == that.y
-    case _ => false
-  }
+    override def equals(other: Any): Boolean = other match {
+        case that: ExamplePoint => this.x == that.x && this.y == that.y
+        case _ => false
+    }
 }
 
 /**
- * User-defined type for [[ExamplePoint]].
- */
+  * User-defined type for [[ExamplePoint]].
+  */
 private[sql] class ExamplePointUDT extends UserDefinedType[ExamplePoint] {
 
-  override def sqlType: DataType = ArrayType(DoubleType, false)
+    override def sqlType: DataType = ArrayType(DoubleType, false)
 
-  override def pyUDT: String = "pyspark.sql.tests.ExamplePointUDT"
+    override def pyUDT: String = "pyspark.sql.tests.ExamplePointUDT"
 
-  override def serialize(p: ExamplePoint): GenericArrayData = {
-    val output = new Array[Any](2)
-    output(0) = p.x
-    output(1) = p.y
-    new GenericArrayData(output)
-  }
-
-  override def deserialize(datum: Any): ExamplePoint = {
-    datum match {
-      case values: ArrayData =>
-        new ExamplePoint(values.getDouble(0), values.getDouble(1))
+    override def serialize(p: ExamplePoint): GenericArrayData = {
+        val output = new Array[Any](2)
+        output(0) = p.x
+        output(1) = p.y
+        new GenericArrayData(output)
     }
-  }
 
-  override def userClass: Class[ExamplePoint] = classOf[ExamplePoint]
+    override def deserialize(datum: Any): ExamplePoint = {
+        datum match {
+            case values: ArrayData =>
+                new ExamplePoint(values.getDouble(0), values.getDouble(1))
+        }
+    }
 
-  private[spark] override def asNullable: ExamplePointUDT = this
+    override def userClass: Class[ExamplePoint] = classOf[ExamplePoint]
+
+    private[spark] override def asNullable: ExamplePointUDT = this
 }
