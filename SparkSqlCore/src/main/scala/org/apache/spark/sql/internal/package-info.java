@@ -16,6 +16,8 @@
  */
 
 /**
+ * 这个包中的所有类都被认为是Spark的内部API，并且在小版本之间可能会发生更改。
+ * <p>
  * All classes in this package are considered an internal API to Spark and
  * are subject to change between minor releases.
  */
