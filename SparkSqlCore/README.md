@@ -15,5 +15,12 @@
 * ExperimentalMethods：最勇敢的实验方法的持有者。我们不能保证方法的二进制兼容性和源代码兼容性的稳定性。
 * ForeachWriter：使用“StreamingQuery”生成的数据的类。通常，这用于将生成的数据发送到外部系统。
 * functions：可用于DataFrame操作的函数。
-* ：
+* KeyValueGroupedDataset：[[Dataset]]已按用户指定的分组键进行逻辑分组。
+* RelationalGroupedDataset：在“DataFrame”上进行聚合的一组方法，由`Dataset.groupBy`。
+* RuntimeConfig：Spark的运行时配置接口。要访问此文件，请使用`SparkSession.conf文件`。
+* SparkSession：使用Dataset和DataFrameAPI编程Spark的入口点。
+* SparkSessionExtensions：
+* SQLContext：Spark 1.x中处理结构化数据（行和列）的入口点。
+* SQLImplicits：用于将常见Scala对象转换为[[Dataset]]的隐式方法的集合。
+* UDFRegistration：用于注册用户定义函数的函数。
 
