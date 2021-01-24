@@ -8,6 +8,8 @@
 
 
 
+package scala
+
 /** Throwing this exception can be a temporary replacement for a method
  *  body that remains to be implemented. For instance, the exception is thrown by
  *  `Predef.???`.

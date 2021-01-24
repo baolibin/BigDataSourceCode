@@ -6,6 +6,8 @@
 **                          |/                                          **
 \*                                                                      */
 
+package scala
+
 /** An annotation that designates that inheriting from a class is deprecated.
  *
  *  This is usually done to warn about a non-final class being made final in a future version.

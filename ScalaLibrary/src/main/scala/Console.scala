@@ -6,6 +6,8 @@
 **                          |/                                          **
 \*                                                                      */
 
+package scala
+
 import java.io.{ BufferedReader, InputStream, InputStreamReader, OutputStream, PrintStream, Reader }
 import scala.io.{ AnsiColor, StdIn }
 import scala.util.DynamicVariable

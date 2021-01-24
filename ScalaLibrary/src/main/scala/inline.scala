@@ -8,6 +8,8 @@
 
 
 
+package scala
+
 /**
  * An annotation on methods that requests that the compiler should
  * try especially hard to inline the annotated method.

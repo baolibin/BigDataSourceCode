@@ -8,6 +8,8 @@
 
 
 
+package scala
+
 /**
  * An annotation on methods that forbids the compiler to inline the
  * method, no matter how safe the inlining appears to be.

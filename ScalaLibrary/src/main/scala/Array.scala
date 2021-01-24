@@ -6,6 +6,8 @@
 **                          |/                                          **
 \*                                                                      */
 
+package scala
+
 import scala.collection.generic._
 import scala.collection.{ mutable, immutable }
 import mutable.{ ArrayBuilder, ArraySeq }

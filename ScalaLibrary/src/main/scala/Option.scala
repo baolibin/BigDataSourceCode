@@ -6,6 +6,8 @@
 **                          |/                                          **
 \*                                                                      */
 
+package scala
+
 object Option {
 
   import scala.language.implicitConversions

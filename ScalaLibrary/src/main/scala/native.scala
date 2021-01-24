@@ -8,6 +8,8 @@
 
 
 
+package scala
+
 /** Marker for native methods.
   *
   * {{{

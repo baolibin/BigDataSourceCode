@@ -6,6 +6,8 @@
 **                          |/                                          **
 \*                                                                      */
 
+package scala
+
 /** An interface containing operations for equality.
  *  The only method not already present in class `AnyRef` is `canEqual`.
  */

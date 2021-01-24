@@ -7,6 +7,9 @@
 \*                                                                      */
 // GENERATED CODE: DO NOT EDIT. See scala.Function0 for timestamp.
 
+package scala
+
+
 /** A function of 1 parameter.
  *  
  *  In the following example, the definition of succ is a

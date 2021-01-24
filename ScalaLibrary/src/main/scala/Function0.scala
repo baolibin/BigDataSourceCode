@@ -8,6 +8,9 @@
 // GENERATED CODE: DO NOT EDIT.
 // genprod generated these sources at: Mon Jun 08 18:05:40 CEST 2015
 
+package scala
+
+
 /** A function of 0 parameters.
  *  
  *  In the following example, the definition of javaVersion is a

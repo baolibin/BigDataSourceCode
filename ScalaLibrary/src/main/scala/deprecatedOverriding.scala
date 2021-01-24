@@ -6,6 +6,8 @@
 **                          |/                                          **
 \*                                                                      */
 
+package scala
+
 /** An annotation that designates that overriding a member is deprecated.
  *
  *  Overriding such a member in  a sub-class then generates a warning.

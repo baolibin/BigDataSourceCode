@@ -6,6 +6,8 @@
 **                          |/                                          **
 \*                                                                      */
 
+package scala
+
 /** Classes and objects (but note, not traits) inheriting the `DelayedInit`
  *  marker trait will have their initialization code rewritten as follows:
  *  `code` becomes `delayedInit(code)`.

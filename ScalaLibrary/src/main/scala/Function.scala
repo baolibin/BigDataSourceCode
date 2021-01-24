@@ -8,6 +8,8 @@
 
 
 
+package scala
+
 /** A module defining utility methods for higher-order functional programming.
  *
  *  @author  Martin Odersky

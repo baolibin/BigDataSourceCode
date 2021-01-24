@@ -6,6 +6,8 @@
 **                          |/                                          **
 \*                                                                      */
 
+package scala
+
 import scala.collection.{ mutable, immutable, generic, SortedSetLike, AbstractSet }
 import java.lang.reflect.{ Modifier, Method => JMethod, Field => JField }
 import scala.reflect.NameTransformer._

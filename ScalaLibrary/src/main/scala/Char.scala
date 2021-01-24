@@ -10,6 +10,8 @@
 // This auto-generated code can be modified in scala.tools.cmd.gen.
 // Afterwards, running tools/codegen-anyvals regenerates this source file.
 
+package scala
+
 /** `Char`, a 16-bit unsigned integer (equivalent to Java's `char` primitive type) is a
  *  subtype of [[scala.AnyVal]]. Instances of `Char` are not
  *  represented by an object in the underlying runtime system.

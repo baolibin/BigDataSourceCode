@@ -6,6 +6,8 @@
 **                          |/                                          **
 \*                                                                      */
 
+package scala
+
 /**
  * Classes extending this trait are cloneable across platforms (Java, .NET).
  */

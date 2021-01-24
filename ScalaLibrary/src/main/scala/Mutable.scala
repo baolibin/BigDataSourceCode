@@ -8,6 +8,8 @@
 
 
 
+package scala
+
 /**
  * A marker trait for mutable data structures such as mutable collections
  *

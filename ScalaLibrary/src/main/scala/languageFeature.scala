@@ -8,6 +8,8 @@
 
 
 
+package scala
+
 import scala.annotation.meta
 
 object languageFeature {

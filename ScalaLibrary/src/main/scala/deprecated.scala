@@ -6,6 +6,8 @@
 **                          |/                                          **
 \*                                                                      */
 
+package scala
+
 import scala.annotation.meta._
 
 /** An annotation that designates that a definition is deprecated.

@@ -6,6 +6,8 @@
 **                          |/                                          **
 \*                                                                      */
 
+package scala
+
 import scala.compat.Platform.currentTime
 import scala.collection.mutable.ListBuffer
 
