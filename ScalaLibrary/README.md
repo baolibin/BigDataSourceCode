@@ -12,7 +12,7 @@
 -----
 ##### 2、核心Scala Library功能模块源码
 > [核心ScalaLibrary功能模块源码](src/main/scala)： 核心Scala类型。它们在没有显式导入的情况下始终可用。
-* ：
+* AnyVal：`AnyVal`是所有“值类型”的根类，它描述在基础主机系统中未实现为对象的值。
 * ：
 * ：
 * ：
