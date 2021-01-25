@@ -13,9 +13,9 @@
 ##### 2、核心Scala Library功能模块源码
 > [核心ScalaLibrary功能模块源码](src/main/scala)： 核心Scala类型。它们在没有显式导入的情况下始终可用。
 * AnyVal：`AnyVal`是所有“值类型”的根类，它描述在基础主机系统中未实现为对象的值。
-* ：
-* ：
-* ：
+* AnyValCompanion：基本类型伴随类的一种常见的超类型。
+* App：“App”特性可用于快速将对象转换为可执行程序。
+* Array：对数组进行操作的实用方法。
 * ：
 * ：
 
