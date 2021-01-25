@@ -9,6 +9,8 @@
 package scala
 
 /**
- * Classes extending this trait are cloneable across platforms (Java, .NET).
- */
+  * 扩展这个特性的类可以跨平台（Java，.NET）克隆。
+  *
+  * Classes extending this trait are cloneable across platforms (Java, .NET).
+  */
 trait Cloneable extends java.lang.Cloneable

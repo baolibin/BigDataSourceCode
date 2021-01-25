@@ -18,8 +18,8 @@
 * Array：对数组进行操作的实用方法。
 * Boolean：`Boolean`（相当于Java的“Boolean”基元类型）是[[[scala.AnyVal]]子类型。
 * Byte：`Byte`，一个8位有符号整数（相当于Java的Byte基元类型）是[[scala.AnyVal]]子类型。
-* ：
-* ：
+* Char：`Char`，一个16位无符号整数（相当于Java的“Char”原语类型）是[[scala.AnyVal]]子类型。
+* Cloneable：扩展这个特性的类可以跨平台（Java，.NET）克隆。
 * ：
 * ：
 * ：
