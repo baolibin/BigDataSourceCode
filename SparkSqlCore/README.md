@@ -24,12 +24,19 @@
 * UDFRegistration：用于注册用户定义函数的函数。
 
 -----
-##### 2、Util模块源码
-> [核心SparkSQL功能模块源码](src/main/scala/org/apache/spark/sql/util)：查询异常监听器。
-* QueryExecutionListener：查询执行监听器的接口，可用于分析执行度量。
+##### 2、Api模块源码
+
 
 -----
-##### 3、Expressions功能模块源码
+##### 3、CataLog模块源码
+
+
+-----
+##### 4、Execution模块源码
+
+
+-----
+##### 5、Expressions模块源码
 > [expressions功能模块源码](src/main/scala/org/apache/spark/sql/expressions):
 * scalalang
     - typed：Scala中可用于“Dataset”操作的类型安全函数。
@@ -41,4 +48,24 @@
 * WindowSpec：定义分区、排序和frame边界的窗口规范。
 
 
+-----
+##### 6、Internal模块源码
+
+
+-----
+##### 7、Jdbc模块源码
+
+
+-----
+##### 8、Sources模块源码
+
+
+-----
+##### 9、Streaming模块源码
+
+
+-----
+##### 10、Util模块源码
+> [核心SparkSQL功能模块源码](src/main/scala/org/apache/spark/sql/util)：查询异常监听器。
+* QueryExecutionListener：查询执行监听器的接口，可用于分析执行度量。
 
