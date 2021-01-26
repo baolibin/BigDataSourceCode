@@ -30,9 +30,10 @@
 * Equals：包含相等操作的接口。类“AnyRef”中唯一不存在的方法是“canEqual”。
 * Float：`Float`，一个32位的IEEE-754浮点数（相当于Java的“Float”原语类型），是[[scala.AnyVal]]子类型。
 * Function：定义高阶函数式程序设计实用方法的模块。
-* ：
-* ：
-* ：
+* Function0：参数为0的函数。
+* inline：
+* Int：`Int`，一个32位有符号整数（相当于Java的“Int”原语类型）是[[scala.AnyVal]]子类型。
+* Long：
 * ：
 * ：
 
