@@ -33,10 +33,35 @@
 * Function0：参数为0的函数。
 * inline：
 * Int：`Int`，一个32位有符号整数（相当于Java的“Int”原语类型）是[[scala.AnyVal]]子类型。
-* Long：
-* ：
-* ：
-
-
+* Long：`Long`，一个64位有符号整数（相当于Java的“Long”原语类型）是[[scala.AnyVal]]子类型。
+* MatchError：
+* Mutable：
+* native：
+* noinline：
+* NotImplementedError：
+* NotNull：
+* Option：
+* PartialFunction：
+* Predef：
+* Product：
+* Product1：
+* Proxy：
+* remote：
+* Responder：
+* Serializable：
+* SerialVersionUID：
+* Short：
+* Specializable：
+* specialized：
+* StringContext：
+* Symbol：
+* throws：
+* transient：
+* Tuple1：
+* unchecked：
+* UninitializedError：
+* UninitializedFieldError：
+* Unit：
+* volatile：
 
 
