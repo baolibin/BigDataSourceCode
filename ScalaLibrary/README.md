@@ -20,10 +20,10 @@
 * Byte：`Byte`，一个8位有符号整数（相当于Java的Byte基元类型）是[[scala.AnyVal]]子类型。
 * Char：`Char`，一个16位无符号整数（相当于Java的“Char”原语类型）是[[scala.AnyVal]]子类型。
 * Cloneable：扩展这个特性的类可以跨平台（Java，.NET）克隆。
-* ：
-* ：
-* ：
-* ：
+* deprecated：一种注释，指明某个定义已被否决。对成员的访问将生成一个不推荐使用的警告。
+* deprecatedInheritance：不推荐使用指定从类继承的注释。
+* deprecatedName：一种注释，将应用该注释的参数的名称指定为已弃用。在命名参数中使用该名称将生成弃用警告。
+* deprecatedOverriding：指定重写成员的注释已弃用。
 * ：
 * ：
 * ：

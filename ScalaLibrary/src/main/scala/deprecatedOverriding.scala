@@ -8,14 +8,17 @@
 
 package scala
 
-/** An annotation that designates that overriding a member is deprecated.
- *
- *  Overriding such a member in  a sub-class then generates a warning.
- *
- *  @param  message the message to print during compilation if the member was overridden
- *  @param  since   a string identifying the first version in which overriding was deprecated
- *  @since  2.10
- *  @see    [[scala.deprecatedInheritance]]
- */
+/**
+  * 指定重写成员的注释已弃用。
+  *
+  * An annotation that designates that overriding a member is deprecated.
+  *
+  * Overriding such a member in  a sub-class then generates a warning.
+  *
+  * @param  message the message to print during compilation if the member was overridden
+  * @param  since   a string identifying the first version in which overriding was deprecated
+  * @since 2.10
+  * @see [[scala.deprecatedInheritance]]
+  */
 private[scala] // for the same reasons as deprecatedInheritance
 class deprecatedOverriding(message: String = "", since: String = "") extends scala.annotation.StaticAnnotation
