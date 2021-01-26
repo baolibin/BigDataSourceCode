@@ -11,27 +11,32 @@
 package scala
 
 
-/** A function of 0 parameters.
- *  
- *  In the following example, the definition of javaVersion is a
- *  shorthand for the anonymous class definition anonfun0:
- *
- *  {{{
- *  object Main extends App {
- *    val javaVersion = () => sys.props("java.version")
- *
- *    val anonfun0 = new Function0[String] {
- *      def apply(): String = sys.props("java.version")
- *    }
- *    assert(javaVersion() == anonfun0())
- * }
- *  }}}
- */
-trait Function0[@specialized(Specializable.Primitives) +R] extends AnyRef { self =>
-  /** Apply the body of this function to the arguments.
-   *  @return   the result of function application.
-   */
-  def apply(): R
+/**
+  * 参数为0的函数。
+  *
+  * A function of 0 parameters.
+  *
+  * In the following example, the definition of javaVersion is a
+  * shorthand for the anonymous class definition anonfun0:
+  *
+  * {{{
+  *  object Main extends App {
+  *    val javaVersion = () => sys.props("java.version")
+  *
+  *    val anonfun0 = new Function0[String] {
+  *      def apply(): String = sys.props("java.version")
+  *    }
+  *    assert(javaVersion() == anonfun0())
+  * }
+  * }}}
+  */
+trait Function0[@specialized(Specializable.Primitives) +R] extends AnyRef {
+    self =>
+    /** Apply the body of this function to the arguments.
+      *
+      * @return the result of function application.
+      */
+    def apply(): R
 
-  override def toString() = "<function0>"
+    override def toString() = "<function0>"
 }
