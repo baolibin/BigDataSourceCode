@@ -9,7 +9,9 @@
 package scala
 
 /**
- * Annotation for specifying the `static SerialVersionUID` field
- * of a serializable class.
- */
+  * 用于指定可序列化类的“static SerialVersionUID”字段的批注。
+  *
+  * Annotation for specifying the `static SerialVersionUID` field
+  * of a serializable class.
+  */
 class SerialVersionUID(value: Long) extends scala.annotation.ClassfileAnnotation

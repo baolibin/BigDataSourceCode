@@ -7,17 +7,19 @@
 \*                                                                      */
 
 
-
 package scala
 
-/** This class implements errors which are thrown whenever a
- *  field is used before it has been initialized.
- *
- *  Such runtime checks are not emitted by default.
- *  They can be enabled by the `-Xcheckinit` compiler option.
- *
- *  @since 2.7
- */
+/**
+  * 此类实现了在初始化字段之前使用字段时抛出的错误。
+  *
+  * This class implements errors which are thrown whenever a
+  * field is used before it has been initialized.
+  *
+  * Such runtime checks are not emitted by default.
+  * They can be enabled by the `-Xcheckinit` compiler option.
+  *
+  * @since 2.7
+  */
 final case class UninitializedFieldError(msg: String) extends RuntimeException(msg) {
-  def this(obj: Any) = this("" + obj)
+    def this(obj: Any) = this("" + obj)
 }

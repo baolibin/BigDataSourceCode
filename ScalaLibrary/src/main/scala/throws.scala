@@ -9,20 +9,22 @@
 package scala
 
 /**
- * Annotation for specifying the exceptions thrown by a method.
- * For example:
- * {{{
- * class Reader(fname: String) {
- *   private val in = new BufferedReader(new FileReader(fname))
- *   @throws[IOException]("if the file doesn't exist")
- *   def read() = in.read()
- * }
- * }}}
- *
- * @author  Nikolay Mihaylov
- * @version 1.0, 19/05/2006
- * @since   2.1
- */
+  * 用于指定方法引发的异常的注释。
+  *
+  * Annotation for specifying the exceptions thrown by a method.
+  * For example:
+  * {{{
+  * class Reader(fname: String) {
+  *   private val in = new BufferedReader(new FileReader(fname))
+  *   @throws[IOException]("if the file doesn't exist")
+  *   def read() = in.read()
+  * }
+  * }}}
+  *
+  * @author Nikolay Mihaylov
+  * @version 1.0, 19/05/2006
+  * @since 2.1
+  */
 class throws[T <: Throwable](cause: String = "") extends scala.annotation.StaticAnnotation {
-  def this(clazz: Class[T]) = this("")
+    def this(clazz: Class[T]) = this("")
 }
