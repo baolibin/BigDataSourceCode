@@ -7,15 +7,16 @@
 \*                                                                      */
 
 
-
 package scala
 
 /**
- * An annotation on methods that forbids the compiler to inline the
- * method, no matter how safe the inlining appears to be.
- *
- * @author Lex Spoon
- * @version 1.0, 2007-5-21
- * @since 2.5
- */
+  * 方法上的注释，禁止编译器内联该方法，无论内联看起来多么安全。
+  *
+  * An annotation on methods that forbids the compiler to inline the
+  * method, no matter how safe the inlining appears to be.
+  *
+  * @author Lex Spoon
+  * @version 1.0, 2007-5-21
+  * @since 2.5
+  */
 class noinline extends scala.annotation.StaticAnnotation

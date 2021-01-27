@@ -7,13 +7,15 @@
 \*                                                                      */
 
 
-
 package scala
 
-/** Throwing this exception can be a temporary replacement for a method
- *  body that remains to be implemented. For instance, the exception is thrown by
- *  `Predef.???`.
- */
+/**
+  * 抛出此异常可以临时替换仍有待实现的方法体。
+  *
+  * Throwing this exception can be a temporary replacement for a method
+  * body that remains to be implemented. For instance, the exception is thrown by
+  * `Predef.???`.
+  */
 final class NotImplementedError(msg: String) extends Error(msg) {
-  def this() = this("an implementation is missing")
+    def this() = this("an implementation is missing")
 }

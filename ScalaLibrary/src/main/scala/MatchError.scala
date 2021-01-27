@@ -7,31 +7,34 @@
 \*                                                                      */
 
 
-
 package scala
 
-/** This class implements errors which are thrown whenever an
- *  object doesn't match any pattern of a pattern matching
- *  expression.
- *
- *  @author  Matthias Zenger
- *  @author  Martin Odersky
- *  @version 1.1, 05/03/2004
- *  @since   2.0
- */
+/**
+  * 此类实现了每当对象与模式匹配表达式的任何模式都不匹配时抛出的错误。
+  *
+  * This class implements errors which are thrown whenever an
+  * object doesn't match any pattern of a pattern matching
+  * expression.
+  *
+  * @author Matthias Zenger
+  * @author Martin Odersky
+  * @version 1.1, 05/03/2004
+  * @since 2.0
+  */
 final class MatchError(obj: Any) extends RuntimeException {
-  /** There's no reason we need to call toString eagerly,
-   *  so defer it until getMessage is called.
-   */
-  private lazy val objString = {
-    def ofClass = "of class " + obj.getClass.getName
-    if (obj == null) "null"
-    else try {
-      obj.toString() + " (" + ofClass + ")"
-    } catch {
-      case _: Throwable => "an instance " + ofClass
-    }
-  }
+    /** There's no reason we need to call toString eagerly,
+      * so defer it until getMessage is called.
+      */
+    private lazy val objString = {
+        def ofClass = "of class " + obj.getClass.getName
 
-  override def getMessage() = objString
+        if (obj == null) "null"
+        else try {
+            obj.toString() + " (" + ofClass + ")"
+        } catch {
+            case _: Throwable => "an instance " + ofClass
+        }
+    }
+
+    override def getMessage() = objString
 }

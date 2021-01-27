@@ -7,10 +7,12 @@
 \*                                                                      */
 
 
-
 package scala
 
-/** Marker for native methods.
+/**
+  * 本机方法的标记。
+  *
+  * Marker for native methods.
   *
   * {{{
   * @native def f(x: Int, y: List[Long]): String = ...

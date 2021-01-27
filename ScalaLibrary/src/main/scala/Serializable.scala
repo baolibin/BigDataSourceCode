@@ -9,6 +9,8 @@
 package scala
 
 /**
- * Classes extending this trait are serializable across platforms (Java, .NET).
- */
+  * 扩展这个特性的类可以跨平台（Java，.NET）序列化。
+  *
+  * Classes extending this trait are serializable across platforms (Java, .NET).
+  */
 trait Serializable extends Any with java.io.Serializable

@@ -9,19 +9,21 @@
 package scala
 
 /**
- * An annotation that designates the class to which it is applied as remotable.
- *
- * For instance, the Scala code
- * {{{
- * @remote trait Hello {
- *   def sayHello(): String
- * }
- * }}}
- * is equivalent to the following Java code:
- * {{{
- * public interface Hello extends java.rmi.Remote {
- *     String sayHello() throws java.rmi.RemoteException;
- * }
- * }}}
- */
+  * 一种注释，将应用它的类指定为可远程处理的。
+  *
+  * An annotation that designates the class to which it is applied as remotable.
+  *
+  * For instance, the Scala code
+  * {{{
+  * @remote trait Hello {
+  *   def sayHello(): String
+  * }
+  * }}}
+  * is equivalent to the following Java code:
+  * {{{
+  * public interface Hello extends java.rmi.Remote {
+  *     String sayHello() throws java.rmi.RemoteException;
+  * }
+  * }}}
+  */
 class remote extends scala.annotation.StaticAnnotation {}

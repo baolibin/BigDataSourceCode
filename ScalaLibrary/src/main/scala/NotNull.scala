@@ -9,9 +9,12 @@
 package scala
 
 /**
- * A marker trait for things that are not allowed to be null
- * @since 2.5
- */
+  * 不允许为空的事物的标记特征。
+  *
+  * A marker trait for things that are not allowed to be null
+  *
+  * @since 2.5
+  */
 
 @deprecated("This trait will be removed", "2.11.0")
 trait NotNull extends Any {}
