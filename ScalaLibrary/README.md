@@ -43,11 +43,11 @@
 * Option：表示可选值。“Option”的实例可以是$some的实例，也可以是$none的对象。
 * PartialFunction：“PartialFunction[A，B]”类型的偏函数是一元函数，其中域不一定包含“A”类型的所有值。函数“isDefinedAt”允许动态测试值是否在函数的域中。
 * Predef：“Predef”对象提供的定义可以在所有Scala编译单元中访问，而无需显式限定。
-* Product：
-* Product1：
-* Proxy：
-* remote：
-* Responder：
+* Product：所有products的基本特征，标准库中至少包括[[scala.Product1]]到[[scala.Product22]]，也包括它们的子类[[scala.Tuple1]]到[[scala.Tuple22]]。此外，所有case类都使用综合生成的方法实现“Product”。
+* Product1：Product1是一个元素的笛卡尔积。
+* Proxy：这个类实现了一个简单的代理，它将所有对类Any中定义的非final公共方法的调用转发给另一个对象self。
+* remote：一种注释，将应用它的类指定为可远程处理的。
+* Responder：此对象包含用于生成响应程序的实用方法。
 * Serializable：
 * SerialVersionUID：
 * Short：
