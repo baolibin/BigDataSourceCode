@@ -48,20 +48,20 @@
 * Proxy：这个类实现了一个简单的代理，它将所有对类Any中定义的非final公共方法的调用转发给另一个对象self。
 * remote：一种注释，将应用它的类指定为可远程处理的。
 * Responder：此对象包含用于生成响应程序的实用方法。
-* Serializable：
-* SerialVersionUID：
-* Short：
-* Specializable：
-* specialized：
-* StringContext：
-* Symbol：
-* throws：
+* Serializable：扩展这个特性的类可以跨平台（Java，.NET）序列化。
+* SerialVersionUID：用于指定可序列化类的“static SerialVersionUID”字段的批注。
+* Short：`Short`，一个16位有符号整数（相当于Java的“Short”原语类型）是[[scala.AnyVal]]子类。
+* Specializable：特殊类型的同伴的一个普通超类型。不应在用户代码中扩展。
+* specialized：注释应该自动专门化代码的类型参数。
+* StringContext：此类提供了执行字符串插值的基本机制。
+* Symbol：这个类提供了一种简单的方法来获取相等字符串的唯一对象。
+* throws：用于指定方法引发的异常的注释。
 * transient：
-* Tuple1：
-* unchecked：
-* UninitializedError：
-* UninitializedFieldError：
-* Unit：
+* Tuple1：一个由1个元素组成的元组；一个[[scala.Product1]]的规范化表示。
+* unchecked：一种注释，用于指定附加编译器检查时不应考虑带注释的实体。
+* UninitializedError：此类表示未初始化的变量/值错误。
+* UninitializedFieldError：此类实现了在初始化字段之前使用字段时抛出的错误。
+* Unit：`Unit`是一个[[scala.AnyVal]]子类型。只有一个“Unit”类型的值，`（）`，并且它不由基础运行时系统中的任何对象表示。返回类型为“Unit”的方法类似于声明为“void”的Java方法。
 * volatile：
 
 
