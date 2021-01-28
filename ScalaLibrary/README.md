@@ -77,7 +77,22 @@
 -----
 ##### 5、Collection功能模块源码
 > [collection功能模块源码](src/main/scala/collection)： 
-* ：
+
+* concurrent：
+    - BasicNode：
+    - CNodeBase：
+    - Gen：
+    - INodeBase：
+    - MainNode：
+    - Map：
+    - TrieMap：
+* convert：
+* generic：
+* immutable：
+* mutable：
+* parallel：
+* script：
+
 
 -----
 ##### 6、Compat功能模块源码
