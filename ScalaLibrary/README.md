@@ -77,7 +77,33 @@
 -----
 ##### 5、Collection功能模块源码
 > [collection功能模块源码](src/main/scala/collection)： 
-
+* BitSet：
+* BitSetLike：
+* BufferedIterator：
+* CustomParallelizable：
+* DefaultMap：
+* GenIterable：
+* GenIterableLike：
+* GenMap：
+* GenMapLike：
+* GenSeq：
+* GenSeqLike：
+* GenTraversable：
+* GenTraversableLike：
+* GenTraversableOnce：
+* IndexedSeq：
+* IndexedSeqLike：
+* IndexedSeqOptimized：
+* Iterable：
+* IterableLike：
+* IterableProxy：
+* IterableProxyLike：
+* IterableView：
+* ：
+* ：
+* ：
+* ：
+* ：
 * concurrent：
     - BasicNode：
     - CNodeBase：
