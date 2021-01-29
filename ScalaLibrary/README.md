@@ -77,7 +77,15 @@
 -----
 ##### 5、Collection功能模块源码
 > [collection功能模块源码](src/main/scala/collection)： 包含使用和扩展Scala集合库所需的基本特性和对象。
-* BitSet：
+* concurrent:concurrent
+    - BasicNode：
+* convert:convert
+* generic:generic
+* immutable:immutable
+* mutable:mutable
+* parallel:parallel
+* script:script
+* BitSet：可变和不可变位集的公共基类。
 * BitSetLike：
 * BufferedIterator：
 * CustomParallelizable：
