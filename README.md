@@ -1,12 +1,22 @@
+## 前奏
+    本项目主要是大数据相关技术源码阅读。
+    随着大数据行情发展，支撑这个体系相关的技术也越来越多。
+    目前列出来的是比较核心常用的框架源码，包括：
+    基础编程语言：Java、Scala
+    数据处理框架：Spark、Flink
+    欢迎小伙伴一起加入阅读，夯实自己的技术，体验其中的乐趣。
+    持续更新中...
+
+---
 ## **源码阅读**
-* [Spark Core-2.2.0 源码阅读](SparkCore)
-* [Spark SQL-2.2.0 源码阅读](SparkSqlCore)
-* [Spark Streaming-2.2.0 源码阅读](SparkStreaming)
-* [Flink Core-1.9.0 源码阅读](FlinkCore)
-* [Flink Streaming-1.9.0 源码阅读](FlinkStreaming)
-* [Flink Batch-1.9.0 源码阅读](FlinkBatch)
-* [Scala Library-2.11.8 源码阅读](ScalaLibrary)
-* [Java Src-1.8.0 源码阅读](JavaSrc)
+* [1、【Scala Library-2.11.8】 源码阅读](ScalaLibrary)
+* [2、【Java Src-1.8.0】 源码阅读](JavaSrc)
+* [3、【Spark Core-2.2.0】 源码阅读](SparkCore)
+* [4、【Spark SQL-2.2.0】 源码阅读](SparkSqlCore)
+* [5、【Spark Streaming-2.2.0】 源码阅读](SparkStreaming)
+* [6、【Flink Batch-1.9.0】 源码阅读](FlinkBatch)
+* [7、【Flink Streaming-1.9.0】 源码阅读](FlinkStreaming)
+* [8、【Flink Core-1.9.0】 源码阅读](FlinkCore)
 
 ---
 ### 一、spark core源码阅读
