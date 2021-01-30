@@ -4,6 +4,7 @@
 * [Spark Streaming-2.2.0 源码阅读](SparkStreaming)
 * [Flink Core-1.9.0 源码阅读](FlinkCore)
 * [Flink Streaming-1.9.0 源码阅读](FlinkStreaming)
+* [Flink Batch-1.9.0 源码阅读](FlinkBatch)
 * [Scala Library-2.11.8 源码阅读](ScalaLibrary)
 * [Java Src-1.8.0 源码阅读](JavaSrc)
 
@@ -81,10 +82,14 @@
     FlinkStreaming模块源码阅读，版本1.9.0。
 
 ---
-### 六、scala library源码阅读
+### 六、flink batch源码阅读
+    FlinkBatch模块源码阅读，版本1.9.0。
+
+---
+### 七、scala library源码阅读
     ScalaLibrary模块源码阅读，版本2.11.8。
 
 ---
-### 七、java src源码阅读
+### 八、java src源码阅读
     JavaSrc模块源码阅读，版本1.8.0。
 
