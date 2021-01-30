@@ -6,7 +6,18 @@
 
     <groupId>org.apache.spark</groupId>
     <artifactId>BigDataSourceCode</artifactId>
-    <version>2.2.0</version>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
 
-    
+    <modules>
+        <module>FlinkBatch</module>
+        <module>FlinkCore</module>
+        <module>FlinkStreaming</module>
+        <module>JavaSrc</module>
+        <module>ScalaLibrary</module>
+        <module>SparkCore</module>
+        <module>SparkSqlCore</module>
+        <module>SparkStreaming</module>
+    </modules>
+
 </project>
