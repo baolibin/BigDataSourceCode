@@ -3,6 +3,7 @@
 * [Spark SQL-2.2.0 源码阅读](SparkSqlCore)
 * [Spark Streaming-2.2.0 源码阅读](SparkStreaming)
 * [Flink Core-1.9.0 源码阅读](FlinkCore)
+* [Flink Streaming-1.9.0 源码阅读](FlinkStreaming)
 * [Scala Library-2.11.8 源码阅读](ScalaLibrary)
 * [Java Src-1.8.0 源码阅读](JavaSrc)
 
@@ -76,10 +77,14 @@
     FlinkCore模块源码阅读，版本1.9.0。
 
 ---
-### 五、scala library源码阅读
+### 五、flink streaming源码阅读
+    FlinkStreaming模块源码阅读，版本1.9.0。
+
+---
+### 六、scala library源码阅读
     ScalaLibrary模块源码阅读，版本2.11.8。
 
 ---
-### 六、java src源码阅读
+### 七、java src源码阅读
     JavaSrc模块源码阅读，版本1.8.0。
 
