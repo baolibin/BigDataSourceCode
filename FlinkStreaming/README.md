@@ -41,7 +41,7 @@
 * DataStreamUtils：
 * JoinedStreams：
 * KeyedStream：
-* OutputTag：
+* OutputTag：[[OutputTag]]是一个类型化和命名的标记，用于标记操作符的side输出。
 * SplitStream：
 * StreamExecutionEnvironment：
 * WindowedStream：

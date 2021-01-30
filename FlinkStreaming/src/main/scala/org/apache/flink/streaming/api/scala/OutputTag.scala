@@ -23,20 +23,22 @@ import org.apache.flink.util.{OutputTag => JOutputTag}
 
 
 /**
- * An [[OutputTag]] is a typed and named tag to use for tagging side outputs
- * of an operator.
- *
- * Example:
- * {{{
- *   val outputTag = OutputTag[String]("late-data")
- * }}}
- *
- * @tparam T the type of elements in the side-output stream.
- */
+  * [[OutputTag]]是一个类型化和命名的标记，用于标记操作符的side输出。
+  *
+  * An [[OutputTag]] is a typed and named tag to use for tagging side outputs
+  * of an operator.
+  *
+  * Example:
+  * {{{
+  *   val outputTag = OutputTag[String]("late-data")
+  * }}}
+  *
+  * @tparam T the type of elements in the side-output stream.
+  */
 @PublicEvolving
 class OutputTag[T: TypeInformation](
-    id: String) extends JOutputTag[T](id, implicitly[TypeInformation[T]])
+                                           id: String) extends JOutputTag[T](id, implicitly[TypeInformation[T]])
 
 object OutputTag {
-  def apply[T: TypeInformation](id: String): OutputTag[T] = new OutputTag(id)
+    def apply[T: TypeInformation](id: String): OutputTag[T] = new OutputTag(id)
 }
