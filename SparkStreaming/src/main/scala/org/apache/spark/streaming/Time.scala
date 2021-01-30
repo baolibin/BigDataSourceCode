@@ -18,76 +18,79 @@
 package org.apache.spark.streaming
 
 /**
- * This is a simple class that represents an absolute instant of time.
- * Internally, it represents time as the difference, measured in milliseconds, between the current
- * time and midnight, January 1, 1970 UTC. This is the same format as what is returned by
- * System.currentTimeMillis.
- */
+  * 这是一个简单的类，表示时间的绝对瞬间。
+  * 在内部，它将时间表示为当前时间与1970年1月1日午夜UTC之间的差值（以毫秒为单位）。
+  * 这与System.currentTimeMillis返回的格式相同.
+  *
+  * This is a simple class that represents an absolute instant of time.
+  * Internally, it represents time as the difference, measured in milliseconds, between the current
+  * time and midnight, January 1, 1970 UTC. This is the same format as what is returned by
+  * System.currentTimeMillis.
+  */
 case class Time(private val millis: Long) {
 
-  def milliseconds: Long = millis
+    def less(that: Time): Boolean = this < that
 
-  def < (that: Time): Boolean = (this.millis < that.millis)
+    def <(that: Time): Boolean = (this.millis < that.millis)
 
-  def <= (that: Time): Boolean = (this.millis <= that.millis)
+    def lessEq(that: Time): Boolean = this <= that
 
-  def > (that: Time): Boolean = (this.millis > that.millis)
+    def <=(that: Time): Boolean = (this.millis <= that.millis)
 
-  def >= (that: Time): Boolean = (this.millis >= that.millis)
+    def greater(that: Time): Boolean = this > that
 
-  def + (that: Duration): Time = new Time(millis + that.milliseconds)
+    def >(that: Time): Boolean = (this.millis > that.millis)
 
-  def - (that: Time): Duration = new Duration(millis - that.millis)
+    def greaterEq(that: Time): Boolean = this >= that
 
-  def - (that: Duration): Time = new Time(millis - that.milliseconds)
+    def >=(that: Time): Boolean = (this.millis >= that.millis)
 
-  // Java-friendlier versions of the above.
+    // Java-friendlier versions of the above.
 
-  def less(that: Time): Boolean = this < that
+    def plus(that: Duration): Time = this + that
 
-  def lessEq(that: Time): Boolean = this <= that
+    def +(that: Duration): Time = new Time(millis + that.milliseconds)
 
-  def greater(that: Time): Boolean = this > that
+    def minus(that: Time): Duration = this - that
 
-  def greaterEq(that: Time): Boolean = this >= that
+    def -(that: Time): Duration = new Duration(millis - that.millis)
 
-  def plus(that: Duration): Time = this + that
+    def minus(that: Duration): Time = this - that
 
-  def minus(that: Time): Duration = this - that
+    def -(that: Duration): Time = new Time(millis - that.milliseconds)
 
-  def minus(that: Duration): Time = this - that
+    def floor(that: Duration): Time = {
+        val t = that.milliseconds
+        new Time((this.millis / t) * t)
+    }
+
+    def floor(that: Duration, zeroTime: Time): Time = {
+        val t = that.milliseconds
+        new Time(((this.millis - zeroTime.milliseconds) / t) * t + zeroTime.milliseconds)
+    }
+
+    def milliseconds: Long = millis
+
+    def isMultipleOf(that: Duration): Boolean =
+        (this.millis % that.milliseconds == 0)
+
+    def min(that: Time): Time = if (this < that) this else that
+
+    def max(that: Time): Time = if (this > that) this else that
+
+    def until(that: Time, interval: Duration): Seq[Time] = {
+        (this.milliseconds) until (that.milliseconds) by (interval.milliseconds) map (new Time(_))
+    }
+
+    def to(that: Time, interval: Duration): Seq[Time] = {
+        (this.milliseconds) to (that.milliseconds) by (interval.milliseconds) map (new Time(_))
+    }
 
 
-  def floor(that: Duration): Time = {
-    val t = that.milliseconds
-    new Time((this.millis / t) * t)
-  }
-
-  def floor(that: Duration, zeroTime: Time): Time = {
-    val t = that.milliseconds
-    new Time(((this.millis - zeroTime.milliseconds) / t) * t + zeroTime.milliseconds)
-  }
-
-  def isMultipleOf(that: Duration): Boolean =
-    (this.millis % that.milliseconds == 0)
-
-  def min(that: Time): Time = if (this < that) this else that
-
-  def max(that: Time): Time = if (this > that) this else that
-
-  def until(that: Time, interval: Duration): Seq[Time] = {
-    (this.milliseconds) until (that.milliseconds) by (interval.milliseconds) map (new Time(_))
-  }
-
-  def to(that: Time, interval: Duration): Seq[Time] = {
-    (this.milliseconds) to (that.milliseconds) by (interval.milliseconds) map (new Time(_))
-  }
-
-
-  override def toString: String = (millis.toString + " ms")
+    override def toString: String = (millis.toString + " ms")
 
 }
 
 object Time {
-  implicit val ordering = Ordering.by((time: Time) => time.millis)
+    implicit val ordering = Ordering.by((time: Time) => time.millis)
 }

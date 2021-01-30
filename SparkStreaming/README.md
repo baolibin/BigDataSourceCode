@@ -9,13 +9,11 @@
 * DStreamGraph：
 * Duration：
 * Interval：
-* State：
-* StateSpec：
-* StreamingContext：
+* State：用于获取和更新“mapWithState”操作中使用的映射函数中的状态的抽象类。
+* StateSpec：表示数据流转换“mapWithState”操作的所有规范的抽象类。
+* StreamingContext：Spark流功能的主要入口点。
 * StreamingSource：
-* Time：
-* ：
-* ：
+* Time：这是一个简单的类，表示时间的绝对瞬间。
 
 -----
 ##### 2、Api功能模块源码
