@@ -32,7 +32,16 @@
 -----
 ##### 8、核心模块源码
 > [核心模块源码](src/main/scala/org/apache/flink/streaming/api/scala)：
-
-
-
-
+* AllWindowedStream：
+* AsyncDataStream：
+* BroadcastConnectedStream：
+* CoGroupedStreams：
+* ConnectedStreams：
+* DataStream：
+* DataStreamUtils：
+* JoinedStreams：
+* KeyedStream：
+* OutputTag：
+* SplitStream：
+* StreamExecutionEnvironment：
+* WindowedStream：
