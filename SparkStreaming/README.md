@@ -17,13 +17,14 @@
 
 -----
 ##### 2、Api功能模块源码
-> [api功能模块源码](src/main/scala/org/apache/spark/streaming/api)：
-* ：
+> [api功能模块源码](src/main/scala/org/apache/spark/streaming/api)：Spark streaming的Java与Python API。
+* Java：Spark streaming的Java API。
+    - JavaDStream：一个有关[[org.apache.spark.streaming.dstream.DStream]]的Java接口，Spark Streaming中表示连续数据流的基本抽象。
 * ：
 
 -----
 ##### 3、Dstream功能模块源码
-> [dstream功能模块源码](src/main/scala/org/apache/spark/streaming/dstream)：
+> [dstream功能模块源码](src/main/scala/org/apache/spark/streaming/dstream)：DStream的各种实现。
 * ：
 * ：
 
