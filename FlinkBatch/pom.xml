@@ -13,6 +13,13 @@
     <groupId>org.apache.flink</groupId>
     <version>1.9.0</version>
 
+    <properties>
+        <flink.shaded.version>7.0</flink.shaded.version>
+        <scala.version>2.11.12</scala.version>
+        <scala.binary.version>2.12</scala.binary.version>
+        <chill.version>0.7.6</chill.version>
+    </properties>
+
     <modules>
         <module>FlinkScalaBatch</module>
         <module>FlinkJavaBatch</module>
