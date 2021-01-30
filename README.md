@@ -36,6 +36,20 @@
 ---
 ### 二、spark sql源码阅读
     SparkSql模块源码阅读，版本2.2.0。
+##### 1、核心SparkSQL功能模块源码
+> [核心SparkSQL功能模块源码](SparkSqlCore/src/main/scala/org/apache/spark/sql)： 允许执行关系查询，包括使用Spark在SQL中表示的查询。
+##### 2、Api模块源码
+> [api模块源码](SparkSqlCore/src/main/scala/org/apache/spark/sql/api)：包含特定于单一语言（即Java）的API类。
+##### 3、CataLog模块源码
+##### 4、Execution模块源码
+##### 5、Expressions模块源码
+> [expressions功能模块源码](SparkSqlCore/src/main/scala/org/apache/spark/sql/expressions):
+##### 6、Internal模块源码
+##### 7、Jdbc模块源码
+##### 8、Sources模块源码
+##### 9、Streaming模块源码
+##### 10、Util模块源码
+> [核心SparkSQL功能模块源码](SparkSqlCore/src/main/scala/org/apache/spark/sql/util)：查询异常监听器。
 
 ---
 ### 三、spark streaming源码阅读
