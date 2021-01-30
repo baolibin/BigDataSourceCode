@@ -69,6 +69,6 @@
 
 -----
 ##### 10、Util模块源码
-> [核心SparkSQL功能模块源码](src/main/scala/org/apache/spark/sql/util)：查询异常监听器。
+> [Util模块源码](src/main/scala/org/apache/spark/sql/util)：查询异常监听器。
 * QueryExecutionListener：查询执行监听器的接口，可用于分析执行度量。
 
