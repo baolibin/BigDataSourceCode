@@ -24,75 +24,77 @@ import org.apache.flink.api.scala.operators.ScalaAggregateOperator
 import scala.reflect.ClassTag
 
 /**
- * The result of [[DataSet.aggregate]]. This can be used to chain more aggregations to the
- * one aggregate operator.
- *
- * @tparam T The type of the DataSet, i.e., the type of the elements of the DataSet.
- */
+  * [[DataSet.aggregate]]的结果. 这可用于将多个聚合链接到一个聚合运算符。
+  *
+  * The result of [[DataSet.aggregate]]. This can be used to chain more aggregations to the
+  * one aggregate operator.
+  *
+  * @tparam T The type of the DataSet, i.e., the type of the elements of the DataSet.
+  */
 @Public
 class AggregateDataSet[T: ClassTag](set: ScalaAggregateOperator[T])
-  extends DataSet[T](set) {
+        extends DataSet[T](set) {
 
-  /**
-   * Adds the given aggregation on the given field to the previous aggregation operation.
-   *
-   * This only works on Tuple DataSets.
-   */
-  def and(agg: Aggregations, field: Int): AggregateDataSet[T] = {
-    set.and(agg, field)
-    this
-  }
+    /**
+      * Syntactic sugar for [[and]] with `SUM`
+      */
+    def andSum(field: Int) = {
+        and(Aggregations.SUM, field)
+    }
 
-  /**
-   * Adds the given aggregation on the given field to the previous aggregation operation.
-   *
-   * This only works on CaseClass DataSets.
-   */
-  def and(agg: Aggregations, field: String): AggregateDataSet[T] = {
-    val fieldIndex = fieldNames2Indices(set.getType, Array(field))(0)
-    set.and(agg, fieldIndex)
-    this
-  }
+    /**
+      * Syntactic sugar for [[and]] with `MAX`
+      */
+    def andMax(field: Int) = {
+        and(Aggregations.MAX, field)
+    }
 
-  /**
-   * Syntactic sugar for [[and]] with `SUM`
-   */
-  def andSum(field: Int) = {
-    and(Aggregations.SUM, field)
-  }
+    /**
+      * Adds the given aggregation on the given field to the previous aggregation operation.
+      *
+      * This only works on Tuple DataSets.
+      */
+    def and(agg: Aggregations, field: Int): AggregateDataSet[T] = {
+        set.and(agg, field)
+        this
+    }
 
-  /**
-   * Syntactic sugar for [[and]] with `MAX`
-   */
-  def andMax(field: Int) = {
-    and(Aggregations.MAX, field)
-  }
+    /**
+      * Syntactic sugar for [[and]] with `MIN`
+      */
+    def andMin(field: Int) = {
+        and(Aggregations.MIN, field)
+    }
 
-  /**
-   * Syntactic sugar for [[and]] with `MIN`
-   */
-  def andMin(field: Int) = {
-    and(Aggregations.MIN, field)
-  }
+    /**
+      * Syntactic sugar for [[and]] with `SUM`
+      */
+    def andSum(field: String) = {
+        and(Aggregations.SUM, field)
+    }
 
-  /**
-   * Syntactic sugar for [[and]] with `SUM`
-   */
-  def andSum(field: String) = {
-    and(Aggregations.SUM, field)
-  }
+    /**
+      * Syntactic sugar for [[and]] with `MAX`
+      */
+    def andMax(field: String) = {
+        and(Aggregations.MAX, field)
+    }
 
-  /**
-   * Syntactic sugar for [[and]] with `MAX`
-   */
-  def andMax(field: String) = {
-    and(Aggregations.MAX, field)
-  }
+    /**
+      * Syntactic sugar for [[and]] with `MIN`
+      */
+    def andMin(field: String) = {
+        and(Aggregations.MIN, field)
+    }
 
-  /**
-   * Syntactic sugar for [[and]] with `MIN`
-   */
-  def andMin(field: String) = {
-    and(Aggregations.MIN, field)
-  }
+    /**
+      * Adds the given aggregation on the given field to the previous aggregation operation.
+      *
+      * This only works on CaseClass DataSets.
+      */
+    def and(agg: Aggregations, field: String): AggregateDataSet[T] = {
+        val fieldIndex = fieldNames2Indices(set.getType, Array(field))(0)
+        set.and(agg, fieldIndex)
+        this
+    }
 }
