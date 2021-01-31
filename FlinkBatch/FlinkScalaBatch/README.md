@@ -28,7 +28,7 @@
 
 -----
 ##### 7、utils模块源码
-> [utils模块源码](src/main/scala/org/apache/flink/api/scala/utils)：
+> [utils模块源码](src/main/scala/org/apache/flink/api/scala/utils)：此类提供了简单的实用程序方法，用于使用索引或唯一标识符压缩数据集中的元素，从数据集中采样元素。
 
 -----
 ##### 8、核心模块源码
