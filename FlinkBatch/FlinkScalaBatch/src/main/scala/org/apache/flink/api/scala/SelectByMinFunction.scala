@@ -22,39 +22,41 @@ import org.apache.flink.api.common.functions.ReduceFunction
 import org.apache.flink.api.java.typeutils.TupleTypeInfoBase
 
 /**
+  * 选择ByMinFunction可使用Scala元组。
+  *
   * SelectByMinFunction to work with Scala tuples
   */
 @Internal
-class SelectByMinFunction[T](t : TupleTypeInfoBase[T], fields : Array[Int])
-  extends ReduceFunction[T] {
-  for(f <- fields) {
-    if (f < 0 || f >= t.getArity()) {
-      throw new IndexOutOfBoundsException(
-        "SelectByMinFunction field position " + f + " is out of range.")
-    }
-
-    // Check whether type is comparable
-    if (!t.getTypeAt(f).isKeyType()) {
-      throw new IllegalArgumentException(
-        "SelectByMinFunction supports only key(Comparable) types.")
-    }
-  }
-
-  override def reduce(value1: T, value2: T): T = {
+class SelectByMinFunction[T](t: TupleTypeInfoBase[T], fields: Array[Int])
+        extends ReduceFunction[T] {
     for (f <- fields) {
-        val element1  = value1.asInstanceOf[Product].productElement(f).asInstanceOf[Comparable[Any]]
-        val element2 = value2.asInstanceOf[Product].productElement(f).asInstanceOf[Comparable[Any]]
+        if (f < 0 || f >= t.getArity()) {
+            throw new IndexOutOfBoundsException(
+                "SelectByMinFunction field position " + f + " is out of range.")
+        }
 
-        val comp = element1.compareTo(element2)
-
-        // If comp is bigger than 0 comparable 1 is bigger.
-        // Return the smaller value.
-        if (comp < 0) {
-          return value1
-        } else if (comp > 0) {
-          return value2
+        // Check whether type is comparable
+        if (!t.getTypeAt(f).isKeyType()) {
+            throw new IllegalArgumentException(
+                "SelectByMinFunction supports only key(Comparable) types.")
         }
     }
-    value1
-  }
+
+    override def reduce(value1: T, value2: T): T = {
+        for (f <- fields) {
+            val element1 = value1.asInstanceOf[Product].productElement(f).asInstanceOf[Comparable[Any]]
+            val element2 = value2.asInstanceOf[Product].productElement(f).asInstanceOf[Comparable[Any]]
+
+            val comp = element1.compareTo(element2)
+
+            // If comp is bigger than 0 comparable 1 is bigger.
+            // Return the smaller value.
+            if (comp < 0) {
+                return value1
+            } else if (comp > 0) {
+                return value2
+            }
+        }
+        value1
+    }
 }

@@ -26,43 +26,45 @@ import org.apache.flink.api.java.operators.SortPartitionOperator
 import scala.reflect.ClassTag
 
 /**
- * The result of [[DataSet.sortPartition]]. This can be used to append additional sort fields to the
- * one sort-partition operator.
- *
- * @tparam T The type of the DataSet, i.e., the type of the elements of the DataSet.
- */
+  * 结果[[DataSet.sortPartition]]. 这可用于将其他排序字段附加到“一个排序分区”操作符。
+  *
+  * The result of [[DataSet.sortPartition]]. This can be used to append additional sort fields to the
+  * one sort-partition operator.
+  *
+  * @tparam T The type of the DataSet, i.e., the type of the elements of the DataSet.
+  */
 @Public
 class PartitionSortedDataSet[T: ClassTag](set: SortPartitionOperator[T])
-  extends DataSet[T](set) {
+        extends DataSet[T](set) {
 
-  /**
-   * Appends the given field and order to the sort-partition operator.
-   */
-  override def sortPartition(field: Int, order: Order): DataSet[T] = {
-    if (set.useKeySelector()) {
-      throw new InvalidProgramException("Expression keys cannot be appended after selector " +
-        "function keys")
+    /**
+      * Appends the given field and order to the sort-partition operator.
+      */
+    override def sortPartition(field: Int, order: Order): DataSet[T] = {
+        if (set.useKeySelector()) {
+            throw new InvalidProgramException("Expression keys cannot be appended after selector " +
+                    "function keys")
+        }
+
+        this.set.sortPartition(field, order)
+        this
     }
 
-    this.set.sortPartition(field, order)
-    this
-  }
+    /**
+      * Appends the given field and order to the sort-partition operator.
+      */
+    override def sortPartition(field: String, order: Order): DataSet[T] = {
+        if (set.useKeySelector()) {
+            throw new InvalidProgramException("Expression keys cannot be appended after selector " +
+                    "function keys")
+        }
 
-  /**
-   * Appends the given field and order to the sort-partition operator.
-   */
-  override def sortPartition(field: String, order: Order): DataSet[T] = {
-    if (set.useKeySelector()) {
-      throw new InvalidProgramException("Expression keys cannot be appended after selector " +
-        "function keys")
+        this.set.sortPartition(field, order)
+        this
     }
 
-    this.set.sortPartition(field, order)
-    this
-  }
-
-  override def sortPartition[K: TypeInformation](fun: T => K, order: Order): DataSet[T] = {
-    throw new InvalidProgramException("KeySelector cannot be chained.")
-  }
+    override def sortPartition[K: TypeInformation](fun: T => K, order: Order): DataSet[T] = {
+        throw new InvalidProgramException("KeySelector cannot be chained.")
+    }
 
 }

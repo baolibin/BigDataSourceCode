@@ -27,98 +27,103 @@ import org.apache.flink.util.Collector
 import scala.reflect.ClassTag
 
 /**
- * A specific [[DataSet]] that results from a `cross` operation. The result of a default cross is a
- * tuple containing the two values from the two sides of the cartesian product. The result of the
- * cross can be changed by specifying a custom cross function using the `apply` method or by
- * providing a [[RichCrossFunction]].
- *
- * Example:
- * {{{
- *   val left = ...
- *   val right = ...
- *   val crossResult = left.cross(right) {
- *     (left, right) => new MyCrossResult(left, right)
- *   }
- * }}}
- *
- * @tparam L Type of the left input of the cross.
- * @tparam R Type of the right input of the cross.
- */
+  * 由“交叉”操作产生的特定[[DataSet]]。
+  * 默认交叉的结果是一个元组，包含笛卡尔积两边的两个值。
+  * 可以通过使用“apply”方法指定自定义交叉函数或提供[[RichCrossFunction]]来更改交叉结果。
+  *
+  * A specific [[DataSet]] that results from a `cross` operation. The result of a default cross is a
+  * tuple containing the two values from the two sides of the cartesian product. The result of the
+  * cross can be changed by specifying a custom cross function using the `apply` method or by
+  * providing a [[RichCrossFunction]].
+  *
+  * Example:
+  * {{{
+  *   val left = ...
+  *   val right = ...
+  *   val crossResult = left.cross(right) {
+  *     (left, right) => new MyCrossResult(left, right)
+  *   }
+  * }}}
+  *
+  * @tparam L Type of the left input of the cross.
+  * @tparam R Type of the right input of the cross.
+  */
 @Public
 class CrossDataSet[L, R](
-    defaultCross: CrossOperator[L, R, (L, R)],
-    leftInput: DataSet[L],
-    rightInput: DataSet[R])
-  extends DataSet(defaultCross) {
+                                defaultCross: CrossOperator[L, R, (L, R)],
+                                leftInput: DataSet[L],
+                                rightInput: DataSet[R])
+        extends DataSet(defaultCross) {
 
-  /**
-   * Creates a new [[DataSet]] where the result for each pair of elements is the result
-   * of the given function.
-   */
-  def apply[O: TypeInformation: ClassTag](fun: (L, R) => O): DataSet[O] = {
-    require(fun != null, "Cross function must not be null.")
-    val crosser = new CrossFunction[L, R, O] {
-      val cleanFun = clean(fun)
-      def cross(left: L, right: R): O = {
-        cleanFun(left, right)
-      }
+    /**
+      * Creates a new [[DataSet]] where the result for each pair of elements is the result
+      * of the given function.
+      */
+    def apply[O: TypeInformation : ClassTag](fun: (L, R) => O): DataSet[O] = {
+        require(fun != null, "Cross function must not be null.")
+        val crosser = new CrossFunction[L, R, O] {
+            val cleanFun = clean(fun)
+
+            def cross(left: L, right: R): O = {
+                cleanFun(left, right)
+            }
+        }
+        val crossOperator = new CrossOperator[L, R, O](
+            leftInput.javaSet,
+            rightInput.javaSet,
+            crosser,
+            implicitly[TypeInformation[O]],
+            defaultCross.getCrossHint(),
+            getCallLocationName())
+        wrap(crossOperator)
     }
-    val crossOperator = new CrossOperator[L, R, O](
-      leftInput.javaSet,
-      rightInput.javaSet,
-      crosser,
-      implicitly[TypeInformation[O]],
-      defaultCross.getCrossHint(),
-      getCallLocationName())
-    wrap(crossOperator)
-  }
 
-  /**
-   * Creates a new [[DataSet]] by passing each pair of values to the given function.
-   * The function can output zero or more elements using the [[Collector]] which will form the
-   * result.
-   *
-   * A [[RichCrossFunction]] can be used to access the
-   * broadcast variables and the [[org.apache.flink.api.common.functions.RuntimeContext]].
-   */
-  def apply[O: TypeInformation: ClassTag](crosser: CrossFunction[L, R, O]): DataSet[O] = {
-    require(crosser != null, "Cross function must not be null.")
-    val crossOperator = new CrossOperator[L, R, O](
-      leftInput.javaSet,
-      rightInput.javaSet,
-      crosser,
-      implicitly[TypeInformation[O]],
-      defaultCross.getCrossHint(),
-      getCallLocationName())
-    wrap(crossOperator)
-  }
+    /**
+      * Creates a new [[DataSet]] by passing each pair of values to the given function.
+      * The function can output zero or more elements using the [[Collector]] which will form the
+      * result.
+      *
+      * A [[RichCrossFunction]] can be used to access the
+      * broadcast variables and the [[org.apache.flink.api.common.functions.RuntimeContext]].
+      */
+    def apply[O: TypeInformation : ClassTag](crosser: CrossFunction[L, R, O]): DataSet[O] = {
+        require(crosser != null, "Cross function must not be null.")
+        val crossOperator = new CrossOperator[L, R, O](
+            leftInput.javaSet,
+            rightInput.javaSet,
+            crosser,
+            implicitly[TypeInformation[O]],
+            defaultCross.getCrossHint(),
+            getCallLocationName())
+        wrap(crossOperator)
+    }
 }
 
 @Internal
 private[flink] object CrossDataSet {
 
-  /**
-   * Creates a default cross operation with Tuple2 as result.
-   */
-  def createCrossOperator[L, R](
-      leftInput: DataSet[L],
-      rightInput: DataSet[R],
-      crossHint: CrossHint) = {
-    
-    val crosser = new CrossFunction[L, R, (L, R)] {
-      def cross(left: L, right: R) = {
-        (left, right)
-      }
-    }
-    val returnType = createTuple2TypeInformation[L, R](leftInput.getType(), rightInput.getType())
-    val crossOperator = new CrossOperator[L, R, (L, R)](
-      leftInput.javaSet,
-      rightInput.javaSet,
-      crosser,
-      returnType,
-      crossHint,
-      getCallLocationName())
+    /**
+      * Creates a default cross operation with Tuple2 as result.
+      */
+    def createCrossOperator[L, R](
+                                         leftInput: DataSet[L],
+                                         rightInput: DataSet[R],
+                                         crossHint: CrossHint) = {
 
-    new CrossDataSet(crossOperator, leftInput, rightInput)
-  }
+        val crosser = new CrossFunction[L, R, (L, R)] {
+            def cross(left: L, right: R) = {
+                (left, right)
+            }
+        }
+        val returnType = createTuple2TypeInformation[L, R](leftInput.getType(), rightInput.getType())
+        val crossOperator = new CrossOperator[L, R, (L, R)](
+            leftInput.javaSet,
+            rightInput.javaSet,
+            crosser,
+            returnType,
+            crossHint,
+            getCallLocationName())
+
+        new CrossDataSet(crossOperator, leftInput, rightInput)
+    }
 }
