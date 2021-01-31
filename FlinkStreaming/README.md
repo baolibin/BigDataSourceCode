@@ -31,7 +31,7 @@
 
 -----
 ##### 8、核心模块源码
-> [核心模块源码](src/main/scala/org/apache/flink/streaming/api/scala)：
+> [核心模块源码](src/main/scala/org/apache/flink/streaming/api/scala)：createTypeInformation当使用scalaapi时，我们总是生成类型信息。
 * AllWindowedStream：
 * AsyncDataStream：
 * BroadcastConnectedStream：
