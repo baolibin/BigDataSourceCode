@@ -37,11 +37,11 @@
 * BroadcastConnectedStream：
 * CoGroupedStreams：
 * ConnectedStreams：
-* DataStream：
+* DataStream：实时流处理的数据集。
 * DataStreamUtils：
 * JoinedStreams：
 * KeyedStream：
 * OutputTag：[[OutputTag]]是一个类型化和命名的标记，用于标记操作符的side输出。
 * SplitStream：
-* StreamExecutionEnvironment：
+* StreamExecutionEnvironment：创建实时流实现环境上下文入口。
 * WindowedStream：
