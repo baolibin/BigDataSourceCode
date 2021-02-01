@@ -19,21 +19,24 @@
 package org.apache.flink.streaming.api.scala
 
 import org.apache.flink.annotation.Public
-import org.apache.flink.streaming.api.datastream.{ SplitStream => SplitJavaStream }
+import org.apache.flink.streaming.api.datastream.{SplitStream => SplitJavaStream}
 
 /**
- * The SplitStream represents an operator that has been split using an
- * [[org.apache.flink.streaming.api.collector.selector.OutputSelector]].
- * Named outputs can be selected using the [[SplitStream#select()]] function.
- * To apply a transformation on the whole output simply call
- * the appropriate method on this stream.
- */
+  * SplitStream表示已使用[[org.apache.flink.streaming.api.collector.selector.OutputSelector]].
+  * 可以使用[[SplitStream#select（）]]函数选择命名输出。要在整个输出上应用转换，只需在此流上调用适当的方法。
+  *
+  * The SplitStream represents an operator that has been split using an
+  * [[org.apache.flink.streaming.api.collector.selector.OutputSelector]].
+  * Named outputs can be selected using the [[SplitStream#select()]] function.
+  * To apply a transformation on the whole output simply call
+  * the appropriate method on this stream.
+  */
 @Public
-class SplitStream[T](javaStream: SplitJavaStream[T]) extends DataStream[T](javaStream){
+class SplitStream[T](javaStream: SplitJavaStream[T]) extends DataStream[T](javaStream) {
 
-  /**
-   *  Sets the output names for which the next operator will receive values.
-   */
-  def select(outputNames: String*): DataStream[T] = 
-    asScalaStream(javaStream.select(outputNames: _*))
+    /**
+      * Sets the output names for which the next operator will receive values.
+      */
+    def select(outputNames: String*): DataStream[T] =
+        asScalaStream(javaStream.select(outputNames: _*))
 }

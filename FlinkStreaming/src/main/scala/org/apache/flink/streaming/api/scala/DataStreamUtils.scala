@@ -26,6 +26,8 @@ import scala.collection.JavaConverters._
 import scala.reflect.ClassTag
 
 /**
+  * 此类提供用于收集[[DataStream]]的简单实用工具方法，通过[[DataStreamUtils]]封装的功能有效地丰富了它。
+  *
   * This class provides simple utility methods for collecting a [[DataStream]],
   * effectively enriching it with the functionality encapsulated by [[DataStreamUtils]].
   *
@@ -36,37 +38,38 @@ import scala.reflect.ClassTag
 @Experimental
 class DataStreamUtils[T: TypeInformation : ClassTag](val self: DataStream[T]) {
 
-  /**
-    * Returns a scala iterator to iterate over the elements of the DataStream.
-    * @return The iterator
-    */
-  def collect() : Iterator[T] = {
-    JavaStreamUtils.collect(self.javaStream).asScala
-  }
+    /**
+      * Returns a scala iterator to iterate over the elements of the DataStream.
+      *
+      * @return The iterator
+      */
+    def collect(): Iterator[T] = {
+        JavaStreamUtils.collect(self.javaStream).asScala
+    }
 
-  /**
-    * Reinterprets the given [[DataStream]] as a [[KeyedStream]], which extracts keys with the
-    * given [[KeySelectorWithType]].
-    *
-    * IMPORTANT: For every partition of the base stream, the keys of events in the base stream
-    * must be partitioned exactly in the same way as if it was created through a
-    * [[DataStream#keyBy(KeySelectorWithType)]].
-    *
-    * @param keySelector Function that defines how keys are extracted from the data stream.
-    * @return The reinterpretation of the [[DataStream]] as a [[KeyedStream]].
-    */
-  def reinterpretAsKeyedStream[K: TypeInformation](
-        keySelector: T => K): KeyedStream[T, K] = {
+    /**
+      * Reinterprets the given [[DataStream]] as a [[KeyedStream]], which extracts keys with the
+      * given [[KeySelectorWithType]].
+      *
+      * IMPORTANT: For every partition of the base stream, the keys of events in the base stream
+      * must be partitioned exactly in the same way as if it was created through a
+      * [[DataStream#keyBy(KeySelectorWithType)]].
+      *
+      * @param keySelector Function that defines how keys are extracted from the data stream.
+      * @return The reinterpretation of the [[DataStream]] as a [[KeyedStream]].
+      */
+    def reinterpretAsKeyedStream[K: TypeInformation](
+                                                        keySelector: T => K): KeyedStream[T, K] = {
 
-    val keySelectorWithType =
-      new KeySelectorWithType[T, K](clean(keySelector), implicitly[TypeInformation[K]])
+        val keySelectorWithType =
+            new KeySelectorWithType[T, K](clean(keySelector), implicitly[TypeInformation[K]])
 
-    asScalaStream(
-      JavaStreamUtils.reinterpretAsKeyedStream(self.javaStream, keySelectorWithType))
-  }
+        asScalaStream(
+            JavaStreamUtils.reinterpretAsKeyedStream(self.javaStream, keySelectorWithType))
+    }
 
-  private[flink] def clean[F <: AnyRef](f: F): F = {
-    new StreamExecutionEnvironment(self.javaStream.getExecutionEnvironment).scalaClean(f)
-  }
+    private[flink] def clean[F <: AnyRef](f: F): F = {
+        new StreamExecutionEnvironment(self.javaStream.getExecutionEnvironment).scalaClean(f)
+    }
 }
 
