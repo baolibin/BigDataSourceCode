@@ -4,6 +4,37 @@
 -----
 ##### 1、api模块源码
 > [api模块源码](src/main/java/org/apache/flink/streaming/api)：
+* checkpoint：
+    - CheckpointedFunction： 
+    - ExternallyInducedSource： 
+    - ListCheckpointed： 
+    - WithMasterCheckpointHook： 
+* collector.selector：
+    - CopyingDirectedOutput： 
+    - DirectedOutput： 
+    - OutputSelector： 
+* datastream：
+* environment：
+* functions：
+* graph：
+* operators：
+* transformations：
+* watermark：
+* windows：
+    - assigners：
+    - evictors：
+    - time：
+    - triggers：
+    - windows：
+        - GlobalWindow：
+        - TimeWindow：
+        - Window：
+* CheckpointingMode：
+* SimpleTimerService：
+* TimeCharacteristic：
+* TimeDomain：
+* TimerService：
+
 
 -----
 ##### 2、experimental模块源码
