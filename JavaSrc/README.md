@@ -145,14 +145,14 @@
 * Scanner：
 * ServiceConfigurationError：
 * ServiceLoader：
-* Set：
+* Set：不包含重复元素的集合。更正式地说，集合不包含一对元素e1和e2，e1等于（e2），最多一个空元素。正如它的名字所暗示的，这个接口为数学集合抽象建模。
 * SimpleTimeZone：
 * SortedMap：
 * SortedSet：
 * Spliterator：
 * Spliterators：
 * SplittableRandom：
-* Stack：
+* Stack：类表示后进先出（LIFO）对象堆栈。它通过五个操作扩展了类向量，允许将向量视为堆栈。
 * StringJoiner：
 * StringTokenizer：
 * Timer：
