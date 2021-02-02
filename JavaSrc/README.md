@@ -125,7 +125,7 @@
 * NavigableMap：
 * NavigableSet：
 * NoSuchElementException：
-* Objects：
+* Objects：此类由{@code static}实用程序方法组成，用于对对象进行操作。这些实用程序包括{@code null}安全或{@code null}容忍的方法，用于计算对象的哈希代码、为对象返回字符串以及比较两个对象。
 * Observable：
 * Observer：
 * Optional：
