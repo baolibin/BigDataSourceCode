@@ -80,7 +80,7 @@
 * DualPivotQuicksort：
 * DuplicateFormatFlagsException：
 * EmptyStackException：
-* Enumeration：
+* Enumeration：实现枚举接口的对象一次生成一系列元素。对nextElement方法的连续调用返回序列的连续元素。
 * EnumMap：
 * EnumSet：
 * EventListener：
