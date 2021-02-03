@@ -60,7 +60,7 @@
 * AbstractSet：
 * ArrayDeque：
 * ArrayList：
-* ArrayPrefixHelpers：
+* ArrayPrefixHelpers：要执行的ForkJoin任务数组.parallelPrefix操作。
 * Arrays：
 * ArraysParallelSortHelpers：
 * Base64：

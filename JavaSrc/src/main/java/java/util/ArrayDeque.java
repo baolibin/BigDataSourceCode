@@ -885,7 +885,7 @@ public class ArrayDeque<E> extends AbstractCollection<E>
         // Read in size and allocate array
         int size = s.readInt();
         int capacity = calculateSize(size);
-        SharedSecrets.getJavaOISAccess().checkArray(s, Object[].class, capacity);
+        // SharedSecrets.getJavaOISAccess().checkArray(s, Object[].class, capacity);
         allocateElements(size);
         head = 0;
         tail = size;

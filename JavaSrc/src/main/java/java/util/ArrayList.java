@@ -790,7 +790,7 @@ public class ArrayList<E> extends AbstractList<E>
         if (size > 0) {
             // be like clone(), allocate array based upon size not capacity
             int capacity = calculateCapacity(elementData, size);
-            SharedSecrets.getJavaOISAccess().checkArray(s, Object[].class, capacity);
+            // SharedSecrets.getJavaOISAccess().checkArray(s, Object[].class, capacity);
             ensureCapacityInternal(size);
 
             Object[] a = elementData;
