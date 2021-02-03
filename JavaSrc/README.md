@@ -92,7 +92,7 @@
 * Formatter：
 * FormatterClosedException：
 * GregorianCalendar：
-* HashMap：
+* HashMap：基于哈希表的Map接口实现。这个实现提供了所有可选的映射操作，并允许空值和空键。（HashMap类大致相当于Hashtable，只是它不同步并且允许空值。）这个类不保证映射的顺序；特别是，它不保证随着时间的推移顺序保持不变。
 * HashSet：
 * Hashtable：
 * IdentityHashMap：
