@@ -167,4 +167,4 @@
 * UnknownFormatFlagsException：
 * UUID：
 * Vector：
-* WeakHashMap：
+* WeakHashMap：基于哈希表实现的Map接口，带有弱键。WeakHashMap中的value在其Key不再正常使用时将自动删除。
