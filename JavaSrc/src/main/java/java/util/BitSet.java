@@ -33,6 +33,8 @@ import java.util.stream.IntStream;
 import java.util.stream.StreamSupport;
 
 /**
+ * 这个类实现了一个按需增长的位向量。位集的每个组件都有一个{@code boolean}值。{@code BitSet}的位由非负整数索引。可以检查、设置或清除单个索引位。一个{@code位集}可用于通过逻辑与、逻辑包含或和逻辑异或操作修改另一个{@code位集}的内容。
+ *
  * This class implements a vector of bits that grows as needed. Each
  * component of the bit set has a {@code boolean} value. The
  * bits of a {@code BitSet} are indexed by nonnegative integers.

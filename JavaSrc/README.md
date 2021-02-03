@@ -64,9 +64,9 @@
 * Arrays：
 * ArraysParallelSortHelpers：
 * Base64：
-* BitSet：
+* BitSet：这个类实现了一个按需增长的位向量。位集的每个组件都有一个{@code boolean}值。{@code BitSet}的位由非负整数索引。可以检查、设置或清除单个索引位。一个{@code位集}可用于通过逻辑与、逻辑包含或和逻辑异或操作修改另一个{@code位集}的内容。
 * Calendar：
-* Collection：
+* Collection：集合层次结构中的根接口。集合表示一组对象，称为其元素。有些集合允许重复元素，而有些则不允许。有些是有序的，有些是无序的。JDK不提供此接口的任何直接实现：它提供更具体的子接口（如Set和List）的实现。此接口通常用于传递集合，并在需要最大通用性的地方对其进行操作。
 * Collections：
 * ComparableTimSort：
 * Comparator：
@@ -112,7 +112,7 @@
 * LinkedHashMap：
 * LinkedHashSet：
 * LinkedList：
-* List：
+* List：有序的集合（也称为序列）。此界面的用户可以精确控制每个元素在列表中的插入位置。用户可以通过整数索引（在列表中的位置）访问元素，并在列表中搜索元素。
 * ListIterator：
 * ListResourceBundle：
 * Locale：
