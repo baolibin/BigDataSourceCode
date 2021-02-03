@@ -25,7 +25,10 @@
 
 package java.util;
 
+import java.io.IOException;
 import java.io.InvalidObjectException;
+import java.io.ObjectInputStream;
+
 import sun.misc.SharedSecrets;
 
 /**
@@ -292,8 +295,8 @@ public class HashSet<E>
      * Reconstitute the <tt>HashSet</tt> instance from a stream (that is,
      * deserialize it).
      */
-    private void readObject(java.io.ObjectInputStream s)
-        throws java.io.IOException, ClassNotFoundException {
+    private void readObject(ObjectInputStream s)
+        throws IOException, ClassNotFoundException {
         // Read in any hidden serialization magic
         s.defaultReadObject();
 
@@ -327,8 +330,8 @@ public class HashSet<E>
         // actual allocation size. Check Map.Entry[].class since it's the nearest public type to
         // what is actually created.
 
-        SharedSecrets.getJavaOISAccess()
-                     .checkArray(s, Map.Entry[].class, HashMap.tableSizeFor(capacity));
+        // SharedSecrets.getJavaOISAccess()
+        //              .checkArray(s, Map.Entry[].class, HashMap.tableSizeFor(capacity));
 
         // Create backing HashMap
         map = (((HashSet<?>)this) instanceof LinkedHashSet ?

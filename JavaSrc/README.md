@@ -15,7 +15,7 @@
 
 -----
 ##### 5、lang模块源码
-
+* Error：{@code Error}是{@code Throwable}的一个子类，它表示一个合理的应用程序不应该试图捕捉的严重问题。大多数这样的错误都是异常情况。{@code ThreadDeath}错误虽然是一个“正常”条件，但也是{@code error}的一个子类，因为大多数应用程序不应该尝试捕捉它。
 -----
 ##### 6、math模块源码
 
@@ -137,12 +137,12 @@
 * Properties：
 * PropertyPermission：
 * PropertyResourceBundle：
-* Queue：
-* Random：
+* Queue：一种设计用于在处理前保存元素的集合。除了基本的{@linkjava.util.Collection集合Collection}操作，队列提供了额外的插入、提取和检查操作。这些方法都有两种形式：一种是在操作失败时抛出异常，另一种是返回特殊值（根据操作的不同，{@code null}或{@code false}）。后一种形式的insert操作专门设计用于容量受限的{@code Queue}实现；在大多数实现中，insert操作不能失败。
+* Random：此类的实例用于生成伪随机数流。该类使用48位种子，该种子使用线性同余公式进行修改。
 * RandomAccess：
 * RegularEnumSet：
 * ResourceBundle：
-* Scanner：
+* Scanner：一个简单的文本扫描器，可以使用正则表达式解析原语类型和字符串。
 * ServiceConfigurationError：
 * ServiceLoader：
 * Set：不包含重复元素的集合。更正式地说，集合不包含一对元素e1和e2，e1等于（e2），最多一个空元素。正如它的名字所暗示的，这个接口为数学集合抽象建模。

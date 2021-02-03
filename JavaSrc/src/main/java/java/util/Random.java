@@ -24,7 +24,13 @@
  */
 
 package java.util;
-import java.io.*;
+
+import sun.misc.Unsafe;
+
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.ObjectStreamField;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.DoubleConsumer;
 import java.util.function.IntConsumer;
@@ -34,9 +40,9 @@ import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 import java.util.stream.StreamSupport;
 
-import sun.misc.Unsafe;
-
 /**
+ * 此类的实例用于生成伪随机数流。该类使用48位种子，该种子使用线性同余公式进行修改。
+ *
  * An instance of this class is used to generate a stream of
  * pseudorandom numbers. The class uses a 48-bit seed, which is
  * modified using a linear congruential formula. (See Donald Knuth,
@@ -69,13 +75,14 @@ import sun.misc.Unsafe;
  * secure.  Consider instead using {@link java.security.SecureRandom} to
  * get a cryptographically secure pseudo-random number generator for use
  * by security-sensitive applications.
- *
- * @author  Frank Yellin
- * @since   1.0
+ * @author Frank Yellin
+ * @since 1.0
  */
 public
 class Random implements java.io.Serializable {
-    /** use serialVersionUID from JDK 1.1 for interoperability */
+    /**
+     * use serialVersionUID from JDK 1.1 for interoperability
+     */
     static final long serialVersionUID = 3905348978240129619L;
 
     /**
@@ -94,7 +101,7 @@ class Random implements java.io.Serializable {
     // IllegalArgumentException messages
     static final String BadBound = "bound must be positive";
     static final String BadRange = "bound must be greater than origin";
-    static final String BadSize  = "size must be non-negative";
+    static final String BadSize = "size must be non-negative";
 
     /**
      * Creates a new random number generator. This constructor sets
@@ -108,7 +115,7 @@ class Random implements java.io.Serializable {
     private static long seedUniquifier() {
         // L'Ecuyer, "Tables of Linear Congruential Generators of
         // Different Sizes and Good Lattice Structure", 1999
-        for (;;) {
+        for (; ; ) {
             long current = seedUniquifier.get();
             long next = current * 181783497276652981L;
             if (seedUniquifier.compareAndSet(current, next))
@@ -117,7 +124,7 @@ class Random implements java.io.Serializable {
     }
 
     private static final AtomicLong seedUniquifier
-        = new AtomicLong(8682522807148012L);
+            = new AtomicLong(8682522807148012L);
 
     /**
      * Creates a new random number generator using a single {@code long} seed.
@@ -125,12 +132,11 @@ class Random implements java.io.Serializable {
      * number generator which is maintained by method {@link #next}.
      *
      * <p>The invocation {@code new Random(seed)} is equivalent to:
-     *  <pre> {@code
+     * <pre> {@code
      * Random rnd = new Random();
      * rnd.setSeed(seed);}</pre>
-     *
      * @param seed the initial seed
-     * @see   #setSeed(long)
+     * @see #setSeed(long)
      */
     public Random(long seed) {
         if (getClass() == Random.class)
@@ -154,7 +160,7 @@ class Random implements java.io.Serializable {
      * created with the argument {@code seed} as a seed. The method
      * {@code setSeed} is implemented by class {@code Random} by
      * atomically updating the seed to
-     *  <pre>{@code (seed ^ 0x5DEECE66DL) & ((1L << 48) - 1)}</pre>
+     * <pre>{@code (seed ^ 0x5DEECE66DL) & ((1L << 48) - 1)}</pre>
      * and clearing the {@code haveNextNextGaussian} flag used by {@link
      * #nextGaussian}.
      *
@@ -162,7 +168,6 @@ class Random implements java.io.Serializable {
      * happens to use only 48 bits of the given seed. In general, however,
      * an overriding method may use all 64 bits of the {@code long}
      * argument as a seed value.
-     *
      * @param seed the initial seed
      */
     synchronized public void setSeed(long seed) {
@@ -181,19 +186,18 @@ class Random implements java.io.Serializable {
      * chosen bit values, each of which is (approximately) equally
      * likely to be {@code 0} or {@code 1}. The method {@code next} is
      * implemented by class {@code Random} by atomically updating the seed to
-     *  <pre>{@code (seed * 0x5DEECE66DL + 0xBL) & ((1L << 48) - 1)}</pre>
+     * <pre>{@code (seed * 0x5DEECE66DL + 0xBL) & ((1L << 48) - 1)}</pre>
      * and returning
-     *  <pre>{@code (int)(seed >>> (48 - bits))}.</pre>
-     *
+     * <pre>{@code (int)(seed >>> (48 - bits))}.</pre>
+     * <p>
      * This is a linear congruential pseudorandom number generator, as
      * defined by D. H. Lehmer and described by Donald E. Knuth in
      * <i>The Art of Computer Programming,</i> Volume 3:
      * <i>Seminumerical Algorithms</i>, section 3.2.1.
-     *
-     * @param  bits random bits
+     * @param bits random bits
      * @return the next pseudorandom value from this random number
-     *         generator's sequence
-     * @since  1.1
+     * generator's sequence
+     * @since 1.1
      */
     protected int next(int bits) {
         long oldseed, nextseed;
@@ -202,7 +206,7 @@ class Random implements java.io.Serializable {
             oldseed = seed.get();
             nextseed = (oldseed * multiplier + addend) & mask;
         } while (!seed.compareAndSet(oldseed, nextseed));
-        return (int)(nextseed >>> (48 - bits));
+        return (int) (nextseed >>> (48 - bits));
     }
 
     /**
@@ -212,33 +216,31 @@ class Random implements java.io.Serializable {
      *
      * <p>The method {@code nextBytes} is implemented by class {@code Random}
      * as if by:
-     *  <pre> {@code
+     * <pre> {@code
      * public void nextBytes(byte[] bytes) {
      *   for (int i = 0; i < bytes.length; )
      *     for (int rnd = nextInt(), n = Math.min(bytes.length - i, 4);
      *          n-- > 0; rnd >>= 8)
      *       bytes[i++] = (byte)rnd;
      * }}</pre>
-     *
-     * @param  bytes the byte array to fill with random bytes
+     * @param bytes the byte array to fill with random bytes
      * @throws NullPointerException if the byte array is null
-     * @since  1.1
+     * @since 1.1
      */
     public void nextBytes(byte[] bytes) {
         for (int i = 0, len = bytes.length; i < len; )
             for (int rnd = nextInt(),
-                     n = Math.min(len - i, Integer.SIZE/Byte.SIZE);
+                 n = Math.min(len - i, Integer.SIZE / Byte.SIZE);
                  n-- > 0; rnd >>= Byte.SIZE)
-                bytes[i++] = (byte)rnd;
+                bytes[i++] = (byte) rnd;
     }
 
     /**
      * The form of nextLong used by LongStream Spliterators.  If
      * origin is greater than bound, acts as unbounded form of
      * nextLong, else as bounded form.
-     *
      * @param origin the least value, unless greater than bound
-     * @param bound the upper bound (exclusive), must not equal origin
+     * @param bound  the upper bound (exclusive), must not equal origin
      * @return a pseudorandom value
      */
     final long internalNextLong(long origin, long bound) {
@@ -253,8 +255,7 @@ class Random implements java.io.Serializable {
                      u = nextLong() >>> 1) // retry
                     ;
                 r += origin;
-            }
-            else {              // range not representable as long
+            } else {              // range not representable as long
                 while (r < origin || r >= bound)
                     r = nextLong();
             }
@@ -267,9 +268,8 @@ class Random implements java.io.Serializable {
      * For the unbounded case: uses nextInt().
      * For the bounded case with representable range: uses nextInt(int bound)
      * For the bounded case with unrepresentable range: uses nextInt()
-     *
      * @param origin the least value, unless greater than bound
-     * @param bound the upper bound (exclusive), must not equal origin
+     * @param bound  the upper bound (exclusive), must not equal origin
      * @return a pseudorandom value
      */
     final int internalNextInt(int origin, int bound) {
@@ -277,25 +277,22 @@ class Random implements java.io.Serializable {
             int n = bound - origin;
             if (n > 0) {
                 return nextInt(n) + origin;
-            }
-            else {  // range not representable as int
+            } else {  // range not representable as int
                 int r;
                 do {
                     r = nextInt();
                 } while (r < origin || r >= bound);
                 return r;
             }
-        }
-        else {
+        } else {
             return nextInt();
         }
     }
 
     /**
      * The form of nextDouble used by DoubleStream Spliterators.
-     *
      * @param origin the least value, unless greater than bound
-     * @param bound the upper bound (exclusive), must not equal origin
+     * @param bound  the upper bound (exclusive), must not equal origin
      * @return a pseudorandom value
      */
     final double internalNextDouble(double origin, double bound) {
@@ -317,13 +314,12 @@ class Random implements java.io.Serializable {
      *
      * <p>The method {@code nextInt} is implemented by class {@code Random}
      * as if by:
-     *  <pre> {@code
+     * <pre> {@code
      * public int nextInt() {
      *   return next(32);
      * }}</pre>
-     *
      * @return the next pseudorandom, uniformly distributed {@code int}
-     *         value from this random number generator's sequence
+     * value from this random number generator's sequence
      */
     public int nextInt() {
         return next(32);
@@ -338,7 +334,7 @@ class Random implements java.io.Serializable {
      * {@code int} values are produced with (approximately) equal
      * probability.  The method {@code nextInt(int bound)} is implemented by
      * class {@code Random} as if by:
-     *  <pre> {@code
+     * <pre> {@code
      * public int nextInt(int bound) {
      *   if (bound <= 0)
      *     throw new IllegalArgumentException("bound must be positive");
@@ -375,11 +371,10 @@ class Random implements java.io.Serializable {
      * sequence of values of their low-order bits.  Thus, this special case
      * greatly increases the length of the sequence of values returned by
      * successive calls to this method if n is a small power of two.
-     *
      * @param bound the upper bound (exclusive).  Must be positive.
      * @return the next pseudorandom, uniformly distributed {@code int}
-     *         value between zero (inclusive) and {@code bound} (exclusive)
-     *         from this random number generator's sequence
+     * value between zero (inclusive) and {@code bound} (exclusive)
+     * from this random number generator's sequence
      * @throws IllegalArgumentException if bound is not positive
      * @since 1.2
      */
@@ -390,7 +385,7 @@ class Random implements java.io.Serializable {
         int r = next(31);
         int m = bound - 1;
         if ((bound & m) == 0)  // i.e., bound is a power of 2
-            r = (int)((bound * (long)r) >> 31);
+            r = (int) ((bound * (long) r) >> 31);
         else {
             for (int u = r;
                  u - (r = u % bound) + m < 0;
@@ -408,20 +403,19 @@ class Random implements java.io.Serializable {
      *
      * <p>The method {@code nextLong} is implemented by class {@code Random}
      * as if by:
-     *  <pre> {@code
+     * <pre> {@code
      * public long nextLong() {
      *   return ((long)next(32) << 32) + next(32);
      * }}</pre>
-     *
+     * <p>
      * Because class {@code Random} uses a seed with only 48 bits,
      * this algorithm will not return all possible {@code long} values.
-     *
      * @return the next pseudorandom, uniformly distributed {@code long}
-     *         value from this random number generator's sequence
+     * value from this random number generator's sequence
      */
     public long nextLong() {
         // it's okay that the bottom word remains signed.
-        return ((long)(next(32)) << 32) + next(32);
+        return ((long) (next(32)) << 32) + next(32);
     }
 
     /**
@@ -434,14 +428,13 @@ class Random implements java.io.Serializable {
      *
      * <p>The method {@code nextBoolean} is implemented by class {@code Random}
      * as if by:
-     *  <pre> {@code
+     * <pre> {@code
      * public boolean nextBoolean() {
      *   return next(1) != 0;
      * }}</pre>
-     *
      * @return the next pseudorandom, uniformly distributed
-     *         {@code boolean} value from this random number generator's
-     *         sequence
+     * {@code boolean} value from this random number generator's
+     * sequence
      * @since 1.2
      */
     public boolean nextBoolean() {
@@ -463,7 +456,7 @@ class Random implements java.io.Serializable {
      *
      * <p>The method {@code nextFloat} is implemented by class {@code Random}
      * as if by:
-     *  <pre> {@code
+     * <pre> {@code
      * public float nextFloat() {
      *   return next(24) / ((float)(1 << 24));
      * }}</pre>
@@ -474,19 +467,18 @@ class Random implements java.io.Serializable {
      * chosen bits, then the algorithm shown would choose {@code float}
      * values from the stated range with perfect uniformity.<p>
      * [In early versions of Java, the result was incorrectly calculated as:
-     *  <pre> {@code
+     * <pre> {@code
      *   return next(30) / ((float)(1 << 30));}</pre>
      * This might seem to be equivalent, if not better, but in fact it
      * introduced a slight nonuniformity because of the bias in the rounding
      * of floating-point numbers: it was slightly more likely that the
      * low-order bit of the significand would be 0 than that it would be 1.]
-     *
      * @return the next pseudorandom, uniformly distributed {@code float}
-     *         value between {@code 0.0} and {@code 1.0} from this
-     *         random number generator's sequence
+     * value between {@code 0.0} and {@code 1.0} from this
+     * random number generator's sequence
      */
     public float nextFloat() {
-        return next(24) / ((float)(1 << 24));
+        return next(24) / ((float) (1 << 24));
     }
 
     /**
@@ -501,7 +493,7 @@ class Random implements java.io.Serializable {
      *
      * <p>The method {@code nextDouble} is implemented by class {@code Random}
      * as if by:
-     *  <pre> {@code
+     * <pre> {@code
      * public double nextDouble() {
      *   return (((long)next(26) << 27) + next(27))
      *     / (double)(1L << 53);
@@ -513,7 +505,7 @@ class Random implements java.io.Serializable {
      * randomly chosen bits, then the algorithm shown would choose
      * {@code double} values from the stated range with perfect uniformity.
      * <p>[In early versions of Java, the result was incorrectly calculated as:
-     *  <pre> {@code
+     * <pre> {@code
      *   return (((long)next(27) << 27) + next(27))
      *     / (double)(1L << 54);}</pre>
      * This might seem to be equivalent, if not better, but in fact it
@@ -522,14 +514,13 @@ class Random implements java.io.Serializable {
      * low-order bit of the significand would be 0 than that it would be 1!
      * This nonuniformity probably doesn't matter much in practice, but we
      * strive for perfection.]
-     *
      * @return the next pseudorandom, uniformly distributed {@code double}
-     *         value between {@code 0.0} and {@code 1.0} from this
-     *         random number generator's sequence
+     * value between {@code 0.0} and {@code 1.0} from this
+     * random number generator's sequence
      * @see Math#random
      */
     public double nextDouble() {
-        return (((long)(next(26)) << 27) + next(27)) * DOUBLE_UNIT;
+        return (((long) (next(26)) << 27) + next(27)) * DOUBLE_UNIT;
     }
 
     private double nextNextGaussian;
@@ -547,7 +538,7 @@ class Random implements java.io.Serializable {
      *
      * <p>The method {@code nextGaussian} is implemented by class
      * {@code Random} as if by a threadsafe version of the following:
-     *  <pre> {@code
+     * <pre> {@code
      * private double nextNextGaussian;
      * private boolean haveNextNextGaussian = false;
      *
@@ -574,11 +565,10 @@ class Random implements java.io.Serializable {
      * section 3.4.1, subsection C, algorithm P. Note that it generates two
      * independent values at the cost of only one call to {@code StrictMath.log}
      * and one call to {@code StrictMath.sqrt}.
-     *
      * @return the next pseudorandom, Gaussian ("normally") distributed
-     *         {@code double} value with mean {@code 0.0} and
-     *         standard deviation {@code 1.0} from this random number
-     *         generator's sequence
+     * {@code double} value with mean {@code 0.0} and
+     * standard deviation {@code 1.0} from this random number
+     * generator's sequence
      */
     synchronized public double nextGaussian() {
         // See Knuth, ACP, Section 3.4.1 Algorithm C.
@@ -592,7 +582,7 @@ class Random implements java.io.Serializable {
                 v2 = 2 * nextDouble() - 1; // between -1 and 1
                 s = v1 * v1 + v2 * v2;
             } while (s >= 1 || s == 0);
-            double multiplier = StrictMath.sqrt(-2 * StrictMath.log(s)/s);
+            double multiplier = StrictMath.sqrt(-2 * StrictMath.log(s) / s);
             nextNextGaussian = v2 * multiplier;
             haveNextNextGaussian = true;
             return v1 * multiplier;
@@ -608,11 +598,10 @@ class Random implements java.io.Serializable {
      *
      * <p>A pseudorandom {@code int} value is generated as if it's the result of
      * calling the method {@link #nextInt()}.
-     *
      * @param streamSize the number of values to generate
      * @return a stream of pseudorandom {@code int} values
      * @throws IllegalArgumentException if {@code streamSize} is
-     *         less than zero
+     *                                  less than zero
      * @since 1.8
      */
     public IntStream ints(long streamSize) {
@@ -620,8 +609,8 @@ class Random implements java.io.Serializable {
             throw new IllegalArgumentException(BadSize);
         return StreamSupport.intStream
                 (new RandomIntsSpliterator
-                         (this, 0L, streamSize, Integer.MAX_VALUE, 0),
-                 false);
+                                (this, 0L, streamSize, Integer.MAX_VALUE, 0),
+                        false);
     }
 
     /**
@@ -630,18 +619,16 @@ class Random implements java.io.Serializable {
      *
      * <p>A pseudorandom {@code int} value is generated as if it's the result of
      * calling the method {@link #nextInt()}.
-     *
+     * @return a stream of pseudorandom {@code int} values
      * @implNote This method is implemented to be equivalent to {@code
      * ints(Long.MAX_VALUE)}.
-     *
-     * @return a stream of pseudorandom {@code int} values
      * @since 1.8
      */
     public IntStream ints() {
         return StreamSupport.intStream
                 (new RandomIntsSpliterator
-                         (this, 0L, Long.MAX_VALUE, Integer.MAX_VALUE, 0),
-                 false);
+                                (this, 0L, Long.MAX_VALUE, Integer.MAX_VALUE, 0),
+                        false);
     }
 
     /**
@@ -665,15 +652,14 @@ class Random implements java.io.Serializable {
      *     return r;
      *   }
      * }}</pre>
-     *
-     * @param streamSize the number of values to generate
+     * @param streamSize         the number of values to generate
      * @param randomNumberOrigin the origin (inclusive) of each random value
-     * @param randomNumberBound the bound (exclusive) of each random value
+     * @param randomNumberBound  the bound (exclusive) of each random value
      * @return a stream of pseudorandom {@code int} values,
-     *         each with the given origin (inclusive) and bound (exclusive)
+     * each with the given origin (inclusive) and bound (exclusive)
      * @throws IllegalArgumentException if {@code streamSize} is
-     *         less than zero, or {@code randomNumberOrigin}
-     *         is greater than or equal to {@code randomNumberBound}
+     *                                  less than zero, or {@code randomNumberOrigin}
+     *                                  is greater than or equal to {@code randomNumberBound}
      * @since 1.8
      */
     public IntStream ints(long streamSize, int randomNumberOrigin,
@@ -684,8 +670,8 @@ class Random implements java.io.Serializable {
             throw new IllegalArgumentException(BadRange);
         return StreamSupport.intStream
                 (new RandomIntsSpliterator
-                         (this, 0L, streamSize, randomNumberOrigin, randomNumberBound),
-                 false);
+                                (this, 0L, streamSize, randomNumberOrigin, randomNumberBound),
+                        false);
     }
 
     /**
@@ -709,16 +695,14 @@ class Random implements java.io.Serializable {
      *     return r;
      *   }
      * }}</pre>
-     *
+     * @param randomNumberOrigin the origin (inclusive) of each random value
+     * @param randomNumberBound  the bound (exclusive) of each random value
+     * @return a stream of pseudorandom {@code int} values,
+     * each with the given origin (inclusive) and bound (exclusive)
+     * @throws IllegalArgumentException if {@code randomNumberOrigin}
+     *                                  is greater than or equal to {@code randomNumberBound}
      * @implNote This method is implemented to be equivalent to {@code
      * ints(Long.MAX_VALUE, randomNumberOrigin, randomNumberBound)}.
-     *
-     * @param randomNumberOrigin the origin (inclusive) of each random value
-     * @param randomNumberBound the bound (exclusive) of each random value
-     * @return a stream of pseudorandom {@code int} values,
-     *         each with the given origin (inclusive) and bound (exclusive)
-     * @throws IllegalArgumentException if {@code randomNumberOrigin}
-     *         is greater than or equal to {@code randomNumberBound}
      * @since 1.8
      */
     public IntStream ints(int randomNumberOrigin, int randomNumberBound) {
@@ -726,8 +710,8 @@ class Random implements java.io.Serializable {
             throw new IllegalArgumentException(BadRange);
         return StreamSupport.intStream
                 (new RandomIntsSpliterator
-                         (this, 0L, Long.MAX_VALUE, randomNumberOrigin, randomNumberBound),
-                 false);
+                                (this, 0L, Long.MAX_VALUE, randomNumberOrigin, randomNumberBound),
+                        false);
     }
 
     /**
@@ -736,11 +720,10 @@ class Random implements java.io.Serializable {
      *
      * <p>A pseudorandom {@code long} value is generated as if it's the result
      * of calling the method {@link #nextLong()}.
-     *
      * @param streamSize the number of values to generate
      * @return a stream of pseudorandom {@code long} values
      * @throws IllegalArgumentException if {@code streamSize} is
-     *         less than zero
+     *                                  less than zero
      * @since 1.8
      */
     public LongStream longs(long streamSize) {
@@ -748,8 +731,8 @@ class Random implements java.io.Serializable {
             throw new IllegalArgumentException(BadSize);
         return StreamSupport.longStream
                 (new RandomLongsSpliterator
-                         (this, 0L, streamSize, Long.MAX_VALUE, 0L),
-                 false);
+                                (this, 0L, streamSize, Long.MAX_VALUE, 0L),
+                        false);
     }
 
     /**
@@ -758,18 +741,16 @@ class Random implements java.io.Serializable {
      *
      * <p>A pseudorandom {@code long} value is generated as if it's the result
      * of calling the method {@link #nextLong()}.
-     *
+     * @return a stream of pseudorandom {@code long} values
      * @implNote This method is implemented to be equivalent to {@code
      * longs(Long.MAX_VALUE)}.
-     *
-     * @return a stream of pseudorandom {@code long} values
      * @since 1.8
      */
     public LongStream longs() {
         return StreamSupport.longStream
                 (new RandomLongsSpliterator
-                         (this, 0L, Long.MAX_VALUE, Long.MAX_VALUE, 0L),
-                 false);
+                                (this, 0L, Long.MAX_VALUE, Long.MAX_VALUE, 0L),
+                        false);
     }
 
     /**
@@ -798,15 +779,14 @@ class Random implements java.io.Serializable {
      *   }
      *   return r;
      * }}</pre>
-     *
-     * @param streamSize the number of values to generate
+     * @param streamSize         the number of values to generate
      * @param randomNumberOrigin the origin (inclusive) of each random value
-     * @param randomNumberBound the bound (exclusive) of each random value
+     * @param randomNumberBound  the bound (exclusive) of each random value
      * @return a stream of pseudorandom {@code long} values,
-     *         each with the given origin (inclusive) and bound (exclusive)
+     * each with the given origin (inclusive) and bound (exclusive)
      * @throws IllegalArgumentException if {@code streamSize} is
-     *         less than zero, or {@code randomNumberOrigin}
-     *         is greater than or equal to {@code randomNumberBound}
+     *                                  less than zero, or {@code randomNumberOrigin}
+     *                                  is greater than or equal to {@code randomNumberBound}
      * @since 1.8
      */
     public LongStream longs(long streamSize, long randomNumberOrigin,
@@ -817,8 +797,8 @@ class Random implements java.io.Serializable {
             throw new IllegalArgumentException(BadRange);
         return StreamSupport.longStream
                 (new RandomLongsSpliterator
-                         (this, 0L, streamSize, randomNumberOrigin, randomNumberBound),
-                 false);
+                                (this, 0L, streamSize, randomNumberOrigin, randomNumberBound),
+                        false);
     }
 
     /**
@@ -847,16 +827,14 @@ class Random implements java.io.Serializable {
      *   }
      *   return r;
      * }}</pre>
-     *
+     * @param randomNumberOrigin the origin (inclusive) of each random value
+     * @param randomNumberBound  the bound (exclusive) of each random value
+     * @return a stream of pseudorandom {@code long} values,
+     * each with the given origin (inclusive) and bound (exclusive)
+     * @throws IllegalArgumentException if {@code randomNumberOrigin}
+     *                                  is greater than or equal to {@code randomNumberBound}
      * @implNote This method is implemented to be equivalent to {@code
      * longs(Long.MAX_VALUE, randomNumberOrigin, randomNumberBound)}.
-     *
-     * @param randomNumberOrigin the origin (inclusive) of each random value
-     * @param randomNumberBound the bound (exclusive) of each random value
-     * @return a stream of pseudorandom {@code long} values,
-     *         each with the given origin (inclusive) and bound (exclusive)
-     * @throws IllegalArgumentException if {@code randomNumberOrigin}
-     *         is greater than or equal to {@code randomNumberBound}
      * @since 1.8
      */
     public LongStream longs(long randomNumberOrigin, long randomNumberBound) {
@@ -864,8 +842,8 @@ class Random implements java.io.Serializable {
             throw new IllegalArgumentException(BadRange);
         return StreamSupport.longStream
                 (new RandomLongsSpliterator
-                         (this, 0L, Long.MAX_VALUE, randomNumberOrigin, randomNumberBound),
-                 false);
+                                (this, 0L, Long.MAX_VALUE, randomNumberOrigin, randomNumberBound),
+                        false);
     }
 
     /**
@@ -875,11 +853,10 @@ class Random implements java.io.Serializable {
      *
      * <p>A pseudorandom {@code double} value is generated as if it's the result
      * of calling the method {@link #nextDouble()}.
-     *
      * @param streamSize the number of values to generate
      * @return a stream of {@code double} values
      * @throws IllegalArgumentException if {@code streamSize} is
-     *         less than zero
+     *                                  less than zero
      * @since 1.8
      */
     public DoubleStream doubles(long streamSize) {
@@ -887,8 +864,8 @@ class Random implements java.io.Serializable {
             throw new IllegalArgumentException(BadSize);
         return StreamSupport.doubleStream
                 (new RandomDoublesSpliterator
-                         (this, 0L, streamSize, Double.MAX_VALUE, 0.0),
-                 false);
+                                (this, 0L, streamSize, Double.MAX_VALUE, 0.0),
+                        false);
     }
 
     /**
@@ -898,18 +875,16 @@ class Random implements java.io.Serializable {
      *
      * <p>A pseudorandom {@code double} value is generated as if it's the result
      * of calling the method {@link #nextDouble()}.
-     *
+     * @return a stream of pseudorandom {@code double} values
      * @implNote This method is implemented to be equivalent to {@code
      * doubles(Long.MAX_VALUE)}.
-     *
-     * @return a stream of pseudorandom {@code double} values
      * @since 1.8
      */
     public DoubleStream doubles() {
         return StreamSupport.doubleStream
                 (new RandomDoublesSpliterator
-                         (this, 0L, Long.MAX_VALUE, Double.MAX_VALUE, 0.0),
-                 false);
+                                (this, 0L, Long.MAX_VALUE, Double.MAX_VALUE, 0.0),
+                        false);
     }
 
     /**
@@ -927,16 +902,15 @@ class Random implements java.io.Serializable {
      *     r = Math.nextDown(bound);
      *   return r;
      * }}</pre>
-     *
-     * @param streamSize the number of values to generate
+     * @param streamSize         the number of values to generate
      * @param randomNumberOrigin the origin (inclusive) of each random value
-     * @param randomNumberBound the bound (exclusive) of each random value
+     * @param randomNumberBound  the bound (exclusive) of each random value
      * @return a stream of pseudorandom {@code double} values,
-     *         each with the given origin (inclusive) and bound (exclusive)
+     * each with the given origin (inclusive) and bound (exclusive)
      * @throws IllegalArgumentException if {@code streamSize} is
-     *         less than zero
+     *                                  less than zero
      * @throws IllegalArgumentException if {@code randomNumberOrigin}
-     *         is greater than or equal to {@code randomNumberBound}
+     *                                  is greater than or equal to {@code randomNumberBound}
      * @since 1.8
      */
     public DoubleStream doubles(long streamSize, double randomNumberOrigin,
@@ -947,8 +921,8 @@ class Random implements java.io.Serializable {
             throw new IllegalArgumentException(BadRange);
         return StreamSupport.doubleStream
                 (new RandomDoublesSpliterator
-                         (this, 0L, streamSize, randomNumberOrigin, randomNumberBound),
-                 false);
+                                (this, 0L, streamSize, randomNumberOrigin, randomNumberBound),
+                        false);
     }
 
     /**
@@ -966,16 +940,14 @@ class Random implements java.io.Serializable {
      *     r = Math.nextDown(bound);
      *   return r;
      * }}</pre>
-     *
+     * @param randomNumberOrigin the origin (inclusive) of each random value
+     * @param randomNumberBound  the bound (exclusive) of each random value
+     * @return a stream of pseudorandom {@code double} values,
+     * each with the given origin (inclusive) and bound (exclusive)
+     * @throws IllegalArgumentException if {@code randomNumberOrigin}
+     *                                  is greater than or equal to {@code randomNumberBound}
      * @implNote This method is implemented to be equivalent to {@code
      * doubles(Long.MAX_VALUE, randomNumberOrigin, randomNumberBound)}.
-     *
-     * @param randomNumberOrigin the origin (inclusive) of each random value
-     * @param randomNumberBound the bound (exclusive) of each random value
-     * @return a stream of pseudorandom {@code double} values,
-     *         each with the given origin (inclusive) and bound (exclusive)
-     * @throws IllegalArgumentException if {@code randomNumberOrigin}
-     *         is greater than or equal to {@code randomNumberBound}
      * @since 1.8
      */
     public DoubleStream doubles(double randomNumberOrigin, double randomNumberBound) {
@@ -983,8 +955,8 @@ class Random implements java.io.Serializable {
             throw new IllegalArgumentException(BadRange);
         return StreamSupport.doubleStream
                 (new RandomDoublesSpliterator
-                         (this, 0L, Long.MAX_VALUE, randomNumberOrigin, randomNumberBound),
-                 false);
+                                (this, 0L, Long.MAX_VALUE, randomNumberOrigin, randomNumberBound),
+                        false);
     }
 
     /**
@@ -1001,16 +973,20 @@ class Random implements java.io.Serializable {
         final long fence;
         final int origin;
         final int bound;
+
         RandomIntsSpliterator(Random rng, long index, long fence,
                               int origin, int bound) {
-            this.rng = rng; this.index = index; this.fence = fence;
-            this.origin = origin; this.bound = bound;
+            this.rng = rng;
+            this.index = index;
+            this.fence = fence;
+            this.origin = origin;
+            this.bound = bound;
         }
 
         public RandomIntsSpliterator trySplit() {
             long i = index, m = (i + fence) >>> 1;
             return (m <= i) ? null :
-                   new RandomIntsSpliterator(rng, i, index = m, origin, bound);
+                    new RandomIntsSpliterator(rng, i, index = m, origin, bound);
         }
 
         public long estimateSize() {
@@ -1056,16 +1032,20 @@ class Random implements java.io.Serializable {
         final long fence;
         final long origin;
         final long bound;
+
         RandomLongsSpliterator(Random rng, long index, long fence,
                                long origin, long bound) {
-            this.rng = rng; this.index = index; this.fence = fence;
-            this.origin = origin; this.bound = bound;
+            this.rng = rng;
+            this.index = index;
+            this.fence = fence;
+            this.origin = origin;
+            this.bound = bound;
         }
 
         public RandomLongsSpliterator trySplit() {
             long i = index, m = (i + fence) >>> 1;
             return (m <= i) ? null :
-                   new RandomLongsSpliterator(rng, i, index = m, origin, bound);
+                    new RandomLongsSpliterator(rng, i, index = m, origin, bound);
         }
 
         public long estimateSize() {
@@ -1112,16 +1092,20 @@ class Random implements java.io.Serializable {
         final long fence;
         final double origin;
         final double bound;
+
         RandomDoublesSpliterator(Random rng, long index, long fence,
                                  double origin, double bound) {
-            this.rng = rng; this.index = index; this.fence = fence;
-            this.origin = origin; this.bound = bound;
+            this.rng = rng;
+            this.index = index;
+            this.fence = fence;
+            this.origin = origin;
+            this.bound = bound;
         }
 
         public RandomDoublesSpliterator trySplit() {
             long i = index, m = (i + fence) >>> 1;
             return (m <= i) ? null :
-                   new RandomDoublesSpliterator(rng, i, index = m, origin, bound);
+                    new RandomDoublesSpliterator(rng, i, index = m, origin, bound);
         }
 
         public long estimateSize() {
@@ -1160,18 +1144,17 @@ class Random implements java.io.Serializable {
 
     /**
      * Serializable fields for Random.
-     *
-     * @serialField    seed long
-     *              seed for random computations
-     * @serialField    nextNextGaussian double
-     *              next Gaussian to be returned
-     * @serialField      haveNextNextGaussian boolean
-     *              nextNextGaussian is valid
+     * @serialField seed long
+     * seed for random computations
+     * @serialField nextNextGaussian double
+     * next Gaussian to be returned
+     * @serialField haveNextNextGaussian boolean
+     * nextNextGaussian is valid
      */
     private static final ObjectStreamField[] serialPersistentFields = {
-        new ObjectStreamField("seed", Long.TYPE),
-        new ObjectStreamField("nextNextGaussian", Double.TYPE),
-        new ObjectStreamField("haveNextNextGaussian", Boolean.TYPE)
+            new ObjectStreamField("seed", Long.TYPE),
+            new ObjectStreamField("nextNextGaussian", Double.TYPE),
+            new ObjectStreamField("haveNextNextGaussian", Boolean.TYPE)
     };
 
     /**
@@ -1179,7 +1162,7 @@ class Random implements java.io.Serializable {
      * deserialize it).
      */
     private void readObject(java.io.ObjectInputStream s)
-        throws java.io.IOException, ClassNotFoundException {
+            throws java.io.IOException, ClassNotFoundException {
 
         ObjectInputStream.GetField fields = s.readFields();
 
@@ -1187,8 +1170,8 @@ class Random implements java.io.Serializable {
         // historical reasons, but it is converted to an AtomicLong.
         long seedVal = fields.get("seed", -1L);
         if (seedVal < 0)
-          throw new java.io.StreamCorruptedException(
-                              "Random: invalid seed");
+            throw new java.io.StreamCorruptedException(
+                    "Random: invalid seed");
         resetSeed(seedVal);
         nextNextGaussian = fields.get("nextNextGaussian", 0.0);
         haveNextNextGaussian = fields.get("haveNextNextGaussian", false);
@@ -1198,7 +1181,7 @@ class Random implements java.io.Serializable {
      * Save the {@code Random} instance to a stream.
      */
     synchronized private void writeObject(ObjectOutputStream s)
-        throws IOException {
+            throws IOException {
 
         // set the values of the Serializable fields
         ObjectOutputStream.PutField fields = s.putFields();
@@ -1215,12 +1198,16 @@ class Random implements java.io.Serializable {
     // Support for resetting seed while deserializing
     private static final Unsafe unsafe = Unsafe.getUnsafe();
     private static final long seedOffset;
+
     static {
         try {
             seedOffset = unsafe.objectFieldOffset
-                (Random.class.getDeclaredField("seed"));
-        } catch (Exception ex) { throw new Error(ex); }
+                    (Random.class.getDeclaredField("seed"));
+        } catch (Exception ex) {
+            throw new Error(ex);
+        }
     }
+
     private void resetSeed(long seedVal) {
         unsafe.putObjectVolatile(this, seedOffset, new AtomicLong(seedVal));
     }

@@ -27,6 +27,7 @@ package java.util;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
+import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -1370,7 +1371,7 @@ public class HashMap<K,V> extends AbstractMap<K,V>
      *         could not be found
      * @throws IOException if an I/O error occurs
      */
-    private void readObject(java.io.ObjectInputStream s)
+    private void readObject(ObjectInputStream s)
         throws IOException, ClassNotFoundException {
         // Read in the threshold (ignored), loadfactor, and any hidden stuff
         s.defaultReadObject();
@@ -1399,7 +1400,7 @@ public class HashMap<K,V> extends AbstractMap<K,V>
 
             // Check Map.Entry[].class since it's the nearest public type to
             // what we're actually creating.
-            SharedSecrets.getJavaOISAccess().checkArray(s, Map.Entry[].class, cap);
+            // SharedSecrets.getJavaOISAccess().checkArray(s, Entry[].class, cap);
             @SuppressWarnings({"rawtypes","unchecked"})
             Node<K,V>[] tab = (Node<K,V>[])new Node[cap];
             table = tab;
