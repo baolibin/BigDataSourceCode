@@ -2,7 +2,49 @@
     SparkCore模块源码阅读，版本2.2。
     包括部署Deploy模块、执行Executor模块、内存Memory模块、调度Scheduler模块、经典的Shuffle模块、存储Storage模块等等。
 
-##### 1、Deploy模块源码
+-----
+##### 1、核心Spark功能模块源码
+> [核心Spark功能模块源码](src/main/scala/org/apache/spark)： 核心Spark功能，[[org.apache.org.apache.spark.SparkContext]]是Spark的主要入口，而[[org.apache.org.apache.spark.rdd。rdd]]表示分布式集合的数据类型，并提供大多数并行操作。
+* Accumulable：一种可以累加的数据类型，即有一个可交换的和相联的“加法”运算，但结果类型“R”可能与所加的元素类型“T”不同。该操作不是线程安全的。 
+* Accumulator：一个更简单的值[[Accumulable]]，其中累加的结果类型与合并的元素类型相同，即仅通过关联和交换操作“添加”到的变量，因此可以有效地并行支持。
+* Aggregator：用于聚合数据的一组函数。
+* ContextCleaner：用于RDD、shuffle和广播状态的异步清理器。
+* Dependency：依赖项的基类。
+* ExecutorAllocationClient：与集群管理器通信以请求或终止executors的客户端。目前只支持YARN模式。
+* ExecutorAllocationManager：基于工作负载动态分配和删除executors的代理。
+* FutureAction：支持取消action结果的future。这是Scala Future接口的扩展，支持取消。
+* HeartbeatReceiver：driver内部从executor端接受心跳信息。
+* InternalAccumulator：与表示任务级度量的内部累加器有关的字段和方法的集合。
+* InterruptibleIterator：围绕现有迭代器提供任务终止功能的迭代器。它通过检查[[TaskContext]]中的中断标志来工作。
+* MapOutputStatistics：保存有关map阶段中输出大小的统计信息。将来可能成为DeveloperApi。
+* MapOutputTracker：用于跟踪stage的map输出位置的类。这是抽象的，因为不同版本的MapOutputTracker（驱动程序和执行程序）使用不同的HashMap来存储其元数据。
+* Partition：RDD中分区的标识符。
+* Partitioner：定义了键值对RDD中的元素如何按键进行分区的一种对象。将每个键映射到一个分区ID，从0到“numPartitions-1”。
+* SecurityManager：负责spark安全的类。一般来说，这个类应该由SparkEnv实例化，大多数组件应该从SparkEnv访问它。
+* SparkConf：Spark应用程序的配置。用于将各种Spark参数设置为键值对。
+* SparkContext：Spark功能的主要入口点。SparkContext表示到Spark集群的连接，可用于在该集群上创建RDD、累加器和广播变量。
+* SparkEnv：保存正在运行的Spark实例（主实例或工作实例）的所有运行时环境对象，包括序列化程序、RpcEnv、块管理器、映射输出跟踪器等。
+* SparkFiles：解析通过`SparkContext.addFile文件()`添加的文件的路径。
+* SparkStatusTracker：用于监视job和stage进度的Low-level状态报告API。
+* SSLOptions： SSLOptions类是SSL配置选项的通用容器。它提供了生成特定对象的方法，以便为不同的通信协议配置SSL。
+* TaskContext：Task的上下文信息。
+* TaskContextImpl：[[TaskContext]]实现。
+* TaskEndReason： 任务结束的各种可能原因。low-level的TaskScheduler应该为“短暂”的失败重试几次任务，并且只报告需要重新提交一些旧阶段的失败。
+* TaskKilledException：当任务被显式终止（即，预期任务失败）时引发异常。
+* TaskNotSerializableException：无法序列化任务时引发异常。
+* TaskState：task生命周期的6个状态。
+* TestUtils：测试实用程序。包含在主代码库中，因为它被多个项目使用。
+
+-----
+##### 2、api模块源码
+> [api模块源码](src/main/scala/org/apache/spark/api)：
+
+-----
+##### 3、broadcast模块源码
+> [broadcast模块源码](src/main/scala/org/apache/spark/broadcast)：
+
+
+##### 4、Deploy模块源码
 > [deploy源码](src/main/org/apache/spark/deploy)
 * Client：在standalone cluster模式中，启动和终止执行程序的驱动器。
 * ClientArguments：驱动程序客户端的命令行解析器。
@@ -21,7 +63,7 @@
 * SparkSubmitArguments：解析和封装spark submit脚本中的参数。env参数用于测试。
 
 -----
-##### 2、Executor模块源码
+##### 5、Executor模块源码
 > [executor源码](src/main/scala/org/apache/spark/executor)：与各种集群管理器一起使用的Executor组件。
 * CoarseGrainedExecutorBackend：在worker中为app启动executor的jvm进程
 * CommitDeniedException：当任务尝试将输出提交到HDFS但被驱动程序拒绝时引发异常。
@@ -36,7 +78,27 @@
 * TaskMetrics：此类是表示与任务关联的度量的内部累加器集合的包装器。
 
 -----
-##### 3、Memory模块源码
+##### 6、input模块源码
+> [input模块源码](src/main/scala/org/apache/spark/input)：
+
+-----
+##### 7、internal模块源码
+> [internal模块源码](src/main/scala/org/apache/spark/internal)：
+
+-----
+##### 8、io源码
+> [io源码](src/main/scala/org/apache/spark/io)：
+
+-----
+##### 9、launcher源码
+> [launcher源码](src/main/scala/org/apache/spark/launcher)：
+
+-----
+##### 10、mapred源码
+> [mapred源码](src/main/scala/org/apache/spark/mapred)：
+
+-----
+##### 11、Memory模块源码
 > [memory源码](src/main/scala/org/apache/spark/memory)：
 >**这个软件包实现了Spark的内存管理系统。这个系统由两个主要组件组成，一个JVM范围的内存管理器和一个每个任务的内存管理器。**
 * MemoryManager：一种抽象内存管理器，用于施行execution和storage之间如何共享内存。
@@ -47,7 +109,83 @@
     - ExecutionMemoryPool：实现策略和簿记，以便在任务之间共享大小可调的内存池。
 
 -----
-##### 4、Scheduler模块源码
+##### 12、metrics源码
+> [metrics源码](src/main/scala/org/apache/spark/metrics)：
+
+-----
+##### 13、network源码
+> [network源码](src/main/scala/org/apache/spark/network)：
+
+-----
+##### 14、partial源码
+> [partial源码](src/main/scala/org/apache/spark/partial)：
+
+-----
+##### 15、RDD源码
+> [RDD源码](src/main/scala/org/apache/spark/rdd)：提供各种RDD的实现。
+* util：工具类
+    - PeriodicRDDCheckpointer：这个类帮助持久化和检查点rdd。
+* AsyncRDDActions：通过隐式转换提供的一组异步RDD操作。
+* BinaryFileRDD：二进制文件RDD。
+* BlockRDD：数据块RDD。
+* CartesianRDD：笛卡尔积RDD。
+* CheckpointRDD：从存储器中恢复检查点数据的RDD。
+* PartitionCoalescer：PartitionCoalescer定义如何合并给定RDD的分区。
+* CoalescedRDD：表示合并的RDD，该RDD的分区数少于其父RDD。
+* CoGroupedRDD：把它的双亲组合在一起的RDD。对于父RDD中的每个键k，生成的RDD包含一个元组，其中包含该键的值列表。
+* DoubleRDDFunctions：通过隐式转换在双精度RDD上提供的额外函数。
+* EmptyRDD：没有分区和元素的RDD。
+* HadoopRDD：一种RDD，提供使用旧的MapReduceAPI读取Hadoop中存储的数据。
+* InputFileBlockHolder：它保存当前Spark任务的文件名。
+* JdbcRDD：对JDBC连接执行SQL查询并读取结果的RDD。
+* LocalCheckpointRDD：一种虚拟的检查点RDD，用于在故障期间提供信息性的错误消息。
+* LocalRDDCheckpointData：在Spark的缓存层上实现的检查点的实现。
+* MapPartitionsRDD：将提供的函数应用于父RDD的每个分区的RDD。
+* NewHadoopRDD：一种RDD，使用新的MapReduceAPI提供读取存储在Hadoop中的数据。
+* OrderedRDDFunctions：（键，值）对的RDD上可用的额外函数，其中键可通过隐式转换进行排序。
+* PairRDDFunctions：通过隐式转换在（键，值）对的RDD上提供的额外函数。
+* ParallelCollectionRDD：
+* PartitionerAwareUnionRDD：类表示一个RDD，该RDD可以接受由同一个分区器分区的多个RDD，并在保留分区器的同时将它们统一为单个RDD。
+* PartitionPruningRDD：一个RDD，用于修剪RDD分区，这样我们就可以避免在所有分区上启动任务。
+* PartitionwiseSampledRDD：从其父RDD分区中采样的RDD。
+* PipedRDD：一种RDD，它通过外部命令（每行打印一个）将每个父分区的内容通过管道传输，并将输出作为字符串集合返回。
+* RDD：一个弹性分布式数据集（RDD），Spark中的基本抽象。表示可以并行操作的不可变的、分区的元素集合。
+* RDDCheckpointData：此类包含与RDD检查点相关的所有信息。这个类的每个实例都与一个RDD相关联。它管理关联RDD的检查点过程，并通过提供检查点RDD的更新分区、迭代器和首选位置来管理检查点后状态。
+* RDDOperationScope：表示实例化RDD的操作的通用命名代码块。
+* ReliableCheckpointRDD：从以前写入可靠存储器的检查点文件中读取数据的一种RDD。
+* ReliableRDDCheckpointData：将RDD数据写入可靠存储器的检查点实现。这允许驱动程序在先前计算的状态出现故障时重新启动。
+* SequenceFileRDDFunctions：（键，值）对的RDD上提供了额外的函数，可以通过隐式转换创建Hadoop SequenceFile。
+* ShuffledRDD：shuffle产生的RDD（例如数据的重新分区）。
+* SubtractedRDD：集差/减法的cogroup优化版本。
+* UnionRDD：并集RDD。
+* WholeTextFileRDD：读入一堆文本文件的RDD，每个文本文件变成一条记录。
+* ZippedPartitionsBaseRDD：
+* ZippedWithIndexRDD：表示用元素索引压缩的RDD。排序首先基于分区索引，然后是每个分区内项目的排序。
+
+
+-----
+##### 16、rpc通信源码
+> [rpc通信源码](src/main/scala/org/apache/spark/rpc)：
+* netty：
+    - Dispatcher：
+    - Inbox：
+    - NettyRpcCallContext：
+    - NettyRpcEnv：
+    - NettyStreamManager：
+    - Outbox：
+    - RpcEndpointVerifier：
+* RpcAddress：
+* RpcCallContext：
+* RpcEndpoint：
+* RpcEndpointAddress：
+* RpcEndpointNotFoundException：
+* RpcEndpointRef：
+* RpcEnv：
+* RpcEnvStoppedException：
+* RpcTimeout：
+
+-----
+##### 17、scheduler模块源码
 > [scheduler源码](src/main/scala/org/apache/spark/scheduler)：Spark的调度组件。这包括`DAGScheduler`以及lower level级别的`TaskScheduler`。
 * cluster：
     - CoarseGrainedClusterMessage：粗粒度的集群消息。
@@ -102,7 +240,15 @@
 * WorkerOffer：表示executor上可用的免费资源。
 
 -----
-##### 5、Shuffle模块源码
+##### 18、security源码
+> [security源码](src/main/scala/org/apache/spark/security)：
+
+-----
+##### 19、serializer源码
+> [serializer源码](src/main/scala/org/apache/spark/serializer)：
+
+-----
+##### 20、Shuffle模块源码
 > [shuffle源码](src/main/scala/org/apache/spark/shuffle)
 * ShuffleManager：shuffle系统的可插拔接口。在SparkEnv中，在driver和每个executor上创建一个ShuffleManager。
 基于spark.shuffle.manager设置，driver向它注册shuffle，executors（或在driver中本地运行的任务）可以请求读写数据。
@@ -123,7 +269,11 @@ Reducers获取此文件的连续区域，以便读取其映射输出部分。
 * FetchFailedException：无法获取shuffle块。执行器捕获这个异常并将其传播回DAGScheduler（通过TaskEndReason），以便我们重新提交上一阶段。
 
 -----
-##### 6、Storage模块源码
+##### 21、status.api.v1源码
+> [status.api.v1源码](src/main/scala/org/apache/spark/status/api/v1)：
+
+-----
+##### 22、Storage模块源码
 > [storage源码](src/main/scala/org/apache/spark/storage)
 * MemoryStore：将块存储在内存中，可以是反序列化Java对象的数组，也可以是序列化ByteBuffers。
 * BlockId：标识特定的数据块，通常与单个文件关联。
@@ -153,116 +303,22 @@ Reducers获取此文件的连续区域，以便读取其映射输出部分。
 * TopologyMapper：TopologyMapper提供给定主机的拓扑信息。
 
 -----
-##### 7、Util模块源码
+##### 23、ui源码
+> [ui源码](src/main/scala/org/apache/spark/ui)：
+
+-----
+##### 24、Util模块源码
 > [util源码](src/main/scala/org/apache/spark/util)： Spark实用程序。
-1. util
-    1. collection
-        1. Sorter：Java实现[[TimSort]]上的简单包装器。Java实现是包私有的，因此不能在包外调用它org.apache.spark网站.使用集合. 这是一个可用于spark的简单包装。
-        2. Utils：集合的实用函数。
-    2. io
-        1. ChunkedByteBuffer：只读字节缓冲区，物理上存储为多个块而不是单个连续数组。
-    3. logging
-        1. FileAppender：连续地将输入流中的数据附加到给定的文件中。
-    4. random
-        1. Pseudorandom：具有伪随机行为的类。
+* util：
+    - collection：
+        - Sorter：Java实现[[TimSort]]上的简单包装器。Java实现是包私有的，因此不能在包外调用它org.apache.spark网站.使用集合. 这是一个可用于spark的简单包装。
+        - Utils：集合的实用函数。
+    - io：
+        - ChunkedByteBuffer：只读字节缓冲区，物理上存储为多个块而不是单个连续数组。
+    - logging：
+        - FileAppender：连续地将输入流中的数据附加到给定的文件中。
+    - random：
+       - Pseudorandom：具有伪随机行为的类。
 
------
-##### 8、核心Spark功能模块源码
-> [核心Spark功能模块源码](src/main/scala/org/apache/spark)： 核心Spark功能，[[org.apache.org.apache.spark.SparkContext]]是Spark的主要入口，而[[org.apache.org.apache.spark.rdd。rdd]]表示分布式集合的数据类型，并提供大多数并行操作。
-* Accumulable：一种可以累加的数据类型，即有一个可交换的和相联的“加法”运算，但结果类型“R”可能与所加的元素类型“T”不同。该操作不是线程安全的。 
-* Accumulator：一个更简单的值[[Accumulable]]，其中累加的结果类型与合并的元素类型相同，即仅通过关联和交换操作“添加”到的变量，因此可以有效地并行支持。
-* Aggregator：用于聚合数据的一组函数。
-* ContextCleaner：用于RDD、shuffle和广播状态的异步清理器。
-* Dependency：依赖项的基类。
-* ExecutorAllocationClient：与集群管理器通信以请求或终止executors的客户端。目前只支持YARN模式。
-* ExecutorAllocationManager：基于工作负载动态分配和删除executors的代理。
-* FutureAction：支持取消action结果的future。这是Scala Future接口的扩展，支持取消。
-* HeartbeatReceiver：driver内部从executor端接受心跳信息。
-* InternalAccumulator：与表示任务级度量的内部累加器有关的字段和方法的集合。
-* InterruptibleIterator：围绕现有迭代器提供任务终止功能的迭代器。它通过检查[[TaskContext]]中的中断标志来工作。
-* MapOutputStatistics：保存有关map阶段中输出大小的统计信息。将来可能成为DeveloperApi。
-* MapOutputTracker：用于跟踪stage的map输出位置的类。这是抽象的，因为不同版本的MapOutputTracker（驱动程序和执行程序）使用不同的HashMap来存储其元数据。
-* Partition：RDD中分区的标识符。
-* Partitioner：定义了键值对RDD中的元素如何按键进行分区的一种对象。将每个键映射到一个分区ID，从0到“numPartitions-1”。
-* SecurityManager：负责spark安全的类。一般来说，这个类应该由SparkEnv实例化，大多数组件应该从SparkEnv访问它。
-* SparkConf：Spark应用程序的配置。用于将各种Spark参数设置为键值对。
-* SparkContext：Spark功能的主要入口点。SparkContext表示到Spark集群的连接，可用于在该集群上创建RDD、累加器和广播变量。
-* SparkEnv：保存正在运行的Spark实例（主实例或工作实例）的所有运行时环境对象，包括序列化程序、RpcEnv、块管理器、映射输出跟踪器等。
-* SparkFiles：解析通过`SparkContext.addFile文件()`添加的文件的路径。
-* SparkStatusTracker：用于监视job和stage进度的Low-level状态报告API。
-* SSLOptions： SSLOptions类是SSL配置选项的通用容器。它提供了生成特定对象的方法，以便为不同的通信协议配置SSL。
-* TaskContext：Task的上下文信息。
-* TaskContextImpl：[[TaskContext]]实现。
-* TaskEndReason： 任务结束的各种可能原因。low-level的TaskScheduler应该为“短暂”的失败重试几次任务，并且只报告需要重新提交一些旧阶段的失败。
-* TaskKilledException：当任务被显式终止（即，预期任务失败）时引发异常。
-* TaskNotSerializableException：无法序列化任务时引发异常。
-* TaskState：task生命周期的6个状态。
-* TestUtils：测试实用程序。包含在主代码库中，因为它被多个项目使用。
 
------
-##### 9、RDD源码
-> [RDD源码](src/main/scala/org/apache/spark/rdd)：提供各种RDD的实现。
-* util：工具类
-    - PeriodicRDDCheckpointer：这个类帮助持久化和检查点rdd。
-* AsyncRDDActions：通过隐式转换提供的一组异步RDD操作。
-* BinaryFileRDD：二进制文件RDD。
-* BlockRDD：数据块RDD。
-* CartesianRDD：笛卡尔积RDD。
-* CheckpointRDD：从存储器中恢复检查点数据的RDD。
-* PartitionCoalescer：PartitionCoalescer定义如何合并给定RDD的分区。
-* CoalescedRDD：表示合并的RDD，该RDD的分区数少于其父RDD。
-* CoGroupedRDD：把它的双亲组合在一起的RDD。对于父RDD中的每个键k，生成的RDD包含一个元组，其中包含该键的值列表。
-* DoubleRDDFunctions：通过隐式转换在双精度RDD上提供的额外函数。
-* EmptyRDD：没有分区和元素的RDD。
-* HadoopRDD：一种RDD，提供使用旧的MapReduceAPI读取Hadoop中存储的数据。
-* InputFileBlockHolder：它保存当前Spark任务的文件名。
-* JdbcRDD：对JDBC连接执行SQL查询并读取结果的RDD。
-* LocalCheckpointRDD：一种虚拟的检查点RDD，用于在故障期间提供信息性的错误消息。
-* LocalRDDCheckpointData：在Spark的缓存层上实现的检查点的实现。
-* MapPartitionsRDD：将提供的函数应用于父RDD的每个分区的RDD。
-* NewHadoopRDD：一种RDD，使用新的MapReduceAPI提供读取存储在Hadoop中的数据。
-* OrderedRDDFunctions：（键，值）对的RDD上可用的额外函数，其中键可通过隐式转换进行排序。
-* PairRDDFunctions：通过隐式转换在（键，值）对的RDD上提供的额外函数。
-* ParallelCollectionRDD：
-* PartitionerAwareUnionRDD：类表示一个RDD，该RDD可以接受由同一个分区器分区的多个RDD，并在保留分区器的同时将它们统一为单个RDD。
-* PartitionPruningRDD：一个RDD，用于修剪RDD分区，这样我们就可以避免在所有分区上启动任务。
-* PartitionwiseSampledRDD：从其父RDD分区中采样的RDD。
-* PipedRDD：一种RDD，它通过外部命令（每行打印一个）将每个父分区的内容通过管道传输，并将输出作为字符串集合返回。
-* RDD：一个弹性分布式数据集（RDD），Spark中的基本抽象。表示可以并行操作的不可变的、分区的元素集合。
-* RDDCheckpointData：此类包含与RDD检查点相关的所有信息。这个类的每个实例都与一个RDD相关联。它管理关联RDD的检查点过程，并通过提供检查点RDD的更新分区、迭代器和首选位置来管理检查点后状态。
-* RDDOperationScope：表示实例化RDD的操作的通用命名代码块。
-* ReliableCheckpointRDD：从以前写入可靠存储器的检查点文件中读取数据的一种RDD。
-* ReliableRDDCheckpointData：将RDD数据写入可靠存储器的检查点实现。这允许驱动程序在先前计算的状态出现故障时重新启动。
-* SequenceFileRDDFunctions：（键，值）对的RDD上提供了额外的函数，可以通过隐式转换创建Hadoop SequenceFile。
-* ShuffledRDD：shuffle产生的RDD（例如数据的重新分区）。
-* SubtractedRDD：集差/减法的cogroup优化版本。
-* UnionRDD：并集RDD。
-* WholeTextFileRDD：读入一堆文本文件的RDD，每个文本文件变成一条记录。
-* ZippedPartitionsBaseRDD：
-* ZippedWithIndexRDD：表示用元素索引压缩的RDD。排序首先基于分区索引，然后是每个分区内项目的排序。
-
------
-##### 10、Rpc通信源码
-> [Rpc通信源码](src/main/scala/org/apache/spark/rpc)：
-* netty：
-    - Dispatcher：
-    - Inbox：
-    - NettyRpcCallContext：
-    - NettyRpcEnv：
-    - NettyStreamManager：
-    - Outbox：
-    - RpcEndpointVerifier：
-* RpcAddress：
-* RpcCallContext：
-* RpcEndpoint：
-* RpcEndpointAddress：
-* RpcEndpointNotFoundException：
-* RpcEndpointRef：
-* RpcEnv：
-* RpcEnvStoppedException：
-* RpcTimeout：
-
------
-##### 11、IO源码
-> [IO源码](src/main/scala/org/apache/spark/io)：
 
