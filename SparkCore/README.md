@@ -44,11 +44,15 @@
 
 -----
 ##### 3、broadcast模块源码
-> [broadcast模块源码](src/main/scala/org/apache/spark/broadcast)：
-
+> [broadcast模块源码](src/main/scala/org/apache/spark/broadcast)：Spark的广播变量，用于向所有节点广播不可变的数据集。
+* Broadcast：广播变量。广播变量允许程序员在每台机器上缓存一个只读变量，而不是将其副本与任务一起发送。例如，它们可以有效地为每个节点提供一个大型输入数据集的副本。Spark还尝试使用高效的广播算法来分配广播变量，以降低通信成本。
+* BroadcastFactory：Spark中所有广播实现的接口（允许多个广播实现）。SparkContext使用BroadcastFactory实现为整个Spark作业实例化特定广播。
+* BroadcastManager：
+* TorrentBroadcast：BitTorrent实现类似[[org.apache.spark.broadcast.Broadcast]].驱动程序将序列化对象分成小块，并将这些小块存储在驱动程序的BlockManager中。
+* TorrentBroadcastFactory：A[[org.apache.spark.broadcast.Broadcast]]使用类似BitTorrent的协议将广播数据分布式传输到执行器的实现。
 
 ##### 4、Deploy模块源码
-> [deploy源码](src/main/org/apache/spark/deploy)
+> [deploy源码](src/main/scala/org/apache/spark/deploy)
 * Client：在standalone cluster模式中，启动和终止执行程序的驱动器。
 * ClientArguments：驱动程序客户端的命令行解析器。
 * DeployMessages：包含在调度程序终结点节点之间发送的消息。
