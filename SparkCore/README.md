@@ -53,6 +53,32 @@
 
 ##### 4、Deploy模块源码
 > [deploy源码](src/main/scala/org/apache/spark/deploy)
+* client：
+    - StandaloneAppClient：
+    - StandaloneAppClientListener：
+* history：
+* master：
+    - ApplicationInfo：
+    - ApplicationSource：
+    - ApplicationState：
+    - DriverInfo：
+    - DriverState：
+    - ExecutorDesc：
+    - FileSystemPersistenceEngine：
+    - LeaderElectionAgent：
+    - Master：
+    - MasterArguments：
+    - MasterMessages：
+    - MasterSource：
+    - PersistenceEngine：
+    - RecoveryModeFactory：
+    - RecoveryState：
+    - WorkerInfo：
+    - WorkerState：
+    - ZooKeeperLeaderElectionAgent：
+    - ZooKeeperPersistenceEngine：
+* rest：
+* worker：
 * Client：在standalone cluster模式中，启动和终止执行程序的驱动器。
 * ClientArguments：驱动程序客户端的命令行解析器。
 * DeployMessages：包含在调度程序终结点节点之间发送的消息。
