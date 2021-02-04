@@ -73,7 +73,7 @@
 * Comparators：
 * ConcurrentModificationException：
 * Currency：
-* Date：
+* Date：类日期表示特定的时间瞬间，精度为毫秒。
 * Deque：
 * Dictionary：
 * DoubleSummaryStatistics：
