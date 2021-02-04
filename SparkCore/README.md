@@ -57,6 +57,12 @@
     - StandaloneAppClient：
     - StandaloneAppClientListener：
 * history：
+    - ApplicationCache：
+    - ApplicationHistoryProvider：
+    - FsHistoryProvider：
+    - HistoryPage：
+    - HistoryServer：
+    - HistoryServerArguments：
 * master：
     - ApplicationInfo：
     - ApplicationSource：
@@ -78,6 +84,13 @@
     - ZooKeeperLeaderElectionAgent：
     - ZooKeeperPersistenceEngine：
 * rest：
+    - RestSubmissionClient：
+    - RestSubmissionServer：
+    - StandaloneRestServer：
+    - SubmitRestProtocolException：
+    - SubmitRestProtocolMessage：
+    - SubmitRestProtocolRequest：
+    - SubmitRestProtocolResponse：
 * worker：
     - CommandUtils：
     - DriverRunner：
@@ -87,17 +100,21 @@
     - WorkerArguments：
     - WorkerSource：
     - WorkerWatcher：
-* 
+* ApplicationDescription：
 * Client：在standalone cluster模式中，启动和终止执行程序的驱动器。
 * ClientArguments：驱动程序客户端的命令行解析器。
+* Command：
 * DeployMessages：包含在调度程序终结点节点之间发送的消息。
+* DriverDescription：
 * ExecutorDescription：用于将Executors的状态从Worker发送到Master。此状态足以让Master在故障转移期间重建其内部数据结构。
 * ExecutorState：executor状态
 * ExternalShuffleService：提供Executors可以从中读取shuffle文件的服务器（而不是直接互相读取）。
 * ExternalShuffleServiceSource：为外部shuffle服务提供度量源。
 * FaultToleranceTest：这个套件测试Spark独立调度器的容错性。
+* JsonProtocol：
 * LocalSparkCluster：在集群中创建Spark独立进程的测试类。
 * PythonRunner：用于启动Python应用程序的主类。它将python作为子进程执行，然后将其连接回JVM以访问系统属性等。
+* RPackageUtils：
 * RRunner：用于使用spark submit启动SparkR应用程序的主类。它将R作为子进程执行，然后将其连接回JVM以访问系统属性等。
 * SparkCuratorUtil：Spark监护管理工具类。
 * SparkHadoopUtil：包含从Spark与Hadoop交互的util方法。
