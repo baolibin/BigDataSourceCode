@@ -17,7 +17,11 @@
 
 package org.apache.spark.api
 
-/** Spark Java programming APIs. */
+/**
+  * Spark Java编程API。
+  *
+  * Spark Java programming APIs.
+  */
 package object java {
-  // For package docs only
+    // For package docs only
 }
