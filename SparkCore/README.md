@@ -54,8 +54,8 @@
 ##### 4、Deploy模块源码
 > [deploy源码](src/main/scala/org/apache/spark/deploy)
 * client：
-    - StandaloneAppClient：
-    - StandaloneAppClientListener：
+    - StandaloneAppClient：允许应用程序与Spark独立群集管理器通信的接口。
+    - StandaloneAppClientListener：在发生各种事件时由部署客户端调用的回调。
 * history：
     - ApplicationCache：
     - ApplicationHistoryProvider：
