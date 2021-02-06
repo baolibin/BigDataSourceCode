@@ -21,8 +21,8 @@ import java.util.NoSuchElementException
 
 import com.codahale.metrics.{Counter, MetricRegistry, Timer}
 import com.google.common.cache._
-import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
 import javax.servlet._
+import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
 import org.apache.spark.internal.Logging
 import org.apache.spark.metrics.source.Source
 import org.apache.spark.ui.SparkUI
@@ -36,6 +36,9 @@ import scala.util.control.NonFatal
   * 应用程序缓存。
   *
   * Cache for applications.
+  *
+  * 只要有足够的容量，就可以缓存已完成的应用程序。未完成的应用程序在每次检索时都会检查其更新时间；
+  * 如果缓存的条目已过期，则会刷新它。
   *
   * Completed applications are cached for as long as there is capacity for them.
   * Incompleted applications have their update time checked on every
@@ -187,6 +190,18 @@ private[history] class ApplicationCache(
     }
 
     /**
+      * Probe for an application being updated.
+      *
+      * @param appId     application ID
+      * @param attemptId attempt ID
+      * @return true if an update has been triggered
+      */
+    def checkForUpdates(appId: String, attemptId: Option[String]): Boolean = {
+        val (entry, updated) = lookupAndUpdate(appId, attemptId)
+        updated
+    }
+
+    /**
       * Look up the entry; update it if needed.
       *
       * @param appId     application ID
@@ -225,15 +240,20 @@ private[history] class ApplicationCache(
     }
 
     /**
-      * Probe for an application being updated.
+      * Time a closure, returning its output.
       *
-      * @param appId     application ID
-      * @param attemptId attempt ID
-      * @return true if an update has been triggered
+      * @param t timer
+      * @param f function
+      * @tparam T type of return value of time
+      * @return the result of the function.
       */
-    def checkForUpdates(appId: String, attemptId: Option[String]): Boolean = {
-        val (entry, updated) = lookupAndUpdate(appId, attemptId)
-        updated
+    private def time[T](t: Timer)(f: => T): T = {
+        val timeCtx = t.time()
+        try {
+            f
+        } finally {
+            timeCtx.close()
+        }
     }
 
     /**
@@ -295,23 +315,6 @@ private[history] class ApplicationCache(
                     throw new NoSuchElementException(s"no application with application Id '$appId'" +
                             attemptId.map { id => s" attemptId '$id'" }.getOrElse(" and no attempt Id"))
             }
-        }
-    }
-
-    /**
-      * Time a closure, returning its output.
-      *
-      * @param t timer
-      * @param f function
-      * @tparam T type of return value of time
-      * @return the result of the function.
-      */
-    private def time[T](t: Timer)(f: => T): T = {
-        val timeCtx = t.time()
-        try {
-            f
-        } finally {
-            timeCtx.close()
         }
     }
 
