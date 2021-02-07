@@ -100,7 +100,7 @@
     - WorkerArguments：
     - WorkerSource：
     - WorkerWatcher：
-* ApplicationDescription：
+* ApplicationDescription：应用程序描述。
 * Client：在standalone cluster模式中，启动和终止执行程序的驱动器。
 * ClientArguments：驱动程序客户端的命令行解析器。
 * Command：
