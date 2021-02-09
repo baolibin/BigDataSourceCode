@@ -32,174 +32,178 @@ import org.apache.spark.SparkContext
 import org.apache.spark.annotation.Since
 
 /**
- * A general format for reading whole files in as streams, byte arrays,
- * or other functions to be added
- */
+  * A general format for reading whole files in as streams, byte arrays,
+  * or other functions to be added
+  */
 private[spark] abstract class StreamFileInputFormat[T]
-  extends CombineFileInputFormat[String, T]
-{
-  override protected def isSplitable(context: JobContext, file: Path): Boolean = false
+    extends CombineFileInputFormat[String, T] {
+    override protected def isSplitable(context: JobContext, file: Path): Boolean = false
 
-  /**
-   * Allow minPartitions set by end-user in order to keep compatibility with old Hadoop API
-   * which is set through setMaxSplitSize
-   */
-  def setMinPartitions(sc: SparkContext, context: JobContext, minPartitions: Int) {
-    val defaultMaxSplitBytes = sc.getConf.get(config.FILES_MAX_PARTITION_BYTES)
-    val openCostInBytes = sc.getConf.get(config.FILES_OPEN_COST_IN_BYTES)
-    val defaultParallelism = sc.defaultParallelism
-    val files = listStatus(context).asScala
-    val totalBytes = files.filterNot(_.isDirectory).map(_.getLen + openCostInBytes).sum
-    val bytesPerCore = totalBytes / defaultParallelism
-    val maxSplitSize = Math.min(defaultMaxSplitBytes, Math.max(openCostInBytes, bytesPerCore))
-    super.setMaxSplitSize(maxSplitSize)
-  }
+    /**
+      * Allow minPartitions set by end-user in order to keep compatibility with old Hadoop API
+      * which is set through setMaxSplitSize
+      */
+    def setMinPartitions(sc: SparkContext, context: JobContext, minPartitions: Int) {
+        val defaultMaxSplitBytes = sc.getConf.get(config.FILES_MAX_PARTITION_BYTES)
+        val openCostInBytes = sc.getConf.get(config.FILES_OPEN_COST_IN_BYTES)
+        val defaultParallelism = sc.defaultParallelism
+        val files = listStatus(context).asScala
+        val totalBytes = files.filterNot(_.isDirectory).map(_.getLen + openCostInBytes).sum
+        val bytesPerCore = totalBytes / defaultParallelism
+        val maxSplitSize = Math.min(defaultMaxSplitBytes, Math.max(openCostInBytes, bytesPerCore))
+        super.setMaxSplitSize(maxSplitSize)
+    }
 
-  def createRecordReader(split: InputSplit, taContext: TaskAttemptContext): RecordReader[String, T]
+    def createRecordReader(split: InputSplit, taContext: TaskAttemptContext): RecordReader[String, T]
 
 }
 
 /**
- * An abstract class of [[org.apache.hadoop.mapreduce.RecordReader RecordReader]]
- * to reading files out as streams
- */
+  * An abstract class of [[org.apache.hadoop.mapreduce.RecordReader RecordReader]]
+  * to reading files out as streams
+  */
 private[spark] abstract class StreamBasedRecordReader[T](
-    split: CombineFileSplit,
-    context: TaskAttemptContext,
-    index: Integer)
-  extends RecordReader[String, T] {
+                                                            split: CombineFileSplit,
+                                                            context: TaskAttemptContext,
+                                                            index: Integer)
+    extends RecordReader[String, T] {
 
-  // True means the current file has been processed, then skip it.
-  private var processed = false
+    // True means the current file has been processed, then skip it.
+    private var processed = false
 
-  private var key = ""
-  private var value: T = null.asInstanceOf[T]
+    private var key = ""
+    private var value: T = null.asInstanceOf[T]
 
-  override def initialize(split: InputSplit, context: TaskAttemptContext): Unit = {}
-  override def close(): Unit = {}
+    override def initialize(split: InputSplit, context: TaskAttemptContext): Unit = {}
 
-  override def getProgress: Float = if (processed) 1.0f else 0.0f
+    override def close(): Unit = {}
 
-  override def getCurrentKey: String = key
+    override def getProgress: Float = if (processed) 1.0f else 0.0f
 
-  override def getCurrentValue: T = value
+    override def getCurrentKey: String = key
 
-  override def nextKeyValue: Boolean = {
-    if (!processed) {
-      val fileIn = new PortableDataStream(split, context, index)
-      value = parseStream(fileIn)
-      key = fileIn.getPath
-      processed = true
-      true
-    } else {
-      false
+    override def getCurrentValue: T = value
+
+    override def nextKeyValue: Boolean = {
+        if (!processed) {
+            val fileIn = new PortableDataStream(split, context, index)
+            value = parseStream(fileIn)
+            key = fileIn.getPath
+            processed = true
+            true
+        } else {
+            false
+        }
     }
-  }
 
-  /**
-   * Parse the stream (and close it afterwards) and return the value as in type T
-   * @param inStream the stream to be read in
-   * @return the data formatted as
-   */
-  def parseStream(inStream: PortableDataStream): T
+    /**
+      * Parse the stream (and close it afterwards) and return the value as in type T
+      *
+      * @param inStream the stream to be read in
+      * @return the data formatted as
+      */
+    def parseStream(inStream: PortableDataStream): T
 }
 
 /**
- * Reads the record in directly as a stream for other objects to manipulate and handle
- */
+  * Reads the record in directly as a stream for other objects to manipulate and handle
+  */
 private[spark] class StreamRecordReader(
-    split: CombineFileSplit,
-    context: TaskAttemptContext,
-    index: Integer)
-  extends StreamBasedRecordReader[PortableDataStream](split, context, index) {
+                                           split: CombineFileSplit,
+                                           context: TaskAttemptContext,
+                                           index: Integer)
+    extends StreamBasedRecordReader[PortableDataStream](split, context, index) {
 
-  def parseStream(inStream: PortableDataStream): PortableDataStream = inStream
+    def parseStream(inStream: PortableDataStream): PortableDataStream = inStream
 }
 
 /**
- * The format for the PortableDataStream files
- */
+  * The format for the PortableDataStream files
+  */
 private[spark] class StreamInputFormat extends StreamFileInputFormat[PortableDataStream] {
-  override def createRecordReader(split: InputSplit, taContext: TaskAttemptContext)
+    override def createRecordReader(split: InputSplit, taContext: TaskAttemptContext)
     : CombineFileRecordReader[String, PortableDataStream] = {
-    new CombineFileRecordReader[String, PortableDataStream](
-      split.asInstanceOf[CombineFileSplit], taContext, classOf[StreamRecordReader])
-  }
+        new CombineFileRecordReader[String, PortableDataStream](
+            split.asInstanceOf[CombineFileSplit], taContext, classOf[StreamRecordReader])
+    }
 }
 
 /**
- * A class that allows DataStreams to be serialized and moved around by not creating them
- * until they need to be read
- * @note TaskAttemptContext is not serializable resulting in the confBytes construct
- * @note CombineFileSplit is not serializable resulting in the splitBytes construct
- */
+  * 一个类，通过在需要读取数据流之前不创建数据流，可以对数据流进行序列化和移动。
+  *
+  * A class that allows DataStreams to be serialized and moved around by not creating them
+  * until they need to be read
+  *
+  * @note TaskAttemptContext is not serializable resulting in the confBytes construct
+  * @note CombineFileSplit is not serializable resulting in the splitBytes construct
+  */
 class PortableDataStream(
-    isplit: CombineFileSplit,
-    context: TaskAttemptContext,
-    index: Integer)
-  extends Serializable {
+                            isplit: CombineFileSplit,
+                            context: TaskAttemptContext,
+                            index: Integer)
+    extends Serializable {
 
-  private val confBytes = {
-    val baos = new ByteArrayOutputStream()
-    context.getConfiguration.write(new DataOutputStream(baos))
-    baos.toByteArray
-  }
-
-  private val splitBytes = {
-    val baos = new ByteArrayOutputStream()
-    isplit.write(new DataOutputStream(baos))
-    baos.toByteArray
-  }
-
-  @transient private lazy val split = {
-    val bais = new ByteArrayInputStream(splitBytes)
-    val nsplit = new CombineFileSplit()
-    nsplit.readFields(new DataInputStream(bais))
-    nsplit
-  }
-
-  @transient private lazy val conf = {
-    val bais = new ByteArrayInputStream(confBytes)
-    val nconf = new Configuration()
-    nconf.readFields(new DataInputStream(bais))
-    nconf
-  }
-  /**
-   * Calculate the path name independently of opening the file
-   */
-  @transient private lazy val path = {
-    val pathp = split.getPath(index)
-    pathp.toString
-  }
-
-  /**
-   * Create a new DataInputStream from the split and context. The user of this method is responsible
-   * for closing the stream after usage.
-   */
-  @Since("1.2.0")
-  def open(): DataInputStream = {
-    val pathp = split.getPath(index)
-    val fs = pathp.getFileSystem(conf)
-    fs.open(pathp)
-  }
-
-  /**
-   * Read the file as a byte array
-   */
-  @Since("1.2.0")
-  def toArray(): Array[Byte] = {
-    val stream = open()
-    try {
-      ByteStreams.toByteArray(stream)
-    } finally {
-      Closeables.close(stream, true)
+    private val confBytes = {
+        val baos = new ByteArrayOutputStream()
+        context.getConfiguration.write(new DataOutputStream(baos))
+        baos.toByteArray
     }
-  }
 
-  @Since("1.2.0")
-  def getPath(): String = path
+    private val splitBytes = {
+        val baos = new ByteArrayOutputStream()
+        isplit.write(new DataOutputStream(baos))
+        baos.toByteArray
+    }
 
-  @Since("2.2.0")
-  def getConfiguration: Configuration = conf
+    @transient private lazy val split = {
+        val bais = new ByteArrayInputStream(splitBytes)
+        val nsplit = new CombineFileSplit()
+        nsplit.readFields(new DataInputStream(bais))
+        nsplit
+    }
+
+    @transient private lazy val conf = {
+        val bais = new ByteArrayInputStream(confBytes)
+        val nconf = new Configuration()
+        nconf.readFields(new DataInputStream(bais))
+        nconf
+    }
+    /**
+      * Calculate the path name independently of opening the file
+      */
+    @transient private lazy val path = {
+        val pathp = split.getPath(index)
+        pathp.toString
+    }
+
+    /**
+      * Create a new DataInputStream from the split and context. The user of this method is responsible
+      * for closing the stream after usage.
+      */
+    @Since("1.2.0")
+    def open(): DataInputStream = {
+        val pathp = split.getPath(index)
+        val fs = pathp.getFileSystem(conf)
+        fs.open(pathp)
+    }
+
+    /**
+      * Read the file as a byte array
+      */
+    @Since("1.2.0")
+    def toArray(): Array[Byte] = {
+        val stream = open()
+        try {
+            ByteStreams.toByteArray(stream)
+        } finally {
+            Closeables.close(stream, true)
+        }
+    }
+
+    @Since("1.2.0")
+    def getPath(): String = path
+
+    @Since("2.2.0")
+    def getConfiguration: Configuration = conf
 }
 

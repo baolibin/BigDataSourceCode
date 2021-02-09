@@ -139,7 +139,11 @@
 -----
 ##### 6、input模块源码
 > [input模块源码](src/main/scala/org/apache/spark/input)：
-* FixedLengthBinaryInputFormat：
+* FixedLengthBinaryInputFormat：用于读取和拆分包含记录的平面二进制文件的自定义输入格式，每个记录的大小以字节为单位固定。固定记录大小是通过Hadoop配置中的参数recordLength指定的。
+* FixedLengthBinaryRecordReader：FixedLengthBinaryRecordReader由FixedLengthBinaryInputFormat返回。它使用FixedLengthBinaryInputFormat中设置的记录长度从给定的InputSplit一次读取一条记录。
+* PortableDataStream：一个类，通过在需要读取数据流之前不创建数据流，可以对数据流进行序列化和移动。
+* WholeTextFileInputFormat：用于读取全文文件。每个文件都作为键-值对读取，其中键是文件路径，值是文件的整个内容。
+* WholeTextFileRecordReader：A[[org.apache.hadoop.mapreduce.RecordReader RecordReader]]用于以键-值对的形式读取单个全文文件，其中键是文件路径，值是文件的整个内容。
 
 -----
 ##### 7、internal模块源码
