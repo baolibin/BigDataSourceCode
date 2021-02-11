@@ -154,7 +154,8 @@
 
 -----
 ##### 8、io源码
-> [io源码](src/main/scala/org/apache/spark/io)：
+> [io源码](src/main/scala/org/apache/spark/io)：用于压缩的IO编解码器。
+* CompressionCodec：CompressionCodec允许定制选择块存储中使用的不同压缩实现。
 
 -----
 ##### 9、launcher源码

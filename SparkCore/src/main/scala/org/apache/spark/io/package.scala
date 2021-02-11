@@ -18,6 +18,8 @@
 package org.apache.spark
 
 /**
- * IO codecs used for compression. See [[org.apache.spark.io.CompressionCodec]].
- */
+  * 用于压缩的IO编解码器。
+  *
+  * IO codecs used for compression. See [[org.apache.spark.io.CompressionCodec]].
+  */
 package object io

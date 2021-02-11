@@ -16,6 +16,8 @@
  */
 
 /**
+ * 用于压缩的IO编解码器。
+ * <p>
  * IO codecs used for compression.
  */
 package org.apache.spark.io;
