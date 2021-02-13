@@ -177,7 +177,7 @@
 -----
 ##### 10、mapred源码
 > [mapred源码](src/main/scala/org/apache/spark/mapred)：
-* SparkHadoopMapRedUtil：
+* SparkHadoopMapRedUtil：提交任务输出。在提交任务输出之前，我们需要知道是否有其他任务试图快速提交相同的输出分区。因此，与驱动程序协调，以确定此尝试是否可以提交（有关详细信息，请参阅SPARK-4879）。
 
 -----
 ##### 11、Memory模块源码

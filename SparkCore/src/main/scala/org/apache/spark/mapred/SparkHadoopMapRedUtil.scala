@@ -27,70 +27,70 @@ import org.apache.spark.executor.CommitDeniedException
 import org.apache.spark.internal.Logging
 
 object SparkHadoopMapRedUtil extends Logging {
-	/**
-	  * 多个task可能会输出到相同的目录partition,我们需要定时去检测,一个task是否可以输出到某个partition.
+    /**
+      * 提交任务输出。在提交任务输出之前，我们需要知道是否有其他任务试图快速提交相同的输出分区。因此，与驱动程序协调，以确定此尝试是否可以提交（有关详细信息，请参阅SPARK-4879）。
       *
-	  * Commits a task output.  Before committing the task output, we need to know whether some other
-	  * task attempt might be racing to commit the same output partition. Therefore, coordinate with
-	  * the driver in order to determine whether this attempt can commit (please see SPARK-4879 for
-	  * details).
-	  *
-	  * Output commit coordinator is only used when `org.apache.spark.hadoop.outputCommitCoordination.enabled`
-	  * is set to true (which is the default).
-	  */
-	def commitTask(
-					  committer: MapReduceOutputCommitter,
-					  mrTaskContext: MapReduceTaskAttemptContext,
-					  jobId: Int,
-					  splitId: Int): Unit = {
+      * Commits a task output.  Before committing the task output, we need to know whether some other
+      * task attempt might be racing to commit the same output partition. Therefore, coordinate with
+      * the driver in order to determine whether this attempt can commit (please see SPARK-4879 for
+      * details).
+      *
+      * Output commit coordinator is only used when `org.apache.spark.hadoop.outputCommitCoordination.enabled`
+      * is set to true (which is the default).
+      */
+    def commitTask(
+                      committer: MapReduceOutputCommitter,
+                      mrTaskContext: MapReduceTaskAttemptContext,
+                      jobId: Int,
+                      splitId: Int): Unit = {
 
-		val mrTaskAttemptID = mrTaskContext.getTaskAttemptID
+        val mrTaskAttemptID = mrTaskContext.getTaskAttemptID
 
-		// Called after we have decided to commit
-		def performCommit(): Unit = {
-			try {
-				committer.commitTask(mrTaskContext)
-				logInfo(s"$mrTaskAttemptID: Committed")
-			} catch {
-				case cause: IOException =>
-					logError(s"Error committing the output of task: $mrTaskAttemptID", cause)
-					committer.abortTask(mrTaskContext)
-					throw cause
-			}
-		}
+        // Called after we have decided to commit
+        def performCommit(): Unit = {
+            try {
+                committer.commitTask(mrTaskContext)
+                logInfo(s"$mrTaskAttemptID: Committed")
+            } catch {
+                case cause: IOException =>
+                    logError(s"Error committing the output of task: $mrTaskAttemptID", cause)
+                    committer.abortTask(mrTaskContext)
+                    throw cause
+            }
+        }
 
-		// First, check whether the task's output has already been committed by some other attempt
-		if (committer.needsTaskCommit(mrTaskContext)) {
-			val shouldCoordinateWithDriver: Boolean = {
-				val sparkConf = SparkEnv.get.conf
-				// We only need to coordinate with the driver if there are concurrent task attempts.
-				// Note that this could happen even when speculation is not enabled (e.g. see SPARK-8029).
-				// This (undocumented) setting is an escape-hatch in case the commit code introduces bugs.
-				sparkConf.getBoolean("org.apache.spark.hadoop.outputCommitCoordination.enabled", defaultValue = true)
-			}
+        // First, check whether the task's output has already been committed by some other attempt
+        if (committer.needsTaskCommit(mrTaskContext)) {
+            val shouldCoordinateWithDriver: Boolean = {
+                val sparkConf = SparkEnv.get.conf
+                // We only need to coordinate with the driver if there are concurrent task attempts.
+                // Note that this could happen even when speculation is not enabled (e.g. see SPARK-8029).
+                // This (undocumented) setting is an escape-hatch in case the commit code introduces bugs.
+                sparkConf.getBoolean("org.apache.spark.hadoop.outputCommitCoordination.enabled", defaultValue = true)
+            }
 
-			if (shouldCoordinateWithDriver) {
-				val outputCommitCoordinator = SparkEnv.get.outputCommitCoordinator
-				val taskAttemptNumber = TaskContext.get().attemptNumber()
-				val canCommit = outputCommitCoordinator.canCommit(jobId, splitId, taskAttemptNumber)
+            if (shouldCoordinateWithDriver) {
+                val outputCommitCoordinator = SparkEnv.get.outputCommitCoordinator
+                val taskAttemptNumber = TaskContext.get().attemptNumber()
+                val canCommit = outputCommitCoordinator.canCommit(jobId, splitId, taskAttemptNumber)
 
-				if (canCommit) {
-					performCommit()
-				} else {
-					val message =
-						s"$mrTaskAttemptID: Not committed because the driver did not authorize commit"
-					logInfo(message)
-					// We need to abort the task so that the driver can reschedule new attempts, if necessary
-					committer.abortTask(mrTaskContext)
-					throw new CommitDeniedException(message, jobId, splitId, taskAttemptNumber)
-				}
-			} else {
-				// Speculation is disabled or a user has chosen to manually bypass the commit coordination
-				performCommit()
-			}
-		} else {
-			// Some other attempt committed the output, so we do nothing and signal success
-			logInfo(s"No need to commit output of task because needsTaskCommit=false: $mrTaskAttemptID")
-		}
-	}
+                if (canCommit) {
+                    performCommit()
+                } else {
+                    val message =
+                        s"$mrTaskAttemptID: Not committed because the driver did not authorize commit"
+                    logInfo(message)
+                    // We need to abort the task so that the driver can reschedule new attempts, if necessary
+                    committer.abortTask(mrTaskContext)
+                    throw new CommitDeniedException(message, jobId, splitId, taskAttemptNumber)
+                }
+            } else {
+                // Speculation is disabled or a user has chosen to manually bypass the commit coordination
+                performCommit()
+            }
+        } else {
+            // Some other attempt committed the output, so we do nothing and signal success
+            logInfo(s"No need to commit output of task because needsTaskCommit=false: $mrTaskAttemptID")
+        }
+    }
 }
