@@ -33,50 +33,52 @@ import org.apache.spark.serializer.Serializer
 import org.apache.spark.storage.{BlockId, StorageLevel}
 
 /**
- * Serves requests to open blocks by simply registering one chunk per block requested.
- * Handles opening and uploading arbitrary BlockManager blocks.
- *
- * Opened blocks are registered with the "one-for-one" strategy, meaning each Transport-layer Chunk
- * is equivalent to one Spark-level shuffle block.
- */
+  * 只需为每个请求的块注册一个块，就可以为打开块的请求提供服务。处理打开和上传任意BlockManager块。
+  *
+  * Serves requests to open blocks by simply registering one chunk per block requested.
+  * Handles opening and uploading arbitrary BlockManager blocks.
+  *
+  * Opened blocks are registered with the "one-for-one" strategy, meaning each Transport-layer Chunk
+  * is equivalent to one Spark-level shuffle block.
+  */
 class NettyBlockRpcServer(
-    appId: String,
-    serializer: Serializer,
-    blockManager: BlockDataManager)
-  extends RpcHandler with Logging {
+                             appId: String,
+                             serializer: Serializer,
+                             blockManager: BlockDataManager)
+    extends RpcHandler with Logging {
 
-  private val streamManager = new OneForOneStreamManager()
+    private val streamManager = new OneForOneStreamManager()
 
-  override def receive(
-      client: TransportClient,
-      rpcMessage: ByteBuffer,
-      responseContext: RpcResponseCallback): Unit = {
-    val message = BlockTransferMessage.Decoder.fromByteBuffer(rpcMessage)
-    logTrace(s"Received request: $message")
+    override def receive(
+                            client: TransportClient,
+                            rpcMessage: ByteBuffer,
+                            responseContext: RpcResponseCallback): Unit = {
+        val message = BlockTransferMessage.Decoder.fromByteBuffer(rpcMessage)
+        logTrace(s"Received request: $message")
 
-    message match {
-      case openBlocks: OpenBlocks =>
-        val blocksNum = openBlocks.blockIds.length
-        val blocks = for (i <- (0 until blocksNum).view)
-          yield blockManager.getBlockData(BlockId.apply(openBlocks.blockIds(i)))
-        val streamId = streamManager.registerStream(appId, blocks.iterator.asJava)
-        logTrace(s"Registered streamId $streamId with $blocksNum buffers")
-        responseContext.onSuccess(new StreamHandle(streamId, blocksNum).toByteBuffer)
+        message match {
+            case openBlocks: OpenBlocks =>
+                val blocksNum = openBlocks.blockIds.length
+                val blocks = for (i <- (0 until blocksNum).view)
+                    yield blockManager.getBlockData(BlockId.apply(openBlocks.blockIds(i)))
+                val streamId = streamManager.registerStream(appId, blocks.iterator.asJava)
+                logTrace(s"Registered streamId $streamId with $blocksNum buffers")
+                responseContext.onSuccess(new StreamHandle(streamId, blocksNum).toByteBuffer)
 
-      case uploadBlock: UploadBlock =>
-        // StorageLevel and ClassTag are serialized as bytes using our JavaSerializer.
-        val (level: StorageLevel, classTag: ClassTag[_]) = {
-          serializer
-            .newInstance()
-            .deserialize(ByteBuffer.wrap(uploadBlock.metadata))
-            .asInstanceOf[(StorageLevel, ClassTag[_])]
+            case uploadBlock: UploadBlock =>
+                // StorageLevel and ClassTag are serialized as bytes using our JavaSerializer.
+                val (level: StorageLevel, classTag: ClassTag[_]) = {
+                    serializer
+                        .newInstance()
+                        .deserialize(ByteBuffer.wrap(uploadBlock.metadata))
+                        .asInstanceOf[(StorageLevel, ClassTag[_])]
+                }
+                val data = new NioManagedBuffer(ByteBuffer.wrap(uploadBlock.blockData))
+                val blockId = BlockId(uploadBlock.blockId)
+                blockManager.putBlockData(blockId, data, level, classTag)
+                responseContext.onSuccess(ByteBuffer.allocate(0))
         }
-        val data = new NioManagedBuffer(ByteBuffer.wrap(uploadBlock.blockData))
-        val blockId = BlockId(uploadBlock.blockId)
-        blockManager.putBlockData(blockId, data, level, classTag)
-        responseContext.onSuccess(ByteBuffer.allocate(0))
     }
-  }
 
-  override def getStreamManager(): StreamManager = streamManager
+    override def getStreamManager(): StreamManager = streamManager
 }

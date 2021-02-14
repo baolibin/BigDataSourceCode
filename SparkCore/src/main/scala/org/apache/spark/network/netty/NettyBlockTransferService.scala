@@ -38,125 +38,128 @@ import org.apache.spark.storage.{BlockId, StorageLevel}
 import org.apache.spark.util.Utils
 
 /**
- * A BlockTransferService that uses Netty to fetch a set of blocks at time.
- */
+  * 一种BlockTransferService，使用Netty一次获取一组块。
+  *
+  * A BlockTransferService that uses Netty to fetch a set of blocks at time.
+  */
 private[spark] class NettyBlockTransferService(
-    conf: SparkConf,
-    securityManager: SecurityManager,
-    bindAddress: String,
-    override val hostName: String,
-    _port: Int,
-    numCores: Int)
-  extends BlockTransferService {
+                                                  conf: SparkConf,
+                                                  securityManager: SecurityManager,
+                                                  bindAddress: String,
+                                                  override val hostName: String,
+                                                  _port: Int,
+                                                  numCores: Int)
+    extends BlockTransferService {
 
-  // TODO: Don't use Java serialization, use a more cross-version compatible serialization format.
-  private val serializer = new JavaSerializer(conf)
-  private val authEnabled = securityManager.isAuthenticationEnabled()
-  private val transportConf = SparkTransportConf.fromSparkConf(conf, "shuffle", numCores)
+    // TODO: Don't use Java serialization, use a more cross-version compatible serialization format.
+    private val serializer = new JavaSerializer(conf)
+    private val authEnabled = securityManager.isAuthenticationEnabled()
+    private val transportConf = SparkTransportConf.fromSparkConf(conf, "shuffle", numCores)
 
-  private[this] var transportContext: TransportContext = _
-  private[this] var server: TransportServer = _
-  private[this] var clientFactory: TransportClientFactory = _
-  private[this] var appId: String = _
+    private[this] var transportContext: TransportContext = _
+    private[this] var server: TransportServer = _
+    private[this] var clientFactory: TransportClientFactory = _
+    private[this] var appId: String = _
 
-  override def init(blockDataManager: BlockDataManager): Unit = {
-    val rpcHandler = new NettyBlockRpcServer(conf.getAppId, serializer, blockDataManager)
-    var serverBootstrap: Option[TransportServerBootstrap] = None
-    var clientBootstrap: Option[TransportClientBootstrap] = None
-    if (authEnabled) {
-      serverBootstrap = Some(new AuthServerBootstrap(transportConf, securityManager))
-      clientBootstrap = Some(new AuthClientBootstrap(transportConf, conf.getAppId, securityManager))
-    }
-    transportContext = new TransportContext(transportConf, rpcHandler)
-    clientFactory = transportContext.createClientFactory(clientBootstrap.toSeq.asJava)
-    server = createServer(serverBootstrap.toList)
-    appId = conf.getAppId
-    logInfo(s"Server created on ${hostName}:${server.getPort}")
-  }
-
-  /** Creates and binds the TransportServer, possibly trying multiple ports. */
-  private def createServer(bootstraps: List[TransportServerBootstrap]): TransportServer = {
-    def startService(port: Int): (TransportServer, Int) = {
-      val server = transportContext.createServer(bindAddress, port, bootstraps.asJava)
-      (server, server.getPort)
-    }
-
-    Utils.startServiceOnPort(_port, startService, conf, getClass.getName)._1
-  }
-
-  override def fetchBlocks(
-      host: String,
-      port: Int,
-      execId: String,
-      blockIds: Array[String],
-      listener: BlockFetchingListener,
-      shuffleFiles: Array[File]): Unit = {
-    logTrace(s"Fetch blocks from $host:$port (executor id $execId)")
-    try {
-      val blockFetchStarter = new RetryingBlockFetcher.BlockFetchStarter {
-        override def createAndStart(blockIds: Array[String], listener: BlockFetchingListener) {
-          val client = clientFactory.createClient(host, port)
-          new OneForOneBlockFetcher(client, appId, execId, blockIds.toArray, listener,
-            transportConf, shuffleFiles).start()
+    override def init(blockDataManager: BlockDataManager): Unit = {
+        val rpcHandler = new NettyBlockRpcServer(conf.getAppId, serializer, blockDataManager)
+        var serverBootstrap: Option[TransportServerBootstrap] = None
+        var clientBootstrap: Option[TransportClientBootstrap] = None
+        if (authEnabled) {
+            serverBootstrap = Some(new AuthServerBootstrap(transportConf, securityManager))
+            clientBootstrap = Some(new AuthClientBootstrap(transportConf, conf.getAppId, securityManager))
         }
-      }
-
-      val maxRetries = transportConf.maxIORetries()
-      if (maxRetries > 0) {
-        // Note this Fetcher will correctly handle maxRetries == 0; we avoid it just in case there's
-        // a bug in this code. We should remove the if statement once we're sure of the stability.
-        new RetryingBlockFetcher(transportConf, blockFetchStarter, blockIds, listener).start()
-      } else {
-        blockFetchStarter.createAndStart(blockIds, listener)
-      }
-    } catch {
-      case e: Exception =>
-        logError("Exception while beginning fetchBlocks", e)
-        blockIds.foreach(listener.onBlockFetchFailure(_, e))
+        transportContext = new TransportContext(transportConf, rpcHandler)
+        clientFactory = transportContext.createClientFactory(clientBootstrap.toSeq.asJava)
+        server = createServer(serverBootstrap.toList)
+        appId = conf.getAppId
+        logInfo(s"Server created on ${hostName}:${server.getPort}")
     }
-  }
 
-  override def port: Int = server.getPort
-
-  override def uploadBlock(
-      hostname: String,
-      port: Int,
-      execId: String,
-      blockId: BlockId,
-      blockData: ManagedBuffer,
-      level: StorageLevel,
-      classTag: ClassTag[_]): Future[Unit] = {
-    val result = Promise[Unit]()
-    val client = clientFactory.createClient(hostname, port)
-
-    // StorageLevel and ClassTag are serialized as bytes using our JavaSerializer.
-    // Everything else is encoded using our binary protocol.
-    val metadata = JavaUtils.bufferToArray(serializer.newInstance().serialize((level, classTag)))
-
-    // Convert or copy nio buffer into array in order to serialize it.
-    val array = JavaUtils.bufferToArray(blockData.nioByteBuffer())
-
-    client.sendRpc(new UploadBlock(appId, execId, blockId.toString, metadata, array).toByteBuffer,
-      new RpcResponseCallback {
-        override def onSuccess(response: ByteBuffer): Unit = {
-          logTrace(s"Successfully uploaded block $blockId")
-          result.success((): Unit)
+    /** Creates and binds the TransportServer, possibly trying multiple ports. */
+    private def createServer(bootstraps: List[TransportServerBootstrap]): TransportServer = {
+        def startService(port: Int): (TransportServer, Int) = {
+            val server = transportContext.createServer(bindAddress, port, bootstraps.asJava)
+            (server, server.getPort)
         }
-        override def onFailure(e: Throwable): Unit = {
-          logError(s"Error while uploading block $blockId", e)
-          result.failure(e)
+
+        Utils.startServiceOnPort(_port, startService, conf, getClass.getName)._1
+    }
+
+    override def fetchBlocks(
+                                host: String,
+                                port: Int,
+                                execId: String,
+                                blockIds: Array[String],
+                                listener: BlockFetchingListener,
+                                shuffleFiles: Array[File]): Unit = {
+        logTrace(s"Fetch blocks from $host:$port (executor id $execId)")
+        try {
+            val blockFetchStarter = new RetryingBlockFetcher.BlockFetchStarter {
+                override def createAndStart(blockIds: Array[String], listener: BlockFetchingListener) {
+                    val client = clientFactory.createClient(host, port)
+                    new OneForOneBlockFetcher(client, appId, execId, blockIds.toArray, listener,
+                        transportConf, shuffleFiles).start()
+                }
+            }
+
+            val maxRetries = transportConf.maxIORetries()
+            if (maxRetries > 0) {
+                // Note this Fetcher will correctly handle maxRetries == 0; we avoid it just in case there's
+                // a bug in this code. We should remove the if statement once we're sure of the stability.
+                new RetryingBlockFetcher(transportConf, blockFetchStarter, blockIds, listener).start()
+            } else {
+                blockFetchStarter.createAndStart(blockIds, listener)
+            }
+        } catch {
+            case e: Exception =>
+                logError("Exception while beginning fetchBlocks", e)
+                blockIds.foreach(listener.onBlockFetchFailure(_, e))
         }
-      })
-
-    result.future
-  }
-
-  override def close(): Unit = {
-    if (server != null) {
-      server.close()
     }
-    if (clientFactory != null) {
-      clientFactory.close()
+
+    override def port: Int = server.getPort
+
+    override def uploadBlock(
+                                hostname: String,
+                                port: Int,
+                                execId: String,
+                                blockId: BlockId,
+                                blockData: ManagedBuffer,
+                                level: StorageLevel,
+                                classTag: ClassTag[_]): Future[Unit] = {
+        val result = Promise[Unit]()
+        val client = clientFactory.createClient(hostname, port)
+
+        // StorageLevel and ClassTag are serialized as bytes using our JavaSerializer.
+        // Everything else is encoded using our binary protocol.
+        val metadata = JavaUtils.bufferToArray(serializer.newInstance().serialize((level, classTag)))
+
+        // Convert or copy nio buffer into array in order to serialize it.
+        val array = JavaUtils.bufferToArray(blockData.nioByteBuffer())
+
+        client.sendRpc(new UploadBlock(appId, execId, blockId.toString, metadata, array).toByteBuffer,
+            new RpcResponseCallback {
+                override def onSuccess(response: ByteBuffer): Unit = {
+                    logTrace(s"Successfully uploaded block $blockId")
+                    result.success((): Unit)
+                }
+
+                override def onFailure(e: Throwable): Unit = {
+                    logError(s"Error while uploading block $blockId", e)
+                    result.failure(e)
+                }
+            })
+
+        result.future
     }
-  }
+
+    override def close(): Unit = {
+        if (server != null) {
+            server.close()
+        }
+        if (clientFactory != null) {
+            clientFactory.close()
+        }
+    }
 }

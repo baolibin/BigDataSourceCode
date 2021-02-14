@@ -198,8 +198,8 @@
 ##### 13、network源码
 > [network源码](src/main/scala/org/apache/spark/network)：
 * netty：
-    - NettyBlockRpcServer：
-    - NettyBlockTransferService：
+    - NettyBlockRpcServer：只需为每个请求的块注册一个块，就可以为打开块的请求提供服务。处理打开和上传任意BlockManager块。
+    - NettyBlockTransferService：一种BlockTransferService，使用Netty一次获取一组块。
     - SparkTransportConf：
 * BlockDataManager：
 * BlockTransferService：
