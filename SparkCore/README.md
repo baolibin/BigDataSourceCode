@@ -200,7 +200,7 @@
 * netty：
     - NettyBlockRpcServer：只需为每个请求的块注册一个块，就可以为打开块的请求提供服务。处理打开和上传任意BlockManager块。
     - NettyBlockTransferService：一种BlockTransferService，使用Netty一次获取一组块。
-    - SparkTransportConf：
+    - SparkTransportConf：提供一个实用程序，用于将Spark JVM（例如，执行器、驱动程序或独立的shuffle服务）中的SparkConf转换为TransportConf，其中包含有关环境的详细信息，如分配给此JVM的内核数。
 * BlockDataManager：
 * BlockTransferService：
 
