@@ -207,6 +207,14 @@
 -----
 ##### 14、partial源码
 > [partial源码](src/main/scala/org/apache/spark/partial)：
+* ApproximateActionListener：
+* ApproximateEvaluator：
+* BoundedDouble：
+* CountEvaluator：
+* GroupedCountEvaluator：
+* MeanEvaluator：
+* PartialResult：
+* SumEvaluator：
 
 -----
 ##### 15、RDD源码
