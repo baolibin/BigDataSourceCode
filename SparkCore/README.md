@@ -345,6 +345,12 @@
 -----
 ##### 19、serializer源码
 > [serializer源码](src/main/scala/org/apache/spark/serializer)：
+* GenericAvroSerializer：
+* JavaSerializer：
+* KryoSerializer：
+* SerializationDebugger：
+* Serializer：
+* SerializerManager：
 
 -----
 ##### 20、Shuffle模块源码
@@ -410,14 +416,47 @@ Reducers获取此文件的连续区域，以便读取其映射输出部分。
 > [util源码](src/main/scala/org/apache/spark/util)： Spark实用程序。
 * util：
     - collection：
+        - ：
+        - ：
+        - ：
+        - ：
+        - ：
+        - ：
+        - ：
+        - ：
+        - ：
+        - ：
+        - ：
+        - ：
+        - ：
+        - ：
+        - ：
         - Sorter：Java实现[[TimSort]]上的简单包装器。Java实现是包私有的，因此不能在包外调用它org.apache.spark网站.使用集合. 这是一个可用于spark的简单包装。
+        - ：
+        - ：
         - Utils：集合的实用函数。
     - io：
         - ChunkedByteBuffer：只读字节缓冲区，物理上存储为多个块而不是单个连续数组。
+        - ：
     - logging：
         - FileAppender：连续地将输入流中的数据附加到给定的文件中。
+        - ：
+        - ：
     - random：
        - Pseudorandom：具有伪随机行为的类。
-
-
+        - ：
+        - ：
+        - ：
+        - ：
+        - ：
+* ：
+* ：
+* ：
+* ：
+* ：
+* ：
+* ：
+* ：
+* ：
+* ：
 
