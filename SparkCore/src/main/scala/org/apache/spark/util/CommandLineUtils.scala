@@ -22,7 +22,8 @@ import java.io.PrintStream
 import org.apache.spark.SparkException
 
 /**
-  * 命令行解析工具公共方法
+  * 包含基本的命令行解析功能和方法来解析一些常见的Spark CLI选项。
+  *
   * Contains basic command line parsing functionality and methods to parse some common Spark CLI
   * options.
   */

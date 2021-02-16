@@ -416,47 +416,77 @@ Reducers获取此文件的连续区域，以便读取其映射输出部分。
 > [util源码](src/main/scala/org/apache/spark/util)： Spark实用程序。
 * util：
     - collection：
-        - ：
-        - ：
-        - ：
-        - ：
-        - ：
-        - ：
-        - ：
-        - ：
-        - ：
-        - ：
-        - ：
-        - ：
-        - ：
-        - ：
-        - ：
+        - AppendOnlyMap：
+        - BitSet：
+        - CompactBuffer：
+        - ExternalAppendOnlyMap：
+        - ExternalSorter：
+        - MedianHeap：
+        - OpenHashMap：
+        - OpenHashSet：
+        - PartitionedAppendOnlyMap：
+        - PartitionedPairBuffer：
+        - PrimitiveKeyOpenHashMap：
+        - PrimitiveVector：
+        - SizeTracker：
+        - SizeTrackingAppendOnlyMap：
+        - SizeTrackingVector：
+        - SortDataFormat：
         - Sorter：Java实现[[TimSort]]上的简单包装器。Java实现是包私有的，因此不能在包外调用它org.apache.spark网站.使用集合. 这是一个可用于spark的简单包装。
-        - ：
-        - ：
+        - Spillable：
         - Utils：集合的实用函数。
+        - WritablePartitionedPairCollection：
     - io：
         - ChunkedByteBuffer：只读字节缓冲区，物理上存储为多个块而不是单个连续数组。
-        - ：
+        - ChunkedByteBufferOutputStream：
     - logging：
         - FileAppender：连续地将输入流中的数据附加到给定的文件中。
-        - ：
-        - ：
+        - RollingFileAppender：
+        - RollingPolicy：
     - random：
        - Pseudorandom：具有伪随机行为的类。
-        - ：
-        - ：
-        - ：
-        - ：
-        - ：
-* ：
-* ：
-* ：
-* ：
-* ：
-* ：
-* ：
-* ：
-* ：
-* ：
-
+        - RandomSampler：
+        - SamplingUtils：
+        - StratifiedSamplingUtils：
+        - XORShiftRandom：
+* AccumulatorV2：
+* Benchmark：
+* BoundedPriorityQueue：
+* ByteBufferInputStream：
+* ByteBufferOutputStream：
+* CausedBy：
+* Clock：
+* ClosureCleaner：
+* CollectionsUtils：
+* CommandLineUtils：包含基本的命令行解析功能和方法来解析一些常见的Spark CLI选项。
+* CompletionIterator：
+* Distribution：
+* EventLoop：
+* IdGenerator：
+* IntParam：
+* JsonProtocol：
+* ListenerBus：
+* ManualClock：
+* MemoryParam：
+* MutablePair：
+* MutableURLClassLoader：
+* NextIterator：
+* ParentClassLoader：
+* PeriodicCheckpointer：
+* RpcUtils：
+* SerializableBuffer：
+* SerializableConfiguration：
+* SerializableJobConf：
+* ShutdownHookManager：
+* SignalUtils：
+* SizeEstimator：
+* SparkExitCode：
+* SparkUncaughtExceptionHandler：
+* StatCounter：
+* TaskListeners：
+* ThreadStackTrace：
+* ThreadUtils：
+* TimeStampedHashMap：
+* UninterruptibleThread：
+* Utils：
+* VersionUtils：
