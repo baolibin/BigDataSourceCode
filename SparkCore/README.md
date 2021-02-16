@@ -338,6 +338,9 @@
 -----
 ##### 18、security源码
 > [security源码](src/main/scala/org/apache/spark/security)：
+* CryptoStreamUtils：
+* GroupMappingServiceProvider：
+* ShellBasedGroupsMappingProvider：
 
 -----
 ##### 19、serializer源码
