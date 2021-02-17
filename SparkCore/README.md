@@ -278,7 +278,7 @@
 * RpcEndpointRef：
 * RpcEnv：
 * RpcEnvStoppedException：
-* RpcTimeout：
+* RpcTimeout：将超时与描述相关联，以便在发生TimeoutException时，可以将有关超时的其他上下文修改为异常消息。
 
 -----
 ##### 17、scheduler模块源码
