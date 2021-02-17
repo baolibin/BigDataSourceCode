@@ -18,8 +18,11 @@
 package org.apache.spark.launcher
 
 /**
- * This class makes SparkSubmitOptionParser visible for Spark code outside of the `launcher`
- * package, since Java doesn't have a feature similar to `private[org.apache.spark]`, and we don't want
- * that class to be public.
- */
+  * 这个类使SparkSubmitOptionParser对'launcher'包之外的Spark代码可见，
+  * 因为Java没有类似于 `private的特性[org.apache.spark]`，我们不希望那个类是公开的。
+  *
+  * This class makes SparkSubmitOptionParser visible for Spark code outside of the `launcher`
+  * package, since Java doesn't have a feature similar to `private[org.apache.spark]`, and we don't want
+  * that class to be public.
+  */
 private[spark] abstract class SparkSubmitArgumentsParser extends SparkSubmitOptionParser
