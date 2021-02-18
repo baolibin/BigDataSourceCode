@@ -18,11 +18,13 @@
 package org.apache.spark
 
 /**
- * :: Experimental ::
- *
- * Support for approximate results. This provides convenient api and also implementation for
- * approximate calculation.
- *
- * @see [[org.apache.spark.rdd.RDD.countApprox]]
- */
+  * :: Experimental ::
+  *
+  * 支持近似结果。这为近似计算提供了方便的api和实现。
+  *
+  * Support for approximate results. This provides convenient api and also implementation for
+  * approximate calculation.
+  *
+  * @see [[org.apache.spark.rdd.RDD.countApprox]]
+  */
 package object partial

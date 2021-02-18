@@ -18,10 +18,13 @@
 package org.apache.spark.partial
 
 /**
- * An object that computes a function incrementally by merging in results of type U from multiple
- * tasks. Allows partial evaluation at any point by calling currentResult().
- */
+  * 一种对象，通过合并多个任务的U型结果来递增地计算函数。通过调用currentResult（）允许在任意点进行部分求值。
+  *
+  * An object that computes a function incrementally by merging in results of type U from multiple
+  * tasks. Allows partial evaluation at any point by calling currentResult().
+  */
 private[spark] trait ApproximateEvaluator[U, R] {
-  def merge(outputId: Int, taskResult: U): Unit
-  def currentResult(): R
+    def merge(outputId: Int, taskResult: U): Unit
+
+    def currentResult(): R
 }
