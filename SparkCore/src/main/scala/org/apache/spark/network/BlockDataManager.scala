@@ -17,36 +17,40 @@
 
 package org.apache.spark.network
 
-import scala.reflect.ClassTag
-
 import org.apache.spark.network.buffer.ManagedBuffer
 import org.apache.spark.storage.{BlockId, StorageLevel}
+
+import scala.reflect.ClassTag
 
 private[spark]
 trait BlockDataManager {
 
-  /**
-    * 得到本地数据块的接口
-   * Interface to get local block data. Throws an exception if the block cannot be found or
-   * cannot be read successfully.
-   */
-  def getBlockData(blockId: BlockId): ManagedBuffer
+    /**
+      * 得到本地数据块的接口。
+      *
+      * Interface to get local block data. Throws an exception if the block cannot be found or
+      * cannot be read successfully.
+      */
+    def getBlockData(blockId: BlockId): ManagedBuffer
 
-  /**
-    * 根据给定的存储模式,把数据存储到本地
-   * Put the block locally, using the given storage level.
-   *
-   * Returns true if the block was stored and false if the put operation failed or the block
-   * already existed.
-   */
-  def putBlockData(
-      blockId: BlockId,
-      data: ManagedBuffer,
-      level: StorageLevel,
-      classTag: ClassTag[_]): Boolean
+    /**
+      * 根据给定的存储模式,把数据存储到本地。
+      *
+      * Put the block locally, using the given storage level.
+      *
+      * Returns true if the block was stored and false if the put operation failed or the block
+      * already existed.
+      */
+    def putBlockData(
+                            blockId: BlockId,
+                            data: ManagedBuffer,
+                            level: StorageLevel,
+                            classTag: ClassTag[_]): Boolean
 
-  /**
-   * Release locks acquired by [[putBlockData()]] and [[getBlockData()]].
-   */
-  def releaseLock(blockId: BlockId, taskAttemptId: Option[Long]): Unit
+    /**
+      * 释放[[putBlockData（）]]和[[getBlockData（）]]获取的锁。
+      *
+      * Release locks acquired by [[putBlockData()]] and [[getBlockData()]].
+      */
+    def releaseLock(blockId: BlockId, taskAttemptId: Option[Long]): Unit
 }
