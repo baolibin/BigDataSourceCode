@@ -133,6 +133,9 @@ abstract class RDD[T: ClassTag](
     def this(@transient oneParent: RDD[_]) =
         this(oneParent.context, List(new OneToOneDependency(oneParent)))
 
+    /** The [[org.apache.spark.SparkContext]] that this RDD was created on. */
+    def context: SparkContext = sc
+
     /**
       * :: DeveloperApi ::
       * Implemented by subclasses to compute a given partition.
@@ -263,6 +266,9 @@ abstract class RDD[T: ClassTag](
       */
     protected def getPreferredLocations(split: Partition): Seq[String] = Nil
 
+    /** An Option holding our checkpoint RDD, if we are checkpointed */
+    private def checkpointRDD: Option[CheckpointRDD[T]] = checkpointData.flatMap(_.checkpointRDD)
+
     /**
       * Internal method to this RDD; will read from cache if applicable, or otherwise compute it.
       * This should ''not'' be called by users directly, but is available for implementors of custom
@@ -285,6 +291,8 @@ abstract class RDD[T: ClassTag](
         new MapPartitionsRDD[U, T](this, (context, pid, iter) => iter.flatMap(cleanF))
     }
 
+    // Transformations (return a new RDD)
+
     /**
       * Return a new RDD containing only the elements that satisfy a predicate.
       */
@@ -302,8 +310,6 @@ abstract class RDD[T: ClassTag](
     def distinct(numPartitions: Int)(implicit ord: Ordering[T] = null): RDD[T] = withScope {
         map(x => (x, null)).reduceByKey((x, y) => x, numPartitions).map(_._1)
     }
-
-    // Transformations (return a new RDD)
 
     /**
       * Return a new RDD containing the distinct elements in this RDD.
@@ -376,6 +382,23 @@ abstract class RDD[T: ClassTag](
     }
 
     /**
+      * Return a new RDD by applying a function to each partition of this RDD, while tracking the index
+      * of the original partition.
+      *
+      * `preservesPartitioning` indicates whether the input function preserves the partitioner, which
+      * should be `false` unless this is a pair RDD and the input function doesn't modify the keys.
+      */
+    def mapPartitionsWithIndex[U: ClassTag](
+                                                   f: (Int, Iterator[T]) => Iterator[U],
+                                                   preservesPartitioning: Boolean = false): RDD[U] = withScope {
+        val cleanedF = sc.clean(f)
+        new MapPartitionsRDD(
+            this,
+            (context: TaskContext, index: Int, iter: Iterator[T]) => cleanedF(index, iter),
+            preservesPartitioning)
+    }
+
+    /**
       * Return a sampled subset of this RDD.
       *
       * @param withReplacement can elements be sampled multiple times (replaced when sampled out)
@@ -444,46 +467,6 @@ abstract class RDD[T: ClassTag](
             sampler.sample(partition)
         }, preservesPartitioning = true)
     }
-
-    /**
-      * Return a new RDD by applying a function to each partition of this RDD, while tracking the index
-      * of the original partition.
-      *
-      * `preservesPartitioning` indicates whether the input function preserves the partitioner, which
-      * should be `false` unless this is a pair RDD and the input function doesn't modify the keys.
-      */
-    def mapPartitionsWithIndex[U: ClassTag](
-                                                   f: (Int, Iterator[T]) => Iterator[U],
-                                                   preservesPartitioning: Boolean = false): RDD[U] = withScope {
-        val cleanedF = sc.clean(f)
-        new MapPartitionsRDD(
-            this,
-            (context: TaskContext, index: Int, iter: Iterator[T]) => cleanedF(index, iter),
-            preservesPartitioning)
-    }
-
-    private def sc: SparkContext = {
-        if (_sc == null) {
-            throw new SparkException(
-                "This RDD lacks a SparkContext. It could happen in the following cases: \n(1) RDD " +
-                        "transformations and actions are NOT invoked by the driver, but inside of other " +
-                        "transformations; for example, rdd1.map(x => rdd2.values.count() * x) is invalid " +
-                        "because the values transformation and count action cannot be performed inside of the " +
-                        "rdd1.map transformation. For more information, see SPARK-5063.\n(2) When a Spark " +
-                        "Streaming job recovers from checkpoint, this exception will be hit if a reference to " +
-                        "an RDD not defined by the streaming job is used in DStream operations. For more " +
-                        "information, See SPARK-13758.")
-        }
-        _sc
-    }
-
-    /**
-      * Execute a block of code in a scope such that all new RDDs created in this body will
-      * be part of the same scope. For more detail, see {{org.apache.org.apache.spark.rdd.RDDOperationScope}}.
-      *
-      * Note: Return statements are NOT allowed in the given body.
-      */
-    private[spark] def withScope[U](body: => U): U = RDDOperationScope.withScope[U](sc)(body)
 
     /**
       * Return a fixed-size sampled subset of this RDD in an array
@@ -578,14 +561,6 @@ abstract class RDD[T: ClassTag](
     }
 
     /**
-      * Return a new RDD by applying a function to all elements of this RDD.
-      */
-    def map[U: ClassTag](f: T => U): RDD[U] = withScope {
-        val cleanF = sc.clean(f)
-        new MapPartitionsRDD[U, T](this, (context, pid, iter) => iter.map(cleanF))
-    }
-
-    /**
       * Return the intersection of this RDD and another one. The output will not contain any duplicate
       * elements, even if the input RDDs did.
       *
@@ -667,6 +642,14 @@ abstract class RDD[T: ClassTag](
     }
 
     /**
+      * Return a new RDD by applying a function to all elements of this RDD.
+      */
+    def map[U: ClassTag](f: T => U): RDD[U] = withScope {
+        val cleanF = sc.clean(f)
+        new MapPartitionsRDD[U, T](this, (context, pid, iter) => iter.map(cleanF))
+    }
+
+    /**
       * Return an RDD of grouped elements. Each group consists of a key and a sequence of elements
       * mapping to that key. The ordering of elements within each group is not guaranteed, and
       * may even differ each time the resulting RDD is evaluated.
@@ -688,6 +671,15 @@ abstract class RDD[T: ClassTag](
         // Similar to Runtime.exec(), if we are given a single string, split it into words
         // using a standard StringTokenizer (i.e. by spaces)
         pipe(PipedRDD.tokenize(command))
+    }
+
+    /**
+      * Return an RDD created by piping elements to a forked external process.
+      */
+    def pipe(command: String, env: Map[String, String]): RDD[String] = withScope {
+        // Similar to Runtime.exec(), if we are given a single string, split it into words
+        // using a standard StringTokenizer (i.e. by spaces)
+        pipe(PipedRDD.tokenize(command), env)
     }
 
     /**
@@ -734,15 +726,6 @@ abstract class RDD[T: ClassTag](
             separateWorkingDir,
             bufferSize,
             encoding)
-    }
-
-    /**
-      * Return an RDD created by piping elements to a forked external process.
-      */
-    def pipe(command: String, env: Map[String, String]): RDD[String] = withScope {
-        // Similar to Runtime.exec(), if we are given a single string, split it into words
-        // using a standard StringTokenizer (i.e. by spaces)
-        pipe(PipedRDD.tokenize(command), env)
     }
 
     /**
@@ -966,6 +949,29 @@ abstract class RDD[T: ClassTag](
         jobResult
     }
 
+    private def sc: SparkContext = {
+        if (_sc == null) {
+            throw new SparkException(
+                "This RDD lacks a SparkContext. It could happen in the following cases: \n(1) RDD " +
+                        "transformations and actions are NOT invoked by the driver, but inside of other " +
+                        "transformations; for example, rdd1.map(x => rdd2.values.count() * x) is invalid " +
+                        "because the values transformation and count action cannot be performed inside of the " +
+                        "rdd1.map transformation. For more information, see SPARK-5063.\n(2) When a Spark " +
+                        "Streaming job recovers from checkpoint, this exception will be hit if a reference to " +
+                        "an RDD not defined by the streaming job is used in DStream operations. For more " +
+                        "information, See SPARK-13758.")
+        }
+        _sc
+    }
+
+    /**
+      * Execute a block of code in a scope such that all new RDDs created in this body will
+      * be part of the same scope. For more detail, see {{org.apache.org.apache.spark.rdd.RDDOperationScope}}.
+      *
+      * Note: Return statements are NOT allowed in the given body.
+      */
+    private[spark] def withScope[U](body: => U): U = RDDOperationScope.withScope[U](sc)(body)
+
     /**
       * Aggregates the elements of this RDD in a multi-level tree pattern.
       *
@@ -1003,6 +1009,8 @@ abstract class RDD[T: ClassTag](
     }
 
     /**
+      * 返回RDD中的元素数。
+      *
       * Return the number of elements in the RDD.
       */
     def count(): Long = sc.runJob(this, Utils.getIteratorSize _).sum
@@ -1454,9 +1462,6 @@ abstract class RDD[T: ClassTag](
         }
     }
 
-    /** The [[org.apache.spark.SparkContext]] that this RDD was created on. */
-    def context: SparkContext = sc
-
     /**
       * Mark this RDD for local checkpointing using Spark's existing caching layer.
       *
@@ -1517,8 +1522,6 @@ abstract class RDD[T: ClassTag](
         }
         this
     }
-
-    private[spark] def conf = sc.conf
 
     /**
       * Return whether this RDD is checkpointed and materialized, either reliably or locally.
@@ -1656,6 +1659,8 @@ abstract class RDD[T: ClassTag](
         dependencies(j).rdd.asInstanceOf[RDD[U]]
     }
 
+    private[spark] def conf = sc.conf
+
     /**
       * Return the ancestors of the given RDD that are related to it only through a sequence of
       * narrow dependencies. This traverses the given RDD's dependency tree using DFS, but maintains
@@ -1698,9 +1703,6 @@ abstract class RDD[T: ClassTag](
       * be called once, so it is safe to implement a time-consuming computation in it.
       */
     protected def getDependencies: Seq[Dependency[_]] = deps
-
-    /** An Option holding our checkpoint RDD, if we are checkpointed */
-    private def checkpointRDD: Option[CheckpointRDD[T]] = checkpointData.flatMap(_.checkpointRDD)
 
     /**
       * Compute an RDD partition or read it from a checkpoint if the RDD is checkpointing.
