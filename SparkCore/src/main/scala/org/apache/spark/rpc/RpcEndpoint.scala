@@ -20,7 +20,8 @@ package org.apache.spark.rpc
 import org.apache.spark.SparkException
 
 /**
-  * 创建RpcEnv的工场类,它必须有一个空的构造函数,以至于可以通过反射来创建.
+  * 创建RpcEnv的工场类,它必须有一个空的构造函数,以至于可以通过反射来创建。
+  *
   * A factory class to create the [[RpcEnv]]. It must have an empty constructor so that it can be
   * created using Reflection.
   */
@@ -54,18 +55,6 @@ private[spark] trait RpcEndpoint {
     val rpcEnv: RpcEnv
 
     /**
-      * The [[RpcEndpointRef]] of this [[RpcEndpoint]]. `self` will become valid when `onStart` is
-      * called. And `self` will become `null` when `onStop` is called.
-      *
-      * Note: Because before `onStart`, [[RpcEndpoint]] has not yet been registered and there is not
-      * valid [[RpcEndpointRef]] for it. So don't call `self` before `onStart` is called.
-      */
-    final def self: RpcEndpointRef = {
-        require(rpcEnv != null, "rpcEnv has not been initialized")
-        rpcEnv.endpointRef(this)
-    }
-
-    /**
       * Process messages from `RpcEndpointRef.send` or `RpcCallContext.reply`. If receiving a
       * unmatched message, `SparkException` will be thrown and sent to `onError`.
       */
@@ -79,6 +68,18 @@ private[spark] trait RpcEndpoint {
       */
     def receiveAndReply(context: RpcCallContext): PartialFunction[Any, Unit] = {
         case _ => context.sendFailure(new SparkException(self + " won't reply anything"))
+    }
+
+    /**
+      * The [[RpcEndpointRef]] of this [[RpcEndpoint]]. `self` will become valid when `onStart` is
+      * called. And `self` will become `null` when `onStop` is called.
+      *
+      * Note: Because before `onStart`, [[RpcEndpoint]] has not yet been registered and there is not
+      * valid [[RpcEndpointRef]] for it. So don't call `self` before `onStart` is called.
+      */
+    final def self: RpcEndpointRef = {
+        require(rpcEnv != null, "rpcEnv has not been initialized")
+        rpcEnv.endpointRef(this)
     }
 
     /**

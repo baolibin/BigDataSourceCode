@@ -206,15 +206,15 @@
 
 -----
 ##### 14、partial源码
-> [partial源码](src/main/scala/org/apache/spark/partial)：
-* ApproximateActionListener：
-* ApproximateEvaluator：
-* BoundedDouble：
-* CountEvaluator：
-* GroupedCountEvaluator：
-* MeanEvaluator：
-* PartialResult：
-* SumEvaluator：
+> [partial源码](src/main/scala/org/apache/spark/partial)：支持近似结果。这为近似计算提供了方便的api和实现。
+* ApproximateActionListener：用于近似单个结果操作的JobListener，例如count（）或non-parallel reduce（）。此侦听器最多等待超时毫秒，并将返回部分答案，即使此时无法获得完整答案。
+* ApproximateEvaluator：一种对象，通过合并多个任务的U型结果来递增地计算函数。通过调用currentResult（）允许在任意点进行部分求值。
+* BoundedDouble：带有误差线和相关置信度的双精度值。
+* CountEvaluator：计数的近似值。
+* GroupedCountEvaluator：按键计数的近似值。返回key到置信区间的映射。
+* MeanEvaluator：平均数的近似估计者。
+* PartialResult：部分结果。
+* SumEvaluator：求和的近似值。它估计平均数和计数并将它们相乘，然后使用两个独立随机变量的方差公式得到结果的方差并计算置信区间。
 
 -----
 ##### 15、RDD源码
@@ -258,7 +258,6 @@
 * ZippedPartitionsBaseRDD：
 * ZippedWithIndexRDD：表示用元素索引压缩的RDD。排序首先基于分区索引，然后是每个分区内项目的排序。
 
-
 -----
 ##### 16、rpc通信源码
 > [rpc通信源码](src/main/scala/org/apache/spark/rpc)：
@@ -270,10 +269,10 @@
     - NettyStreamManager：
     - Outbox：
     - RpcEndpointVerifier：
-* RpcAddress：
-* RpcCallContext：
-* RpcEndpoint：
-* RpcEndpointAddress：
+* RpcAddress：RPC环境的地址，带有主机名和端口。
+* RpcCallContext：[[RpcEndpoint]]可以用来发回消息或失败的回调。它是线程安全的，可以在任何线程中调用。
+* RpcEndpoint：RPC的一个端点，用于定义给定消息要触发的函数。
+* RpcEndpointAddress：RPC终结点的地址标识符。
 * RpcEndpointNotFoundException：
 * RpcEndpointRef：
 * RpcEnv：
