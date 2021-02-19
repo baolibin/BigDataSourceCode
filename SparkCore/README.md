@@ -337,9 +337,9 @@
 -----
 ##### 18、security源码
 > [security源码](src/main/scala/org/apache/spark/security)：
-* CryptoStreamUtils：
-* GroupMappingServiceProvider：
-* ShellBasedGroupsMappingProvider：
+* CryptoStreamUtils：用于操作IO加密和解密流的util类。
+* GroupMappingServiceProvider：这个Spark特性用于将给定的用户名映射到它所属的一组。
+* ShellBasedGroupsMappingProvider：此类负责在基于Unix的环境中获取特定用户的组。
 
 -----
 ##### 19、serializer源码

@@ -21,25 +21,28 @@ import org.apache.spark.internal.Logging
 import org.apache.spark.util.Utils
 
 /**
- * This class is responsible for getting the groups for a particular user in Unix based
- * environments. This implementation uses the Unix Shell based id command to fetch the user groups
- * for the specified user. It does not cache the user groups as the invocations are expected
- * to be infrequent.
- */
+  * 此类负责在基于Unix的环境中获取特定用户的组。
+  * 此实现使用基于unixshell的id命令获取指定用户的用户组。它不缓存用户组，因为预期调用不频繁。
+  *
+  * This class is responsible for getting the groups for a particular user in Unix based
+  * environments. This implementation uses the Unix Shell based id command to fetch the user groups
+  * for the specified user. It does not cache the user groups as the invocations are expected
+  * to be infrequent.
+  */
 
 private[spark] class ShellBasedGroupsMappingProvider extends GroupMappingServiceProvider
-  with Logging {
+        with Logging {
 
-  override def getGroups(username: String): Set[String] = {
-    val userGroups = getUnixGroups(username)
-    logDebug("User: " + username + " Groups: " + userGroups.mkString(","))
-    userGroups
-  }
+    override def getGroups(username: String): Set[String] = {
+        val userGroups = getUnixGroups(username)
+        logDebug("User: " + username + " Groups: " + userGroups.mkString(","))
+        userGroups
+    }
 
-  // shells out a "bash -c id -Gn username" to get user groups
-  private def getUnixGroups(username: String): Set[String] = {
-    val cmdSeq = Seq("bash", "-c", "id -Gn " + username)
-    // we need to get rid of the trailing "\n" from the result of command execution
-    Utils.executeAndGetOutput(cmdSeq).stripLineEnd.split(" ").toSet
-  }
+    // shells out a "bash -c id -Gn username" to get user groups
+    private def getUnixGroups(username: String): Set[String] = {
+        val cmdSeq = Seq("bash", "-c", "id -Gn " + username)
+        // we need to get rid of the trailing "\n" from the result of command execution
+        Utils.executeAndGetOutput(cmdSeq).stripLineEnd.split(" ").toSet
+    }
 }

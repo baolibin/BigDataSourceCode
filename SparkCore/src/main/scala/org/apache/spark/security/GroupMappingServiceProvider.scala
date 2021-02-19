@@ -18,21 +18,27 @@
 package org.apache.spark.security
 
 /**
- * This Spark trait is used for mapping a given userName to a set of groups which it belongs to.
- * This is useful for specifying a common group of admins/developers to provide them admin, modify
- * and/or view access rights. Based on whether access control checks are enabled using
- * org.apache.spark.acls.enable, every time a user tries to access or modify the application, the
- * SecurityManager gets the corresponding groups a user belongs to from the instance of the groups
- * mapping provider specified by the entry org.apache.spark.user.groups.mapping.
- */
+  * 这个Spark特性用于将给定的用户名映射到它所属的一组。
+  * 这对于指定管理员/开发人员的公共组以向他们提供管理、修改和/或查看访问权限非常有用。
+  * 基于是否使用启用了访问控制检查org.apache.spark.acls.enable启用，每次用户尝试访问或修改应用程序时，
+  * SecurityManager都会从条目指定的组映射提供程序实例中获取用户所属的相应组org.apache.spark.user.groups.mapping用户组映射.
+  *
+  * This Spark trait is used for mapping a given userName to a set of groups which it belongs to.
+  * This is useful for specifying a common group of admins/developers to provide them admin, modify
+  * and/or view access rights. Based on whether access control checks are enabled using
+  * org.apache.spark.acls.enable, every time a user tries to access or modify the application, the
+  * SecurityManager gets the corresponding groups a user belongs to from the instance of the groups
+  * mapping provider specified by the entry org.apache.spark.user.groups.mapping.
+  */
 
 trait GroupMappingServiceProvider {
 
-  /**
-   * Get the groups the user belongs to.
-   * @param userName User's Name
-   * @return set of groups that the user belongs to. Empty in case of an invalid user.
-   */
-  def getGroups(userName : String) : Set[String]
+    /**
+      * Get the groups the user belongs to.
+      *
+      * @param userName User's Name
+      * @return set of groups that the user belongs to. Empty in case of an invalid user.
+      */
+    def getGroups(userName: String): Set[String]
 
 }
