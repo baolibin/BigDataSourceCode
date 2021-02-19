@@ -263,20 +263,20 @@
 > [rpc通信源码](src/main/scala/org/apache/spark/rpc)：
 * netty：
     - Dispatcher：消息调度器，负责将RPC消息路由到适当的端点。
-    - Inbox：
+    - Inbox：存储[[RpcEndpoint]]消息并安全地将消息发布到该线程的收件箱。
     - NettyRpcCallContext：
     - NettyRpcEnv：
-    - NettyStreamManager：
+    - NettyStreamManager：StreamManager实现，用于从nettyrpconv提供文件服务。
     - Outbox：
-    - RpcEndpointVerifier：
+    - RpcEndpointVerifier：用于远程[[RpcEnv]]查询“RpcEndpoint”是否存在的[[RpcEndpoint]]。
 * RpcAddress：RPC环境的地址，带有主机名和端口。
 * RpcCallContext：[[RpcEndpoint]]可以用来发回消息或失败的回调。它是线程安全的，可以在任何线程中调用。
 * RpcEndpoint：RPC的一个端点，用于定义给定消息要触发的函数。
 * RpcEndpointAddress：RPC终结点的地址标识符。
-* RpcEndpointNotFoundException：
-* RpcEndpointRef：
-* RpcEnv：
-* RpcEnvStoppedException：
+* RpcEndpointNotFoundException：Cannot find endpoint Exception。
+* RpcEndpointRef：远程[[RpcEndpoint]]的引用。[[RpcEndpointRef]]是线程安全的。
+* RpcEnv：RpcEnv实现必须具有具有空构造函数的[[RpcEnvFactory]]实现，以便可以通过反射创建它。
+* RpcEnvStoppedException：RpcEnv stopped Exception。
 * RpcTimeout：将超时与描述相关联，以便在发生TimeoutException时，可以将有关超时的其他上下文修改为异常消息。
 
 -----
