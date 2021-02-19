@@ -262,7 +262,7 @@
 ##### 16、rpc通信源码
 > [rpc通信源码](src/main/scala/org/apache/spark/rpc)：
 * netty：
-    - Dispatcher：
+    - Dispatcher：消息调度器，负责将RPC消息路由到适当的端点。
     - Inbox：
     - NettyRpcCallContext：
     - NettyRpcEnv：
