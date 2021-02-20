@@ -343,13 +343,13 @@
 
 -----
 ##### 19、serializer源码
-> [serializer源码](src/main/scala/org/apache/spark/serializer)：
-* GenericAvroSerializer：
-* JavaSerializer：
-* KryoSerializer：
+> [serializer源码](src/main/scala/org/apache/spark/serializer)：用于RDD和无序数据的可插入序列化程序。
+* GenericAvroSerializer：用于通用Avro记录的自定义序列化程序。
+* JavaSerializer：使用Java内置序列化的Spark序列化程序。
+* KryoSerializer：使用Kryo序列化库的Spark序列化程序。
 * SerializationDebugger：
-* Serializer：
-* SerializerManager：
+* Serializer：序列化程序。因为有些序列化库不是线程安全的，所以这个类用于创建[[org.apache.spark.serializer.SerializerInstance]]执行实际序列化并保证一次只能从一个线程调用的对象。
+* SerializerManager：为各种Spark组件配置序列化、压缩和加密的组件，包括自动选择要用于无序排列的[[Serializer]]。
 
 -----
 ##### 20、Shuffle模块源码

@@ -16,6 +16,8 @@
  */
 
 /**
+ * 用于RDD和无序数据的可插入序列化程序。
+ * <p>
  * Pluggable serializers for RDD and shuffle data.
  */
 package org.apache.spark.serializer;
