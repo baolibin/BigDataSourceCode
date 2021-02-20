@@ -415,13 +415,13 @@ Reducers获取此文件的连续区域，以便读取其映射输出部分。
 > [util源码](src/main/scala/org/apache/spark/util)： Spark实用程序。
 * util：
     - collection：
-        - AppendOnlyMap：
-        - BitSet：
-        - CompactBuffer：
-        - ExternalAppendOnlyMap：
-        - ExternalSorter：
-        - MedianHeap：
-        - OpenHashMap：
+        - AppendOnlyMap：一个简单的开放哈希表，针对只附加的用例进行了优化，其中键永远不会被删除，但每个键的值可能会被更改。
+        - BitSet：一个简单的，固定大小的位集实现。这种实现速度很快，因为它避免了安全/绑定检查。
+        - CompactBuffer：一种仅附加的缓冲区，类似于ArrayBuffer，但是对于小的缓冲区内存效率更高。
+        - ExternalAppendOnlyMap：一种仅附加的映射，当磁盘空间不足时将已排序的内容溢出到磁盘。
+        - ExternalSorter：排序并潜在地合并（K，V）类型的多个键值对，以生成（K，C）类型的键组合器对。
+        - MedianHeap：MedianHeap设计用于快速跟踪可能包含重复项的一组数字的中间值。插入一个新数字的时间复杂度为O（logn），而确定中值的时间复杂度为O（1）。
+        - OpenHashMap：可为空键的快速哈希map实现。此哈希映射支持插入和更新，但不支持删除。这个map比java.util.HashMap快5倍，同时使用更少的空间开销。
         - OpenHashSet：
         - PartitionedAppendOnlyMap：
         - PartitionedPairBuffer：
@@ -487,5 +487,5 @@ Reducers获取此文件的连续区域，以便读取其映射输出部分。
 * ThreadUtils：
 * TimeStampedHashMap：
 * UninterruptibleThread：
-* Utils：
-* VersionUtils：
+* Utils：Spark使用的各种实用方法。
+* VersionUtils：用于处理Spark版本字符串的实用程序。
