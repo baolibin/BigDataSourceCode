@@ -477,12 +477,12 @@ Reducers获取此文件的连续区域，以便读取其映射输出部分。
 * SerializableConfiguration：
 * SerializableJobConf：
 * ShutdownHookManager：
-* SignalUtils：
+* SignalUtils：包含用于处理posix信号的实用程序。
 * SizeEstimator：
 * SparkExitCode：
 * SparkUncaughtExceptionHandler：
 * StatCounter：
-* TaskListeners：
+* TaskListeners：侦听器提供了一个回调函数，以便在任务执行完成时调用。
 * ThreadStackTrace：
 * ThreadUtils：
 * TimeStampedHashMap：

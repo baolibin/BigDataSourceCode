@@ -23,48 +23,50 @@ import org.apache.spark.TaskContext
 import org.apache.spark.annotation.DeveloperApi
 
 /**
- * :: DeveloperApi ::
- *
- * Listener providing a callback function to invoke when a task's execution completes.
- */
+  * 侦听器提供了一个回调函数，以便在任务执行完成时调用。
+  *
+  * :: DeveloperApi ::
+  *
+  * Listener providing a callback function to invoke when a task's execution completes.
+  */
 @DeveloperApi
 trait TaskCompletionListener extends EventListener {
-  def onTaskCompletion(context: TaskContext): Unit
+    def onTaskCompletion(context: TaskContext): Unit
 }
 
 
 /**
- * :: DeveloperApi ::
- *
- * Listener providing a callback function to invoke when a task's execution encounters an error.
- * Operations defined here must be idempotent, as `onTaskFailure` can be called multiple times.
- */
+  * :: DeveloperApi ::
+  *
+  * Listener providing a callback function to invoke when a task's execution encounters an error.
+  * Operations defined here must be idempotent, as `onTaskFailure` can be called multiple times.
+  */
 @DeveloperApi
 trait TaskFailureListener extends EventListener {
-  def onTaskFailure(context: TaskContext, error: Throwable): Unit
+    def onTaskFailure(context: TaskContext, error: Throwable): Unit
 }
 
 
 /**
- * Exception thrown when there is an exception in executing the callback in TaskCompletionListener.
- */
+  * Exception thrown when there is an exception in executing the callback in TaskCompletionListener.
+  */
 private[spark]
 class TaskCompletionListenerException(
-    errorMessages: Seq[String],
-    val previousError: Option[Throwable] = None)
-  extends RuntimeException {
+                                             errorMessages: Seq[String],
+                                             val previousError: Option[Throwable] = None)
+        extends RuntimeException {
 
-  override def getMessage: String = {
-    val listenerErrorMessage =
-      if (errorMessages.size == 1) {
-        errorMessages.head
-      } else {
-        errorMessages.zipWithIndex.map { case (msg, i) => s"Exception $i: $msg" }.mkString("\n")
-      }
-    val previousErrorMessage = previousError.map { e =>
-      "\n\nPrevious exception in task: " + e.getMessage + "\n" +
-        e.getStackTrace.mkString("\t", "\n\t", "")
-    }.getOrElse("")
-    listenerErrorMessage + previousErrorMessage
-  }
+    override def getMessage: String = {
+        val listenerErrorMessage =
+            if (errorMessages.size == 1) {
+                errorMessages.head
+            } else {
+                errorMessages.zipWithIndex.map { case (msg, i) => s"Exception $i: $msg" }.mkString("\n")
+            }
+        val previousErrorMessage = previousError.map { e =>
+            "\n\nPrevious exception in task: " + e.getMessage + "\n" +
+                    e.getStackTrace.mkString("\t", "\n\t", "")
+        }.getOrElse("")
+        listenerErrorMessage + previousErrorMessage
+    }
 }
