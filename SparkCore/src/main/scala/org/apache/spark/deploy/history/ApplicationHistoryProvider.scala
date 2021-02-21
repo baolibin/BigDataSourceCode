@@ -65,6 +65,8 @@ private[history] abstract class HistoryUpdateProbe {
 }
 
 /**
+  * 调用“getAppUI（）”返回的所有信息：新UI和任何必需的更新状态。
+  *
   * All the information returned from a call to `getAppUI()`: the new UI
   * and any required update state.
   *

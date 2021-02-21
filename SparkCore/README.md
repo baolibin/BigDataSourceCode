@@ -58,11 +58,11 @@
     - StandaloneAppClientListener：在发生各种事件时由部署客户端调用的回调。
 * history：
     - ApplicationCache：应用程序缓存。
-    - ApplicationHistoryProvider：
-    - FsHistoryProvider：
+    - ApplicationHistoryProvider：调用“getAppUI（）”返回的所有信息：新UI和任何必需的更新状态。
+    - FsHistoryProvider：从文件系统中存储的事件日志中提供应用程序历史记录的类。此提供程序定期在后台检查新完成的应用程序，并通过解析关联的事件日志来呈现历史应用程序UI。
     - HistoryPage：
-    - HistoryServer：
-    - HistoryServerArguments：
+    - HistoryServer：一种web服务器，用于呈现已完成应用程序的SparkUIs。
+    - HistoryServerArguments：HistoryServer命令行解析。
 * master：
     - ApplicationInfo：
     - ApplicationSource：

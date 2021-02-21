@@ -41,7 +41,8 @@ import scala.collection.mutable
 import scala.xml.Node
 
 /**
-  * 从文件系统中存储的事件日志中提供应用程序历史记录的类。
+  * 从文件系统中存储的事件日志中提供应用程序历史记录的类。此提供程序定期在后台检查新完成的应用程序，并通过解析关联的事件日志来呈现历史应用程序UI。
+  *
   *
   * A class that provides application history from event logs stored in the file system.
   * This provider checks for new finished applications in the background periodically and
@@ -78,6 +79,7 @@ private[history] class FsHistoryProvider(conf: SparkConf, clock: Clock)
     val fileToAppInfo = new mutable.HashMap[Path, FsApplicationAttemptInfo]()
 
     import FsHistoryProvider._
+
     // Conf option used for testing the initialization code.
     val initThread = initialize()
     // Interval between safemode checks.
