@@ -70,14 +70,14 @@
     - DriverInfo：
     - DriverState：
     - ExecutorDesc：
-    - FileSystemPersistenceEngine：
-    - LeaderElectionAgent：
+    - FileSystemPersistenceEngine：将数据存储在单个磁盘目录中，每个应用程序和辅助进程有一个文件。删除应用程序和辅助进程时，文件将被删除。
+    - LeaderElectionAgent：LeaderElectionAgent跟踪当前主代理，是所有选举代理的公共接口。
     - Master：
-    - MasterArguments：
-    - MasterMessages：
+    - MasterArguments：主程序的命令行解析器。
+    - MasterMessages：包含仅由主机及其关联实体看到的消息。
     - MasterSource：
-    - PersistenceEngine：
-    - RecoveryModeFactory：
+    - PersistenceEngine：允许主服务器保持从故障中恢复所需的任何状态。
+    - RecoveryModeFactory：这个类的实现可以作为Spark的独立模式的恢复模式替代。
     - RecoveryState：
     - WorkerInfo：
     - WorkerState：
