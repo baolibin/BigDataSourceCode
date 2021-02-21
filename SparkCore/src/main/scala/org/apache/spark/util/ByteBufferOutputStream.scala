@@ -21,40 +21,42 @@ import java.io.ByteArrayOutputStream
 import java.nio.ByteBuffer
 
 /**
- * Provide a zero-copy way to convert data in ByteArrayOutputStream to ByteBuffer
- */
+  * 提供零拷贝方式将ByteArrayOutputStream中的数据转换为ByteBuffer。
+  *
+  * Provide a zero-copy way to convert data in ByteArrayOutputStream to ByteBuffer
+  */
 private[spark] class ByteBufferOutputStream(capacity: Int) extends ByteArrayOutputStream(capacity) {
 
-  def this() = this(32)
+    private[this] var closed: Boolean = false
 
-  def getCount(): Int = count
+    def this() = this(32)
 
-  private[this] var closed: Boolean = false
+    def getCount(): Int = count
 
-  override def write(b: Int): Unit = {
-    require(!closed, "cannot write to a closed ByteBufferOutputStream")
-    super.write(b)
-  }
-
-  override def write(b: Array[Byte], off: Int, len: Int): Unit = {
-    require(!closed, "cannot write to a closed ByteBufferOutputStream")
-    super.write(b, off, len)
-  }
-
-  override def reset(): Unit = {
-    require(!closed, "cannot reset a closed ByteBufferOutputStream")
-    super.reset()
-  }
-
-  override def close(): Unit = {
-    if (!closed) {
-      super.close()
-      closed = true
+    override def write(b: Int): Unit = {
+        require(!closed, "cannot write to a closed ByteBufferOutputStream")
+        super.write(b)
     }
-  }
 
-  def toByteBuffer: ByteBuffer = {
-    require(closed, "can only call toByteBuffer() after ByteBufferOutputStream has been closed")
-    ByteBuffer.wrap(buf, 0, count)
-  }
+    override def write(b: Array[Byte], off: Int, len: Int): Unit = {
+        require(!closed, "cannot write to a closed ByteBufferOutputStream")
+        super.write(b, off, len)
+    }
+
+    override def reset(): Unit = {
+        require(!closed, "cannot reset a closed ByteBufferOutputStream")
+        super.reset()
+    }
+
+    override def close(): Unit = {
+        if (!closed) {
+            super.close()
+            closed = true
+        }
+    }
+
+    def toByteBuffer: ByteBuffer = {
+        require(closed, "can only call toByteBuffer() after ByteBufferOutputStream has been closed")
+        ByteBuffer.wrap(buf, 0, count)
+    }
 }

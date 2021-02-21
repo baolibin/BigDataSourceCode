@@ -449,13 +449,13 @@ Reducers获取此文件的连续区域，以便读取其映射输出部分。
         - StratifiedSamplingUtils：PairRDDFunctions中sampleByKey方法的辅助函数和数据结构。
         - XORShiftRandom：这个类实现了一个XORShift随机数生成器算法。
 * AccumulatorV2：累加器的基类，它可以累加“IN”类型的输入，并产生“OUT”类型的输出。
-* Benchmark：
-* BoundedPriorityQueue：
-* ByteBufferInputStream：
-* ByteBufferOutputStream：
-* CausedBy：
-* Clock：
-* ClosureCleaner：
+* Benchmark：用于基准组件的实用程序类。
+* BoundedPriorityQueue：有界优先级队列。这个类包装了原始的PriorityQueue类并对其进行了修改，以便只保留前K个元素。前K个元素由隐式排序[A]定义。
+* ByteBufferInputStream：从ByteBuffer读取数据。
+* ByteBufferOutputStream：提供零拷贝方式将ByteArrayOutputStream中的数据转换为ByteBuffer。
+* CausedBy：用于提取错误根本原因的提取器对象。
+* Clock：表示时钟的接口，以便在单元测试中模拟它们。
+* ClosureCleaner：一种使闭包可序列化（如果可以安全地进行）的清理程序。
 * CollectionsUtils：
 * CommandLineUtils：包含基本的命令行解析功能和方法来解析一些常见的Spark CLI选项。
 * CompletionIterator：

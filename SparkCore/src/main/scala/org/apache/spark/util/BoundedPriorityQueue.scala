@@ -24,46 +24,53 @@ import scala.collection.JavaConverters._
 import scala.collection.generic.Growable
 
 /**
- * Bounded priority queue. This class wraps the original PriorityQueue
- * class and modifies it such that only the top K elements are retained.
- * The top K elements are defined by an implicit Ordering[A].
- */
+  * 有界优先级队列。这个类包装了原始的PriorityQueue类并对其进行了修改，以便只保留前K个元素。
+  * 前K个元素由隐式排序[A]定义。
+  *
+  * Bounded priority queue. This class wraps the original PriorityQueue
+  * class and modifies it such that only the top K elements are retained.
+  * The top K elements are defined by an implicit Ordering[A].
+  */
 private[spark] class BoundedPriorityQueue[A](maxSize: Int)(implicit ord: Ordering[A])
-  extends Iterable[A] with Growable[A] with Serializable {
+        extends Iterable[A] with Growable[A] with Serializable {
 
-  private val underlying = new JPriorityQueue[A](maxSize, ord)
+    private val underlying = new JPriorityQueue[A](maxSize, ord)
 
-  override def iterator: Iterator[A] = underlying.iterator.asScala
+    override def iterator: Iterator[A] = underlying.iterator.asScala
 
-  override def size: Int = underlying.size
-
-  override def ++=(xs: TraversableOnce[A]): this.type = {
-    xs.foreach { this += _ }
-    this
-  }
-
-  override def +=(elem: A): this.type = {
-    if (size < maxSize) {
-      underlying.offer(elem)
-    } else {
-      maybeReplaceLowest(elem)
+    override def +=(elem1: A, elem2: A, elems: A*): this.type = {
+        this += elem1 += elem2 ++= elems
     }
-    this
-  }
 
-  override def +=(elem1: A, elem2: A, elems: A*): this.type = {
-    this += elem1 += elem2 ++= elems
-  }
-
-  override def clear() { underlying.clear() }
-
-  private def maybeReplaceLowest(a: A): Boolean = {
-    val head = underlying.peek()
-    if (head != null && ord.gt(a, head)) {
-      underlying.poll()
-      underlying.offer(a)
-    } else {
-      false
+    override def ++=(xs: TraversableOnce[A]): this.type = {
+        xs.foreach {
+            this += _
+        }
+        this
     }
-  }
+
+    override def +=(elem: A): this.type = {
+        if (size < maxSize) {
+            underlying.offer(elem)
+        } else {
+            maybeReplaceLowest(elem)
+        }
+        this
+    }
+
+    override def size: Int = underlying.size
+
+    private def maybeReplaceLowest(a: A): Boolean = {
+        val head = underlying.peek()
+        if (head != null && ord.gt(a, head)) {
+            underlying.poll()
+            underlying.offer(a)
+        } else {
+            false
+        }
+    }
+
+    override def clear() {
+        underlying.clear()
+    }
 }
