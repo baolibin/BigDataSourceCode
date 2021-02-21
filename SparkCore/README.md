@@ -458,15 +458,15 @@ Reducers获取此文件的连续区域，以便读取其映射输出部分。
 * ClosureCleaner：一种使闭包可序列化（如果可以安全地进行）的清理程序。
 * CollectionsUtils：
 * CommandLineUtils：包含基本的命令行解析功能和方法来解析一些常见的Spark CLI选项。
-* CompletionIterator：
-* Distribution：
-* EventLoop：
-* IdGenerator：
-* IntParam：
-* JsonProtocol：
-* ListenerBus：
-* ManualClock：
-* MemoryParam：
+* CompletionIterator：一个迭代器的包装器，它在成功遍历所有元素后调用一个完成方法。
+* Distribution：用于从数值的小样本中获取一些统计信息工具，并带有一些方便的摘要函数。
+* EventLoop：从调用者接收事件并处理事件线程中所有事件的事件循环。它将启动一个独占事件线程来处理所有事件。
+* IdGenerator：用于获取唯一生成ID的util。这是围绕Java的AtomicInteger的包装。一个示例用法是在BlockManager中，每个BlockManager实例将启动一个RpcEndpoint，我们使用这个实用程序来分配RpcEndpoints的唯一名称。
+* IntParam：用于将字符串解析为整数的提取器对象。
+* JsonProtocol：将SparkListener事件序列化到JSON或从JSON序列化。
+* ListenerBus：向侦听器发布事件的事件总线。
+* ManualClock：一种可以手动设置和修改时间的时钟。它报告的时间不会随着时间的流逝而改变，只会随着调用者修改它的时间而改变。这主要用于测试。
+* MemoryParam：用于将JVM内存字符串（如“10g”）解析为表示兆字节数的Int的提取器对象。支持与相同的格式实用程序。内存字符串.
 * MutablePair：
 * MutableURLClassLoader：
 * NextIterator：

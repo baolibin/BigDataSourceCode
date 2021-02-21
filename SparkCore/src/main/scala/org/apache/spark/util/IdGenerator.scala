@@ -20,12 +20,16 @@ package org.apache.spark.util
 import java.util.concurrent.atomic.AtomicInteger
 
 /**
- * A util used to get a unique generation ID. This is a wrapper around Java's
- * AtomicInteger. An example usage is in BlockManager, where each BlockManager
- * instance would start an RpcEndpoint and we use this utility to assign the RpcEndpoints'
- * unique names.
- */
+  * 用于获取唯一生成ID的util。这是围绕Java的AtomicInteger的包装。
+  * 一个示例用法是在BlockManager中，每个BlockManager实例将启动一个RpcEndpoint，我们使用这个实用程序来分配RpcEndpoints的唯一名称。
+  *
+  * A util used to get a unique generation ID. This is a wrapper around Java's
+  * AtomicInteger. An example usage is in BlockManager, where each BlockManager
+  * instance would start an RpcEndpoint and we use this utility to assign the RpcEndpoints'
+  * unique names.
+  */
 private[spark] class IdGenerator {
-  private val id = new AtomicInteger
-  def next: Int = id.incrementAndGet
+    private val id = new AtomicInteger
+
+    def next: Int = id.incrementAndGet
 }

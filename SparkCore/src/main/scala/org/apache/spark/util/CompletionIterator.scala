@@ -18,32 +18,36 @@
 package org.apache.spark.util
 
 /**
- * Wrapper around an iterator which calls a completion method after it successfully iterates
- * through all the elements.
- */
+  * 一个迭代器的包装器，它在成功遍历所有元素后调用一个完成方法。
+  *
+  * Wrapper around an iterator which calls a completion method after it successfully iterates
+  * through all the elements.
+  */
 private[spark]
 // scalastyle:off
-abstract class CompletionIterator[ +A, +I <: Iterator[A]](sub: I) extends Iterator[A] {
-// scalastyle:on
+abstract class CompletionIterator[+A, +I <: Iterator[A]](sub: I) extends Iterator[A] {
+    // scalastyle:on
 
-  private[this] var completed = false
-  def next(): A = sub.next()
-  def hasNext: Boolean = {
-    val r = sub.hasNext
-    if (!r && !completed) {
-      completed = true
-      completion()
+    private[this] var completed = false
+
+    def next(): A = sub.next()
+
+    def hasNext: Boolean = {
+        val r = sub.hasNext
+        if (!r && !completed) {
+            completed = true
+            completion()
+        }
+        r
     }
-    r
-  }
 
-  def completion(): Unit
+    def completion(): Unit
 }
 
 private[spark] object CompletionIterator {
-  def apply[A, I <: Iterator[A]](sub: I, completionFunction: => Unit) : CompletionIterator[A, I] = {
-    new CompletionIterator[A, I](sub) {
-      def completion(): Unit = completionFunction
+    def apply[A, I <: Iterator[A]](sub: I, completionFunction: => Unit): CompletionIterator[A, I] = {
+        new CompletionIterator[A, I](sub) {
+            def completion(): Unit = completionFunction
+        }
     }
-  }
 }
