@@ -437,11 +437,11 @@ Reducers获取此文件的连续区域，以便读取其映射输出部分。
         - WritablePartitionedPairCollection：用于跟踪键值对集合大小的公共接口。
     - io：
         - ChunkedByteBuffer：只读字节缓冲区，物理上存储为多个块而不是单个连续数组。
-        - ChunkedByteBufferOutputStream：
+        - ChunkedByteBufferOutputStream：写入固定大小字节数组块的输出流。
     - logging：
         - FileAppender：连续地将输入流中的数据附加到给定的文件中。
-        - RollingFileAppender：
-        - RollingPolicy：
+        - RollingFileAppender：连续地将输入流中的数据追加到给定的文件中，并在给定的时间间隔后对该文件进行滚动。滚动文件是基于给定的模式命名的。
+        - RollingPolicy：定义所基于的策略[[org.apache.spark.util.logging.RollingFileAppender]]将生成滚动文件。
     - random：
        - Pseudorandom：具有伪随机行为的类。
         - RandomSampler：
