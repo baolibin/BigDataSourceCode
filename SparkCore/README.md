@@ -84,22 +84,22 @@
     - ZooKeeperLeaderElectionAgent：
     - ZooKeeperPersistenceEngine：
 * rest：
-    - RestSubmissionClient：
-    - RestSubmissionServer：
-    - StandaloneRestServer：
-    - SubmitRestProtocolException：
-    - SubmitRestProtocolMessage：
-    - SubmitRestProtocolRequest：
-    - SubmitRestProtocolResponse：
+    - RestSubmissionClient：向[[RestSubmissionServer]]提交应用程序的客户端。
+    - RestSubmissionServer：响应[[RestSubmissionClient]]提交的请求的服务器。
+    - StandaloneRestServer：响应[[RestSubmissionClient]]提交的请求的服务器。
+    - SubmitRestProtocolException：REST应用程序提交协议中引发异常。
+    - SubmitRestProtocolMessage：在REST应用程序提交协议中交换的抽象消息。
+    - SubmitRestProtocolRequest：在REST应用程序提交协议中从客户端发送的抽象请求。
+    - SubmitRestProtocolResponse：在REST应用程序提交协议中从服务器发送的抽象响应。
 * worker：
-    - CommandUtils：
-    - DriverRunner：
-    - DriverWrapper：
-    - ExecutorRunner：
+    - CommandUtils：使用spark类路径运行命令的实用工具。
+    - DriverRunner：管理一个驱动程序的执行，包括在发生故障时自动重新启动驱动程序。
+    - DriverWrapper：用于启动驱动程序以便它们与工作进程共享命运的实用对象。
+    - ExecutorRunner：管理一个executor进程的执行。
     - Worker：
-    - WorkerArguments：
+    - WorkerArguments：worker进程的命令行分析器。
     - WorkerSource：
-    - WorkerWatcher：
+    - WorkerWatcher：连接到工作进程并在连接断开时终止JVM的端点。
 * ApplicationDescription：应用程序描述。
 * Client：在standalone cluster模式中，启动和终止执行程序的驱动器。
 * ClientArguments：驱动程序客户端的命令行解析器。
