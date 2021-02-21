@@ -466,8 +466,8 @@ Reducers获取此文件的连续区域，以便读取其映射输出部分。
 * JsonProtocol：将SparkListener事件序列化到JSON或从JSON序列化。
 * ListenerBus：向侦听器发布事件的事件总线。
 * ManualClock：一种可以手动设置和修改时间的时钟。它报告的时间不会随着时间的流逝而改变，只会随着调用者修改它的时间而改变。这主要用于测试。
-* MemoryParam：用于将JVM内存字符串（如“10g”）解析为表示兆字节数的Int的提取器对象。支持与相同的格式实用程序。内存字符串.
-* MutablePair：
+* MemoryParam：用于将JVM内存字符串（如“10g”）解析为表示兆字节数的Int的提取器对象。支持与相同的格式实用程序。内存字符串。
+* MutablePair：由两个元素组成的元组。当我们想要最小化对象分配时，这可以作为Scala的Tuple2的替代方案。
 * MutableURLClassLoader：
 * NextIterator：
 * ParentClassLoader：

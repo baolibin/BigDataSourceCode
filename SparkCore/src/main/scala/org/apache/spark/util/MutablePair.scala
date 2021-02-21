@@ -20,30 +20,31 @@ package org.apache.spark.util
 import org.apache.spark.annotation.DeveloperApi
 
 /**
- * :: DeveloperApi ::
- * A tuple of 2 elements. This can be used as an alternative to Scala's Tuple2 when we want to
- * minimize object allocation.
- *
- * @param  _1   Element 1 of this MutablePair
- * @param  _2   Element 2 of this MutablePair
- */
+  * 由两个元素组成的元组。当我们想要最小化对象分配时，这可以作为Scala的Tuple2的替代方案。
+  *
+  * :: DeveloperApi ::
+  * A tuple of 2 elements. This can be used as an alternative to Scala's Tuple2 when we want to
+  * minimize object allocation.
+  *
+  * @param  _1 Element 1 of this MutablePair
+  * @param  _2 Element 2 of this MutablePair
+  */
 @DeveloperApi
-case class MutablePair[@specialized(Int, Long, Double, Char, Boolean/* , AnyRef */) T1,
-                       @specialized(Int, Long, Double, Char, Boolean/* , AnyRef */) T2]
-  (var _1: T1, var _2: T2)
-  extends Product2[T1, T2]
-{
-  /** No-arg constructor for serialization */
-  def this() = this(null.asInstanceOf[T1], null.asInstanceOf[T2])
+case class MutablePair[@specialized(Int, Long, Double, Char, Boolean /* , AnyRef */) T1,
+        @specialized(Int, Long, Double, Char, Boolean /* , AnyRef */) T2]
+(var _1: T1, var _2: T2)
+        extends Product2[T1, T2] {
+    /** No-arg constructor for serialization */
+    def this() = this(null.asInstanceOf[T1], null.asInstanceOf[T2])
 
-  /** Updates this pair with new values and returns itself */
-  def update(n1: T1, n2: T2): MutablePair[T1, T2] = {
-    _1 = n1
-    _2 = n2
-    this
-  }
+    /** Updates this pair with new values and returns itself */
+    def update(n1: T1, n2: T2): MutablePair[T1, T2] = {
+        _1 = n1
+        _2 = n2
+        this
+    }
 
-  override def toString: String = "(" + _1 + "," + _2 + ")"
+    override def toString: String = "(" + _1 + "," + _2 + ")"
 
-  override def canEqual(that: Any): Boolean = that.isInstanceOf[MutablePair[_, _]]
+    override def canEqual(that: Any): Boolean = that.isInstanceOf[MutablePair[_, _]]
 }
