@@ -17,89 +17,94 @@
 
 package org.apache.spark.util.collection
 
-import scala.collection.mutable
-
 import org.apache.spark.util.SizeEstimator
 
+import scala.collection.mutable
+
 /**
- * A general interface for collections to keep track of their estimated sizes in bytes.
- * We sample with a slow exponential back-off using the SizeEstimator to amortize the time,
- * as each call to SizeEstimator is somewhat expensive (order of a few milliseconds).
- */
+  * 集合的通用接口，用于跟踪以字节为单位的估计大小。
+  * 我们使用SizeEstimator以缓慢的指数回退进行采样，以分摊时间，因为每次调用SizeEstimator都有点昂贵（几毫秒的顺序）。
+  *
+  * A general interface for collections to keep track of their estimated sizes in bytes.
+  * We sample with a slow exponential back-off using the SizeEstimator to amortize the time,
+  * as each call to SizeEstimator is somewhat expensive (order of a few milliseconds).
+  */
 private[spark] trait SizeTracker {
 
-  import SizeTracker._
+    import SizeTracker._
 
-  /**
-   * Controls the base of the exponential which governs the rate of sampling.
-   * E.g., a value of 2 would mean we sample at 1, 2, 4, 8, ... elements.
-   */
-  private val SAMPLE_GROWTH_RATE = 1.1
+    /**
+      * Controls the base of the exponential which governs the rate of sampling.
+      * E.g., a value of 2 would mean we sample at 1, 2, 4, 8, ... elements.
+      */
+    private val SAMPLE_GROWTH_RATE = 1.1
 
-  /** Samples taken since last resetSamples(). Only the last two are kept for extrapolation. */
-  private val samples = new mutable.Queue[Sample]
+    /** Samples taken since last resetSamples(). Only the last two are kept for extrapolation. */
+    private val samples = new mutable.Queue[Sample]
 
-  /** The average number of bytes per update between our last two samples. */
-  private var bytesPerUpdate: Double = _
+    /** The average number of bytes per update between our last two samples. */
+    private var bytesPerUpdate: Double = _
 
-  /** Total number of insertions and updates into the map since the last resetSamples(). */
-  private var numUpdates: Long = _
+    /** Total number of insertions and updates into the map since the last resetSamples(). */
+    private var numUpdates: Long = _
 
-  /** The value of 'numUpdates' at which we will take our next sample. */
-  private var nextSampleNum: Long = _
+    /** The value of 'numUpdates' at which we will take our next sample. */
+    private var nextSampleNum: Long = _
 
-  resetSamples()
+    resetSamples()
 
-  /**
-   * Reset samples collected so far.
-   * This should be called after the collection undergoes a dramatic change in size.
-   */
-  protected def resetSamples(): Unit = {
-    numUpdates = 1
-    nextSampleNum = 1
-    samples.clear()
-    takeSample()
-  }
-
-  /**
-   * Callback to be invoked after every update.
-   */
-  protected def afterUpdate(): Unit = {
-    numUpdates += 1
-    if (nextSampleNum == numUpdates) {
-      takeSample()
+    /**
+      * Estimate the current size of the collection in bytes. O(1) time.
+      */
+    def estimateSize(): Long = {
+        assert(samples.nonEmpty)
+        val extrapolatedDelta = bytesPerUpdate * (numUpdates - samples.last.numUpdates)
+        (samples.last.size + extrapolatedDelta).toLong
     }
-  }
 
-  /**
-   * Take a new sample of the current collection's size.
-   */
-  private def takeSample(): Unit = {
-    samples.enqueue(Sample(SizeEstimator.estimate(this), numUpdates))
-    // Only use the last two samples to extrapolate
-    if (samples.size > 2) {
-      samples.dequeue()
+    /**
+      * Reset samples collected so far.
+      * This should be called after the collection undergoes a dramatic change in size.
+      */
+    protected def resetSamples(): Unit = {
+        numUpdates = 1
+        nextSampleNum = 1
+        samples.clear()
+        takeSample()
     }
-    val bytesDelta = samples.toList.reverse match {
-      case latest :: previous :: tail =>
-        (latest.size - previous.size).toDouble / (latest.numUpdates - previous.numUpdates)
-      // If fewer than 2 samples, assume no change
-      case _ => 0
-    }
-    bytesPerUpdate = math.max(0, bytesDelta)
-    nextSampleNum = math.ceil(numUpdates * SAMPLE_GROWTH_RATE).toLong
-  }
 
-  /**
-   * Estimate the current size of the collection in bytes. O(1) time.
-   */
-  def estimateSize(): Long = {
-    assert(samples.nonEmpty)
-    val extrapolatedDelta = bytesPerUpdate * (numUpdates - samples.last.numUpdates)
-    (samples.last.size + extrapolatedDelta).toLong
-  }
+    /**
+      * Callback to be invoked after every update.
+      */
+    protected def afterUpdate(): Unit = {
+        numUpdates += 1
+        if (nextSampleNum == numUpdates) {
+            takeSample()
+        }
+    }
+
+    /**
+      * Take a new sample of the current collection's size.
+      */
+    private def takeSample(): Unit = {
+        samples.enqueue(Sample(SizeEstimator.estimate(this), numUpdates))
+        // Only use the last two samples to extrapolate
+        if (samples.size > 2) {
+            samples.dequeue()
+        }
+        val bytesDelta = samples.toList.reverse match {
+            case latest :: previous :: tail =>
+                (latest.size - previous.size).toDouble / (latest.numUpdates - previous.numUpdates)
+            // If fewer than 2 samples, assume no change
+            case _ => 0
+        }
+        bytesPerUpdate = math.max(0, bytesDelta)
+        nextSampleNum = math.ceil(numUpdates * SAMPLE_GROWTH_RATE).toLong
+    }
 }
 
 private object SizeTracker {
-  case class Sample(size: Long, numUpdates: Long)
+
+    case class Sample(size: Long, numUpdates: Long)
+
 }

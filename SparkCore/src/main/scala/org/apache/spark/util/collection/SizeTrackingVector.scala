@@ -20,20 +20,22 @@ package org.apache.spark.util.collection
 import scala.reflect.ClassTag
 
 /**
- * An append-only buffer that keeps track of its estimated size in bytes.
- */
+  * 一种仅附加的缓冲区，用于跟踪以字节为单位的估计大小。
+  *
+  * An append-only buffer that keeps track of its estimated size in bytes.
+  */
 private[spark] class SizeTrackingVector[T: ClassTag]
-  extends PrimitiveVector[T]
-  with SizeTracker {
+        extends PrimitiveVector[T]
+                with SizeTracker {
 
-  override def +=(value: T): Unit = {
-    super.+=(value)
-    super.afterUpdate()
-  }
+    override def +=(value: T): Unit = {
+        super.+=(value)
+        super.afterUpdate()
+    }
 
-  override def resize(newLength: Int): PrimitiveVector[T] = {
-    super.resize(newLength)
-    resetSamples()
-    this
-  }
+    override def resize(newLength: Int): PrimitiveVector[T] = {
+        super.resize(newLength)
+        resetSamples()
+        this
+    }
 }

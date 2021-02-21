@@ -425,16 +425,16 @@ Reducers获取此文件的连续区域，以便读取其映射输出部分。
         - OpenHashSet：一个简单、快速的哈希集，针对非空插入用例进行了优化，其中键永远不会被删除。
         - PartitionedAppendOnlyMap：writeablepartitionedpaircollection的实现，它包装了一个映射，其中键是（partition ID，K）的元组。
         - PartitionedPairBuffer：只追加键值对的缓冲区，每个缓冲区都有一个相应的分区ID，用于跟踪其估计大小（字节）。
-        - PrimitiveKeyOpenHashMap：
-        - PrimitiveVector：
-        - SizeTracker：
-        - SizeTrackingAppendOnlyMap：
-        - SizeTrackingVector：
-        - SortDataFormat：
+        - PrimitiveKeyOpenHashMap：一个快速的散列映射实现原语，非空键。此哈希映射支持插入和更新，但不支持删除。
+        - PrimitiveVector：一个仅附加的、非线程安全的、支持数组的向量，它针对基元类型进行了优化。
+        - SizeTracker：集合的通用接口，用于跟踪以字节为单位的估计大小。
+        - SizeTrackingAppendOnlyMap：一种仅附加的映射，它以字节为单位跟踪其估计大小。
+        - SizeTrackingVector：一种仅附加的缓冲区，用于跟踪以字节为单位的估计大小。
+        - SortDataFormat：对数据的任意输入缓冲区进行排序的抽象。此接口需要确定给定元素索引的排序键，以及交换元素和将数据从一个缓冲区移动到另一个缓冲区。
         - Sorter：Java实现[[TimSort]]上的简单包装器。Java实现是包私有的，因此不能在包外调用它org.apache.spark网站.使用集合. 这是一个可用于spark的简单包装。
-        - Spillable：
+        - Spillable：当超过内存阈值时，将内存中集合的内容溢出到磁盘。
         - Utils：集合的实用函数。
-        - WritablePartitionedPairCollection：
+        - WritablePartitionedPairCollection：用于跟踪键值对集合大小的公共接口。
     - io：
         - ChunkedByteBuffer：只读字节缓冲区，物理上存储为多个块而不是单个连续数组。
         - ChunkedByteBufferOutputStream：
