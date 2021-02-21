@@ -149,17 +149,16 @@
 ##### 7、internal模块源码
 > [internal模块源码](src/main/scala/org/apache/spark/internal)：
 * config：
-    - config：
-    - ConfigBuilder：
-    - ConfigEntry：
-    - ConfigProvider：
-    - ConfigReader：
+    - ConfigBuilder：Spark配置的基本生成器。提供用于创建特定类型生成器的方法。
+    - ConfigEntry：一个entry包含配置的所有元信息。
+    - ConfigProvider：配置值的来源。
+    - ConfigReader：用于读取配置项和执行变量替换的帮助程序类。
 * io：
-    - FileCommitProtocol：
-    - HadoopMapReduceCommitProtocol：
-    - SparkHadoopMapReduceWriter：
-    - SparkHadoopWriter：
-    - SparkHadoopWriterUtils：
+    - FileCommitProtocol：定义单个Spark作业如何提交其输出的接口。
+    - HadoopMapReduceCommitProtocol：由底层Hadoop OutputCommitter支持的[[FileCommitProtocol]]实现。
+    - SparkHadoopMapReduceWriter：使用Hadoop OutputFormat保存RDD的helper对象。
+    - SparkHadoopWriter：使用Hadoop OutputFormat保存RDD的内部帮助程序类。
+    - SparkHadoopWriterUtils：一个helper对象，提供使用Hadoop OutputFormat保存RDD时使用的公共util（来自旧的mapredapi和新的mapreduceapi）。
 * Logging：要记录数据的类的实用特性。为类创建SLF4J记录器，并允许使用仅在启用日志级别时才延迟计算参数的方法在不同级别记录消息。
 
 -----
