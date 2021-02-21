@@ -422,9 +422,9 @@ Reducers获取此文件的连续区域，以便读取其映射输出部分。
         - ExternalSorter：排序并潜在地合并（K，V）类型的多个键值对，以生成（K，C）类型的键组合器对。
         - MedianHeap：MedianHeap设计用于快速跟踪可能包含重复项的一组数字的中间值。插入一个新数字的时间复杂度为O（logn），而确定中值的时间复杂度为O（1）。
         - OpenHashMap：可为空键的快速哈希map实现。此哈希映射支持插入和更新，但不支持删除。这个map比java.util.HashMap快5倍，同时使用更少的空间开销。
-        - OpenHashSet：
-        - PartitionedAppendOnlyMap：
-        - PartitionedPairBuffer：
+        - OpenHashSet：一个简单、快速的哈希集，针对非空插入用例进行了优化，其中键永远不会被删除。
+        - PartitionedAppendOnlyMap：writeablepartitionedpaircollection的实现，它包装了一个映射，其中键是（partition ID，K）的元组。
+        - PartitionedPairBuffer：只追加键值对的缓冲区，每个缓冲区都有一个相应的分区ID，用于跟踪其估计大小（字节）。
         - PrimitiveKeyOpenHashMap：
         - PrimitiveVector：
         - SizeTracker：

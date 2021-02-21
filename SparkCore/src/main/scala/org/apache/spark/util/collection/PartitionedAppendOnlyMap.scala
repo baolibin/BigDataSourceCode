@@ -22,19 +22,21 @@ import java.util.Comparator
 import org.apache.spark.util.collection.WritablePartitionedPairCollection._
 
 /**
- * Implementation of WritablePartitionedPairCollection that wraps a map in which the keys are tuples
- * of (partition ID, K)
- */
+  * writeablepartitionedpaircollection的实现，它包装了一个映射，其中键是（partition ID，K）的元组。
+  *
+  * Implementation of WritablePartitionedPairCollection that wraps a map in which the keys are tuples
+  * of (partition ID, K)
+  */
 private[spark] class PartitionedAppendOnlyMap[K, V]
-  extends SizeTrackingAppendOnlyMap[(Int, K), V] with WritablePartitionedPairCollection[K, V] {
+        extends SizeTrackingAppendOnlyMap[(Int, K), V] with WritablePartitionedPairCollection[K, V] {
 
-  def partitionedDestructiveSortedIterator(keyComparator: Option[Comparator[K]])
+    def partitionedDestructiveSortedIterator(keyComparator: Option[Comparator[K]])
     : Iterator[((Int, K), V)] = {
-    val comparator = keyComparator.map(partitionKeyComparator).getOrElse(partitionComparator)
-    destructiveSortedIterator(comparator)
-  }
+        val comparator = keyComparator.map(partitionKeyComparator).getOrElse(partitionComparator)
+        destructiveSortedIterator(comparator)
+    }
 
-  def insert(partition: Int, key: K, value: V): Unit = {
-    update((partition, key), value)
-  }
+    def insert(partition: Int, key: K, value: V): Unit = {
+        update((partition, key), value)
+    }
 }
