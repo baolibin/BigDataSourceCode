@@ -442,13 +442,13 @@ Reducers获取此文件的连续区域，以便读取其映射输出部分。
         - FileAppender：连续地将输入流中的数据附加到给定的文件中。
         - RollingFileAppender：连续地将输入流中的数据追加到给定的文件中，并在给定的时间间隔后对该文件进行滚动。滚动文件是基于给定的模式命名的。
         - RollingPolicy：定义所基于的策略[[org.apache.spark.util.logging.RollingFileAppender]]将生成滚动文件。
-    - random：
+    - random：随机数生成实用程序。
        - Pseudorandom：具有伪随机行为的类。
-        - RandomSampler：
+        - RandomSampler：伪随机采样器。可以更改采样项目类型。例如，我们可能希望为分层抽样或重要性抽样添加权重。应该只使用绑定到采样器并且不能在采样后应用的转换。
         - SamplingUtils：
-        - StratifiedSamplingUtils：
-        - XORShiftRandom：
-* AccumulatorV2：
+        - StratifiedSamplingUtils：PairRDDFunctions中sampleByKey方法的辅助函数和数据结构。
+        - XORShiftRandom：这个类实现了一个XORShift随机数生成器算法。
+* AccumulatorV2：累加器的基类，它可以累加“IN”类型的输入，并产生“OUT”类型的输出。
 * Benchmark：
 * BoundedPriorityQueue：
 * ByteBufferInputStream：

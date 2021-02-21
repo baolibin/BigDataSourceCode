@@ -18,6 +18,8 @@
 package org.apache.spark.util
 
 /**
- * Utilities for random number generation.
- */
+  * 随机数生成实用程序。
+  *
+  * Utilities for random number generation.
+  */
 package object random

@@ -16,6 +16,8 @@
  */
 
 /**
+ * 随机数生成实用程序。
+ * <p>
  * Utilities for random number generation.
  */
 package org.apache.spark.util.random;
