@@ -18,14 +18,16 @@
 package org.apache.spark.util
 
 /**
- * Used for shipping per-thread stacktraces from the executors to driver.
- */
+  * 用于将每个线程的堆栈跟踪从执行器传送到驱动程序。
+  *
+  * Used for shipping per-thread stacktraces from the executors to driver.
+  */
 private[spark] case class ThreadStackTrace(
-  threadId: Long,
-  threadName: String,
-  threadState: Thread.State,
-  stackTrace: String,
-  blockedByThreadId: Option[Long],
-  blockedByLock: String,
-  holdingLocks: Seq[String])
+                                                  threadId: Long,
+                                                  threadName: String,
+                                                  threadState: Thread.State,
+                                                  stackTrace: String,
+                                                  blockedByThreadId: Option[Long],
+                                                  blockedByLock: String,
+                                                  holdingLocks: Seq[String])
 
