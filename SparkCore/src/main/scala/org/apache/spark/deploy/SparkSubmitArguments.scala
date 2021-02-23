@@ -33,14 +33,18 @@ import scala.collection.mutable.{ArrayBuffer, HashMap}
 import scala.io.Source
 
 /**
-  * 解析和封装spark submit脚本中的参数。env参数用于测试。
+  * 解析和封装org.apache.spark-submit脚本。env参数用于测试。
   *
   * Parses and encapsulates arguments from the org.apache.spark-submit script.
   * The env argument is used for testing.
   */
 private[deploy] class SparkSubmitArguments(args: Seq[String], env: Map[String, String] = sys.env)
         extends SparkSubmitArgumentsParser {
-    /** Default properties present in the currently defined defaults file. */
+    /**
+      * 当前定义的默认文件中存在默认属性。
+      *
+      * Default properties present in the currently defined defaults file.
+      */
     lazy val defaultSparkProperties: HashMap[String, String] = {
         val defaultProperties = new HashMap[String, String]()
         // scalastyle:off println
@@ -50,6 +54,7 @@ private[deploy] class SparkSubmitArguments(args: Seq[String], env: Map[String, S
             properties.foreach { case (k, v) =>
                 defaultProperties(k) = v
             }
+            // 属性文件可能包含敏感信息，因此请在打印前进行修订。
             // Property files may contain sensitive information, so redact before printing
             if (verbose) {
                 Utils.redact(properties).foreach { case (k, v) =>
@@ -278,162 +283,6 @@ private[deploy] class SparkSubmitArguments(args: Seq[String], env: Map[String, S
         true
     }
 
-    private def printUsageAndExit(exitCode: Int, unknownParam: Any = null): Unit = {
-        // scalastyle:off println
-        val outStream = SparkSubmit.printStream
-        if (unknownParam != null) {
-            outStream.println("Unknown/unsupported param " + unknownParam)
-        }
-        val command = sys.env.get("_SPARK_CMD_USAGE").getOrElse(
-            """Usage: org.apache.spark-submit [options] <app jar | python file> [app arguments]
-              |Usage: org.apache.spark-submit --kill [submission ID] --master [org.apache.spark://...]
-              |Usage: org.apache.spark-submit --status [submission ID] --master [org.apache.spark://...]
-              |Usage: org.apache.spark-submit run-example [options] example-class [example args]""".stripMargin)
-        outStream.println(command)
-
-        val mem_mb = Utils.DEFAULT_DRIVER_MEM_MB
-        outStream.println(
-            s"""
-               |Options:
-               |  --master MASTER_URL         org.apache.spark://host:port, mesos://host:port, yarn, or local.
-               |  --deploy-mode DEPLOY_MODE   Whether to launch the driver program locally ("client") or
-               |                              on one of the worker machines inside the cluster ("cluster")
-               |                              (Default: client).
-               |  --class CLASS_NAME          Your application's main class (for Java / Scala apps).
-               |  --name NAME                 A name of your application.
-               |  --jars JARS                 Comma-separated list of local jars to include on the driver
-               |                              and executor classpaths.
-               |  --packages                  Comma-separated list of maven coordinates of jars to include
-               |                              on the driver and executor classpaths. Will search the local
-               |                              maven repo, then maven central and any additional remote
-               |                              repositories given by --repositories. The format for the
-               |                              coordinates should be groupId:artifactId:version.
-               |  --exclude-packages          Comma-separated list of groupId:artifactId, to exclude while
-               |                              resolving the dependencies provided in --packages to avoid
-               |                              dependency conflicts.
-               |  --repositories              Comma-separated list of additional remote repositories to
-               |                              search for the maven coordinates given with --packages.
-               |  --py-files PY_FILES         Comma-separated list of .zip, .egg, or .py files to place
-               |                              on the PYTHONPATH for Python apps.
-               |  --files FILES               Comma-separated list of files to be placed in the working
-               |                              directory of each executor. File paths of these files
-               |                              in executors can be accessed via SparkFiles.get(fileName).
-               |
-               |  --conf PROP=VALUE           Arbitrary Spark configuration property.
-               |  --properties-file FILE      Path to a file from which to load extra properties. If not
-               |                              specified, this will look for conf/org.apache.spark-defaults.conf.
-               |
-               |  --driver-memory MEM         Memory for driver (e.g. 1000M, 2G) (Default: ${mem_mb}M).
-               |  --driver-java-options       Extra Java options to pass to the driver.
-               |  --driver-library-path       Extra library path entries to pass to the driver.
-               |  --driver-class-path         Extra class path entries to pass to the driver. Note that
-               |                              jars added with --jars are automatically included in the
-               |                              classpath.
-               |
-               |  --executor-memory MEM       Memory per executor (e.g. 1000M, 2G) (Default: 1G).
-               |
-               |  --proxy-user NAME           User to impersonate when submitting the application.
-               |                              This argument does not work with --principal / --keytab.
-               |
-               |  --help, -h                  Show this help message and exit.
-               |  --verbose, -v               Print additional debug output.
-               |  --version,                  Print the version of current Spark.
-               |
-               | Spark standalone with cluster deploy mode only:
-               |  --driver-cores NUM          Cores for driver (Default: 1).
-               |
-               | Spark standalone or Mesos with cluster deploy mode only:
-               |  --supervise                 If given, restarts the driver on failure.
-               |  --kill SUBMISSION_ID        If given, kills the driver specified.
-               |  --status SUBMISSION_ID      If given, requests the status of the driver specified.
-               |
-               | Spark standalone and Mesos only:
-               |  --total-executor-cores NUM  Total cores for all executors.
-               |
-               | Spark standalone and YARN only:
-               |  --executor-cores NUM        Number of cores per executor. (Default: 1 in YARN mode,
-               |                              or all available cores on the worker in standalone mode)
-               |
-               | YARN-only:
-               |  --driver-cores NUM          Number of cores used by the driver, only in cluster mode
-               |                              (Default: 1).
-               |  --queue QUEUE_NAME          The YARN queue to submit to (Default: "default").
-               |  --num-executors NUM         Number of executors to launch (Default: 2).
-               |                              If dynamic allocation is enabled, the initial number of
-               |                              executors will be at least NUM.
-               |  --archives ARCHIVES         Comma separated list of archives to be extracted into the
-               |                              working directory of each executor.
-               |  --principal PRINCIPAL       Principal to be used to login to KDC, while running on
-               |                              secure HDFS.
-               |  --keytab KEYTAB             The full path to the file that contains the keytab for the
-               |                              principal specified above. This keytab will be copied to
-               |                              the node running the Application Master via the Secure
-               |                              Distributed Cache, for renewing the login tickets and the
-               |                              delegation tokens periodically.
-      """.stripMargin
-        )
-
-        if (SparkSubmit.isSqlShell(mainClass)) {
-            outStream.println("CLI options:")
-            outStream.println(getSqlShellOptions())
-        }
-        // scalastyle:on println
-
-        SparkSubmit.exitFn(exitCode)
-    }
-
-    /**
-      * Run the Spark SQL CLI main class with the "--help" option and catch its output. Then filter
-      * the results to remove unwanted lines.
-      *
-      * Since the CLI will call `System.exit()`, we install a security manager to prevent that call
-      * from working, and restore the original one afterwards.
-      */
-    private def getSqlShellOptions(): String = {
-        val currentOut = System.out
-        val currentErr = System.err
-        val currentSm = System.getSecurityManager()
-        try {
-            val out = new ByteArrayOutputStream()
-            val stream = new PrintStream(out)
-            System.setOut(stream)
-            System.setErr(stream)
-
-            val sm = new SecurityManager() {
-                override def checkExit(status: Int): Unit = {
-                    throw new SecurityException()
-                }
-
-                override def checkPermission(perm: java.security.Permission): Unit = {}
-            }
-            System.setSecurityManager(sm)
-
-            try {
-                Utils.classForName(mainClass).getMethod("main", classOf[Array[String]])
-                        .invoke(null, Array(HELP))
-            } catch {
-                case e: InvocationTargetException =>
-                    // Ignore SecurityException, since we throw it above.
-                    if (!e.getCause().isInstanceOf[SecurityException]) {
-                        throw e
-                    }
-            }
-
-            stream.flush()
-
-            // Get the output and discard any unnecessary lines from it.
-            Source.fromString(new String(out.toByteArray(), StandardCharsets.UTF_8)).getLines
-                    .filter { line =>
-                        !line.startsWith("log4j") && !line.startsWith("usage")
-                    }
-                    .mkString("\n")
-        } finally {
-            System.setSecurityManager(currentSm)
-            System.setOut(currentOut)
-            System.setErr(currentErr)
-        }
-    }
-
     /**
       * 处理无法识别的命令行选项。
       *
@@ -624,6 +473,164 @@ private[deploy] class SparkSubmitArguments(args: Seq[String], env: Map[String, S
 
         if (proxyUser != null && principal != null) {
             SparkSubmit.printErrorAndExit("Only one of --proxy-user or --principal can be provided.")
+        }
+    }
+
+    private def printUsageAndExit(exitCode: Int, unknownParam: Any = null): Unit = {
+        // scalastyle:off println
+        val outStream = SparkSubmit.printStream
+        if (unknownParam != null) {
+            outStream.println("Unknown/unsupported param " + unknownParam)
+        }
+        val command = sys.env.get("_SPARK_CMD_USAGE").getOrElse(
+            """Usage: org.apache.spark-submit [options] <app jar | python file> [app arguments]
+              |Usage: org.apache.spark-submit --kill [submission ID] --master [org.apache.spark://...]
+              |Usage: org.apache.spark-submit --status [submission ID] --master [org.apache.spark://...]
+              |Usage: org.apache.spark-submit run-example [options] example-class [example args]""".stripMargin)
+        outStream.println(command)
+
+        val mem_mb = Utils.DEFAULT_DRIVER_MEM_MB
+        outStream.println(
+            s"""
+               |Options:
+               |  --master MASTER_URL         org.apache.spark://host:port, mesos://host:port, yarn, or local.
+               |  --deploy-mode DEPLOY_MODE   Whether to launch the driver program locally ("client") or
+               |                              on one of the worker machines inside the cluster ("cluster")
+               |                              (Default: client).
+               |  --class CLASS_NAME          Your application's main class (for Java / Scala apps).
+               |  --name NAME                 A name of your application.
+               |  --jars JARS                 Comma-separated list of local jars to include on the driver
+               |                              and executor classpaths.
+               |  --packages                  Comma-separated list of maven coordinates of jars to include
+               |                              on the driver and executor classpaths. Will search the local
+               |                              maven repo, then maven central and any additional remote
+               |                              repositories given by --repositories. The format for the
+               |                              coordinates should be groupId:artifactId:version.
+               |  --exclude-packages          Comma-separated list of groupId:artifactId, to exclude while
+               |                              resolving the dependencies provided in --packages to avoid
+               |                              dependency conflicts.
+               |  --repositories              Comma-separated list of additional remote repositories to
+               |                              search for the maven coordinates given with --packages.
+               |  --py-files PY_FILES         Comma-separated list of .zip, .egg, or .py files to place
+               |                              on the PYTHONPATH for Python apps.
+               |  --files FILES               Comma-separated list of files to be placed in the working
+               |                              directory of each executor. File paths of these files
+               |                              in executors can be accessed via SparkFiles.get(fileName).
+               |
+               |  --conf PROP=VALUE           Arbitrary Spark configuration property.
+               |  --properties-file FILE      Path to a file from which to load extra properties. If not
+               |                              specified, this will look for conf/org.apache.spark-defaults.conf.
+               |
+               |  --driver-memory MEM         Memory for driver (e.g. 1000M, 2G) (Default: ${mem_mb}M).
+               |  --driver-java-options       Extra Java options to pass to the driver.
+               |  --driver-library-path       Extra library path entries to pass to the driver.
+               |  --driver-class-path         Extra class path entries to pass to the driver. Note that
+               |                              jars added with --jars are automatically included in the
+               |                              classpath.
+               |
+               |  --executor-memory MEM       Memory per executor (e.g. 1000M, 2G) (Default: 1G).
+               |
+               |  --proxy-user NAME           User to impersonate when submitting the application.
+               |                              This argument does not work with --principal / --keytab.
+               |
+               |  --help, -h                  Show this help message and exit.
+               |  --verbose, -v               Print additional debug output.
+               |  --version,                  Print the version of current Spark.
+               |
+               | Spark standalone with cluster deploy mode only:
+               |  --driver-cores NUM          Cores for driver (Default: 1).
+               |
+               | Spark standalone or Mesos with cluster deploy mode only:
+               |  --supervise                 If given, restarts the driver on failure.
+               |  --kill SUBMISSION_ID        If given, kills the driver specified.
+               |  --status SUBMISSION_ID      If given, requests the status of the driver specified.
+               |
+               | Spark standalone and Mesos only:
+               |  --total-executor-cores NUM  Total cores for all executors.
+               |
+               | Spark standalone and YARN only:
+               |  --executor-cores NUM        Number of cores per executor. (Default: 1 in YARN mode,
+               |                              or all available cores on the worker in standalone mode)
+               |
+               | YARN-only:
+               |  --driver-cores NUM          Number of cores used by the driver, only in cluster mode
+               |                              (Default: 1).
+               |  --queue QUEUE_NAME          The YARN queue to submit to (Default: "default").
+               |  --num-executors NUM         Number of executors to launch (Default: 2).
+               |                              If dynamic allocation is enabled, the initial number of
+               |                              executors will be at least NUM.
+               |  --archives ARCHIVES         Comma separated list of archives to be extracted into the
+               |                              working directory of each executor.
+               |  --principal PRINCIPAL       Principal to be used to login to KDC, while running on
+               |                              secure HDFS.
+               |  --keytab KEYTAB             The full path to the file that contains the keytab for the
+               |                              principal specified above. This keytab will be copied to
+               |                              the node running the Application Master via the Secure
+               |                              Distributed Cache, for renewing the login tickets and the
+               |                              delegation tokens periodically.
+      """.stripMargin
+        )
+
+        if (SparkSubmit.isSqlShell(mainClass)) {
+            outStream.println("CLI options:")
+            outStream.println(getSqlShellOptions())
+        }
+        // scalastyle:on println
+
+        SparkSubmit.exitFn(exitCode)
+    }
+
+    /**
+      * 使用“--help”选项运行sparksqlcli主类并捕获其输出。然后过滤结果以删除不需要的行。
+      *
+      * Run the Spark SQL CLI main class with the "--help" option and catch its output. Then filter
+      * the results to remove unwanted lines.
+      *
+      * Since the CLI will call `System.exit()`, we install a security manager to prevent that call
+      * from working, and restore the original one afterwards.
+      */
+    private def getSqlShellOptions(): String = {
+        val currentOut = System.out
+        val currentErr = System.err
+        val currentSm = System.getSecurityManager()
+        try {
+            val out = new ByteArrayOutputStream()
+            val stream = new PrintStream(out)
+            System.setOut(stream)
+            System.setErr(stream)
+
+            val sm = new SecurityManager() {
+                override def checkExit(status: Int): Unit = {
+                    throw new SecurityException()
+                }
+
+                override def checkPermission(perm: java.security.Permission): Unit = {}
+            }
+            System.setSecurityManager(sm)
+
+            try {
+                Utils.classForName(mainClass).getMethod("main", classOf[Array[String]])
+                        .invoke(null, Array(HELP))
+            } catch {
+                case e: InvocationTargetException =>
+                    // Ignore SecurityException, since we throw it above.
+                    if (!e.getCause().isInstanceOf[SecurityException]) {
+                        throw e
+                    }
+            }
+
+            stream.flush()
+
+            // Get the output and discard any unnecessary lines from it.
+            Source.fromString(new String(out.toByteArray(), StandardCharsets.UTF_8)).getLines
+                    .filter { line =>
+                        !line.startsWith("log4j") && !line.startsWith("usage")
+                    }
+                    .mkString("\n")
+        } finally {
+            System.setSecurityManager(currentSm)
+            System.setOut(currentOut)
+            System.setErr(currentErr)
         }
     }
 

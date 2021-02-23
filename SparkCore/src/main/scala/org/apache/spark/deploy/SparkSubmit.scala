@@ -161,8 +161,12 @@ object SparkSubmit extends CommandLineUtils {
     }
 
     /**
-      * 根据提供的参数提交这个app
+      * 使用提供的参数提交应用程序。
+      *
       * Submit the application using the provided parameters.
+      *
+      * 这个过程分两步进行。首先，我们通过设置适当的类路径、系统属性和应用程序参数来准备启动环境，以便基于集群管理器和部署模式运行子主类。
+      * 其次，我们使用这个启动环境来调用子主类的main方法。
       *
       * This runs in two steps. First, we prepare the launch environment by setting up
       * the appropriate classpath, system properties, and application arguments for
@@ -233,7 +237,8 @@ object SparkSubmit extends CommandLineUtils {
     }
 
     /**
-      * 准备环境，为提交一个Spark作业应用。
+      * 准备提交申请的环境。
+      *
       * Prepare the environment for submitting an application.
       * This returns a 4-tuple:
       * (1) the arguments for the child process,子进程的参数
@@ -1027,35 +1032,6 @@ private[spark] object SparkSubmitUtils {
     }
 
     /**
-      * 使用提供的解析器从给定的文件名加载ivy设置。
-      *
-      * Load Ivy settings from a given filename, using supplied resolvers
-      *
-      * @param settingsFile Path to Ivy settings file
-      * @param remoteRepos  Comma-delimited string of remote repositories other than maven central
-      * @param ivyPath      The path to the local ivy repository
-      * @return An IvySettings object
-      */
-    def loadIvySettings(
-                               settingsFile: String,
-                               remoteRepos: Option[String],
-                               ivyPath: Option[String]): IvySettings = {
-        val file = new File(settingsFile)
-        require(file.exists(), s"Ivy settings file $file does not exist")
-        require(file.isFile(), s"Ivy settings file $file is not a normal file")
-        val ivySettings: IvySettings = new IvySettings
-        try {
-            ivySettings.load(file)
-        } catch {
-            case e@(_: IOException | _: ParseException) =>
-                throw new SparkException(s"Failed when loading Ivy settings from $settingsFile", e)
-        }
-        processIvyPathArg(ivySettings, ivyPath)
-        processRemoteRepoArg(ivySettings, remoteRepos)
-        ivySettings
-    }
-
-    /**
       * 如果提供选项，则为缓存位置设置ivy设置。
       *
       * Set ivy settings for location of cache, if option is supplied
@@ -1096,6 +1072,35 @@ private[spark] object SparkSubmitUtils {
             ivySettings.addResolver(cr)
             ivySettings.setDefaultResolver(cr.getName)
         }
+    }
+
+    /**
+      * 使用提供的解析器从给定的文件名加载ivy设置。
+      *
+      * Load Ivy settings from a given filename, using supplied resolvers
+      *
+      * @param settingsFile Path to Ivy settings file
+      * @param remoteRepos  Comma-delimited string of remote repositories other than maven central
+      * @param ivyPath      The path to the local ivy repository
+      * @return An IvySettings object
+      */
+    def loadIvySettings(
+                               settingsFile: String,
+                               remoteRepos: Option[String],
+                               ivyPath: Option[String]): IvySettings = {
+        val file = new File(settingsFile)
+        require(file.exists(), s"Ivy settings file $file does not exist")
+        require(file.isFile(), s"Ivy settings file $file is not a normal file")
+        val ivySettings: IvySettings = new IvySettings
+        try {
+            ivySettings.load(file)
+        } catch {
+            case e@(_: IOException | _: ParseException) =>
+                throw new SparkException(s"Failed when loading Ivy settings from $settingsFile", e)
+        }
+        processIvyPathArg(ivySettings, ivyPath)
+        processRemoteRepoArg(ivySettings, remoteRepos)
+        ivySettings
     }
 
     /**

@@ -235,21 +235,6 @@ private[spark] object Utils extends Logging {
     }
 
     /**
-      * Get the Context ClassLoader on this thread or, if not present, the ClassLoader that
-      * loaded Spark.
-      *
-      * This should be used whenever passing a ClassLoader to Class.ForName or finding the currently
-      * active loader when setting up ClassLoader delegation chains.
-      */
-    def getContextOrSparkClassLoader: ClassLoader =
-        Option(Thread.currentThread().getContextClassLoader).getOrElse(getSparkClassLoader)
-
-    /**
-      * Get the ClassLoader which loaded Spark.
-      */
-    def getSparkClassLoader: ClassLoader = getClass.getClassLoader
-
-    /**
       * Primitive often used when writing [[java.nio.ByteBuffer]] to [[java.io.DataOutput]]
       */
     def writeByteBuffer(bb: ByteBuffer, out: DataOutput): Unit = {
@@ -1700,7 +1685,11 @@ private[spark] object Utils extends Logging {
         path
     }
 
-    /** Load properties present in the given file. */
+    /**
+      * 加载给定文件中的属性。
+      *
+      * Load properties present in the given file.
+      */
     def getPropertiesFromFile(filename: String): Map[String, String] = {
         val file = new File(filename)
         require(file.exists(), s"Properties file $file does not exist")
@@ -1767,6 +1756,17 @@ private[spark] object Utils extends Logging {
         threadInfos.sortBy(_.getThreadId).map(threadInfoToThreadStackTrace)
     }
 
+    def getThreadDumpForThread(threadId: Long): Option[ThreadStackTrace] = {
+        if (threadId <= 0) {
+            None
+        } else {
+            // The Int.MaxValue here requests the entire untruncated stack trace of the thread:
+            val threadInfo =
+                Option(ManagementFactory.getThreadMXBean.getThreadInfo(threadId, Int.MaxValue))
+            threadInfo.map(threadInfoToThreadStackTrace)
+        }
+    }
+
     private def threadInfoToThreadStackTrace(threadInfo: ThreadInfo): ThreadStackTrace = {
         val monitors = threadInfo.getLockedMonitors.map(m => m.getLockedStackFrame -> m).toMap
         val stackTrace = threadInfo.getStackTrace.map { frame =>
@@ -1791,17 +1791,6 @@ private[spark] object Utils extends Logging {
                     if (threadInfo.getLockOwnerId < 0) None else Some(threadInfo.getLockOwnerId),
             blockedByLock = Option(threadInfo.getLockInfo).map(_.lockString).getOrElse(""),
             holdingLocks = heldLocks.toSeq)
-    }
-
-    def getThreadDumpForThread(threadId: Long): Option[ThreadStackTrace] = {
-        if (threadId <= 0) {
-            None
-        } else {
-            // The Int.MaxValue here requests the entire untruncated stack trace of the thread:
-            val threadInfo =
-                Option(ManagementFactory.getThreadMXBean.getThreadInfo(threadId, Int.MaxValue))
-            threadInfo.map(threadInfoToThreadStackTrace)
-        }
     }
 
     /**
@@ -1982,17 +1971,6 @@ private[spark] object Utils extends Logging {
         (JavaUtils.byteStringAsBytes(str) / 1024 / 1024).toInt
     }
 
-    private implicit class Lock(lock: LockInfo) {
-        def lockString: String = {
-            lock match {
-                case monitor: MonitorInfo =>
-                    s"Monitor(${lock.getClassName}@${lock.getIdentityHashCode}})"
-                case _ =>
-                    s"Lock(${lock.getClassName}@${lock.getIdentityHashCode}})"
-            }
-        }
-    }
-
     /**
       * Return the prefix of a command that appends the given library paths to the
       * system-specific library path environment variable. On Unix, for instance,
@@ -2024,6 +2002,17 @@ private[spark] object Utils extends Logging {
             "DYLD_LIBRARY_PATH"
         } else {
             "LD_LIBRARY_PATH"
+        }
+    }
+
+    private implicit class Lock(lock: LockInfo) {
+        def lockString: String = {
+            lock match {
+                case monitor: MonitorInfo =>
+                    s"Monitor(${lock.getClassName}@${lock.getIdentityHashCode}})"
+                case _ =>
+                    s"Lock(${lock.getClassName}@${lock.getIdentityHashCode}})"
+            }
         }
     }
 
@@ -2102,6 +2091,21 @@ private[spark] object Utils extends Logging {
         Class.forName(className, true, getContextOrSparkClassLoader)
         // scalastyle:on classforname
     }
+
+    /**
+      * Get the Context ClassLoader on this thread or, if not present, the ClassLoader that
+      * loaded Spark.
+      *
+      * This should be used whenever passing a ClassLoader to Class.ForName or finding the currently
+      * active loader when setting up ClassLoader delegation chains.
+      */
+    def getContextOrSparkClassLoader: ClassLoader =
+        Option(Thread.currentThread().getContextClassLoader).getOrElse(getSparkClassLoader)
+
+    /**
+      * Get the ClassLoader which loaded Spark.
+      */
+    def getSparkClassLoader: ClassLoader = getClass.getClassLoader
 
     /**
       * Split the comma delimited string of master URLs into a list.
@@ -2261,28 +2265,6 @@ private[spark] object Utils extends Logging {
         redact(redactionPattern, kvs)
     }
 
-    private def redact(redactionPattern: Regex, kvs: Seq[(String, String)]): Seq[(String, String)] = {
-        // If the sensitive information regex matches with either the key or the value, redact the value
-        // While the original intent was to only redact the value if the key matched with the regex,
-        // we've found that especially in verbose mode, the value of the property may contain sensitive
-        // information like so:
-        // "sun.java.command":"org.apache.org.apache.spark.deploy.SparkSubmit ... \
-        // --conf org.apache.spark.executorEnv.HADOOP_CREDSTORE_PASSWORD=secret_password ...
-        //
-        // And, in such cases, simply searching for the sensitive information regex in the key name is
-        // not sufficient. The values themselves have to be searched as well and redacted if matched.
-        // This does mean we may be accounting more false positives - for example, if the value of an
-        // arbitrary property contained the term 'password', we may redact the value from the UI and
-        // logs. In order to work around it, user would have to make the org.apache.spark.redaction.regex property
-        // more specific.
-        kvs.map { case (key, value) =>
-            redactionPattern.findFirstIn(key)
-                    .orElse(redactionPattern.findFirstIn(value))
-                    .map { _ => (key, REDACTION_REPLACEMENT_TEXT) }
-                    .getOrElse((key, value))
-        }
-    }
-
     /**
       * Redact the sensitive information in the given string.
       */
@@ -2304,6 +2286,28 @@ private[spark] object Utils extends Logging {
             SECRET_REDACTION_PATTERN.defaultValueString
         ).r
         redact(redactionPattern, kvs.toArray)
+    }
+
+    private def redact(redactionPattern: Regex, kvs: Seq[(String, String)]): Seq[(String, String)] = {
+        // If the sensitive information regex matches with either the key or the value, redact the value
+        // While the original intent was to only redact the value if the key matched with the regex,
+        // we've found that especially in verbose mode, the value of the property may contain sensitive
+        // information like so:
+        // "sun.java.command":"org.apache.org.apache.spark.deploy.SparkSubmit ... \
+        // --conf org.apache.spark.executorEnv.HADOOP_CREDSTORE_PASSWORD=secret_password ...
+        //
+        // And, in such cases, simply searching for the sensitive information regex in the key name is
+        // not sufficient. The values themselves have to be searched as well and redacted if matched.
+        // This does mean we may be accounting more false positives - for example, if the value of an
+        // arbitrary property contained the term 'password', we may redact the value from the UI and
+        // logs. In order to work around it, user would have to make the org.apache.spark.redaction.regex property
+        // more specific.
+        kvs.map { case (key, value) =>
+            redactionPattern.findFirstIn(key)
+                    .orElse(redactionPattern.findFirstIn(value))
+                    .map { _ => (key, REDACTION_REPLACEMENT_TEXT) }
+                    .getOrElse((key, value))
+        }
     }
 
     private def maxNumToStringFields = {
