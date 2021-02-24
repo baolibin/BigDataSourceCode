@@ -147,7 +147,7 @@ object SparkSubmit extends CommandLineUtils {
       */
     private def kill(args: SparkSubmitArguments): Unit = {
         new RestSubmissionClient(args.master)
-                .killSubmission(args.submissionToKill)
+            .killSubmission(args.submissionToKill)
     }
 
     /**
@@ -157,7 +157,7 @@ object SparkSubmit extends CommandLineUtils {
       */
     private def requestStatus(args: SparkSubmitArguments): Unit = {
         new RestSubmissionClient(args.master)
-                .requestSubmissionStatus(args.submissionToRequestStatusFor)
+            .requestSubmissionStatus(args.submissionToRequestStatusFor)
     }
 
     /**
@@ -176,6 +176,7 @@ object SparkSubmit extends CommandLineUtils {
       */
     @tailrec
     private def submit(args: SparkSubmitArguments): Unit = {
+        // 提交前的参数准备
         val (childArgs, childClasspath, sysProps, childMainClass) = prepareSubmitEnvironment(args)
 
         def doRunMain(): Unit = {
@@ -225,7 +226,7 @@ object SparkSubmit extends CommandLineUtils {
                 // Fail over to use the legacy submission gateway
                 case e: SubmitRestConnectionException =>
                     printWarning(s"Master endpoint ${args.master} was not a REST server. " +
-                            "Falling back to legacy submission gateway instead.")
+                        "Falling back to legacy submission gateway instead.")
                     args.useRest = false
                     submit(args)
             }
@@ -242,8 +243,8 @@ object SparkSubmit extends CommandLineUtils {
       * Prepare the environment for submitting an application.
       * This returns a 4-tuple:
       * (1) the arguments for the child process,子进程的参数
-      * (2) a list of classpath entries for the child, 子程序的类路径条目信息
-      * (3) a map of system properties, and  系统参数配置
+      * (2) a list of classpath entries for the child, 子程序的类路径项列表
+      * (3) a map of system properties, and  系统属性的映射
       * (4) the main class for the child 子程序的主类
       * Exposed for testing.
       */
@@ -261,7 +262,7 @@ object SparkSubmit extends CommandLineUtils {
             case "yarn" => YARN
             case "yarn-client" | "yarn-cluster" =>
                 printWarning(s"Master ${args.master} is deprecated since 2.0." +
-                        " Please use master \"yarn\" with specified deploy mode instead.")
+                    " Please use master \"yarn\" with specified deploy mode instead.")
                 YARN
             case m if m.startsWith("org/apache/spark") => STANDALONE
             case m if m.startsWith("mesos") => MESOS
@@ -299,7 +300,7 @@ object SparkSubmit extends CommandLineUtils {
             if (!Utils.classIsLoadable("org.apache.org.apache.spark.deploy.yarn.Client") && !Utils.isTesting) {
                 printErrorAndExit(
                     "Could not load YARN classes. " +
-                            "This copy of Spark may not have been compiled with YARN support.")
+                        "This copy of Spark may not have been compiled with YARN support.")
             }
         }
 
@@ -377,10 +378,10 @@ object SparkSubmit extends CommandLineUtils {
         (clusterManager, deployMode) match {
             case (STANDALONE, CLUSTER) if args.isPython =>
                 printErrorAndExit("Cluster deploy mode is currently not supported for python " +
-                        "applications on standalone clusters.")
+                    "applications on standalone clusters.")
             case (STANDALONE, CLUSTER) if args.isR =>
                 printErrorAndExit("Cluster deploy mode is currently not supported for R " +
-                        "applications on standalone clusters.")
+                    "applications on standalone clusters.")
             case (LOCAL, CLUSTER) =>
                 printErrorAndExit("Cluster deploy mode is not compatible with master \"local\"")
             case (_, CLUSTER) if isShell(args.primaryResource) =>
@@ -551,8 +552,8 @@ object SparkSubmit extends CommandLineUtils {
         // Map all arguments to command-line options or system properties for our chosen mode
         for (opt <- options) {
             if (opt.value != null &&
-                    (deployMode & opt.deployMode) != 0 &&
-                    (clusterManager & opt.clusterManager) != 0) {
+                (deployMode & opt.deployMode) != 0 &&
+                (clusterManager & opt.clusterManager) != 0) {
                 if (opt.clOption != null) {
                     childArgs += (opt.clOption, opt.value)
                 }
@@ -717,11 +718,11 @@ object SparkSubmit extends CommandLineUtils {
       * running cluster deploy mode or python applications.
       */
     private def runMain(
-                               childArgs: Seq[String],
-                               childClasspath: Seq[String],
-                               sysProps: Map[String, String],
-                               childMainClass: String,
-                               verbose: Boolean): Unit = {
+                           childArgs: Seq[String],
+                           childClasspath: Seq[String],
+                           sysProps: Map[String, String],
+                           childMainClass: String,
+                           verbose: Boolean): Unit = {
         // scalastyle:off println
         // 打印一些JVM信息
         if (verbose) {
@@ -890,8 +891,8 @@ object SparkSubmit extends CommandLineUtils {
       */
     private def mergeFileLists(lists: String*): String = {
         val merged = lists.filterNot(StringUtils.isBlank)
-                .flatMap(_.split(","))
-                .mkString(",")
+            .flatMap(_.split(","))
+            .mkString(",")
         if (merged == "") null else merged
     }
 
@@ -905,8 +906,8 @@ object SparkSubmit extends CommandLineUtils {
       * @return A comma separated local files list.
       */
     private[deploy] def downloadFileList(
-                                                fileList: String,
-                                                hadoopConf: HadoopConfiguration): String = {
+                                            fileList: String,
+                                            hadoopConf: HadoopConfiguration): String = {
         require(fileList != null, "fileList cannot be null.")
         fileList.split(",").map(downloadFile(_, hadoopConf)).mkString(",")
     }
@@ -1085,9 +1086,9 @@ private[spark] object SparkSubmitUtils {
       * @return An IvySettings object
       */
     def loadIvySettings(
-                               settingsFile: String,
-                               remoteRepos: Option[String],
-                               ivyPath: Option[String]): IvySettings = {
+                           settingsFile: String,
+                           remoteRepos: Option[String],
+                           ivyPath: Option[String]): IvySettings = {
         val file = new File(settingsFile)
         require(file.exists(), s"Ivy settings file $file does not exist")
         require(file.isFile(), s"Ivy settings file $file is not a normal file")
@@ -1115,10 +1116,10 @@ private[spark] object SparkSubmitUtils {
       *         transitive dependencies
       */
     def resolveMavenCoordinates(
-                                       coordinates: String,
-                                       ivySettings: IvySettings,
-                                       exclusions: Seq[String] = Nil,
-                                       isTest: Boolean = false): String = {
+                                   coordinates: String,
+                                   ivySettings: IvySettings,
+                                   exclusions: Seq[String] = Nil,
+                                   isTest: Boolean = false): String = {
         if (coordinates == null || coordinates.trim.isEmpty) {
             ""
         } else {
@@ -1181,7 +1182,7 @@ private[spark] object SparkSubmitUtils {
                 // retrieve all resolved dependencies
                 ivy.retrieve(rr.getModuleDescriptor.getModuleRevisionId,
                     packagesDirectory.getAbsolutePath + File.separator +
-                            "[organization]_[artifact]-[revision].[ext]",
+                        "[organization]_[artifact]-[revision].[ext]",
                     retrieveOptions.setConfs(Array(ivyConfName)))
                 resolveDependencyPaths(rr.getArtifacts.toArray, packagesDirectory)
             } finally {
@@ -1201,12 +1202,12 @@ private[spark] object SparkSubmitUtils {
       * @return a comma-delimited list of paths for the dependencies
       */
     def resolveDependencyPaths(
-                                      artifacts: Array[AnyRef],
-                                      cacheDirectory: File): String = {
+                                  artifacts: Array[AnyRef],
+                                  cacheDirectory: File): String = {
         artifacts.map { artifactInfo =>
             val artifact = artifactInfo.asInstanceOf[Artifact].getModuleRevisionId
             cacheDirectory.getAbsolutePath + File.separator +
-                    s"${artifact.getOrganisation}_${artifact.getName}-${artifact.getRevision}.jar"
+                s"${artifact.getOrganisation}_${artifact.getName}-${artifact.getRevision}.jar"
         }.mkString(",")
     }
 
@@ -1216,9 +1217,9 @@ private[spark] object SparkSubmitUtils {
       * Adds the given maven coordinates to Ivy's module descriptor.
       */
     def addDependenciesToIvy(
-                                    md: DefaultModuleDescriptor,
-                                    artifacts: Seq[MavenCoordinate],
-                                    ivyConfName: String): Unit = {
+                                md: DefaultModuleDescriptor,
+                                artifacts: Seq[MavenCoordinate],
+                                ivyConfName: String): Unit = {
         artifacts.foreach { mvn =>
             val ri = ModuleRevisionId.newInstance(mvn.groupId, mvn.artifactId, mvn.version)
             val dd = new DefaultDependencyDescriptor(ri, false, false)
@@ -1236,9 +1237,9 @@ private[spark] object SparkSubmitUtils {
       * Add exclusion rules for dependencies already included in the org.apache.spark-assembly
       */
     def addExclusionRules(
-                                 ivySettings: IvySettings,
-                                 ivyConfName: String,
-                                 md: DefaultModuleDescriptor): Unit = {
+                             ivySettings: IvySettings,
+                             ivyConfName: String,
+                             md: DefaultModuleDescriptor): Unit = {
         // Add scala exclusion rule
         md.addExcludeRule(createExclusion("*:scala-library:*", ivySettings, ivyConfName))
 
@@ -1255,9 +1256,9 @@ private[spark] object SparkSubmitUtils {
     }
 
     private[deploy] def createExclusion(
-                                               coords: String,
-                                               ivySettings: IvySettings,
-                                               ivyConfName: String): ExcludeRule = {
+                                           coords: String,
+                                           ivySettings: IvySettings,
+                                           ivyConfName: String): ExcludeRule = {
         val c = extractMavenCoordinates(coords)(0)
         val id = new ArtifactId(new ModuleId(c.groupId, c.artifactId), "*", "*", "*")
         val rule = new DefaultExcludeRule(id, ivySettings.getMatcher("glob"), null)
@@ -1278,13 +1279,13 @@ private[spark] object SparkSubmitUtils {
         coordinates.split(",").map { p =>
             val splits = p.replace("/", ":").split(":")
             require(splits.length == 3, s"Provided Maven Coordinates must be in the form " +
-                    s"'groupId:artifactId:version'. The coordinate provided is: $p")
+                s"'groupId:artifactId:version'. The coordinate provided is: $p")
             require(splits(0) != null && splits(0).trim.nonEmpty, s"The groupId cannot be null or " +
-                    s"be whitespace. The groupId provided is: ${splits(0)}")
+                s"be whitespace. The groupId provided is: ${splits(0)}")
             require(splits(1) != null && splits(1).trim.nonEmpty, s"The artifactId cannot be null or " +
-                    s"be whitespace. The artifactId provided is: ${splits(1)}")
+                s"be whitespace. The artifactId provided is: ${splits(1)}")
             require(splits(2) != null && splits(2).trim.nonEmpty, s"The version cannot be null or " +
-                    s"be whitespace. The version provided is: ${splits(2)}")
+                s"be whitespace. The version provided is: ${splits(2)}")
             new MavenCoordinate(splits(0), splits(1), splits(2))
         }
     }
@@ -1318,8 +1319,8 @@ private[spark] object SparkSubmitUtils {
   * the user's driver program or to downstream launcher tools.
   */
 private case class OptionAssigner(
-                                         value: String,
-                                         clusterManager: Int,
-                                         deployMode: Int,
-                                         clOption: String = null,
-                                         sysProp: String = null)
+                                     value: String,
+                                     clusterManager: Int,
+                                     deployMode: Int,
+                                     clOption: String = null,
+                                     sysProp: String = null)
