@@ -102,9 +102,10 @@ private[deploy] class SparkSubmitArguments(args: Seq[String], env: Map[String, S
     var driverCores: String = null
     var submissionToKill: String = null
     var submissionToRequestStatusFor: String = null
-    var useRest: Boolean = true // used internally
+    var useRest: Boolean = true // used internally 内部使用
 
     // Set parameters from command line arguments
+    // 从命令行参数设置参数。
     try {
         parse(args.asJava)
     } catch {
@@ -112,10 +113,13 @@ private[deploy] class SparkSubmitArguments(args: Seq[String], env: Map[String, S
             SparkSubmit.printErrorAndExit(e.getMessage())
     }
     // Populate `sparkProperties` map from properties file
+    // 从属性文件填充“sparkProperties”映射
     mergeDefaultSparkProperties()
     // Remove keys that don't start with "org.apache.spark." from `sparkProperties`.
+    // 删除来自“sparkProperties”不以“org.apache.spark.”开头的键。
     ignoreNonSparkProperties()
     // Use `sparkProperties` map along with env vars to fill in any missing parameters
+    // 使用“sparkproperty”映射和env vars来填充任何缺少的参数
     loadEnvironmentArguments()
 
     validateArguments()
@@ -283,199 +287,6 @@ private[deploy] class SparkSubmitArguments(args: Seq[String], env: Map[String, S
         true
     }
 
-    /**
-      * 处理无法识别的命令行选项。
-      *
-      * Handle unrecognized command line options.
-      *
-      * The first unrecognized option is treated as the "primary resource". Everything else is
-      * treated as application arguments.
-      */
-    override protected def handleUnknown(opt: String): Boolean = {
-        if (opt.startsWith("-")) {
-            SparkSubmit.printErrorAndExit(s"Unrecognized option '$opt'.")
-        }
-
-        primaryResource =
-                if (!SparkSubmit.isShell(opt) && !SparkSubmit.isInternal(opt)) {
-                    Utils.resolveURI(opt).toString
-                } else {
-                    opt
-                }
-        isPython = SparkSubmit.isPython(opt)
-        isR = SparkSubmit.isR(opt)
-        false
-    }
-
-    override protected def handleExtraArgs(extra: JList[String]): Unit = {
-        childArgs ++= extra.asScala
-    }
-
-    /**
-      * 调用时，将默认属性文件中的值与通过--conf指定的值合并。
-      *
-      * Merge values from the default properties file with those specified through --conf.
-      * When this is called, `sparkProperties` is already filled with configs from the latter.
-      */
-    private def mergeDefaultSparkProperties(): Unit = {
-        // Use common defaults file, if not specified by user
-        propertiesFile = Option(propertiesFile).getOrElse(Utils.getDefaultPropertiesFile(env))
-        // Honor --conf before the defaults file
-        defaultSparkProperties.foreach { case (k, v) =>
-            if (!sparkProperties.contains(k)) {
-                sparkProperties(k) = v
-            }
-        }
-    }
-
-    /**
-      * 从“SparkProperty”中删除不以“org.apache.spark.”开头的键`。
-      *
-      * Remove keys that don't start with "org.apache.spark." from `sparkProperties`.
-      **/
-    private def ignoreNonSparkProperties(): Unit = {
-        sparkProperties.foreach { case (k, v) =>
-            if (!k.startsWith("org.apache.spark.")) {
-                sparkProperties -= k
-                SparkSubmit.printWarning(s"Ignoring non-org.apache.spark config property: $k=$v")
-            }
-        }
-    }
-
-    /**
-      * 从环境变量、Spark属性等加载参数。
-      *
-      * Load arguments from environment variables, Spark properties etc.
-      */
-    private def loadEnvironmentArguments(): Unit = {
-        master = Option(master)
-                .orElse(sparkProperties.get("org.apache.spark.master"))
-                .orElse(env.get("MASTER"))
-                .orNull
-        driverExtraClassPath = Option(driverExtraClassPath)
-                .orElse(sparkProperties.get("org.apache.spark.driver.extraClassPath"))
-                .orNull
-        driverExtraJavaOptions = Option(driverExtraJavaOptions)
-                .orElse(sparkProperties.get("org.apache.spark.driver.extraJavaOptions"))
-                .orNull
-        driverExtraLibraryPath = Option(driverExtraLibraryPath)
-                .orElse(sparkProperties.get("org.apache.spark.driver.extraLibraryPath"))
-                .orNull
-        driverMemory = Option(driverMemory)
-                .orElse(sparkProperties.get("org.apache.spark.driver.memory"))
-                .orElse(env.get("SPARK_DRIVER_MEMORY"))
-                .orNull
-        driverCores = Option(driverCores)
-                .orElse(sparkProperties.get("org.apache.spark.driver.cores"))
-                .orNull
-        executorMemory = Option(executorMemory)
-                .orElse(sparkProperties.get("org.apache.spark.executor.memory"))
-                .orElse(env.get("SPARK_EXECUTOR_MEMORY"))
-                .orNull
-        executorCores = Option(executorCores)
-                .orElse(sparkProperties.get("org.apache.spark.executor.cores"))
-                .orElse(env.get("SPARK_EXECUTOR_CORES"))
-                .orNull
-        totalExecutorCores = Option(totalExecutorCores)
-                .orElse(sparkProperties.get("org.apache.spark.cores.max"))
-                .orNull
-        name = Option(name).orElse(sparkProperties.get("org.apache.spark.app.name")).orNull
-        jars = Option(jars).orElse(sparkProperties.get("org.apache.spark.jars")).orNull
-        files = Option(files).orElse(sparkProperties.get("org.apache.spark.files")).orNull
-        ivyRepoPath = sparkProperties.get("org.apache.spark.jars.ivy").orNull
-        packages = Option(packages).orElse(sparkProperties.get("org.apache.spark.jars.packages")).orNull
-        packagesExclusions = Option(packagesExclusions)
-                .orElse(sparkProperties.get("org.apache.spark.jars.excludes")).orNull
-        deployMode = Option(deployMode)
-                .orElse(sparkProperties.get("org.apache.spark.submit.deployMode"))
-                .orElse(env.get("DEPLOY_MODE"))
-                .orNull
-        numExecutors = Option(numExecutors)
-                .getOrElse(sparkProperties.get("org.apache.spark.executor.instances").orNull)
-        queue = Option(queue).orElse(sparkProperties.get("org.apache.spark.yarn.queue")).orNull
-        keytab = Option(keytab).orElse(sparkProperties.get("org.apache.spark.yarn.keytab")).orNull
-        principal = Option(principal).orElse(sparkProperties.get("org.apache.spark.yarn.principal")).orNull
-
-        // Try to set main class from JAR if no --class argument is given
-        if (mainClass == null && !isPython && !isR && primaryResource != null) {
-            val uri = new URI(primaryResource)
-            val uriScheme = uri.getScheme()
-
-            uriScheme match {
-                case "file" =>
-                    try {
-                        val jar = new JarFile(uri.getPath)
-                        // Note that this might still return null if no main-class is set; we catch that later
-                        mainClass = jar.getManifest.getMainAttributes.getValue("Main-Class")
-                    } catch {
-                        case e: Exception =>
-                            SparkSubmit.printErrorAndExit(s"Cannot load main class from JAR $primaryResource")
-                    }
-                case _ =>
-                    SparkSubmit.printErrorAndExit(
-                        s"Cannot load main class from JAR $primaryResource with URI $uriScheme. " +
-                                "Please specify a class through --class.")
-            }
-        }
-
-        // Global defaults. These should be keep to minimum to avoid confusing behavior.
-        master = Option(master).getOrElse("local[*]")
-
-        // In YARN mode, app name can be set via SPARK_YARN_APP_NAME (see SPARK-5222)
-        if (master.startsWith("yarn")) {
-            name = Option(name).orElse(env.get("SPARK_YARN_APP_NAME")).orNull
-        }
-
-        // Set name from main class if not given
-        name = Option(name).orElse(Option(mainClass)).orNull
-        if (name == null && primaryResource != null) {
-            name = Utils.stripDirectory(primaryResource)
-        }
-
-        // Action should be SUBMIT unless otherwise specified
-        action = Option(action).getOrElse(SUBMIT)
-    }
-
-    /**
-      * 确保必填字段存在。仅在加载所有默认值后调用此函数。
-      *
-      * Ensure that required fields exists. Call this only once all defaults are loaded.
-      */
-    private def validateArguments(): Unit = {
-        action match {
-            case SUBMIT => validateSubmitArguments()
-            case KILL => validateKillArguments()
-            case REQUEST_STATUS => validateStatusRequestArguments()
-        }
-    }
-
-    private def validateSubmitArguments(): Unit = {
-        if (args.length == 0) {
-            printUsageAndExit(-1)
-        }
-        if (primaryResource == null) {
-            SparkSubmit.printErrorAndExit("Must specify a primary resource (JAR or Python or R file)")
-        }
-        if (mainClass == null && SparkSubmit.isUserJar(primaryResource)) {
-            SparkSubmit.printErrorAndExit("No main class set in JAR; please specify one with --class")
-        }
-        if (pyFiles != null && !isPython) {
-            SparkSubmit.printErrorAndExit("--py-files given but primary resource is not a Python script")
-        }
-
-        if (master.startsWith("yarn")) {
-            val hasHadoopEnv = env.contains("HADOOP_CONF_DIR") || env.contains("YARN_CONF_DIR")
-            if (!hasHadoopEnv && !Utils.isTesting) {
-                throw new Exception(s"When running with master '$master' " +
-                        "either HADOOP_CONF_DIR or YARN_CONF_DIR must be set in the environment.")
-            }
-        }
-
-        if (proxyUser != null && principal != null) {
-            SparkSubmit.printErrorAndExit("Only one of --proxy-user or --principal can be provided.")
-        }
-    }
-
     private def printUsageAndExit(exitCode: Int, unknownParam: Any = null): Unit = {
         // scalastyle:off println
         val outStream = SparkSubmit.printStream
@@ -631,6 +442,204 @@ private[deploy] class SparkSubmitArguments(args: Seq[String], env: Map[String, S
             System.setSecurityManager(currentSm)
             System.setOut(currentOut)
             System.setErr(currentErr)
+        }
+    }
+
+    /**
+      * 处理无法识别的命令行选项。
+      *
+      * Handle unrecognized command line options.
+      *
+      * 第一个未识别的选项被视为“主要资源”。其他一切都被视为应用程序参数。
+      * The first unrecognized option is treated as the "primary resource". Everything else is
+      * treated as application arguments.
+      */
+    override protected def handleUnknown(opt: String): Boolean = {
+        if (opt.startsWith("-")) {
+            SparkSubmit.printErrorAndExit(s"Unrecognized option '$opt'.")
+        }
+
+        primaryResource =
+                if (!SparkSubmit.isShell(opt) && !SparkSubmit.isInternal(opt)) {
+                    Utils.resolveURI(opt).toString
+                } else {
+                    opt
+                }
+        isPython = SparkSubmit.isPython(opt)
+        isR = SparkSubmit.isR(opt)
+        false
+    }
+
+    override protected def handleExtraArgs(extra: JList[String]): Unit = {
+        childArgs ++= extra.asScala
+    }
+
+    /**
+      * 调用时，将默认属性文件中的值与通过--conf指定的值合并。
+      *
+      * Merge values from the default properties file with those specified through --conf.
+      * When this is called, `sparkProperties` is already filled with configs from the latter.
+      */
+    private def mergeDefaultSparkProperties(): Unit = {
+        // Use common defaults file, if not specified by user
+        propertiesFile = Option(propertiesFile).getOrElse(Utils.getDefaultPropertiesFile(env))
+        // Honor --conf before the defaults file
+        defaultSparkProperties.foreach { case (k, v) =>
+            if (!sparkProperties.contains(k)) {
+                sparkProperties(k) = v
+            }
+        }
+    }
+
+    /**
+      * 从“SparkProperty”中删除不以“org.apache.spark.”开头的键。
+      *
+      * Remove keys that don't start with "org.apache.spark." from 'sparkProperties'
+      */
+    private def ignoreNonSparkProperties(): Unit = {
+        sparkProperties.foreach { case (k, v) =>
+            if (!k.startsWith("org.apache.spark.")) {
+                sparkProperties -= k
+                SparkSubmit.printWarning(s"Ignoring non-org.apache.spark config property: $k=$v")
+            }
+        }
+    }
+
+    /**
+      * 从环境变量、Spark属性等加载参数。
+      *
+      * Load arguments from environment variables, Spark properties etc.
+      */
+    private def loadEnvironmentArguments(): Unit = {
+        master = Option(master)
+                .orElse(sparkProperties.get("org.apache.spark.master"))
+                .orElse(env.get("MASTER"))
+                .orNull
+        driverExtraClassPath = Option(driverExtraClassPath)
+                .orElse(sparkProperties.get("org.apache.spark.driver.extraClassPath"))
+                .orNull
+        driverExtraJavaOptions = Option(driverExtraJavaOptions)
+                .orElse(sparkProperties.get("org.apache.spark.driver.extraJavaOptions"))
+                .orNull
+        driverExtraLibraryPath = Option(driverExtraLibraryPath)
+                .orElse(sparkProperties.get("org.apache.spark.driver.extraLibraryPath"))
+                .orNull
+        driverMemory = Option(driverMemory)
+                .orElse(sparkProperties.get("org.apache.spark.driver.memory"))
+                .orElse(env.get("SPARK_DRIVER_MEMORY"))
+                .orNull
+        driverCores = Option(driverCores)
+                .orElse(sparkProperties.get("org.apache.spark.driver.cores"))
+                .orNull
+        executorMemory = Option(executorMemory)
+                .orElse(sparkProperties.get("org.apache.spark.executor.memory"))
+                .orElse(env.get("SPARK_EXECUTOR_MEMORY"))
+                .orNull
+        executorCores = Option(executorCores)
+                .orElse(sparkProperties.get("org.apache.spark.executor.cores"))
+                .orElse(env.get("SPARK_EXECUTOR_CORES"))
+                .orNull
+        totalExecutorCores = Option(totalExecutorCores)
+                .orElse(sparkProperties.get("org.apache.spark.cores.max"))
+                .orNull
+        name = Option(name).orElse(sparkProperties.get("org.apache.spark.app.name")).orNull
+        jars = Option(jars).orElse(sparkProperties.get("org.apache.spark.jars")).orNull
+        files = Option(files).orElse(sparkProperties.get("org.apache.spark.files")).orNull
+        ivyRepoPath = sparkProperties.get("org.apache.spark.jars.ivy").orNull
+        packages = Option(packages).orElse(sparkProperties.get("org.apache.spark.jars.packages")).orNull
+        packagesExclusions = Option(packagesExclusions)
+                .orElse(sparkProperties.get("org.apache.spark.jars.excludes")).orNull
+        deployMode = Option(deployMode)
+                .orElse(sparkProperties.get("org.apache.spark.submit.deployMode"))
+                .orElse(env.get("DEPLOY_MODE"))
+                .orNull
+        numExecutors = Option(numExecutors)
+                .getOrElse(sparkProperties.get("org.apache.spark.executor.instances").orNull)
+        queue = Option(queue).orElse(sparkProperties.get("org.apache.spark.yarn.queue")).orNull
+        keytab = Option(keytab).orElse(sparkProperties.get("org.apache.spark.yarn.keytab")).orNull
+        principal = Option(principal).orElse(sparkProperties.get("org.apache.spark.yarn.principal")).orNull
+
+        // Try to set main class from JAR if no --class argument is given
+        // 如果未给出--class参数，请尝试从JAR设置主类
+        if (mainClass == null && !isPython && !isR && primaryResource != null) {
+            val uri = new URI(primaryResource)
+            val uriScheme = uri.getScheme()
+
+            uriScheme match {
+                case "file" =>
+                    try {
+                        val jar = new JarFile(uri.getPath)
+                        // Note that this might still return null if no main-class is set; we catch that later
+                        mainClass = jar.getManifest.getMainAttributes.getValue("Main-Class")
+                    } catch {
+                        case e: Exception =>
+                            SparkSubmit.printErrorAndExit(s"Cannot load main class from JAR $primaryResource")
+                    }
+                case _ =>
+                    SparkSubmit.printErrorAndExit(
+                        s"Cannot load main class from JAR $primaryResource with URI $uriScheme. " +
+                                "Please specify a class through --class.")
+            }
+        }
+
+        // Global defaults. These should be keep to minimum to avoid confusing behavior.
+        // 全局默认值。这些应该保持在最低限度，以避免混淆行为。
+        master = Option(master).getOrElse("local[*]")
+
+        // In YARN mode, app name can be set via SPARK_YARN_APP_NAME (see SPARK-5222)
+        if (master.startsWith("yarn")) {
+            name = Option(name).orElse(env.get("SPARK_YARN_APP_NAME")).orNull
+        }
+
+        // Set name from main class if not given
+        // 如果未给定，则从主类设置名称
+        name = Option(name).orElse(Option(mainClass)).orNull
+        if (name == null && primaryResource != null) {
+            name = Utils.stripDirectory(primaryResource)
+        }
+
+        // Action should be SUBMIT unless otherwise specified
+        // 除非另有规定，否则应提交行动
+        action = Option(action).getOrElse(SUBMIT)
+    }
+
+    /**
+      * 确保必填字段存在。仅在加载所有默认值后调用此函数。
+      *
+      * Ensure that required fields exists. Call this only once all defaults are loaded.
+      */
+    private def validateArguments(): Unit = {
+        action match {
+            case SUBMIT => validateSubmitArguments()
+            case KILL => validateKillArguments()
+            case REQUEST_STATUS => validateStatusRequestArguments()
+        }
+    }
+
+    private def validateSubmitArguments(): Unit = {
+        if (args.length == 0) {
+            printUsageAndExit(-1)
+        }
+        if (primaryResource == null) {
+            SparkSubmit.printErrorAndExit("Must specify a primary resource (JAR or Python or R file)")
+        }
+        if (mainClass == null && SparkSubmit.isUserJar(primaryResource)) {
+            SparkSubmit.printErrorAndExit("No main class set in JAR; please specify one with --class")
+        }
+        if (pyFiles != null && !isPython) {
+            SparkSubmit.printErrorAndExit("--py-files given but primary resource is not a Python script")
+        }
+
+        if (master.startsWith("yarn")) {
+            val hasHadoopEnv = env.contains("HADOOP_CONF_DIR") || env.contains("YARN_CONF_DIR")
+            if (!hasHadoopEnv && !Utils.isTesting) {
+                throw new Exception(s"When running with master '$master' " +
+                        "either HADOOP_CONF_DIR or YARN_CONF_DIR must be set in the environment.")
+            }
+        }
+
+        if (proxyUser != null && principal != null) {
+            SparkSubmit.printErrorAndExit("Only one of --proxy-user or --principal can be provided.")
         }
     }
 
