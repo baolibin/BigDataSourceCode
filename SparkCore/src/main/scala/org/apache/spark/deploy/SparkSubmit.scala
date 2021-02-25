@@ -382,6 +382,7 @@ object SparkSubmit extends CommandLineUtils {
         }
 
         // Require all R files to be local
+        // 要求所有R文件都是本地的
         if (args.isR && !isYarnCluster && !isMesosCluster) {
             if (Utils.nonLocalPaths(args.primaryResource).nonEmpty) {
                 printErrorAndExit(s"Only local R files are supported: ${args.primaryResource}")
@@ -389,6 +390,7 @@ object SparkSubmit extends CommandLineUtils {
         }
 
         // The following modes are not supported or applicable
+        // 以下模式不受支持或不适用
         (clusterManager, deployMode) match {
             case (STANDALONE, CLUSTER) if args.isPython =>
                 printErrorAndExit("Cluster deploy mode is currently not supported for python " +
@@ -408,21 +410,27 @@ object SparkSubmit extends CommandLineUtils {
         }
 
         // If we're running a python app, set the main class to our specific python runner
+        // 如果我们运行的是python应用程序，请将main类设置为特定的python运行程序
         if (args.isPython && deployMode == CLIENT) {
             if (args.primaryResource == PYSPARK_SHELL) {
                 args.mainClass = "org.apache.org.apache.spark.api.python.PythonGatewayServer"
             } else {
                 // If a python file is provided, add it to the child arguments and list of files to deploy.
                 // Usage: PythonAppRunner <main python file> <extra python files> [app arguments]
+
+                // 如果提供了python文件，请将其添加到要部署的子参数和文件列表中。
+                // 用法：PythonAppRunner<main python file><extra python files>[app arguments]
                 args.mainClass = "org.apache.org.apache.spark.deploy.PythonRunner"
                 args.childArgs = ArrayBuffer(args.primaryResource, args.pyFiles) ++ args.childArgs
                 if (clusterManager != YARN) {
                     // The YARN backend distributes the primary file differently, so don't merge it.
+                    // 后端以不同的方式分发主文件，因此不要合并它。
                     args.files = mergeFileLists(args.files, args.primaryResource)
                 }
             }
             if (clusterManager != YARN) {
                 // The YARN backend handles python files differently, so don't merge the lists.
+                // YARN后端处理python文件的方式不同，因此不要合并列表。
                 args.files = mergeFileLists(args.files, args.pyFiles)
             }
             if (args.pyFiles != null) {
@@ -433,6 +441,8 @@ object SparkSubmit extends CommandLineUtils {
         // In YARN mode for an R app, add the SparkR package archive and the R package
         // archive containing all of the built R libraries to archives so that they can
         // be distributed with the job
+
+        // 在R应用程序的YARN模式中，添加SparkR包存档和R包,包含所有构建的R库的归档文件,与job一起分配
         if (args.isR && clusterManager == YARN) {
             val sparkRPackagePath = RUtils.localSparkRPackagePath
             if (sparkRPackagePath.isEmpty) {
@@ -446,9 +456,11 @@ object SparkSubmit extends CommandLineUtils {
 
             // Distribute the SparkR package.
             // Assigns a symbol link name "sparkr" to the shipped package.
+            // 分发SparkR包。将符号链接名称“sparkr”指定给已装运的包。
             args.archives = mergeFileLists(args.archives, sparkRPackageURI + "#sparkr")
 
             // Distribute the R package archive containing all the built R packages.
+            // 分发包含所有构建的R包的R包存档。
             if (!RUtils.rPackages.isEmpty) {
                 val rPackageFile =
                     RPackageUtils.zipRLibraries(new File(RUtils.rPackages.get), R_PACKAGE_ARCHIVE)
@@ -458,6 +470,7 @@ object SparkSubmit extends CommandLineUtils {
 
                 val rPackageURI = Utils.resolveURI(rPackageFile.getAbsolutePath).toString
                 // Assigns a symbol link name "rpkg" to the shipped package.
+                // 将符号链接名称“rpkg”指定给已装运的包。
                 args.archives = mergeFileLists(args.archives, rPackageURI + "#rpkg")
             }
         }
@@ -473,12 +486,14 @@ object SparkSubmit extends CommandLineUtils {
         }
 
         // If we're running an R app, set the main class to our specific R runner
+        // 如果我们运行的是R应用程序，请将主类设置为特定的R runner
         if (args.isR && deployMode == CLIENT) {
             if (args.primaryResource == SPARKR_SHELL) {
                 args.mainClass = "org.apache.org.apache.spark.api.r.RBackend"
             } else {
                 // If an R file is provided, add it to the child arguments and list of files to deploy.
                 // Usage: RRunner <main R file> [app arguments]
+                // 如果提供了R文件，请将其添加到要部署的子参数和文件列表中。
                 args.mainClass = "org.apache.org.apache.spark.deploy.RRunner"
                 args.childArgs = ArrayBuffer(args.primaryResource) ++ args.childArgs
                 args.files = mergeFileLists(args.files, args.primaryResource)
@@ -488,17 +503,21 @@ object SparkSubmit extends CommandLineUtils {
         if (isYarnCluster && args.isR) {
             // In yarn-cluster mode for an R app, add primary resource to files
             // that can be distributed with the job
+            // 在R应用程序的群集模式下，将主资源添加到文件,可以随作业一起分发
             args.files = mergeFileLists(args.files, args.primaryResource)
         }
 
         // Special flag to avoid deprecation warnings at the client
+        // 用于避免客户端出现弃用警告的特殊标志
         sysProps("SPARK_SUBMIT") = "true"
 
         // A list of rules to map each argument to system properties or command-line options in
         // each deploy mode; we iterate through these below
+        // 将每个参数映射到中的系统属性或命令行选项的规则列表,每个部署模式；我们将在下面遍历这些模式
         val options = List[OptionAssigner](
 
             // All cluster managers
+            // 所有群集管理器
             OptionAssigner(args.master, ALL_CLUSTER_MGRS, ALL_DEPLOY_MODES, sysProp = "org.apache.spark.master"),
             OptionAssigner(args.deployMode, ALL_CLUSTER_MGRS, ALL_DEPLOY_MODES,
                 sysProp = "org.apache.spark.submit.deployMode"),
@@ -547,6 +566,9 @@ object SparkSubmit extends CommandLineUtils {
         // In addition, add the main application jar and any added jars (if any) to the classpath
         // Also add the main application jar and any added jars to classpath in case YARN client
         // requires these jars.
+
+        // 在client模式下，直接启动应用程序主类,另外，将主应用程序jar和任何添加的jar（如果有的话）添加到类路径中
+        // 还可以将主应用程序jar和任何添加的jar添加到类路径中，以防出现问题需要这些jars。
         if (deployMode == CLIENT || isYarnCluster) {
             childMainClass = args.mainClass
             if (isUserJar(args.primaryResource)) {
@@ -564,6 +586,7 @@ object SparkSubmit extends CommandLineUtils {
         }
 
         // Map all arguments to command-line options or system properties for our chosen mode
+        // 将所有参数映射到所选模式的命令行选项或系统属性
         for (opt <- options) {
             if (opt.value != null &&
                 (deployMode & opt.deployMode) != 0 &&
