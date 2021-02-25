@@ -251,6 +251,7 @@ object SparkSubmit extends CommandLineUtils {
     private[deploy] def prepareSubmitEnvironment(args: SparkSubmitArguments)
     : (Seq[String], Seq[String], Map[String, String], String) = {
         // Return values
+        // 返回值
         val childArgs = new ArrayBuffer[String]()
         val childClasspath = new ArrayBuffer[String]()
         val sysProps = new HashMap[String, String]()
@@ -283,6 +284,9 @@ object SparkSubmit extends CommandLineUtils {
         // Because the deprecated way of specifying "yarn-cluster" and "yarn-client" encapsulate both
         // the master and deploy mode, we have some logic to infer the master and deploy mode
         // from each other if only one is specified, or exit early if they are at odds.
+
+        // 因为不推荐使用指定“yarn cluster”和“yarn client”方法封装的master和deploy模式,
+        // 所以如果只指定了一种模式，我们就有一些逻辑来推断master和deploy模式，如果它们不一致，我们就提前退出。
         if (clusterManager == YARN) {
             (args.master, args.deployMode) match {
                 case ("yarn-cluster", null) =>
@@ -297,6 +301,7 @@ object SparkSubmit extends CommandLineUtils {
             }
 
             // Make sure YARN is included in our build if we're trying to use it
+            // 在使用YARN之前,先确保在我们项目的构建中.
             if (!Utils.classIsLoadable("org.apache.org.apache.spark.deploy.yarn.Client") && !Utils.isTesting) {
                 printErrorAndExit(
                     "Could not load YARN classes. " +
@@ -305,6 +310,7 @@ object SparkSubmit extends CommandLineUtils {
         }
 
         // Update args.deployMode if it is null. It will be passed down as a Spark property later.
+        // 更新参数部署模式如果为空。以后它将作为Spark属性传递下去。
         (args.deployMode, deployMode) match {
             case (null, CLIENT) => args.deployMode = "client"
             case (null, CLUSTER) => args.deployMode = "cluster"
@@ -315,6 +321,7 @@ object SparkSubmit extends CommandLineUtils {
 
         // Resolve maven dependencies if there are any and add classpath to jars. Add them to py-files
         // too for packages that include Python code
+        // 如果存在maven依赖项，请解析它们，并将类路径添加到jar中。对于包含Python代码的包，也可以将它们添加到py文件中
         val exclusions: Seq[String] =
         if (!StringUtils.isBlank(args.packagesExclusions)) {
             args.packagesExclusions.split(",")
@@ -323,6 +330,7 @@ object SparkSubmit extends CommandLineUtils {
         }
 
         // Create the IvySettings, either load from file or build defaults
+        // 创建IvySettings，从文件加载或生成默认值
         val ivySettings = args.sparkProperties.get("org.apache.spark.jars.ivySettings").map { ivySettingsFile =>
             SparkSubmitUtils.loadIvySettings(ivySettingsFile, Option(args.repositories),
                 Option(args.ivyRepoPath))
@@ -341,11 +349,13 @@ object SparkSubmit extends CommandLineUtils {
 
         // install any R packages that may have been passed through --jars or --packages.
         // Spark Packages may contain R source code inside the jar.
+        // 安装任何可能通过-jars或-packages传递的R包。Spark包可能在jar中包含R源代码。
         if (args.isR && !StringUtils.isBlank(args.jars)) {
             RPackageUtils.checkAndBuildRPackage(args.jars, printStream, args.verbose)
         }
 
         // In client mode, download remote files.
+        // 在客户端模式下，下载远程文件。
         if (deployMode == CLIENT) {
             val hadoopConf = new HadoopConfiguration()
             args.primaryResource = Option(args.primaryResource).map(downloadFile(_, hadoopConf)).orNull
@@ -357,6 +367,10 @@ object SparkSubmit extends CommandLineUtils {
         // Require all python files to be local, so we can add them to the PYTHONPATH
         // In YARN cluster mode, python files are distributed as regular files, which can be non-local.
         // In Mesos cluster mode, non-local python files are automatically downloaded by Mesos.
+
+        // 要求所有python文件都是本地的，所以我们可以将它们添加到PYTHONPATH
+        // 在YARN集群模式下，python文件作为常规文件分发，这些文件可以是非本地的。
+        // 在Mesos集群模式下，Mesos会自动下载非本地python文件。
         if (args.isPython && !isYarnCluster && !isMesosCluster) {
             if (Utils.nonLocalPaths(args.primaryResource).nonEmpty) {
                 printErrorAndExit(s"Only local python files are supported: ${args.primaryResource}")

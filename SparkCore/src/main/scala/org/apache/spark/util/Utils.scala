@@ -134,16 +134,16 @@ private[spark] object Utils extends Logging {
       * @return the trimmed and formatted string.
       */
     def truncatedString[T](
-                                  seq: Seq[T],
-                                  start: String,
-                                  sep: String,
-                                  end: String,
-                                  maxNumFields: Int = maxNumToStringFields): String = {
+                              seq: Seq[T],
+                              start: String,
+                              sep: String,
+                              end: String,
+                              maxNumFields: Int = maxNumToStringFields): String = {
         if (seq.length > maxNumFields) {
             if (truncationWarningPrinted.compareAndSet(false, true)) {
                 logWarning(
                     "Truncated the string representation of a plan since it was too large. This " +
-                            "behavior can be adjusted by setting 'org.apache.spark.debug.maxToStringFields' in SparkEnv.conf.")
+                        "behavior can be adjusted by setting 'org.apache.spark.debug.maxToStringFields' in SparkEnv.conf.")
             }
             val numFields = math.max(0, maxNumFields - 1)
             seq.take(numFields).mkString(
@@ -197,7 +197,7 @@ private[spark] object Utils extends Logging {
 
     /** Serialize via nested stream using specific serializer */
     def serializeViaNestedStream(os: OutputStream, ser: SerializerInstance)(
-            f: SerializationStream => Unit): Unit = {
+        f: SerializationStream => Unit): Unit = {
         val osWrapper = ser.serializeStream(new OutputStream {
             override def write(b: Int): Unit = os.write(b)
 
@@ -212,7 +212,7 @@ private[spark] object Utils extends Logging {
 
     /** Deserialize via nested stream using specific serializer */
     def deserializeViaNestedStream(is: InputStream, ser: SerializerInstance)(
-            f: DeserializationStream => Unit): Unit = {
+        f: DeserializationStream => Unit): Unit = {
         val isWrapper = ser.deserializeStream(new InputStream {
             override def read(): Int = is.read()
 
@@ -225,7 +225,11 @@ private[spark] object Utils extends Logging {
         }
     }
 
-    /** Determines whether the provided class is loadable in the current thread. */
+    /**
+      * 确定提供的类是否可在当前线程中加载
+      *
+      * Determines whether the provided class is loadable in the current thread.
+      */
     def classIsLoadable(clazz: String): Boolean = {
         // scalastyle:off classforname
         Try {
@@ -272,11 +276,11 @@ private[spark] object Utils extends Logging {
       */
     def chmod700(file: File): Boolean = {
         file.setReadable(false, false) &&
-                file.setReadable(true, true) &&
-                file.setWritable(false, false) &&
-                file.setWritable(true, true) &&
-                file.setExecutable(false, false) &&
-                file.setExecutable(true, true)
+            file.setReadable(true, true) &&
+            file.setWritable(false, false) &&
+            file.setWritable(true, true) &&
+            file.setExecutable(false, false) &&
+            file.setExecutable(true, true)
     }
 
     /**
@@ -291,7 +295,7 @@ private[spark] object Utils extends Logging {
             attempts += 1
             if (attempts > maxAttempts) {
                 throw new IOException("Failed to create a temp directory (under " + root + ") after " +
-                        maxAttempts + " attempts!")
+                    maxAttempts + " attempts!")
             }
             try {
                 dir = new File(root, namePrefix + "-" + UUID.randomUUID.toString)
@@ -311,8 +315,8 @@ private[spark] object Utils extends Logging {
       * automatically deleted when the VM shuts down.
       */
     def createTempDir(
-                             root: String = System.getProperty("java.io.tmpdir"),
-                             namePrefix: String = "org/apache/spark"): File = {
+                         root: String = System.getProperty("java.io.tmpdir"),
+                         namePrefix: String = "org/apache/spark"): File = {
         val dir = createDirectory(root, namePrefix)
         ShutdownHookManager.registerShutdownDeleteDir(dir)
         dir
@@ -324,13 +328,13 @@ private[spark] object Utils extends Logging {
       * the parameter transferToEnabled should be configured by org.apache.spark.file.transferTo = [true|false].
       */
     def copyStream(
-                          in: InputStream,
-                          out: OutputStream,
-                          closeStreams: Boolean = false,
-                          transferToEnabled: Boolean = false): Long = {
+                      in: InputStream,
+                      out: OutputStream,
+                      closeStreams: Boolean = false,
+                      transferToEnabled: Boolean = false): Long = {
         tryWithSafeFinally {
             if (in.isInstanceOf[FileInputStream] && out.isInstanceOf[FileOutputStream]
-                    && transferToEnabled) {
+                && transferToEnabled) {
                 // When both streams are File stream, use transferTo to improve copy performance.
                 val inChannel = in.asInstanceOf[FileInputStream].getChannel()
                 val outChannel = out.asInstanceOf[FileOutputStream].getChannel()
@@ -362,10 +366,10 @@ private[spark] object Utils extends Logging {
     }
 
     def copyFileStreamNIO(
-                                 input: FileChannel,
-                                 output: FileChannel,
-                                 startPosition: Long,
-                                 bytesToCopy: Long): Unit = {
+                             input: FileChannel,
+                             output: FileChannel,
+                             startPosition: Long,
+                             bytesToCopy: Long): Unit = {
         val initialPos = output.position()
         var count = 0L
         // In case transferTo method transferred less data than we have required.
@@ -446,13 +450,13 @@ private[spark] object Utils extends Logging {
       * the requested file.
       */
     def fetchFile(
-                         url: String,
-                         targetDir: File,
-                         conf: SparkConf,
-                         securityMgr: SecurityManager,
-                         hadoopConf: Configuration,
-                         timestamp: Long,
-                         useCache: Boolean) {
+                     url: String,
+                     targetDir: File,
+                     conf: SparkConf,
+                     securityMgr: SecurityManager,
+                     hadoopConf: Configuration,
+                     timestamp: Long,
+                     useCache: Boolean) {
         val fileName = decodeFileNameInURI(new URI(url))
         val targetFile = new File(targetDir, fileName)
         val fetchCacheEnabled = conf.getBoolean("org.apache.spark.files.useFetchCache", defaultValue = true)
@@ -570,7 +574,7 @@ private[spark] object Utils extends Logging {
         } else {
             if (conf.getenv("MESOS_DIRECTORY") != null && shuffleServiceEnabled) {
                 logInfo("MESOS_DIRECTORY available but not using provided Mesos sandbox because " +
-                        "org.apache.spark.shuffle.service.enabled is enabled.")
+                    "org.apache.spark.shuffle.service.enabled is enabled.")
             }
             // In non-Yarn mode (or for the driver in yarn-client mode), we cannot trust the user
             // configuration to point to a secure directory. So create a subdirectory with restricted
@@ -719,9 +723,9 @@ private[spark] object Utils extends Logging {
         val cutoffTimeInMillis = System.currentTimeMillis - (cutoff * 1000)
 
         filesAndDirs.exists(_.lastModified() > cutoffTimeInMillis) ||
-                filesAndDirs.filter(_.isDirectory).exists(
-                    subdir => doesDirectoryContainAnyNewFiles(subdir, cutoff)
-                )
+            filesAndDirs.filter(_.isDirectory).exists(
+                subdir => doesDirectoryContainAnyNewFiles(subdir, cutoff)
+            )
     }
 
     /**
@@ -845,10 +849,10 @@ private[spark] object Utils extends Logging {
       * Execute a command and return the process running the command.
       */
     def executeCommand(
-                              command: Seq[String],
-                              workingDir: File = new File("."),
-                              extraEnvironment: Map[String, String] = Map.empty,
-                              redirectStderr: Boolean = true): Process = {
+                          command: Seq[String],
+                          workingDir: File = new File("."),
+                          extraEnvironment: Map[String, String] = Map.empty,
+                          redirectStderr: Boolean = true): Process = {
         val builder = new ProcessBuilder(command: _*).directory(workingDir)
         val environment = builder.environment()
         for ((key, value) <- extraEnvironment) {
@@ -869,10 +873,10 @@ private[spark] object Utils extends Logging {
       * Execute a command and get its output, throwing an exception if it yields a code other than 0.
       */
     def executeAndGetOutput(
-                                   command: Seq[String],
-                                   workingDir: File = new File("."),
-                                   extraEnvironment: Map[String, String] = Map.empty,
-                                   redirectStderr: Boolean = true): String = {
+                               command: Seq[String],
+                               workingDir: File = new File("."),
+                               extraEnvironment: Map[String, String] = Map.empty,
+                               redirectStderr: Boolean = true): String = {
         val process = executeCommand(command, workingDir, extraEnvironment, redirectStderr)
         val output = new StringBuilder
         val threadName = "read stdout for " + command(0)
@@ -893,9 +897,9 @@ private[spark] object Utils extends Logging {
       * Return and start a daemon thread that processes the content of the input stream line by line.
       */
     def processStreamByLine(
-                                   threadName: String,
-                                   inputStream: InputStream,
-                                   processLine: String => Unit): Thread = {
+                               threadName: String,
+                               inputStream: InputStream,
+                               processLine: String => Unit): Thread = {
         val t = new Thread(threadName) {
             override def run() {
                 for (line <- Source.fromInputStream(inputStream).getLines()) {
@@ -1084,7 +1088,7 @@ private[spark] object Utils extends Logging {
             // frames. This is intended to ensure that we don't crash in these situations by
             // ignoring any frames that we can't examine.
             if (ste != null && ste.getMethodName != null
-                    && !ste.getMethodName.contains("getStackTrace")) {
+                && !ste.getMethodName.contains("getStackTrace")) {
                 if (insideSpark) {
                     if (skipClass(ste.getClassName)) {
                         lastSparkMethod = if (ste.getMethodName == "<init>") {
@@ -1138,18 +1142,18 @@ private[spark] object Utils extends Logging {
     }
 
     private def getCompressedLogFileLengthCache(
-                                                       sparkConf: SparkConf): LoadingCache[String, java.lang.Long] = this.synchronized {
+                                                   sparkConf: SparkConf): LoadingCache[String, java.lang.Long] = this.synchronized {
         if (compressedLogFileLengthCache == null) {
             val compressedLogFileLengthCacheSize = sparkConf.getInt(
                 UNCOMPRESSED_LOG_FILE_LENGTH_CACHE_SIZE_CONF,
                 DEFAULT_UNCOMPRESSED_LOG_FILE_LENGTH_CACHE_SIZE)
             compressedLogFileLengthCache = CacheBuilder.newBuilder()
-                    .maximumSize(compressedLogFileLengthCacheSize)
-                    .build[String, java.lang.Long](new CacheLoader[String, java.lang.Long]() {
-                        override def load(path: String): java.lang.Long = {
-                            Utils.getCompressedFileLength(new File(path))
-                        }
-                    })
+                .maximumSize(compressedLogFileLengthCacheSize)
+                .build[String, java.lang.Long](new CacheLoader[String, java.lang.Long]() {
+                override def load(path: String): java.lang.Long = {
+                    Utils.getCompressedFileLength(new File(path))
+                }
+            })
         }
         compressedLogFileLengthCache
     }
@@ -1198,7 +1202,7 @@ private[spark] object Utils extends Logging {
             val startIndexOfFile = sum
             val endIndexOfFile = sum + fileToLength(file)
             logDebug(s"Processing file $file, " +
-                    s"with start index = $startIndexOfFile, end index = $endIndex")
+                s"with start index = $startIndexOfFile, end index = $endIndex")
 
             /*
                                             ____________
@@ -1386,7 +1390,7 @@ private[spark] object Utils extends Logging {
       */
     def getSystemProperties: Map[String, String] = {
         System.getProperties.stringPropertyNames().asScala
-                .map(key => (key, System.getProperty(key))).toMap
+            .map(key => (key, System.getProperty(key))).toMap
     }
 
     /**
@@ -1517,6 +1521,8 @@ private[spark] object Utils extends Logging {
     }
 
     /**
+      * 指示Spark当前是否正在运行单元测试。
+      *
       * Indicates whether Spark is currently running unit tests.
       */
     def isTesting: Boolean = {
@@ -1712,11 +1718,11 @@ private[spark] object Utils extends Logging {
     /** Return the path of the default Spark properties file. */
     def getDefaultPropertiesFile(env: Map[String, String] = sys.env): String = {
         env.get("SPARK_CONF_DIR")
-                .orElse(env.get("SPARK_HOME").map { t => s"$t${File.separator}conf" })
-                .map { t => new File(s"$t${File.separator}org.apache.spark-defaults.conf") }
-                .filter(_.isFile)
-                .map(_.getAbsolutePath)
-                .orNull
+            .orElse(env.get("SPARK_HOME").map { t => s"$t${File.separator}conf" })
+            .map { t => new File(s"$t${File.separator}org.apache.spark-defaults.conf") }
+            .filter(_.isFile)
+            .map(_.getAbsolutePath)
+            .orNull
     }
 
     /**
@@ -1724,8 +1730,8 @@ private[spark] object Utils extends Logging {
       * Provided properties have the highest priority.
       */
     def updateSparkConfigFromProperties(
-                                               conf: SparkConf,
-                                               properties: Map[String, String]): Unit = {
+                                           conf: SparkConf,
+                                           properties: Map[String, String]): Unit = {
         properties.filter { case (k, v) =>
             k.startsWith("org.apache.spark.")
         }.foreach { case (k, v) =>
@@ -1788,7 +1794,7 @@ private[spark] object Utils extends Logging {
             threadState = threadInfo.getThreadState,
             stackTrace = stackTrace,
             blockedByThreadId =
-                    if (threadInfo.getLockOwnerId < 0) None else Some(threadInfo.getLockOwnerId),
+                if (threadInfo.getLockOwnerId < 0) None else Some(threadInfo.getLockOwnerId),
             blockedByLock = Option(threadInfo.getLockInfo).map(_.lockString).getOrElse(""),
             holdingLocks = heldLocks.toSeq)
     }
@@ -1798,8 +1804,8 @@ private[spark] object Utils extends Logging {
       */
     def sparkJavaOpts(conf: SparkConf, filterKey: (String => Boolean) = _ => true): Seq[String] = {
         conf.getAll
-                .filter { case (k, _) => filterKey(k) }
-                .map { case (k, v) => s"-D$k=$v" }
+            .filter { case (k, _) => filterKey(k) }
+            .map { case (k, v) => s"-D$k=$v" }
     }
 
     /**
@@ -1835,10 +1841,10 @@ private[spark] object Utils extends Logging {
       * @return (service: T, port: Int)
       */
     def startServiceOnPort[T](
-                                     startPort: Int,
-                                     startService: Int => (T, Int),
-                                     conf: SparkConf,
-                                     serviceName: String = ""): (T, Int) = {
+                                 startPort: Int,
+                                 startService: Int => (T, Int),
+                                 conf: SparkConf,
+                                 serviceName: String = ""): (T, Int) = {
 
         require(startPort == 0 || (1024 <= startPort && startPort < 65536),
             "startPort should be between 1024 and 65535 (inclusive), or 0 for a random free port.")
@@ -1861,15 +1867,15 @@ private[spark] object Utils extends Logging {
                     if (offset >= maxRetries) {
                         val exceptionMessage = if (startPort == 0) {
                             s"${e.getMessage}: Service$serviceString failed after " +
-                                    s"$maxRetries retries (on a random free port)! " +
-                                    s"Consider explicitly setting the appropriate binding address for " +
-                                    s"the service$serviceString (for example org.apache.spark.driver.bindAddress " +
-                                    s"for SparkDriver) to the correct binding address."
+                                s"$maxRetries retries (on a random free port)! " +
+                                s"Consider explicitly setting the appropriate binding address for " +
+                                s"the service$serviceString (for example org.apache.spark.driver.bindAddress " +
+                                s"for SparkDriver) to the correct binding address."
                         } else {
                             s"${e.getMessage}: Service$serviceString failed after " +
-                                    s"$maxRetries retries (starting from $startPort)! Consider explicitly setting " +
-                                    s"the appropriate port for the service$serviceString (for example org.apache.spark.ui.port " +
-                                    s"for SparkUI) to an available port or increasing org.apache.spark.port.maxRetries."
+                                s"$maxRetries retries (starting from $startPort)! Consider explicitly setting " +
+                                s"the appropriate port for the service$serviceString (for example org.apache.spark.ui.port " +
+                                s"for SparkUI) to an available port or increasing org.apache.spark.port.maxRetries."
                         }
                         val exception = new BindException(exceptionMessage)
                         // restore original stack trace
@@ -1880,10 +1886,10 @@ private[spark] object Utils extends Logging {
                         // As startPort 0 is for a random free port, it is most possibly binding address is
                         // not correct.
                         logWarning(s"Service$serviceString could not bind on a random free port. " +
-                                "You may check whether configuring an appropriate binding address.")
+                            "You may check whether configuring an appropriate binding address.")
                     } else {
                         logWarning(s"Service$serviceString could not bind on port $tryPort. " +
-                                s"Attempting port ${tryPort + 1}.")
+                            s"Attempting port ${tryPort + 1}.")
                     }
             }
         }
@@ -1905,7 +1911,7 @@ private[spark] object Utils extends Logging {
                 e.getThrowables.asScala.exists(isBindCollision)
             case e: NativeIoException =>
                 (e.getMessage != null && e.getMessage.startsWith("bind() failed: ")) ||
-                        isBindCollision(e.getCause)
+                    isBindCollision(e.getCause)
             case e: Exception => isBindCollision(e.getCause)
             case _ => false
         }
@@ -1947,10 +1953,10 @@ private[spark] object Utils extends Logging {
     }
 
     def invoke(
-                      clazz: Class[_],
-                      obj: AnyRef,
-                      methodName: String,
-                      args: (Class[_], AnyRef)*): AnyRef = {
+                  clazz: Class[_],
+                  obj: AnyRef,
+                  methodName: String,
+                  args: (Class[_], AnyRef)*): AnyRef = {
         val (types, values) = args.unzip
         val method = clazz.getDeclaredMethod(methodName, types: _*)
         method.setAccessible(true)
@@ -2045,12 +2051,12 @@ private[spark] object Utils extends Logging {
             val host = uri.getHost
             val port = uri.getPort
             if (uri.getScheme != "org/apache/spark" ||
-                    host == null ||
-                    port < 0 ||
-                    (uri.getPath != null && !uri.getPath.isEmpty) || // uri.getPath returns "" instead of null
-                    uri.getFragment != null ||
-                    uri.getQuery != null ||
-                    uri.getUserInfo != null) {
+                host == null ||
+                port < 0 ||
+                (uri.getPath != null && !uri.getPath.isEmpty) || // uri.getPath returns "" instead of null
+                uri.getFragment != null ||
+                uri.getQuery != null ||
+                uri.getUserInfo != null) {
                 throw new SparkException("Invalid master URL: " + sparkUrl)
             }
             (host, port)
@@ -2066,7 +2072,7 @@ private[spark] object Utils extends Logging {
       */
     def getCurrentUserName(): String = {
         Option(System.getenv("SPARK_USER"))
-                .getOrElse(UserGroupInformation.getCurrentUser().getShortUserName())
+            .getOrElse(UserGroupInformation.getCurrentUser().getShortUserName())
     }
 
     // Returns the groups to which the current user belongs.
@@ -2076,7 +2082,7 @@ private[spark] object Utils extends Logging {
         if (groupProviderClassName != "") {
             try {
                 val groupMappingServiceProvider = classForName(groupProviderClassName).newInstance.
-                        asInstanceOf[org.apache.spark.security.GroupMappingServiceProvider]
+                    asInstanceOf[org.apache.spark.security.GroupMappingServiceProvider]
                 val currentUserGroups = groupMappingServiceProvider.getGroups(username)
                 return currentUserGroups
             } catch {
@@ -2161,7 +2167,7 @@ private[spark] object Utils extends Logging {
     def isDynamicAllocationEnabled(conf: SparkConf): Boolean = {
         val dynamicAllocationEnabled = conf.getBoolean("org.apache.spark.dynamicAllocation.enabled", false)
         dynamicAllocationEnabled &&
-                (!isLocalMaster(conf) || conf.getBoolean("org.apache.spark.dynamicAllocation.testing", false))
+            (!isLocalMaster(conf) || conf.getBoolean("org.apache.spark.dynamicAllocation.testing", false))
     }
 
     /**
@@ -2179,14 +2185,14 @@ private[spark] object Utils extends Logging {
     def getDynamicAllocationInitialExecutors(conf: SparkConf): Int = {
         if (conf.get(DYN_ALLOCATION_INITIAL_EXECUTORS) < conf.get(DYN_ALLOCATION_MIN_EXECUTORS)) {
             logWarning(s"${DYN_ALLOCATION_INITIAL_EXECUTORS.key} less than " +
-                    s"${DYN_ALLOCATION_MIN_EXECUTORS.key} is invalid, ignoring its setting, " +
-                    "please update your configs.")
+                s"${DYN_ALLOCATION_MIN_EXECUTORS.key} is invalid, ignoring its setting, " +
+                "please update your configs.")
         }
 
         if (conf.get(EXECUTOR_INSTANCES).getOrElse(0) < conf.get(DYN_ALLOCATION_MIN_EXECUTORS)) {
             logWarning(s"${EXECUTOR_INSTANCES.key} less than " +
-                    s"${DYN_ALLOCATION_MIN_EXECUTORS.key} is invalid, ignoring its setting, " +
-                    "please update your configs.")
+                s"${DYN_ALLOCATION_MIN_EXECUTORS.key} is invalid, ignoring its setting, " +
+                "please update your configs.")
         }
 
         val initialExecutors = Seq(
@@ -2195,8 +2201,8 @@ private[spark] object Utils extends Logging {
             conf.get(EXECUTOR_INSTANCES).getOrElse(0)).max
 
         logInfo(s"Using initial executors = $initialExecutors, max of " +
-                s"${DYN_ALLOCATION_INITIAL_EXECUTORS.key}, ${DYN_ALLOCATION_MIN_EXECUTORS.key} and " +
-                s"${EXECUTOR_INSTANCES.key}")
+            s"${DYN_ALLOCATION_INITIAL_EXECUTORS.key}, ${DYN_ALLOCATION_MIN_EXECUTORS.key} and " +
+            s"${EXECUTOR_INSTANCES.key}")
         initialExecutors
     }
 
@@ -2304,9 +2310,9 @@ private[spark] object Utils extends Logging {
         // more specific.
         kvs.map { case (key, value) =>
             redactionPattern.findFirstIn(key)
-                    .orElse(redactionPattern.findFirstIn(value))
-                    .map { _ => (key, REDACTION_REPLACEMENT_TEXT) }
-                    .getOrElse((key, value))
+                .orElse(redactionPattern.findFirstIn(value))
+                .map { _ => (key, REDACTION_REPLACEMENT_TEXT) }
+                .getOrElse((key, value))
         }
     }
 
@@ -2333,10 +2339,10 @@ private[spark] object Utils extends Logging {
       *                      `sourceFile`
       */
     private def downloadFile(
-                                    url: String,
-                                    in: InputStream,
-                                    destFile: File,
-                                    fileOverwrite: Boolean): Unit = {
+                                url: String,
+                                in: InputStream,
+                                destFile: File,
+                                fileOverwrite: Boolean): Unit = {
         val tempFile = File.createTempFile("fetchFileTemp", null,
             new File(destFile.getParentFile.getAbsolutePath))
         logInfo(s"Fetching $url to $tempFile")
@@ -2371,11 +2377,11 @@ private[spark] object Utils extends Logging {
       *                         `destFile`.
       */
     private def copyFile(
-                                url: String,
-                                sourceFile: File,
-                                destFile: File,
-                                fileOverwrite: Boolean,
-                                removeSourceFile: Boolean = false): Unit = {
+                            url: String,
+                            sourceFile: File,
+                            destFile: File,
+                            fileOverwrite: Boolean,
+                            removeSourceFile: Boolean = false): Unit = {
 
         if (destFile.exists) {
             if (!filesEqualRecursive(sourceFile, destFile)) {
@@ -2456,12 +2462,12 @@ private[spark] object Utils extends Logging {
       * the requested file.
       */
     private def doFetchFile(
-                                   url: String,
-                                   targetDir: File,
-                                   filename: String,
-                                   conf: SparkConf,
-                                   securityMgr: SecurityManager,
-                                   hadoopConf: Configuration) {
+                               url: String,
+                               targetDir: File,
+                               filename: String,
+                               conf: SparkConf,
+                               securityMgr: SecurityManager,
+                               hadoopConf: Configuration) {
         val targetFile = new File(targetDir, filename)
         val uri = new URI(url)
         val fileOverwrite = conf.getBoolean("org.apache.spark.files.overwrite", defaultValue = false)
@@ -2513,13 +2519,13 @@ private[spark] object Utils extends Logging {
       * Visible for testing
       */
     private[spark] def fetchHcfsFile(
-                                            path: Path,
-                                            targetDir: File,
-                                            fs: FileSystem,
-                                            conf: SparkConf,
-                                            hadoopConf: Configuration,
-                                            fileOverwrite: Boolean,
-                                            filename: Option[String] = None): Unit = {
+                                        path: Path,
+                                        targetDir: File,
+                                        fs: FileSystem,
+                                        conf: SparkConf,
+                                        hadoopConf: Configuration,
+                                        fileOverwrite: Boolean,
+                                        filename: Option[String] = None): Unit = {
         if (!targetDir.exists() && !targetDir.mkdir()) {
             throw new IOException(s"Failed to create directory ${targetDir.getPath}")
         }
@@ -2616,22 +2622,22 @@ private[spark] object Utils extends Logging {
 
                 for (ni <- reOrderedNetworkIFs) {
                     val addresses = ni.getInetAddresses.asScala
-                            .filterNot(addr => addr.isLinkLocalAddress || addr.isLoopbackAddress).toSeq
+                        .filterNot(addr => addr.isLinkLocalAddress || addr.isLoopbackAddress).toSeq
                     if (addresses.nonEmpty) {
                         val addr = addresses.find(_.isInstanceOf[Inet4Address]).getOrElse(addresses.head)
                         // because of Inet6Address.toHostName may add interface at the end if it knows about it
                         val strippedAddress = InetAddress.getByAddress(addr.getAddress)
                         // We've found an address that looks reasonable!
                         logWarning("Your hostname, " + InetAddress.getLocalHost.getHostName + " resolves to" +
-                                " a loopback address: " + address.getHostAddress + "; using " +
-                                strippedAddress.getHostAddress + " instead (on interface " + ni.getName + ")")
+                            " a loopback address: " + address.getHostAddress + "; using " +
+                            strippedAddress.getHostAddress + " instead (on interface " + ni.getName + ")")
                         logWarning("Set SPARK_LOCAL_IP if you need to bind to another address")
                         return strippedAddress
                     }
                 }
                 logWarning("Your hostname, " + InetAddress.getLocalHost.getHostName + " resolves to" +
-                        " a loopback address: " + address.getHostAddress + ", but we couldn't find any" +
-                        " external IP address!")
+                    " a loopback address: " + address.getHostAddress + ", but we couldn't find any" +
+                    " external IP address!")
                 logWarning("Set SPARK_LOCAL_IP if you need to bind to another address")
             }
             address
@@ -2659,7 +2665,7 @@ private[spark] object Utils extends Logging {
         val SPARK_SQL_CLASS_REGEX = """^org\.apache\.org.apache.spark\.sql.*""".r
         val SCALA_CORE_CLASS_PREFIX = "scala"
         val isSparkClass = SPARK_CORE_CLASS_REGEX.findFirstIn(className).isDefined ||
-                SPARK_SQL_CLASS_REGEX.findFirstIn(className).isDefined
+            SPARK_SQL_CLASS_REGEX.findFirstIn(className).isDefined
         val isScalaClass = className.startsWith(SCALA_CORE_CLASS_PREFIX)
         // If the class is a Spark internal class or a Scala class, then exclude.
         isSparkClass || isScalaClass
@@ -2707,26 +2713,26 @@ private[util] object CallerContext extends Logging {
   * @param taskAttemptNumber     task attempt id
   */
 private[spark] class CallerContext(
-                                          from: String,
-                                          upstreamCallerContext: Option[String] = None,
-                                          appId: Option[String] = None,
-                                          appAttemptId: Option[String] = None,
-                                          jobId: Option[Int] = None,
-                                          stageId: Option[Int] = None,
-                                          stageAttemptId: Option[Int] = None,
-                                          taskId: Option[Long] = None,
-                                          taskAttemptNumber: Option[Int] = None) extends Logging {
+                                      from: String,
+                                      upstreamCallerContext: Option[String] = None,
+                                      appId: Option[String] = None,
+                                      appAttemptId: Option[String] = None,
+                                      jobId: Option[Int] = None,
+                                      stageId: Option[Int] = None,
+                                      stageAttemptId: Option[Int] = None,
+                                      taskId: Option[Long] = None,
+                                      taskAttemptNumber: Option[Int] = None) extends Logging {
 
     private val context = prepareContext("SPARK_" +
-            from +
-            appId.map("_" + _).getOrElse("") +
-            appAttemptId.map("_" + _).getOrElse("") +
-            jobId.map("_JId_" + _).getOrElse("") +
-            stageId.map("_SId_" + _).getOrElse("") +
-            stageAttemptId.map("_" + _).getOrElse("") +
-            taskId.map("_TId_" + _).getOrElse("") +
-            taskAttemptNumber.map("_" + _).getOrElse("") +
-            upstreamCallerContext.map("_" + _).getOrElse(""))
+        from +
+        appId.map("_" + _).getOrElse("") +
+        appAttemptId.map("_" + _).getOrElse("") +
+        jobId.map("_JId_" + _).getOrElse("") +
+        stageId.map("_SId_" + _).getOrElse("") +
+        stageAttemptId.map("_" + _).getOrElse("") +
+        taskId.map("_TId_" + _).getOrElse("") +
+        taskAttemptNumber.map("_" + _).getOrElse("") +
+        upstreamCallerContext.map("_" + _).getOrElse(""))
 
     /**
       * Set up the caller context [[context]] by invoking Hadoop CallerContext API of
@@ -2764,11 +2770,11 @@ private[spark] class CallerContext(
   * A utility class to redirect the child process's stdout or stderr.
   */
 private[spark] class RedirectThread(
-                                           in: InputStream,
-                                           out: OutputStream,
-                                           name: String,
-                                           propagateEof: Boolean = false)
-        extends Thread(name) {
+                                       in: InputStream,
+                                       out: OutputStream,
+                                       name: String,
+                                       propagateEof: Boolean = false)
+    extends Thread(name) {
 
     setDaemon(true)
 
