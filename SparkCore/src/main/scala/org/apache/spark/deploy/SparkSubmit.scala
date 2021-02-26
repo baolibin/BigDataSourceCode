@@ -193,6 +193,8 @@ object SparkSubmit extends CommandLineUtils {
                     })
                 } catch {
                     case e: Exception =>
+                        // Hadoop的AuthorizationException抑制了异常的堆栈跟踪，这使得JVM输出的消息没有什么帮助。
+                        // 相反，在这里检测具有空堆栈跟踪的异常，并对它们进行不同的处理。
                         // Hadoop's AuthorizationException suppresses the exception's stack trace, which
                         // makes the message printed to the output by the JVM not very helpful. Instead,
                         // detect exceptions with empty stack traces here, and treat them differently.
@@ -210,6 +212,10 @@ object SparkSubmit extends CommandLineUtils {
             }
         }
 
+        // 在独立群集模式下，有两个提交网关：
+        // （1） 传统的RPC网关使用o.a.s.deploy.Client作为包装
+        // （2） Spark 1.3中引入的新的基于REST的网关
+        // 后者是spark1.3的默认行为，但是如果主端点不是REST服务器，sparksubmit将故障转移到使用遗留网关。
         // In standalone cluster mode, there are two submission gateways:
         //   (1) The traditional RPC gateway using o.a.s.deploy.Client as a wrapper
         //   (2) The new REST-based gateway introduced in Spark 1.3
@@ -224,6 +230,7 @@ object SparkSubmit extends CommandLineUtils {
                 doRunMain()
             } catch {
                 // Fail over to use the legacy submission gateway
+                // 故障转移以使用旧提交网关
                 case e: SubmitRestConnectionException =>
                     printWarning(s"Master endpoint ${args.master} was not a REST server. " +
                             "Falling back to legacy submission gateway instead.")
@@ -231,6 +238,7 @@ object SparkSubmit extends CommandLineUtils {
                     submit(args)
             }
             // In all other modes, just run the main class as prepared
+            // 在所有其他模式下，只需运行主类。
         } else {
             // 其它cluster模式
             doRunMain()
@@ -1312,17 +1320,6 @@ private[spark] object SparkSubmitUtils {
         }
     }
 
-    private[deploy] def createExclusion(
-                                               coords: String,
-                                               ivySettings: IvySettings,
-                                               ivyConfName: String): ExcludeRule = {
-        val c = extractMavenCoordinates(coords)(0)
-        val id = new ArtifactId(new ModuleId(c.groupId, c.artifactId), "*", "*", "*")
-        val rule = new DefaultExcludeRule(id, ivySettings.getMatcher("glob"), null)
-        rule.addConfiguration(ivyConfName)
-        rule
-    }
-
     /**
       * 从逗号分隔的字符串中提取maven坐标。
       *
@@ -1354,6 +1351,17 @@ private[spark] object SparkSubmitUtils {
       */
     def getModuleDescriptor: DefaultModuleDescriptor = DefaultModuleDescriptor.newDefaultInstance(
         ModuleRevisionId.newInstance("org.apache.org.apache.spark", "org.apache.spark-submit-parent", "1.0"))
+
+    private[deploy] def createExclusion(
+                                               coords: String,
+                                               ivySettings: IvySettings,
+                                               ivyConfName: String): ExcludeRule = {
+        val c = extractMavenCoordinates(coords)(0)
+        val id = new ArtifactId(new ModuleId(c.groupId, c.artifactId), "*", "*", "*")
+        val rule = new DefaultExcludeRule(id, ivySettings.getMatcher("glob"), null)
+        rule.addConfiguration(ivyConfName)
+        rule
+    }
 
     /**
       * 表示一个Maven的坐标
