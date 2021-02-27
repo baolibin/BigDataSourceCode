@@ -75,9 +75,11 @@ import scala.util.control.NonFatal
 class SparkContext(config: SparkConf) extends Logging {
 
     val startTime = System.currentTimeMillis()
+    // 为运行SparkContext的用户设置SPARK USER。
     // Set SPARK_USER for user who is running SparkContext.
     val sparkUser = Utils.getCurrentUserName()
 
+    // 为了防止多个SparkContext同时处于活动状态，请将此上下文标记为已开始构造。
     // In order to prevent multiple SparkContexts from being active at the same time, mark this
     // context as having started construction.
     // NOTE: this must be placed at the beginning of the SparkContext constructor.
@@ -92,6 +94,7 @@ class SparkContext(config: SparkConf) extends Logging {
 
         override protected def initialValue(): Properties = new Properties()
     }
+    // 构建此SparkContext的调用站点。
     // The call site where this SparkContext was constructed.
     private val creationSite: CallSite = Utils.getCallSite()
     // If true, log warnings instead of throwing exceptions when multiple SparkContexts are active
@@ -112,14 +115,18 @@ class SparkContext(config: SparkConf) extends Logging {
         val map: ConcurrentMap[Int, RDD[_]] = new MapMaker().weakValues().makeMap[Int, RDD[_]]()
         map.asScala
     }
+    // 要传递给executors的环境变量。
     // Environment variables to pass to our executors.
     private[spark] val executorEnvs = HashMap[String, String]()
 
+    // 在Spark驱动程序日志中注销Spark版本
     // log out Spark Version in Spark driver log
     logInfo(s"Running Spark version $SPARK_VERSION")
 
     warnDeprecatedVersions()
 
+    // 私有变量。这些变量保持上下文的内部状态，外部世界无法访问它们。
+    // 它们是可变的，因为我们希望提前将它们全部初始化为某个中立值，所以在构造函数仍在运行时调用“stop（）”是安全的。
     /* ------------------------------------------------------------------------------------- *
      | Private variables. These variables keep the internal state of the context, and are    |
      | not accessible by the outside world. They're mutable since we want to initialize all  |
@@ -150,6 +157,7 @@ class SparkContext(config: SparkConf) extends Logging {
     private var _listenerBusStarted: Boolean = false
     private var _jars: Seq[String] = _
 
+    // 访问器和公共字段。它们提供了对上下文内部状态的访问。
     /* ------------------------------------------------------------------------------------- *
      | Accessors and public fields. These provide access to the internal state of the        |
      | context.                                                                              |
@@ -159,6 +167,8 @@ class SparkContext(config: SparkConf) extends Logging {
     private[spark] var checkpointDir: Option[String] = None
 
     /**
+      * 创建从系统属性加载设置的SparkContext。
+      *
       * Create a SparkContext that loads settings from system properties (for instance, when
       * launching with ./bin/org.apache.spark-submit).
       */
@@ -1877,7 +1887,8 @@ class SparkContext(config: SparkConf) extends Logging {
     }
 
     /**
-      * 提交执行一个作业
+      * 提交一个作业以执行，并返回一个包含结果的FutureJob。
+      *
       * Submit a job for execution and return a FutureJob holding the result.
       *
       * @param rdd              target RDD to run tasks on
