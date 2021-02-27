@@ -904,6 +904,9 @@ class SparkContext(config: SparkConf) extends Logging {
         taskScheduler.defaultParallelism
     }
 
+    /**
+      * 初始化SparkContext代码
+      */
     try {
         _conf = config.clone()
         _conf.validateSettings()
@@ -928,6 +931,7 @@ class SparkContext(config: SparkConf) extends Logging {
             logInfo("Spark configuration:\n" + _conf.toDebugString)
         }
 
+        // 设置Spark驱动程序主机和端口系统属性。这将显式地设置配置，而不是依赖于config常量的默认值。
         // Set Spark driver host and port system properties. This explicitly sets the configuration
         // instead of relying on the default value of the config constant.
         _conf.set(DRIVER_HOST_ADDRESS, _conf.get(DRIVER_HOST_ADDRESS))
@@ -959,15 +963,18 @@ class SparkContext(config: SparkConf) extends Logging {
 
         if (master == "yarn" && deployMode == "client") System.setProperty("SPARK_YARN_MODE", "true")
 
+        // "_jobProgressListener"应该在创建SparkEnv之前设置，因为在创建"SparkEnv",一些信息将被发布到“listenerBus”，我们不应该错过它们。
         // "_jobProgressListener" should be set up before creating SparkEnv because when creating
         // "SparkEnv", some messages will be posted to "listenerBus" and we should not miss them.
         _jobProgressListener = new JobProgressListener(_conf)
         listenerBus.addListener(jobProgressListener)
 
+        // 创建Spark执行环境（缓存、map输出跟踪器等）
         // Create the Spark execution environment (cache, map output tracker, etc)
         _env = createSparkEnv(_conf, isLocal, listenerBus)
         SparkEnv.set(_env)
 
+        // 如果运行REPL，请向文件服务器注册REPL的输出目录。
         // If running the REPL, register the repl's output dir with the file server.
         _conf.getOption("org.apache.spark.repl.class.outputDir").foreach { path =>
             val replUri = _env.rpcEnv.fileServer.addDirectory("/classes", new File(path))
@@ -997,6 +1004,7 @@ class SparkContext(config: SparkConf) extends Logging {
 
         _hadoopConfiguration = SparkHadoopUtil.get.newConfiguration(_conf)
 
+        // 添加通过构造函数给出的每个JAR。
         // Add each JAR given through the constructor
         if (jars != null) {
             jars.foreach(addJar)
@@ -1013,6 +1021,7 @@ class SparkContext(config: SparkConf) extends Logging {
                 .map(Utils.memoryStringToMb)
                 .getOrElse(1024)
 
+        // 将java选项转换为env vars是一种解决方法，因为我们不能在sbt中直接设置env vars。
         // Convert java options to env vars as a work around
         // since we can't set env vars directly in sbt.
         for {(envKey, propKey) <- Seq(("SPARK_TESTING", "org.apache.spark.testing"))
@@ -1022,17 +1031,20 @@ class SparkContext(config: SparkConf) extends Logging {
         Option(System.getenv("SPARK_PREPEND_CLASSES")).foreach { v =>
             executorEnvs("SPARK_PREPEND_CLASSES") = v
         }
+        // Mesos调度器后端依赖于此环境变量来设置执行器内存。
         // The Mesos scheduler backend relies on this environment variable to set executor memory.
         // TODO: Set this only in the Mesos scheduler.
         executorEnvs("SPARK_EXECUTOR_MEMORY") = executorMemory + "m"
         executorEnvs ++= _conf.getExecutorEnv
         executorEnvs("SPARK_USER") = sparkUser
 
+        // 我们需要在“createTaskScheduler”之前注册“HeartbeatReceiver”，因为Executor将在构造函数中检索“HeartbeatReceiver”。
         // We need to register "HeartbeatReceiver" before "createTaskScheduler" because Executor will
         // retrieve "HeartbeatReceiver" in the constructor. (SPARK-6640)
         _heartbeatReceiver = env.rpcEnv.setupEndpoint(
             HeartbeatReceiver.ENDPOINT_NAME, new HeartbeatReceiver(this))
 
+        // 创建并启动计划程序
         // Create and start the scheduler
         val (sched, ts) = SparkContext.createTaskScheduler(this, master, deployMode)
         _schedulerBackend = sched
@@ -1040,6 +1052,7 @@ class SparkContext(config: SparkConf) extends Logging {
         _dagScheduler = new DAGScheduler(this)
         _heartbeatReceiver.ask[Boolean](TaskSchedulerIsSet)
 
+        // TaskScheduler在DAGScheduler的构造函数中设置DAGScheduler引用后，启动TaskScheduler。
         // start TaskScheduler after taskScheduler sets DAGScheduler reference in DAGScheduler's
         // constructor
         _taskScheduler.start()
@@ -1053,9 +1066,12 @@ class SparkContext(config: SparkConf) extends Logging {
         _ui.foreach(_.setAppId(_applicationId))
         _env.blockManager.initialize(_applicationId)
 
+        // 需要为Driver程序设置度量系统org.apache.spark.app.id到应用程序ID。
+        // 所以它应该在我们从任务调度器获取app ID并设置org.apache.spark.app.id.
         // The metrics system for Driver need to be set org.apache.spark.app.id to app ID.
         // So it should start after we get app ID from the task scheduler and set org.apache.spark.app.id.
         _env.metricsSystem.start()
+        // 在度量系统启动后，将驱动程序度量servlet处理程序附加到web ui。
         // Attach the driver metrics servlet handler to the web ui after the metrics system is started.
         _env.metricsSystem.getServletHandlers.foreach(handler => ui.foreach(_.attachHandler(handler)))
 
@@ -1071,6 +1087,7 @@ class SparkContext(config: SparkConf) extends Logging {
                     None
                 }
 
+        // 可以根据工作负载动态扩展执行器的数量。暴露测试。
         // Optionally scale number of executors dynamically based on workload. Exposed for testing.
         val dynamicAllocationEnabled = Utils.isDynamicAllocationEnabled(_conf)
         _executorAllocationManager =
@@ -1107,6 +1124,8 @@ class SparkContext(config: SparkConf) extends Logging {
             _env.metricsSystem.registerSource(e.executorAllocationManagerSource)
         }
 
+        // 如果用户忘记了上下文，请确保上下文已停止。这避免了在JVM干净地退出后留下未完成的事件日志。
+        // 但是，如果JVM被杀死，这也没有什么帮助。
         // Make sure the context is stopped if the user forgets about it. This avoids leaving
         // unfinished event logs around after the JVM exits cleanly. It doesn't help if the JVM
         // is killed, though.
@@ -2795,6 +2814,8 @@ object SparkContext extends Logging {
 }
 
 /**
+  * 从主字符串中提取信息的正则表达式集合。
+  *
   * A collection of regexes for extracting information from the master string.
   */
 private object SparkMasterRegex {
@@ -2809,6 +2830,8 @@ private object SparkMasterRegex {
 }
 
 /**
+  * 一个类，它封装了如何将某个类型“T”从“writeable”转换成“T”。它存储与“T”对应的“Writable”类（例如，“Int”的“IntWritable”）和一个用于进行转换的函数。
+  *
   * A class encapsulating how to convert some type `T` from `Writable`. It stores both the `Writable`
   * class corresponding to `T` (e.g. `IntWritable` for `Int`) and a function for doing the
   * conversion.
@@ -2865,6 +2888,8 @@ object WritableConverter {
 }
 
 /**
+  * 封装如何将某个类型“T”转换为“Writable”的类。它存储与“T”对应的“Writable”类（例如，“Int”的“IntWritable”）和一个用于进行转换的函数。
+  *
   * A class encapsulating how to convert some type `T` to `Writable`. It stores both the `Writable`
   * class corresponding to `T` (e.g. `IntWritable` for `Int`) and a function for doing the
   * conversion.
