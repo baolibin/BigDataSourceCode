@@ -98,40 +98,25 @@ class SparkConf(loadDefaults: Boolean) extends Cloneable with Logging with Seria
         set("org.apache.spark.app.name", name)
     }
 
-    /** Set JAR files to distribute to the cluster. (Java-friendly version.) */
+    /**
+      * 设置要分发到集群的JAR文件。（Java友好版本。）
+      * Set JAR files to distribute to the cluster. (Java-friendly version.)
+      */
     def setJars(jars: Array[String]): SparkConf = {
         setJars(jars.toSeq)
     }
 
-    /** Set JAR files to distribute to the cluster. */
+    /**
+      * 设置要分发到集群的JAR文件。
+      * Set JAR files to distribute to the cluster.
+      */
     def setJars(jars: Seq[String]): SparkConf = {
         for (jar <- jars if (jar == null)) logWarning("null jar passed to SparkContext constructor")
         set("org.apache.spark.jars", jars.filter(_ != null).mkString(","))
     }
 
     /**
-      * 设置KV值
-      * Set a configuration variable.
-      */
-    def set(key: String, value: String): SparkConf = {
-        set(key, value, false)
-    }
-
-    private[spark] def set(key: String, value: String, silent: Boolean): SparkConf = {
-        if (key == null) {
-            throw new NullPointerException("null key")
-        }
-        if (value == null) {
-            throw new NullPointerException("null value for " + key)
-        }
-        if (!silent) {
-            logDeprecationWarning(key)
-        }
-        settings.put(key, value)
-        this
-    }
-
-    /**
+      * 设置启动执行器时要使用的多个环境变量。
       * Set multiple environment variables to be used when launching executors.
       * (Java-friendly version.)
       */
@@ -140,6 +125,10 @@ class SparkConf(loadDefaults: Boolean) extends Cloneable with Logging with Seria
     }
 
     /**
+      * 设置启动执行器时要使用的多个环境变量。
+      * 这些变量存储为来自org.apache.spark.executorEnv.VAR_NAME的属性
+      * （例如org.apache.spark.executorEnv.PATH)但这种方法使它们更容易设置。
+      *
       * Set multiple environment variables to be used when launching executors.
       * These variables are stored as properties of the form org.apache.spark.executorEnv.VAR_NAME
       * (for example org.apache.spark.executorEnv.PATH) but this method makes them easier to set.
@@ -152,6 +141,8 @@ class SparkConf(loadDefaults: Boolean) extends Cloneable with Logging with Seria
     }
 
     /**
+      * 设置启动此应用程序的执行器时要使用的环境变量。
+      *
       * Set an environment variable to be used when launching executors for this application.
       * These variables are stored as properties of the form org.apache.spark.executorEnv.VAR_NAME
       * (for example org.apache.spark.executorEnv.PATH) but this method makes them easier to set.
@@ -161,19 +152,29 @@ class SparkConf(loadDefaults: Boolean) extends Cloneable with Logging with Seria
     }
 
     /**
+      * 设置工作节点上安装Spark的位置。
+      *
       * Set the location where Spark is installed on worker nodes.
       */
     def setSparkHome(home: String): SparkConf = {
         set("org.apache.spark.home", home)
     }
 
-    /** Set multiple parameters together */
+    /**
+      * 同时设置多个参数。
+      *
+      * Set multiple parameters together
+      */
     def setAll(settings: Traversable[(String, String)]): SparkConf = {
         settings.foreach { case (k, v) => set(k, v) }
         this
     }
 
-    /** Set a parameter if it isn't already configured */
+    /**
+      * 如果尚未配置，设置参数
+      *
+      * Set a parameter if it isn't already configured
+      */
     def setIfMissing(key: String, value: String): SparkConf = {
         if (settings.putIfAbsent(key, value) == null) {
             logDeprecationWarning(key)
@@ -182,6 +183,8 @@ class SparkConf(loadDefaults: Boolean) extends Cloneable with Logging with Seria
     }
 
     /**
+      * 使用Kryo序列化并用Kryo注册给定的类集。
+      *
       * Use Kryo serialization and register the given set of classes with Kryo.
       * If called multiple times, this will append the classes from all calls together.
       */
@@ -237,19 +240,6 @@ class SparkConf(loadDefaults: Boolean) extends Cloneable with Logging with Seria
         Utils.timeStringAsSeconds(get(key, defaultValue))
     }
 
-    /** Get a parameter, falling back to a default if not set */
-    def get(key: String, defaultValue: String): String = {
-        getOption(key).getOrElse(defaultValue)
-    }
-
-    /**
-      * 根据Key返回Option参数值。
-      * Get a parameter as an Option
-      */
-    def getOption(key: String): Option[String] = {
-        Option(settings.get(key)).orElse(getDeprecatedConfig(key, this))
-    }
-
     /**
       * Get a time parameter as milliseconds; throws a NoSuchElementException if it's not set. If no
       * suffix is provided then milliseconds are assumed.
@@ -303,17 +293,17 @@ class SparkConf(loadDefaults: Boolean) extends Cloneable with Logging with Seria
         Utils.byteStringAsKb(get(key))
     }
 
-    /** Get a parameter; throws a NoSuchElementException if it's not set */
-    def get(key: String): String = {
-        getOption(key).getOrElse(throw new NoSuchElementException(key))
-    }
-
     /**
       * Get a size parameter as Kibibytes, falling back to a default if not set. If no
       * suffix is provided then Kibibytes are assumed.
       */
     def getSizeAsKb(key: String, defaultValue: String): Long = {
         Utils.byteStringAsKb(get(key, defaultValue))
+    }
+
+    /** Get a parameter, falling back to a default if not set */
+    def get(key: String, defaultValue: String): String = {
+        getOption(key).getOrElse(defaultValue)
     }
 
     /**
@@ -324,6 +314,19 @@ class SparkConf(loadDefaults: Boolean) extends Cloneable with Logging with Seria
       */
     def getSizeAsMb(key: String): Long = {
         Utils.byteStringAsMb(get(key))
+    }
+
+    /** Get a parameter; throws a NoSuchElementException if it's not set */
+    def get(key: String): String = {
+        getOption(key).getOrElse(throw new NoSuchElementException(key))
+    }
+
+    /**
+      * 根据Key返回Option参数值。
+      * Get a parameter as an Option
+      */
+    def getOption(key: String): Option[String] = {
+        Option(settings.get(key)).orElse(getDeprecatedConfig(key, this))
     }
 
     /**
@@ -397,7 +400,11 @@ class SparkConf(loadDefaults: Boolean) extends Cloneable with Logging with Seria
                 configsWithAlternatives.get(key).toSeq.flatten.exists { alt => contains(alt.key) }
     }
 
-    /** Copy this object */
+    /**
+      * 复制此对象。
+      *
+      * Copy this object
+      */
     override def clone: SparkConf = {
         val cloned = new SparkConf(false)
         settings.entrySet().asScala.foreach { e =>
@@ -432,6 +439,28 @@ class SparkConf(loadDefaults: Boolean) extends Cloneable with Logging with Seria
 
     private[spark] def set[T](entry: OptionalConfigEntry[T], value: T): SparkConf = {
         set(entry.key, entry.rawStringConverter(value))
+        this
+    }
+
+    /**
+      * 设置KV值
+      * Set a configuration variable.
+      */
+    def set(key: String, value: String): SparkConf = {
+        set(key, value, false)
+    }
+
+    private[spark] def set(key: String, value: String, silent: Boolean): SparkConf = {
+        if (key == null) {
+            throw new NullPointerException("null key")
+        }
+        if (value == null) {
+            throw new NullPointerException("null value for " + key)
+        }
+        if (!silent) {
+            logDeprecationWarning(key)
+        }
+        settings.put(key, value)
         this
     }
 
@@ -590,6 +619,8 @@ class SparkConf(loadDefaults: Boolean) extends Cloneable with Logging with Seria
 private[spark] object SparkConf extends Logging {
 
     /**
+      * 将不推荐使用的配置键映射到有关不推荐使用的信息。
+      *
       * Maps deprecated config keys to information about the deprecation.
       *
       * The extra information is logged as a warning when the config is present in the user's
@@ -615,6 +646,8 @@ private[spark] object SparkConf extends Logging {
     }
 
     /**
+      * 将当前配置键映射到Spark早期版本中使用的备用键。
+      *
       * Maps a current config key to alternate keys that were used in previous version of Spark.
       *
       * The alternates are used in the order defined in this map. If deprecated configs are
@@ -673,6 +706,8 @@ private[spark] object SparkConf extends Logging {
     )
 
     /**
+      * “configsWithAlternatives”的视图，使查找不推荐使用的配置键更有效。
+      *
       * A view of `configsWithAlternatives` that makes it more efficient to look up deprecated
       * config keys.
       *
@@ -685,6 +720,8 @@ private[spark] object SparkConf extends Logging {
     }
 
     /**
+      * 返回是否应在启动时将给定的配置传递给执行器。
+      *
       * Return whether the given config should be passed to an executor on start-up.
       *
       * Certain authentication configs are required from the executor when it connects to
@@ -699,6 +736,8 @@ private[spark] object SparkConf extends Logging {
     }
 
     /**
+      * 如果给的的配置与`org.apache.spark.*.port` or `org.apache.spark.port.*`匹配，则返回true。
+      *
       * Return true if the given config matches either `org.apache.spark.*.port` or `org.apache.spark.port.*`.
       */
     def isSparkPortConf(name: String): Boolean = {
@@ -706,6 +745,8 @@ private[spark] object SparkConf extends Logging {
     }
 
     /**
+      * 为给定的配置选项查找可用的已弃用键，并返回第一个可用值。
+      *
       * Looks for available deprecated keys for the given config option, and return the first
       * value available.
       */
@@ -719,6 +760,8 @@ private[spark] object SparkConf extends Logging {
     }
 
     /**
+      * 如果给定的配置键已弃用，则记录警告消息。
+      *
       * Logs a warning message if the given config key is deprecated.
       */
     def logDeprecationWarning(key: String): Unit = {
@@ -743,6 +786,8 @@ private[spark] object SparkConf extends Logging {
     }
 
     /**
+      * 保存有关已弃用但没有替换项的keys的信息。
+      *
       * Holds information about keys that have been deprecated and do not have a replacement.
       *
       * @param key                The deprecated key.
@@ -755,6 +800,8 @@ private[spark] object SparkConf extends Logging {
                                                deprecationMessage: String)
 
     /**
+      * 有关已弃用的备用配置key的信息。
+      *
       * Information about an alternate configuration key that has been deprecated.
       *
       * @param key         The deprecated config key.
