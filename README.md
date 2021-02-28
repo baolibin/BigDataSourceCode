@@ -39,58 +39,95 @@
 ---
 ### 二、spark sql源码阅读
     SparkSql模块源码阅读，版本2.2.0。
-##### 1、核心SparkSQL功能模块源码
-> [核心SparkSQL功能模块源码](SparkSqlCore/src/main/scala/org/apache/spark/sql)： 允许执行关系查询，包括使用Spark在SQL中表示的查询。
-##### 2、Api模块源码
-> [api模块源码](SparkSqlCore/src/main/scala/org/apache/spark/sql/api)：包含特定于单一语言（即Java）的API类。
-##### 3、CataLog模块源码
-##### 4、Execution模块源码
-##### 5、Expressions模块源码
-> [expressions功能模块源码](SparkSqlCore/src/main/scala/org/apache/spark/sql/expressions):
-##### 6、Internal模块源码
-##### 7、Jdbc模块源码
-##### 8、Sources模块源码
-##### 9、Streaming模块源码
-##### 10、Util模块源码
-> [Util模块源码](SparkSqlCore/src/main/scala/org/apache/spark/sql/util)：查询异常监听器。
+##### [1、核心SparkSQL功能模块源码](SparkSqlCore/src/main/scala/org/apache/spark/sql)： 允许执行关系查询，包括使用Spark在SQL中表示的查询。
+##### [2、Api模块源码](SparkSqlCore/src/main/scala/org/apache/spark/sql/api)：包含特定于单一语言（即Java）的API类。
+##### [3、CataLog模块源码]()
+##### [4、Execution模块源码]()
+##### [5、Expressions模块源码](SparkSqlCore/src/main/scala/org/apache/spark/sql/expressions):
+##### [6、Internal模块源码]()
+##### [7、Jdbc模块源码]()
+##### [8、Sources模块源码]()
+##### [9、Streaming模块源码]()
+##### [10、Util模块源码](SparkSqlCore/src/main/scala/org/apache/spark/sql/util)：查询异常监听器。
 
 ---
 ### 三、spark streaming源码阅读
     SparkSql模块源码阅读，版本2.2.0。
-##### 1、核心SparkStreaming功能模块源码
-> [核心SparkStreaming功能模块源码](SparkStreaming/src/main/scala/org/apache/spark)： Spark流处理功能。[[org.apache.spark.streaming.StreamingContext]]作为Spark流处理的主要入口。[[org.apache.spark.streaming.dstream.DStream]]表示RDD的连续序列的数据类型，表示连续的数据流。
-##### 2、Api功能模块源码
-> [api功能模块源码](SparkStreaming/src/main/scala/org/apache/spark/streaming/api)：Spark streaming的Java与Python API。
-##### 3、Dstream功能模块源码
-> [dstream功能模块源码](SparkStreaming/src/main/scala/org/apache/spark/streaming/dstream)：DStream的各种实现。
-##### 4、Rdd功能模块源码
-> [rdd功能模块源码](SparkStreaming/src/main/scala/org/apache/spark/streaming/rdd)：
-##### 5、Receiver功能模块源码
-> [receiver功能模块源码](SparkStreaming/src/main/scala/org/apache/spark/streaming/receiver)：
-##### 6、Scheduler功能模块源码
-> [scheduler功能模块源码](SparkStreaming/src/main/scala/org/apache/spark/streaming/scheduler)：
-##### 7、Ui功能模块源码
-> [ui功能模块源码](SparkStreaming/src/main/scala/org/apache/spark/streaming/ui)：
-##### 8、Util功能模块源码
-> [util功能模块源码](SparkStreaming/src/main/scala/org/apache/spark/streaming/util)：
+##### [1、核心SparkStreaming功能模块源码](SparkStreaming/src/main/scala/org/apache/spark)： Spark流处理功能。[[org.apache.spark.streaming.StreamingContext]]作为Spark流处理的主要入口。[[org.apache.spark.streaming.dstream.DStream]]表示RDD的连续序列的数据类型，表示连续的数据流。
+##### [2、Api功能模块源码](SparkStreaming/src/main/scala/org/apache/spark/streaming/api)：Spark streaming的Java与Python API。
+##### [3、Dstream功能模块源码](SparkStreaming/src/main/scala/org/apache/spark/streaming/dstream)：DStream的各种实现。
+##### [4、Rdd功能模块源码](SparkStreaming/src/main/scala/org/apache/spark/streaming/rdd)：
+##### [5、Receiver功能模块源码](SparkStreaming/src/main/scala/org/apache/spark/streaming/receiver)：
+##### [6、Scheduler功能模块源码](SparkStreaming/src/main/scala/org/apache/spark/streaming/scheduler)：
+##### [7、Ui功能模块源码](SparkStreaming/src/main/scala/org/apache/spark/streaming/ui)：
+##### [8、Util功能模块源码](SparkStreaming/src/main/scala/org/apache/spark/streaming/util)：
 
 ---
 ### 四、flink core源码阅读
     FlinkCore模块源码阅读，版本1.9.0。
+##### [1、api模块源码](FlinkCore/src/main/java/org/apache/flink/api)：
+##### [2、configuration模块源码](FlinkCore/src/main/java/org/apache/flink/configuration)：
+##### [3、core模块源码](FlinkCore/src/main/java/org/apache/flink/core)：
+##### [4、types模块源码](FlinkCore/src/main/java/org/apache/flink/types)：
+##### [5、util模块源码](FlinkCore/src/main/java/org/apache/flink/util)：
 
 ---
 ### 五、flink streaming源码阅读
     FlinkStreaming模块源码阅读，版本1.9.0。
+##### [1、api模块源码](FlinkStreaming/src/main/java/org/apache/flink/streaming/api)：
+##### [2、experimental模块源码](FlinkStreaming/src/main/java/org/apache/flink/streaming/experimental)：
+##### [3、runtime模块源码](FlinkStreaming/src/main/java/org/apache/flink/streaming/runtime)：
+##### [4、util模块源码](FlinkStreaming/src/main/java/org/apache/flink/streaming/util)：
+##### [5、async模块源码](FlinkStreaming/src/main/scala/org/apache/flink/streaming/api/scala/async)：
+##### [6、extensions模块源码](FlinkStreaming/src/main/scala/org/apache/flink/streaming/api/scala/extensions)：
+##### [7、function模块源码](FlinkStreaming/src/main/scala/org/apache/flink/streaming/api/scala/function)：
+##### [8、核心模块源码](FlinkStreaming/src/main/scala/org/apache/flink/streaming/api/scala)：createTypeInformation当使用scalaapi时，我们总是生成类型信息。
 
 ---
 ### 六、flink batch源码阅读
     FlinkBatch模块源码阅读，版本1.9.0。
+##### [1、operators模块源码](FlinkBatch/FlinkScalaBatch/src/main/java/org/apache/flink/api/scala/operators)：
+##### [2、typeutils模块源码](FlinkBatch/FlinkScalaBatch/src/main/java/org/apache/flink/api/scala/typeutils)：
+##### [3、codegen模块源码](FlinkBatch/FlinkScalaBatch/src/main/scala/org/apache/flink/api/scala/codegen)：
+##### [4、extensions模块源码](FlinkBatch/FlinkScalaBatch/src/main/scala/org/apache/flink/api/scala/extensions)：
+##### [5、metrics模块源码](FlinkBatch/FlinkScalaBatch/src/main/scala/org/apache/flink/api/scala/metrics)：
+##### [6、typeutils模块源码](FlinkBatch/FlinkScalaBatch/src/main/scala/org/apache/flink/api/scala/typeutils)：
+##### [7、utils模块源码](FlinkBatch/FlinkScalaBatch/src/main/scala/org/apache/flink/api/scala/utils)：此类提供了简单的实用程序方法，用于使用索引或唯一标识符压缩数据集中的元素，从数据集中采样元素。
+##### [8、核心模块源码](FlinkBatch/FlinkScalaBatch/src/main/java/org/apache/flink/api/scala)：Flink Scala API。
 
 ---
 ### 七、scala library源码阅读
     ScalaLibrary模块源码阅读，版本2.11.8。
+##### [1、核心Scala Library-Aux功能模块源码](ScalaLibrary/src/main/scala/libiary-aux)：
+##### [2、核心Scala Library功能模块源码](ScalaLibrary/src/main/scala)： 核心Scala类型。它们在没有显式导入的情况下始终可用。
+##### [3、Annotation功能模块源码](ScalaLibrary/src/main/scala/annotation)： 
+##### [4、Beans功能模块源码](ScalaLibrary/src/main/scala/beans)： 
+##### [5、Collection功能模块源码](ScalaLibrary/src/main/scala/collection)： 包含使用和扩展Scala集合库所需的基本特性和对象。
+##### [6、Compat功能模块源码](ScalaLibrary/src/main/scala/compat)： 
+##### [7、Concurrent功能模块源码](ScalaLibrary/src/main/scala/concurrent)： 
+##### [8、Io功能模块源码](ScalaLibrary/src/main/scala/io)： 
+##### [9、Math功能模块源码](ScalaLibrary/src/main/scala/math)： 
+##### [10、Ref功能模块源码](ScalaLibrary/src/main/scala/ref)： 
+##### [11、Reflect功能模块源码](ScalaLibrary/src/main/scala/reflect)： 
+##### [12、Runtime功能模块源码](ScalaLibrary/src/main/scala/runtime)： 
+##### [13、Sys功能模块源码](ScalaLibrary/src/main/scala/sys)： 
+##### [14、Text功能模块源码](ScalaLibrary/src/main/scala/text)： 
+##### [15、Util功能模块源码](ScalaLibrary/src/main/scala/util)： 
 
 ---
 ### 八、java src源码阅读
     JavaSrc模块源码阅读，版本1.8.0。
-
+##### [1、applet模块源码]()
+##### [2、awt模块源码]()
+##### [3、beans模块源码]()
+##### [4、io模块源码]()
+##### [5、lang模块源码]()
+##### [6、math模块源码]()
+##### [7、net模块源码]()
+##### [8、nio模块源码]()
+##### [9、rmi模块源码]()
+##### [10、security模块源码]()
+##### [11、sql模块源码]()
+##### [12、text模块源码]()
+##### [13、time模块源码]()
+##### [14、util模块源码]()
