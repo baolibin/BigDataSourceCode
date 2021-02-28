@@ -26,13 +26,18 @@
 package java.io;
 
 /**
+ * 类的可序列化性由实现java.io.Serializable可序列化接口。
+ * 未实现此接口的类将不会对其任何状态进行序列化或反序列化。
+ * 可序列化类的所有子类型本身都是可序列化的。
+ * 序列化接口没有方法或字段，仅用于标识可序列化的语义。
+ * <p>
  * Serializability of a class is enabled by the class implementing the
  * java.io.Serializable interface. Classes that do not implement this
  * interface will not have any of their state serialized or
  * deserialized.  All subtypes of a serializable class are themselves
  * serializable.  The serialization interface has no methods or fields
  * and serves only to identify the semantics of being serializable. <p>
- *
+ * <p>
  * To allow subtypes of non-serializable classes to be serialized, the
  * subtype may assume responsibility for saving and restoring the
  * state of the supertype's public, protected, and (if accessible)
@@ -41,29 +46,29 @@ package java.io;
  * initialize the class's state.  It is an error to declare a class
  * Serializable if this is not the case.  The error will be detected at
  * runtime. <p>
- *
+ * <p>
  * During deserialization, the fields of non-serializable classes will
  * be initialized using the public or protected no-arg constructor of
  * the class.  A no-arg constructor must be accessible to the subclass
  * that is serializable.  The fields of serializable subclasses will
  * be restored from the stream. <p>
- *
+ * <p>
  * When traversing a graph, an object may be encountered that does not
  * support the Serializable interface. In this case the
  * NotSerializableException will be thrown and will identify the class
  * of the non-serializable object. <p>
- *
+ * <p>
  * Classes that require special handling during the serialization and
  * deserialization process must implement special methods with these exact
  * signatures:
  *
  * <PRE>
  * private void writeObject(java.io.ObjectOutputStream out)
- *     throws IOException
+ * throws IOException
  * private void readObject(java.io.ObjectInputStream in)
- *     throws IOException, ClassNotFoundException;
+ * throws IOException, ClassNotFoundException;
  * private void readObjectNoData()
- *     throws ObjectStreamException;
+ * throws ObjectStreamException;
  * </PRE>
  *
  * <p>The writeObject method is responsible for writing the state of the
@@ -106,13 +111,13 @@ package java.io;
  * <PRE>
  * ANY-ACCESS-MODIFIER Object writeReplace() throws ObjectStreamException;
  * </PRE><p>
- *
+ * <p>
  * This writeReplace method is invoked by serialization if the method
  * exists and it would be accessible from a method defined within the
  * class of the object being serialized. Thus, the method can have private,
  * protected and package-private access. Subclass access to this method
  * follows java accessibility rules. <p>
- *
+ * <p>
  * Classes that need to designate a replacement when an instance of it
  * is read from the stream should implement this special method with the
  * exact signature.
@@ -120,10 +125,10 @@ package java.io;
  * <PRE>
  * ANY-ACCESS-MODIFIER Object readResolve() throws ObjectStreamException;
  * </PRE><p>
- *
+ * <p>
  * This readResolve method follows the same invocation rules and
  * accessibility rules as writeReplace.<p>
- *
+ * <p>
  * The serialization runtime associates with each serializable class a version
  * number, called a serialVersionUID, which is used during deserialization to
  * verify that the sender and receiver of a serialized object have loaded
@@ -138,7 +143,7 @@ package java.io;
  * <PRE>
  * ANY-ACCESS-MODIFIER static final long serialVersionUID = 42L;
  * </PRE>
- *
+ * <p>
  * If a serializable class does not explicitly declare a serialVersionUID, then
  * the serialization runtime will calculate a default serialVersionUID value
  * for that class based on various aspects of the class, as described in the
@@ -157,14 +162,13 @@ package java.io;
  * classes cannot declare an explicit serialVersionUID, so they always have
  * the default computed value, but the requirement for matching
  * serialVersionUID values is waived for array classes.
- *
- * @author  unascribed
+ * @author unascribed
  * @see java.io.ObjectOutputStream
  * @see java.io.ObjectInputStream
  * @see java.io.ObjectOutput
  * @see java.io.ObjectInput
  * @see java.io.Externalizable
- * @since   JDK1.1
+ * @since JDK1.1
  */
 public interface Serializable {
 }

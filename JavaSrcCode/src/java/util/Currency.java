@@ -41,8 +41,8 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 import java.util.spi.CurrencyNameProvider;
-import sun.util.locale.provider.LocaleServiceProviderPool;
-import sun.util.logging.PlatformLogger;
+// import sun.util.locale.provider.LocaleServiceProviderPool;
+// import sun.util.logging.PlatformLogger;
 
 
 /**
@@ -502,14 +502,14 @@ public final class Currency implements Serializable {
      * @exception NullPointerException if <code>locale</code> is null
      */
     public String getSymbol(Locale locale) {
-        LocaleServiceProviderPool pool =
+        /*LocaleServiceProviderPool pool =
             LocaleServiceProviderPool.getPool(CurrencyNameProvider.class);
         String symbol = pool.getLocalizedObject(
                                 CurrencyNameGetter.INSTANCE,
                                 locale, currencyCode, SYMBOL);
         if (symbol != null) {
             return symbol;
-        }
+        }*/
 
         // use currency code as symbol of last resort
         return currencyCode;
@@ -568,14 +568,14 @@ public final class Currency implements Serializable {
      * @since 1.7
      */
     public String getDisplayName(Locale locale) {
-        LocaleServiceProviderPool pool =
+        /*LocaleServiceProviderPool pool =
             LocaleServiceProviderPool.getPool(CurrencyNameProvider.class);
         String result = pool.getLocalizedObject(
                                 CurrencyNameGetter.INSTANCE,
                                 locale, currencyCode, DISPLAYNAME);
         if (result != null) {
             return result;
-        }
+        }*/
 
         // use currency code as symbol of last resort
         return currencyCode;
@@ -625,11 +625,11 @@ public final class Currency implements Serializable {
      * implementation.
      */
     private static class CurrencyNameGetter
-        implements LocaleServiceProviderPool.LocalizedObjectGetter<CurrencyNameProvider,
-                                                                   String> {
+       /* implements LocaleServiceProviderPool.LocalizedObjectGetter<CurrencyNameProvider,
+                                                                   String>*/ {
         private static final CurrencyNameGetter INSTANCE = new CurrencyNameGetter();
 
-        @Override
+        // @Override
         public String getObject(CurrencyNameProvider currencyNameProvider,
                                 Locale locale,
                                 String key,
@@ -771,13 +771,13 @@ public final class Currency implements Serializable {
     }
 
     private static void info(String message, Throwable t) {
-        PlatformLogger logger = PlatformLogger.getLogger("java.util.Currency");
+        /*PlatformLogger logger = PlatformLogger.getLogger("java.util.Currency");
         if (logger.isLoggable(PlatformLogger.Level.INFO)) {
             if (t != null) {
                 logger.info(message, t);
             } else {
                 logger.info(message);
             }
-        }
+        }*/
     }
 }

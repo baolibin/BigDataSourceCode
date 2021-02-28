@@ -26,6 +26,8 @@
 package java.lang;
 
 /**
+ * 类实现可克隆接口以向{@link java.lang.Object#clone（）}方法，该方法为该类的实例创建一个字段对字段的副本是合法的。
+ * <p>
  * A class implements the <code>Cloneable</code> interface to
  * indicate to the {@link java.lang.Object#clone()} method that it
  * is legal for that method to make a
@@ -44,11 +46,10 @@ package java.lang;
  * Therefore, it is not possible to clone an object merely by virtue of the
  * fact that it implements this interface.  Even if the clone method is invoked
  * reflectively, there is no guarantee that it will succeed.
- *
- * @author  unascribed
- * @see     java.lang.CloneNotSupportedException
- * @see     java.lang.Object#clone()
- * @since   JDK1.0
+ * @author unascribed
+ * @see java.lang.CloneNotSupportedException
+ * @see java.lang.Object#clone()
+ * @since JDK1.0
  */
 public interface Cloneable {
 }

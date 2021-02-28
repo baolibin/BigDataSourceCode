@@ -38,7 +38,7 @@ import java.util.function.UnaryOperator;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
-import sun.misc.SharedSecrets;
+// import sun.misc.SharedSecrets;
 
 /**
  * This class consists exclusively of static methods that operate on or return
@@ -1841,7 +1841,7 @@ public class Collections {
         private static final long serialVersionUID = -4858195264774772197L;
 
         /**
-         * A class for the {@link EMPTY_NAVIGABLE_MAP} which needs readResolve
+         * A class for the @link EMPTY_NAVIGABLE_MAP which needs readResolve
          * to preserve singleton property.
          *
          * @param <K> type of keys, if there were any, and of bounds
@@ -1862,7 +1862,7 @@ public class Collections {
         }
 
         /**
-         * Singleton for {@link emptyNavigableMap()} which is also immutable.
+         * Singleton for @link emptyNavigableMap which is also immutable.
          */
         private static final EmptyNavigableMap<?,?> EMPTY_NAVIGABLE_MAP =
             new EmptyNavigableMap<>();
@@ -5127,7 +5127,7 @@ public class Collections {
 
         private void readObject(ObjectInputStream ois) throws IOException, ClassNotFoundException {
             ois.defaultReadObject();
-            SharedSecrets.getJavaOISAccess().checkArray(ois, Object[].class, n);
+            // SharedSecrets.getJavaOISAccess().checkArray(ois, Object[].class, n);
         }
     }
 

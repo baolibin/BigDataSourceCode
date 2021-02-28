@@ -37,7 +37,7 @@ import java.io.BufferedWriter;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 
-import sun.util.spi.XmlPropertiesProvider;
+// import sun.util.spi.XmlPropertiesProvider;
 
 /**
  * The {@code Properties} class represents a persistent set of
@@ -826,7 +826,7 @@ class Properties extends Hashtable<Object,Object> {
         if (comments != null) {
             writeComments(bw, comments);
         }
-        bw.write("#" + new Date().toString());
+        // bw.write("#" + new Date().toString());
         bw.newLine();
         synchronized (this) {
             for (Enumeration<?> e = keys(); e.hasMoreElements();) {
@@ -878,7 +878,7 @@ class Properties extends Hashtable<Object,Object> {
     public synchronized void loadFromXML(InputStream in)
         throws IOException, InvalidPropertiesFormatException
     {
-        XmlSupport.load(this, Objects.requireNonNull(in));
+        // XmlSupport.load(this, Objects.requireNonNull(in));
         in.close();
     }
 
@@ -950,8 +950,8 @@ class Properties extends Hashtable<Object,Object> {
     public void storeToXML(OutputStream os, String comment, String encoding)
         throws IOException
     {
-        XmlSupport.save(this, Objects.requireNonNull(os), comment,
-                        Objects.requireNonNull(encoding));
+        // XmlSupport.save(this, Objects.requireNonNull(os), comment,
+                   //     Objects.requireNonNull(encoding));
     }
 
     /**
@@ -1158,7 +1158,7 @@ class Properties extends Hashtable<Object,Object> {
      */
     private static class XmlSupport {
 
-        private static XmlPropertiesProvider loadProviderFromProperty(ClassLoader cl) {
+        /*private static XmlPropertiesProvider loadProviderFromProperty(ClassLoader cl) {
             String cn = System.getProperty("sun.util.spi.XmlPropertiesProvider");
             if (cn == null)
                 return null;
@@ -1206,6 +1206,6 @@ class Properties extends Hashtable<Object,Object> {
             throws IOException
         {
             PROVIDER.store(props, os, comment, encoding);
-        }
+        }*/
     }
 }
