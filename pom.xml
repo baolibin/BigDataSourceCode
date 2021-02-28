@@ -13,7 +13,6 @@
         <module>FlinkBatch</module>
         <module>FlinkCore</module>
         <module>FlinkStreaming</module>
-        <module>JavaSrc</module>
         <module>ScalaLibrary</module>
         <module>SparkCore</module>
         <module>SparkSqlCore</module>
