@@ -898,7 +898,11 @@ class SparkContext(config: SparkConf) extends Logging {
       */
     def defaultMinPartitions: Int = math.min(defaultParallelism, 2)
 
-    /** Default level of parallelism to use when not given by user (e.g. parallelize and makeRDD). */
+    /**
+      * 当用户未给定时使用的默认并行级别（例如parallelize和makeRDD）。
+      *
+      * Default level of parallelism to use when not given by user (e.g. parallelize and makeRDD).
+      */
     def defaultParallelism: Int = {
         assertNotStopped()
         taskScheduler.defaultParallelism
@@ -921,6 +925,7 @@ class SparkContext(config: SparkConf) extends Logging {
         // log out org.apache.spark.app.name in the Spark driver logs
         logInfo(s"Submitted application: $appName")
 
+        // 系统属性org.apache.spark.yarn.app.id如果AM在YARN集群上运行用户代码，则必须设置。
         // System property org.apache.spark.yarn.app.id must be set if user code ran by AM on a YARN cluster
         if (master == "yarn" && deployMode == "cluster" && !_conf.contains("org.apache.spark.yarn.app.id")) {
             throw new SparkException("Detected yarn cluster mode, but isn't running on a cluster. " +
@@ -981,6 +986,7 @@ class SparkContext(config: SparkConf) extends Logging {
             _conf.set("org.apache.spark.repl.class.uri", replUri)
         }
 
+        // 用于监视job和stage进度的Low-level状态报告API。
         _statusTracker = new SparkStatusTracker(this)
 
         _progressBar =
@@ -998,6 +1004,7 @@ class SparkContext(config: SparkConf) extends Logging {
                     // For tests, do not enable the UI
                     None
                 }
+        // 在启动任务调度器之前绑定UI，以便将绑定的端口正确地与集群管理器通信。
         // Bind the UI before starting the task scheduler to communicate
         // the bound port to the cluster manager properly
         _ui.foreach(_.bind())
@@ -2289,7 +2296,11 @@ class SparkContext(config: SparkConf) extends Logging {
 
     private[spark] def newShuffleId(): Int = nextShuffleId.getAndIncrement()
 
-    /** Register a new RDD, returning its RDD ID */
+    /**
+      * 注册一个新的RDD，返回其RDD ID。
+      *
+      * Register a new RDD, returning its RDD ID
+      */
     private[spark] def newRddId(): Int = nextRddId.getAndIncrement()
 
     /**
@@ -2348,6 +2359,8 @@ class SparkContext(config: SparkConf) extends Logging {
     }
 
     /**
+      * 关闭SparkContext。
+      *
       * Shut down the SparkContext.
       */
     def stop(): Unit = {
@@ -2456,6 +2469,8 @@ class SparkContext(config: SparkConf) extends Logging {
 }
 
 /**
+  * SparkContext对象包含许多隐式转换和参数，用于各种Spark功能。
+  *
   * The SparkContext object contains a number of implicit conversions and parameters for use with
   * various Spark features.
   */
@@ -2464,11 +2479,15 @@ object SparkContext extends Logging {
         Set("ALL", "DEBUG", "ERROR", "FATAL", "INFO", "OFF", "TRACE", "WARN")
 
     /**
+      * 保护对跟踪SparkContext构造的全局变量的访问的锁。
+      *
       * Lock that guards access to global variables that track SparkContext construction.
       */
     private val SPARK_CONTEXT_CONSTRUCTOR_LOCK = new Object()
 
     /**
+      * 活跃的、完整的SparkContext。如果没有激活的SparkContext，则为“null”。
+      *
       * The active, fully-constructed SparkContext.  If no SparkContext is active, then this is `null`.
       *
       * Access to this field is guarded by SPARK_CONTEXT_CONSTRUCTOR_LOCK.
@@ -2487,6 +2506,8 @@ object SparkContext extends Logging {
       */
     private[spark] val DRIVER_IDENTIFIER = "driver"
     /**
+      * 驱动程序标识符的旧版本，为向后兼容而保留。
+      *
       * Legacy version of DRIVER_IDENTIFIER, retained for backwards-compatibility.
       */
     private[spark] val LEGACY_DRIVER_IDENTIFIER = "<driver>"
@@ -2713,6 +2734,9 @@ object SparkContext extends Logging {
     }
 
     /**
+      * 基于给定的主URL创建任务计划程序。
+      * 返回调度程序后端和任务调度程序的2元组。
+      *
       * Create a task scheduler based on a given master URL.
       * Return a 2-tuple of the scheduler backend and the task scheduler.
       */

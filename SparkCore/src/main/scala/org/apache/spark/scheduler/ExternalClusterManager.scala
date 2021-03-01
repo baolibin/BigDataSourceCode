@@ -36,6 +36,8 @@ private[spark] trait ExternalClusterManager {
     def canCreate(masterURL: String): Boolean
 
     /**
+      * 为给定的SparkContext创建任务调度器实例。
+      *
       * Create a task scheduler instance for the given SparkContext
       *
       * @param sc        SparkContext
@@ -45,6 +47,8 @@ private[spark] trait ExternalClusterManager {
     def createTaskScheduler(sc: SparkContext, masterURL: String): TaskScheduler
 
     /**
+      * 为给定的SparkContext和计划程序创建计划程序后端。
+      *
       * Create a scheduler backend for the given SparkContext and scheduler. This is
       * called after task scheduler is created using `ExternalClusterManager.createTaskScheduler()`.
       *
