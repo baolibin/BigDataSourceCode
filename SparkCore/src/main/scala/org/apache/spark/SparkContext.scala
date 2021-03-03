@@ -2734,8 +2734,7 @@ object SparkContext extends Logging {
     }
 
     /**
-      * 基于给定的主URL创建任务计划程序。
-      * 返回调度程序后端和任务调度程序的2元组。
+      * 基于给定的主URL创建任务计划程序,返回调度程序后端和任务调度程序的2元组。
       *
       * Create a task scheduler based on a given master URL.
       * Return a 2-tuple of the scheduler backend and the task scheduler.
@@ -2746,6 +2745,7 @@ object SparkContext extends Logging {
                                            deployMode: String): (SchedulerBackend, TaskScheduler) = {
         import SparkMasterRegex._
 
+		// 在本地运行时，不要尝试在失败时重新执行任务。
         // When running locally, don't try to re-execute tasks on failure.
         val MAX_LOCAL_TASK_FAILURES = 1
 
@@ -2759,6 +2759,7 @@ object SparkContext extends Logging {
             case LOCAL_N_REGEX(threads) =>
                 def localCpuCount: Int = Runtime.getRuntime.availableProcessors()
 
+				// local[*]估计机器上的内核数；local[N]正好使用N个线程。
                 // local[*] estimates the number of cores on the machine; local[N] uses exactly N threads.
                 val threadCount = if (threads == "*") localCpuCount else threads.toInt
                 if (threadCount <= 0) {
@@ -2772,6 +2773,7 @@ object SparkContext extends Logging {
             case LOCAL_N_FAILURES_REGEX(threads, maxFailures) =>
                 def localCpuCount: Int = Runtime.getRuntime.availableProcessors()
 
+				// local[*，M]表示计算机上出现M个故障的内核数,local[N，M]表示正好有N个线程有M个失败。
                 // local[*, M] means the number of cores on the computer with M failures
                 // local[N, M] means exactly N threads with M failures
                 val threadCount = if (threads == "*") localCpuCount else threads.toInt
@@ -2788,6 +2790,7 @@ object SparkContext extends Logging {
                 (backend, scheduler)
 
             case LOCAL_CLUSTER_REGEX(numSlaves, coresPerSlave, memoryPerSlave) =>
+				// 检查以确保请求的内存<=memoryPerSlave。否则Spark将会终止。
                 // Check to make sure memory requested <= memoryPerSlave. Otherwise Spark will just hang.
                 val memoryPerSlaveInt = memoryPerSlave.toInt
                 if (sc.executorMemory > memoryPerSlaveInt) {
