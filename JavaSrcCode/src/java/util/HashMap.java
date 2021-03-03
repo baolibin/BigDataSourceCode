@@ -233,11 +233,15 @@ public class HashMap<K, V> extends AbstractMap<K, V>
 	 */
 
 	/**
+	 * 默认初始容量-必须是2的幂。
+	 *
 	 * The default initial capacity - MUST be a power of two.
 	 */
 	static final int DEFAULT_INITIAL_CAPACITY = 1 << 4; // aka 16
 
 	/**
+	 * 最大容量，如果有参数的构造函数隐式指定了更高的值，则使用。必须是2的幂<=1<<30。
+	 *
 	 * The maximum capacity, used if a higher value is implicitly specified
 	 * by either of the constructors with arguments.
 	 * MUST be a power of two <= 1<<30.
@@ -245,6 +249,8 @@ public class HashMap<K, V> extends AbstractMap<K, V>
 	static final int MAXIMUM_CAPACITY = 1 << 30;
 
 	/**
+	 * 构造函数中未指定时使用的负载因子。
+	 *
 	 * The load factor used when none specified in constructor.
 	 */
 	static final float DEFAULT_LOAD_FACTOR = 0.75f;
@@ -401,6 +407,8 @@ public class HashMap<K, V> extends AbstractMap<K, V>
 	/* ---------------- Fields -------------- */
 
 	/**
+	 * table数组，在第一次使用时初始化，并根据需要调整大小。分配时，长度总是2的幂。
+	 *
 	 * The table, initialized on first use, and resized as
 	 * necessary. When allocated, length is always a power of two.
 	 * (We also tolerate length zero in some operations to allow
@@ -409,6 +417,8 @@ public class HashMap<K, V> extends AbstractMap<K, V>
 	transient Node<K, V>[] table;
 
 	/**
+	 * 保留缓存的entrySet（）。请注意，AbstractMap字段用于keySet（）和values（）。
+	 *
 	 * Holds cached entrySet(). Note that AbstractMap fields are used
 	 * for keySet() and values().
 	 */
