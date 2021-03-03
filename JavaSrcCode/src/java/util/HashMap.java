@@ -234,14 +234,14 @@ public class HashMap<K, V> extends AbstractMap<K, V>
 
 	/**
 	 * 默认初始容量-必须是2的幂。
-	 *
+	 * <p>
 	 * The default initial capacity - MUST be a power of two.
 	 */
 	static final int DEFAULT_INITIAL_CAPACITY = 1 << 4; // aka 16
 
 	/**
 	 * 最大容量，如果有参数的构造函数隐式指定了更高的值，则使用。必须是2的幂<=1<<30。
-	 *
+	 * <p>
 	 * The maximum capacity, used if a higher value is implicitly specified
 	 * by either of the constructors with arguments.
 	 * MUST be a power of two <= 1<<30.
@@ -250,7 +250,7 @@ public class HashMap<K, V> extends AbstractMap<K, V>
 
 	/**
 	 * 构造函数中未指定时使用的负载因子。
-	 *
+	 * <p>
 	 * The load factor used when none specified in constructor.
 	 */
 	static final float DEFAULT_LOAD_FACTOR = 0.75f;
@@ -392,6 +392,8 @@ public class HashMap<K, V> extends AbstractMap<K, V>
 	}
 
 	/**
+	 * 返回给定目标容量的二次幂。
+	 * <p>
 	 * Returns a power of two size for the given target capacity.
 	 */
 	static final int tableSizeFor(int cap) {
@@ -408,7 +410,7 @@ public class HashMap<K, V> extends AbstractMap<K, V>
 
 	/**
 	 * table数组，在第一次使用时初始化，并根据需要调整大小。分配时，长度总是2的幂。
-	 *
+	 * <p>
 	 * The table, initialized on first use, and resized as
 	 * necessary. When allocated, length is always a power of two.
 	 * (We also tolerate length zero in some operations to allow
@@ -418,13 +420,15 @@ public class HashMap<K, V> extends AbstractMap<K, V>
 
 	/**
 	 * 保留缓存的entrySet（）。请注意，AbstractMap字段用于keySet（）和values（）。
-	 *
+	 * <p>
 	 * Holds cached entrySet(). Note that AbstractMap fields are used
 	 * for keySet() and values().
 	 */
 	transient Set<Map.Entry<K, V>> entrySet;
 
 	/**
+	 * 此映射中包含的键值映射数。
+	 * <p>
 	 * The number of key-value mappings contained in this map.
 	 */
 	transient int size;
@@ -439,6 +443,8 @@ public class HashMap<K, V> extends AbstractMap<K, V>
 	transient int modCount;
 
 	/**
+	 * 要调整大小的下一个大小值（容量*负载系数）。
+	 * <p>
 	 * The next size value at which to resize (capacity * load factor).
 	 * @serial
 	 */
@@ -449,6 +455,8 @@ public class HashMap<K, V> extends AbstractMap<K, V>
 	int threshold;
 
 	/**
+	 * 哈希表的加载因子。
+	 * <p>
 	 * The load factor for the hash table.
 	 * @serial
 	 */
@@ -457,6 +465,8 @@ public class HashMap<K, V> extends AbstractMap<K, V>
 	/* ---------------- Public operations -------------- */
 
 	/**
+	 * 用指定的初始容量和负载因子构造一个空的<tt>HashMap</tt>。
+	 * <p>
 	 * Constructs an empty <tt>HashMap</tt> with the specified initial
 	 * capacity and load factor.
 	 * @param initialCapacity the initial capacity
@@ -534,6 +544,8 @@ public class HashMap<K, V> extends AbstractMap<K, V>
 	}
 
 	/**
+	 * 返回此映射中的键值映射数。
+	 *
 	 * Returns the number of key-value mappings in this map.
 	 * @return the number of key-value mappings in this map
 	 */
@@ -865,6 +877,8 @@ public class HashMap<K, V> extends AbstractMap<K, V>
 	}
 
 	/**
+	 * 从此映射中删除所有映射。
+	 *
 	 * Removes all of the mappings from this map.
 	 * The map will be empty after this call returns.
 	 */
@@ -1367,6 +1381,8 @@ public class HashMap<K, V> extends AbstractMap<K, V>
 	// Cloning and serialization
 
 	/**
+	 * 返回此<tt>HashMap</tt>实例的浅层副本：键和值本身不会被克隆。
+	 *
 	 * Returns a shallow copy of this <tt>HashMap</tt> instance: the keys and
 	 * values themselves are not cloned.
 	 * @return a shallow copy of this map
