@@ -18,6 +18,8 @@
 package org.apache.spark.sql
 
 /**
+  * sparksql的物理执行组件。请注意，这是一个私有包。catalyst中的所有类都被认为是激发SQL的内部API，并且在不同的小版本之间会发生变化。
+  *
  * The physical execution component of Spark SQL. Note that this is a private package.
  * All classes in catalyst are considered an internal API to Spark SQL and are subject
  * to change between minor releases.

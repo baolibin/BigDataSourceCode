@@ -59,13 +59,13 @@
     SparkSql模块源码阅读，版本2.2.0。
 ##### [1、核心SparkSQL功能模块源码](SparkSqlCore/src/main/scala/org/apache/spark/sql)： 允许执行关系查询，包括使用Spark在SQL中表示的查询。
 ##### [2、Api模块源码](SparkSqlCore/src/main/scala/org/apache/spark/sql/api)：包含特定于单一语言（即Java）的API类。
-##### [3、CataLog模块源码]()
-##### [4、Execution模块源码]()
-##### [5、Expressions模块源码](SparkSqlCore/src/main/scala/org/apache/spark/sql/expressions):
-##### [6、Internal模块源码]()
-##### [7、Jdbc模块源码]()
-##### [8、Sources模块源码]()
-##### [9、Streaming模块源码]()
+##### [3、CataLog模块源码](SparkSqlCore/src/main/scala/org/apache/spark/sql/catalog)：Spark的目录接口。要访问请使用`SparkSession.catalog`。
+##### [4、Execution模块源码](SparkSqlCore/src/main/scala/org/apache/spark/sql/execution):sparksql的物理执行组件。请注意，这是一个私有包。catalyst中的所有类都被认为是激发SQL的内部API，并且在不同的小版本之间会发生变化。
+##### [5、Expressions模块源码](SparkSqlCore/src/main/scala/org/apache/spark/sql/expressions):包含UDAF、Window等操作的表达计算类。
+##### [6、Internal模块源码](SparkSqlCore/src/main/scala/org/apache/spark/sql/internal):这个包中的所有类都被认为是Spark的内部API，并且在小版本之间可能会发生更改。
+##### [7、Jdbc模块源码](SparkSqlCore/src/main/scala/org/apache/spark/sql/jdbc):数据库操作相关类。
+##### [8、Sources模块源码](SparkSqlCore/src/main/scala/org/apache/spark/sql/sources):一组用于向sparksql添加数据源的api。
+##### [9、Streaming模块源码](SparkSqlCore/src/main/scala/org/apache/spark/sql/streaming):
 ##### [10、Util模块源码](SparkSqlCore/src/main/scala/org/apache/spark/sql/util)：查询异常监听器。
 
 ---

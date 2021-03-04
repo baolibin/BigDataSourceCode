@@ -25,7 +25,7 @@ import scala.collection.JavaConverters._
 
 
 /**
-  * Spark的目录接口。要访问此文件，请使用`SparkSession.catalog`。
+  * Spark的目录接口。要访问请使用`SparkSession.catalog`。
   *
   * Catalog interface for Spark. To access this, use `SparkSession.catalog`.
   *

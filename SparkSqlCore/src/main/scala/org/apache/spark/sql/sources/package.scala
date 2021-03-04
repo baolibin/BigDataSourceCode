@@ -17,6 +17,8 @@
 package org.apache.spark.sql
 
 /**
- * A set of APIs for adding data sources to Spark SQL.
- */
+  * 一组用于向sparksql添加数据源的api。
+  *
+  * A set of APIs for adding data sources to Spark SQL.
+  */
 package object sources
