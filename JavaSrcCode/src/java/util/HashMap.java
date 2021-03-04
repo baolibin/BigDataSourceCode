@@ -281,6 +281,8 @@ public class HashMap<K, V> extends AbstractMap<K, V>
 	static final int MIN_TREEIFY_CAPACITY = 64;
 
 	/**
+	 * 基本散列表节点，用于大多数条目。
+	 * <p>
 	 * Basic hash bin node, used for most entries.  (See below for
 	 * TreeNode subclass, and in LinkedHashMap for its Entry subclass.)
 	 */
@@ -335,6 +337,8 @@ public class HashMap<K, V> extends AbstractMap<K, V>
 	/* ---------------- Static utilities -------------- */
 
 	/**
+	 * 计算key.hashCode（）并将散列的高位（异或）扩散到低位。
+	 *
 	 * Computes key.hashCode() and spreads (XORs) higher bits of hash
 	 * to lower.  Because the table uses power-of-two masking, sets of
 	 * hashes that vary only in bits above the current mask will
@@ -356,6 +360,8 @@ public class HashMap<K, V> extends AbstractMap<K, V>
 	}
 
 	/**
+	 * 如果x的类的形式为“Class C implements Comparable<C>”，则返回x的类，否则返回null。
+	 *
 	 * Returns x's Class if it is of the form "class C implements
 	 * Comparable<C>", else null.
 	 */
@@ -465,7 +471,7 @@ public class HashMap<K, V> extends AbstractMap<K, V>
 	/* ---------------- Public operations -------------- */
 
 	/**
-	 * 用指定的初始容量和负载因子构造一个空的<tt>HashMap</tt>。
+	 * 用指定的初始容量和负载因子构造一个空的HashMap。
 	 * <p>
 	 * Constructs an empty <tt>HashMap</tt> with the specified initial
 	 * capacity and load factor.
@@ -488,6 +494,8 @@ public class HashMap<K, V> extends AbstractMap<K, V>
 	}
 
 	/**
+	 * 用指定的初始容量和默认负载因子（0.75）构造一个空的HashMap。
+	 *
 	 * Constructs an empty <tt>HashMap</tt> with the specified initial
 	 * capacity and the default load factor (0.75).
 	 * @param initialCapacity the initial capacity.
@@ -498,6 +506,8 @@ public class HashMap<K, V> extends AbstractMap<K, V>
 	}
 
 	/**
+	 * 用默认初始容量（16）和默认负载因子（0.75）构造一个空的HashMap。
+	 *
 	 * Constructs an empty <tt>HashMap</tt> with the default initial capacity
 	 * (16) and the default load factor (0.75).
 	 */
@@ -506,6 +516,8 @@ public class HashMap<K, V> extends AbstractMap<K, V>
 	}
 
 	/**
+	 * 使用与指定映射相同的映射构造新的HashMap
+	 *
 	 * Constructs a new <tt>HashMap</tt> with the same mappings as the
 	 * specified <tt>Map</tt>.  The <tt>HashMap</tt> is created with
 	 * default load factor (0.75) and an initial capacity sufficient to
@@ -545,7 +557,7 @@ public class HashMap<K, V> extends AbstractMap<K, V>
 
 	/**
 	 * 返回此映射中的键值映射数。
-	 *
+	 * <p>
 	 * Returns the number of key-value mappings in this map.
 	 * @return the number of key-value mappings in this map
 	 */
@@ -878,7 +890,7 @@ public class HashMap<K, V> extends AbstractMap<K, V>
 
 	/**
 	 * 从此映射中删除所有映射。
-	 *
+	 * <p>
 	 * Removes all of the mappings from this map.
 	 * The map will be empty after this call returns.
 	 */
@@ -1382,7 +1394,7 @@ public class HashMap<K, V> extends AbstractMap<K, V>
 
 	/**
 	 * 返回此<tt>HashMap</tt>实例的浅层副本：键和值本身不会被克隆。
-	 *
+	 * <p>
 	 * Returns a shallow copy of this <tt>HashMap</tt> instance: the keys and
 	 * values themselves are not cloned.
 	 * @return a shallow copy of this map
@@ -1880,6 +1892,8 @@ public class HashMap<K, V> extends AbstractMap<K, V>
 	// Tree bins
 
 	/**
+	 * TreeNode节点，继承LinkedHashMap.Entry。
+	 * <p>
 	 * Entry for Tree bins. Extends LinkedHashMap.Entry (which in turn
 	 * extends Node) so can be used as extension of either regular or
 	 * linked node.
