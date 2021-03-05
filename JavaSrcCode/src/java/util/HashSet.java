@@ -98,10 +98,13 @@ public class HashSet<E>
 
     private transient HashMap<E,Object> map;
 
+    // HashSet的value值都是统一的一个PRESENT,HashSet跟HashMap一样，都是一个存放链表的数组。
     // Dummy value to associate with an Object in the backing Map
     private static final Object PRESENT = new Object();
 
     /**
+     * 构造一个新的空集；backing HashMap实例默认初始容量（16）和负载系数（0.75）。
+
      * Constructs a new, empty set; the backing <tt>HashMap</tt> instance has
      * default initial capacity (16) and load factor (0.75).
      */
@@ -166,6 +169,8 @@ public class HashSet<E>
     }
 
     /**
+     * 返回此集合中元素的迭代器。元素未按特定顺序退回。
+     *
      * Returns an iterator over the elements in this set.  The elements
      * are returned in no particular order.
      *
@@ -177,6 +182,8 @@ public class HashSet<E>
     }
 
     /**
+     * 返回此集合中的元素数（其基数）。
+     *
      * Returns the number of elements in this set (its cardinality).
      *
      * @return the number of elements in this set (its cardinality)
@@ -186,6 +193,8 @@ public class HashSet<E>
     }
 
     /**
+     * 如果此集合不包含元素，则返回true。
+     *
      * Returns <tt>true</tt> if this set contains no elements.
      *
      * @return <tt>true</tt> if this set contains no elements
@@ -208,6 +217,8 @@ public class HashSet<E>
     }
 
     /**
+     * 如果指定的元素尚未存在，则将其添加到此集合中。
+     *
      * Adds the specified element to this set if it is not already present.
      * More formally, adds the specified element <tt>e</tt> to this set if
      * this set contains no element <tt>e2</tt> such that
@@ -224,6 +235,8 @@ public class HashSet<E>
     }
 
     /**
+     * 从该集合中删除指定的元素（如果存在）。
+     *
      * Removes the specified element from this set if it is present.
      * More formally, removes an element <tt>e</tt> such that
      * <tt>(o==null&nbsp;?&nbsp;e==null&nbsp;:&nbsp;o.equals(e))</tt>,
@@ -240,6 +253,8 @@ public class HashSet<E>
     }
 
     /**
+     * 删除此集中的所有元素。
+     *
      * Removes all of the elements from this set.
      * The set will be empty after this call returns.
      */
@@ -248,6 +263,8 @@ public class HashSet<E>
     }
 
     /**
+     * 返回此HashSet<实例的浅层副本：元素它们本身不是克隆的。
+     *
      * Returns a shallow copy of this <tt>HashSet</tt> instance: the elements
      * themselves are not cloned.
      *
@@ -265,6 +282,8 @@ public class HashSet<E>
     }
 
     /**
+     * 将这个HashSet实例的状态保存到流中
+     *
      * Save the state of this <tt>HashSet</tt> instance to a stream (that is,
      * serialize it).
      *
@@ -292,6 +311,8 @@ public class HashSet<E>
     }
 
     /**
+     * 从流中重构哈希集实例（即，反序列化）。
+     *
      * Reconstitute the <tt>HashSet</tt> instance from a stream (that is,
      * deserialize it).
      */
