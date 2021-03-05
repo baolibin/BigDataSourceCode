@@ -545,6 +545,8 @@ public class HashMap<K, V> extends AbstractMap<K, V>
 	}
 
 	/**
+	 * 实现Map.putAll和Map构造器。
+	 *
 	 * Implements Map.putAll and Map constructor.
 	 * @param m     the map
 	 * @param evict false when initially constructing this map, else
@@ -609,6 +611,8 @@ public class HashMap<K, V> extends AbstractMap<K, V>
 	}
 
 	/**
+	 * 实现Map.get以及相关方法。
+	 *
 	 * Implements Map.get and related methods.
 	 * @param hash hash for key
 	 * @param key  the key
