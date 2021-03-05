@@ -293,7 +293,7 @@ public class HashMap<K, V> extends AbstractMap<K, V>
 	static final int MIN_TREEIFY_CAPACITY = 64;
 
 	/**
-	 * 基本散列表节点，用于大多数条目。
+	 * 基本散列表节点，用于大多数条目。HashMap是一个存放链表的数组
 	 * <p>
 	 * Basic hash bin node, used for most entries.  (See below for
 	 * TreeNode subclass, and in LinkedHashMap for its Entry subclass.)
@@ -839,6 +839,8 @@ public class HashMap<K, V> extends AbstractMap<K, V>
 	}
 
 	/**
+	 * 从此映射中删除指定键的映射（如果存在）。
+	 *
 	 * Removes the mapping for the specified key from this map if present.
 	 * @param key key whose mapping is to be removed from the map
 	 * @return the previous value associated with <tt>key</tt>, or
