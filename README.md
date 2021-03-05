@@ -48,6 +48,10 @@
         - [org.apache.flink.api.scala.ExecutionEnvironment类]()
         - [org.apache.flink.api.scala.DataSet类]()
 * [7、【Flink Streaming-1.9.0】 源码阅读](FlinkStreaming)
+    - [7.0、主要源码类阅读]()
+        - [org.apache.flink.streaming.api.scala.StreamExecutionEnvironment类]()
+        - [org.apache.flink.streaming.api.scala.DataStream类]()
+        - [org.apache.flink.streaming.api.scala.OutputTag类]()
 * [8、【Flink Core-1.9.0】 源码阅读](FlinkCore)
     - [8.0、主要源码类阅读]()
         - [org.apache.flink.util.OutputTag类]()
@@ -56,6 +60,7 @@
         - [org.apache.flink.api.common.operators.Operator类]()
         - [org.apache.flink.api.common.functions.FlatMapFunction类]()
         - [org.apache.flink.api.common.functions.RichFlatMapFunction类]()
+        - [org.apache.flink.streaming.api.watermark.Watermark类]()
 
 ---
 ### 一、spark core源码阅读
