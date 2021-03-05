@@ -256,7 +256,10 @@ public class HashMap<K, V> extends AbstractMap<K, V>
 	static final float DEFAULT_LOAD_FACTOR = 0.75f;
 
 	/**
-	 * The bin count threshold for using a tree rather than list for a
+	 * 链表转换为红黑树
+	 * 桶的树化阈值：即 链表转成红黑树的阈值，在存储数据时，当链表长度 > 该值时，则将链表转换成红黑树
+	 *
+	 * The bin(bucket) count threshold for using a tree rather than list for a
 	 * bin.  Bins are converted to trees when adding an element to a
 	 * bin with at least this many nodes. The value must be greater
 	 * than 2 and should be at least 8 to mesh with assumptions in
@@ -266,13 +269,22 @@ public class HashMap<K, V> extends AbstractMap<K, V>
 	static final int TREEIFY_THRESHOLD = 8;
 
 	/**
-	 * The bin count threshold for untreeifying a (split) bin during a
+	 * 红黑树转换为链表
+	 * 桶的链表还原阈值：即 红黑树转为链表的阈值，当在扩容（resize（））时（此时HashMap的数据存储位置会重新计算），在重新计算存储位置后，当原有的红黑树内数量 < 6时，则将 红黑树转换成链表
+	 *
+	 * The bin(bucket) count threshold for untreeifying a (split) bin during a
 	 * resize operation. Should be less than TREEIFY_THRESHOLD, and at
 	 * most 6 to mesh with shrinkage detection under removal.
 	 */
 	static final int UNTREEIFY_THRESHOLD = 6;
 
 	/**
+	 * 最小树形化Hash表容量阈值：即 当哈希表中的容量 > 该值时，才允许树形化链表 （即 将链表 转换成红黑树）
+	 * 否则，若桶内元素太多时，则直接扩容，而不是树形化
+	 * 为了避免进行扩容、树形化选择的冲突，这个值不能小于 4 * TREEIFY_THRESHOLD
+	 *
+	 * 如果Hash表容量大于了 TREEIFY_THRESHOLD ，但是capacity小于MIN_TREEIFY_CAPACITY 则依然使用链表结构进行存储，此时会对HashMap进行扩容；如果capacity大于了MIN_TREEIFY_CAPACITY ，则会进行树化。
+	 *
 	 * The smallest table capacity for which bins may be treeified.
 	 * (Otherwise the table is resized if too many nodes in a bin.)
 	 * Should be at least 4 * TREEIFY_THRESHOLD to avoid conflicts
@@ -440,6 +452,8 @@ public class HashMap<K, V> extends AbstractMap<K, V>
 	transient int size;
 
 	/**
+	 * 此哈希映射在结构上被修改的次数,结构修改是指更改HashMap中映射的数量或修改其内部结构的修改
+	 *
 	 * The number of times this HashMap has been structurally modified
 	 * Structural modifications are those that change the number of mappings in
 	 * the HashMap or otherwise modify its internal structure (e.g.,
