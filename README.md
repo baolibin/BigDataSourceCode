@@ -46,6 +46,13 @@
 * [6、【Flink Batch-1.9.0】 源码阅读](FlinkBatch)
 * [7、【Flink Streaming-1.9.0】 源码阅读](FlinkStreaming)
 * [8、【Flink Core-1.9.0】 源码阅读](FlinkCore)
+    - [8.0、主要源码类阅读]()
+        - [org.apache.flink.util.OutputTag类]()
+        - [org.apache.flink.api.common.typeinfo.TypeInformation类]()
+        - [org.apache.flink.api.common.state.State类]()
+        - [org.apache.flink.api.common.operators.Operator类]()
+        - [org.apache.flink.api.common.functions.FlatMapFunction类]()
+        - [org.apache.flink.api.common.functions.RichFlatMapFunction类]()
 
 ---
 ### 一、spark core源码阅读
