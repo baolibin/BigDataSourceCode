@@ -29,9 +29,9 @@ import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
 
-import sun.misc.SharedSecrets;
-
 /**
+ * 这个类实现Set接口，由一个哈希表（实际上是一个HashMap实例）支持。
+ *
  * This class implements the <tt>Set</tt> interface, backed by a hash table
  * (actually a <tt>HashMap</tt> instance).  It makes no guarantees as to the
  * iteration order of the set; in particular, it does not guarantee that the
@@ -52,7 +52,7 @@ import sun.misc.SharedSecrets;
  * the threads modifies the set, it <i>must</i> be synchronized externally.
  * This is typically accomplished by synchronizing on some object that
  * naturally encapsulates the set.
- *
+ * <p>
  * If no such object exists, the set should be "wrapped" using the
  * {@link Collections#synchronizedSet Collections.synchronizedSet}
  * method.  This is best done at creation time, to prevent accidental
@@ -78,308 +78,296 @@ import sun.misc.SharedSecrets;
  * <p>This class is a member of the
  * <a href="{@docRoot}/../technotes/guides/collections/index.html">
  * Java Collections Framework</a>.
- *
  * @param <E> the type of elements maintained by this set
- *
- * @author  Josh Bloch
- * @author  Neal Gafter
- * @see     Collection
- * @see     Set
- * @see     TreeSet
- * @see     HashMap
- * @since   1.2
+ * @author Josh Bloch
+ * @author Neal Gafter
+ * @see Collection
+ * @see Set
+ * @see TreeSet
+ * @see HashMap
+ * @since 1.2
  */
 
 public class HashSet<E>
-    extends AbstractSet<E>
-    implements Set<E>, Cloneable, java.io.Serializable
-{
-    static final long serialVersionUID = -5024744406713321676L;
+		extends AbstractSet<E>
+		implements Set<E>, Cloneable, java.io.Serializable {
+	static final long serialVersionUID = -5024744406713321676L;
 
-    private transient HashMap<E,Object> map;
+	private transient HashMap<E, Object> map;
 
-    // HashSet的value值都是统一的一个PRESENT,HashSet跟HashMap一样，都是一个存放链表的数组。
-    // Dummy value to associate with an Object in the backing Map
-    private static final Object PRESENT = new Object();
+	// HashSet的value值都是统一的一个PRESENT,HashSet跟HashMap一样，都是一个存放链表的数组。
+	// Dummy value to associate with an Object in the backing Map
+	private static final Object PRESENT = new Object();
 
-    /**
-     * 构造一个新的空集；backing HashMap实例默认初始容量（16）和负载系数（0.75）。
+	/**
+	 * 构造一个新的空集；backing HashMap实例默认初始容量（16）和负载系数（0.75）。
+	 * <p>
+	 * Constructs a new, empty set; the backing <tt>HashMap</tt> instance has
+	 * default initial capacity (16) and load factor (0.75).
+	 */
+	public HashSet() {
+		map = new HashMap<>();
+	}
 
-     * Constructs a new, empty set; the backing <tt>HashMap</tt> instance has
-     * default initial capacity (16) and load factor (0.75).
-     */
-    public HashSet() {
-        map = new HashMap<>();
-    }
+	/**
+	 * Constructs a new set containing the elements in the specified
+	 * collection.  The <tt>HashMap</tt> is created with default load factor
+	 * (0.75) and an initial capacity sufficient to contain the elements in
+	 * the specified collection.
+	 * @param c the collection whose elements are to be placed into this set
+	 * @throws NullPointerException if the specified collection is null
+	 */
+	public HashSet(Collection<? extends E> c) {
+		map = new HashMap<>(Math.max((int) (c.size() / .75f) + 1, 16));
+		addAll(c);
+	}
 
-    /**
-     * Constructs a new set containing the elements in the specified
-     * collection.  The <tt>HashMap</tt> is created with default load factor
-     * (0.75) and an initial capacity sufficient to contain the elements in
-     * the specified collection.
-     *
-     * @param c the collection whose elements are to be placed into this set
-     * @throws NullPointerException if the specified collection is null
-     */
-    public HashSet(Collection<? extends E> c) {
-        map = new HashMap<>(Math.max((int) (c.size()/.75f) + 1, 16));
-        addAll(c);
-    }
+	/**
+	 * Constructs a new, empty set; the backing <tt>HashMap</tt> instance has
+	 * the specified initial capacity and the specified load factor.
+	 * @param initialCapacity the initial capacity of the hash map
+	 * @param loadFactor      the load factor of the hash map
+	 * @throws IllegalArgumentException if the initial capacity is less
+	 *                                  than zero, or if the load factor is nonpositive
+	 */
+	public HashSet(int initialCapacity, float loadFactor) {
+		map = new HashMap<>(initialCapacity, loadFactor);
+	}
 
-    /**
-     * Constructs a new, empty set; the backing <tt>HashMap</tt> instance has
-     * the specified initial capacity and the specified load factor.
-     *
-     * @param      initialCapacity   the initial capacity of the hash map
-     * @param      loadFactor        the load factor of the hash map
-     * @throws     IllegalArgumentException if the initial capacity is less
-     *             than zero, or if the load factor is nonpositive
-     */
-    public HashSet(int initialCapacity, float loadFactor) {
-        map = new HashMap<>(initialCapacity, loadFactor);
-    }
+	/**
+	 * Constructs a new, empty set; the backing <tt>HashMap</tt> instance has
+	 * the specified initial capacity and default load factor (0.75).
+	 * @param initialCapacity the initial capacity of the hash table
+	 * @throws IllegalArgumentException if the initial capacity is less
+	 *                                  than zero
+	 */
+	public HashSet(int initialCapacity) {
+		map = new HashMap<>(initialCapacity);
+	}
 
-    /**
-     * Constructs a new, empty set; the backing <tt>HashMap</tt> instance has
-     * the specified initial capacity and default load factor (0.75).
-     *
-     * @param      initialCapacity   the initial capacity of the hash table
-     * @throws     IllegalArgumentException if the initial capacity is less
-     *             than zero
-     */
-    public HashSet(int initialCapacity) {
-        map = new HashMap<>(initialCapacity);
-    }
+	/**
+	 * Constructs a new, empty linked hash set.  (This package private
+	 * constructor is only used by LinkedHashSet.) The backing
+	 * HashMap instance is a LinkedHashMap with the specified initial
+	 * capacity and the specified load factor.
+	 * @param initialCapacity the initial capacity of the hash map
+	 * @param loadFactor      the load factor of the hash map
+	 * @param dummy           ignored (distinguishes this
+	 *                        constructor from other int, float constructor.)
+	 * @throws IllegalArgumentException if the initial capacity is less
+	 *                                  than zero, or if the load factor is nonpositive
+	 */
+	HashSet(int initialCapacity, float loadFactor, boolean dummy) {
+		map = new LinkedHashMap<>(initialCapacity, loadFactor);
+	}
 
-    /**
-     * Constructs a new, empty linked hash set.  (This package private
-     * constructor is only used by LinkedHashSet.) The backing
-     * HashMap instance is a LinkedHashMap with the specified initial
-     * capacity and the specified load factor.
-     *
-     * @param      initialCapacity   the initial capacity of the hash map
-     * @param      loadFactor        the load factor of the hash map
-     * @param      dummy             ignored (distinguishes this
-     *             constructor from other int, float constructor.)
-     * @throws     IllegalArgumentException if the initial capacity is less
-     *             than zero, or if the load factor is nonpositive
-     */
-    HashSet(int initialCapacity, float loadFactor, boolean dummy) {
-        map = new LinkedHashMap<>(initialCapacity, loadFactor);
-    }
+	/**
+	 * 返回此集合中元素的迭代器。元素未按特定顺序退回。
+	 * <p>
+	 * Returns an iterator over the elements in this set.  The elements
+	 * are returned in no particular order.
+	 * @return an Iterator over the elements in this set
+	 * @see ConcurrentModificationException
+	 */
+	public Iterator<E> iterator() {
+		return map.keySet().iterator();
+	}
 
-    /**
-     * 返回此集合中元素的迭代器。元素未按特定顺序退回。
-     *
-     * Returns an iterator over the elements in this set.  The elements
-     * are returned in no particular order.
-     *
-     * @return an Iterator over the elements in this set
-     * @see ConcurrentModificationException
-     */
-    public Iterator<E> iterator() {
-        return map.keySet().iterator();
-    }
+	/**
+	 * 返回此集合中的元素数（其基数）。
+	 * <p>
+	 * Returns the number of elements in this set (its cardinality).
+	 * @return the number of elements in this set (its cardinality)
+	 */
+	public int size() {
+		return map.size();
+	}
 
-    /**
-     * 返回此集合中的元素数（其基数）。
-     *
-     * Returns the number of elements in this set (its cardinality).
-     *
-     * @return the number of elements in this set (its cardinality)
-     */
-    public int size() {
-        return map.size();
-    }
+	/**
+	 * 如果此集合不包含元素，则返回true。
+	 * <p>
+	 * Returns <tt>true</tt> if this set contains no elements.
+	 * @return <tt>true</tt> if this set contains no elements
+	 */
+	public boolean isEmpty() {
+		return map.isEmpty();
+	}
 
-    /**
-     * 如果此集合不包含元素，则返回true。
-     *
-     * Returns <tt>true</tt> if this set contains no elements.
-     *
-     * @return <tt>true</tt> if this set contains no elements
-     */
-    public boolean isEmpty() {
-        return map.isEmpty();
-    }
+	/**
+	 * 如果此集合包含指定的元素，则返回<tt>true</tt>。
+	 * <p>
+	 * Returns <tt>true</tt> if this set contains the specified element.
+	 * More formally, returns <tt>true</tt> if and only if this set
+	 * contains an element <tt>e</tt> such that
+	 * <tt>(o==null&nbsp;?&nbsp;e==null&nbsp;:&nbsp;o.equals(e))</tt>.
+	 * @param o element whose presence in this set is to be tested
+	 * @return <tt>true</tt> if this set contains the specified element
+	 */
+	public boolean contains(Object o) {
+		return map.containsKey(o);
+	}
 
-    /**
-     * Returns <tt>true</tt> if this set contains the specified element.
-     * More formally, returns <tt>true</tt> if and only if this set
-     * contains an element <tt>e</tt> such that
-     * <tt>(o==null&nbsp;?&nbsp;e==null&nbsp;:&nbsp;o.equals(e))</tt>.
-     *
-     * @param o element whose presence in this set is to be tested
-     * @return <tt>true</tt> if this set contains the specified element
-     */
-    public boolean contains(Object o) {
-        return map.containsKey(o);
-    }
+	/**
+	 * 如果指定的元素尚未存在，则将其添加到此集合中。
+	 * <p>
+	 * Adds the specified element to this set if it is not already present.
+	 * More formally, adds the specified element <tt>e</tt> to this set if
+	 * this set contains no element <tt>e2</tt> such that
+	 * <tt>(e==null&nbsp;?&nbsp;e2==null&nbsp;:&nbsp;e.equals(e2))</tt>.
+	 * If this set already contains the element, the call leaves the set
+	 * unchanged and returns <tt>false</tt>.
+	 * @param e element to be added to this set
+	 * @return <tt>true</tt> if this set did not already contain the specified
+	 * element
+	 */
+	public boolean add(E e) {
+		return map.put(e, PRESENT) == null;
+	}
 
-    /**
-     * 如果指定的元素尚未存在，则将其添加到此集合中。
-     *
-     * Adds the specified element to this set if it is not already present.
-     * More formally, adds the specified element <tt>e</tt> to this set if
-     * this set contains no element <tt>e2</tt> such that
-     * <tt>(e==null&nbsp;?&nbsp;e2==null&nbsp;:&nbsp;e.equals(e2))</tt>.
-     * If this set already contains the element, the call leaves the set
-     * unchanged and returns <tt>false</tt>.
-     *
-     * @param e element to be added to this set
-     * @return <tt>true</tt> if this set did not already contain the specified
-     * element
-     */
-    public boolean add(E e) {
-        return map.put(e, PRESENT)==null;
-    }
+	/**
+	 * 从该集合中删除指定的元素（如果存在）。
+	 * <p>
+	 * Removes the specified element from this set if it is present.
+	 * More formally, removes an element <tt>e</tt> such that
+	 * <tt>(o==null&nbsp;?&nbsp;e==null&nbsp;:&nbsp;o.equals(e))</tt>,
+	 * if this set contains such an element.  Returns <tt>true</tt> if
+	 * this set contained the element (or equivalently, if this set
+	 * changed as a result of the call).  (This set will not contain the
+	 * element once the call returns.)
+	 * @param o object to be removed from this set, if present
+	 * @return <tt>true</tt> if the set contained the specified element
+	 */
+	public boolean remove(Object o) {
+		return map.remove(o) == PRESENT;
+	}
 
-    /**
-     * 从该集合中删除指定的元素（如果存在）。
-     *
-     * Removes the specified element from this set if it is present.
-     * More formally, removes an element <tt>e</tt> such that
-     * <tt>(o==null&nbsp;?&nbsp;e==null&nbsp;:&nbsp;o.equals(e))</tt>,
-     * if this set contains such an element.  Returns <tt>true</tt> if
-     * this set contained the element (or equivalently, if this set
-     * changed as a result of the call).  (This set will not contain the
-     * element once the call returns.)
-     *
-     * @param o object to be removed from this set, if present
-     * @return <tt>true</tt> if the set contained the specified element
-     */
-    public boolean remove(Object o) {
-        return map.remove(o)==PRESENT;
-    }
+	/**
+	 * 删除此集中的所有元素。
+	 * <p>
+	 * Removes all of the elements from this set.
+	 * The set will be empty after this call returns.
+	 */
+	public void clear() {
+		map.clear();
+	}
 
-    /**
-     * 删除此集中的所有元素。
-     *
-     * Removes all of the elements from this set.
-     * The set will be empty after this call returns.
-     */
-    public void clear() {
-        map.clear();
-    }
+	/**
+	 * 返回此HashSet<实例的浅层副本：元素它们本身不是克隆的。
+	 * <p>
+	 * Returns a shallow copy of this <tt>HashSet</tt> instance: the elements
+	 * themselves are not cloned.
+	 * @return a shallow copy of this set
+	 */
+	@SuppressWarnings("unchecked")
+	public Object clone() {
+		try {
+			HashSet<E> newSet = (HashSet<E>) super.clone();
+			newSet.map = (HashMap<E, Object>) map.clone();
+			return newSet;
+		} catch (CloneNotSupportedException e) {
+			throw new InternalError(e);
+		}
+	}
 
-    /**
-     * 返回此HashSet<实例的浅层副本：元素它们本身不是克隆的。
-     *
-     * Returns a shallow copy of this <tt>HashSet</tt> instance: the elements
-     * themselves are not cloned.
-     *
-     * @return a shallow copy of this set
-     */
-    @SuppressWarnings("unchecked")
-    public Object clone() {
-        try {
-            HashSet<E> newSet = (HashSet<E>) super.clone();
-            newSet.map = (HashMap<E, Object>) map.clone();
-            return newSet;
-        } catch (CloneNotSupportedException e) {
-            throw new InternalError(e);
-        }
-    }
+	/**
+	 * 将这个HashSet实例的状态保存到流中
+	 * <p>
+	 * Save the state of this <tt>HashSet</tt> instance to a stream (that is,
+	 * serialize it).
+	 * @serialData The capacity of the backing <tt>HashMap</tt> instance
+	 * (int), and its load factor (float) are emitted, followed by
+	 * the size of the set (the number of elements it contains)
+	 * (int), followed by all of its elements (each an Object) in
+	 * no particular order.
+	 */
+	private void writeObject(java.io.ObjectOutputStream s)
+			throws java.io.IOException {
+		// Write out any hidden serialization magic
+		s.defaultWriteObject();
 
-    /**
-     * 将这个HashSet实例的状态保存到流中
-     *
-     * Save the state of this <tt>HashSet</tt> instance to a stream (that is,
-     * serialize it).
-     *
-     * @serialData The capacity of the backing <tt>HashMap</tt> instance
-     *             (int), and its load factor (float) are emitted, followed by
-     *             the size of the set (the number of elements it contains)
-     *             (int), followed by all of its elements (each an Object) in
-     *             no particular order.
-     */
-    private void writeObject(java.io.ObjectOutputStream s)
-        throws java.io.IOException {
-        // Write out any hidden serialization magic
-        s.defaultWriteObject();
+		// Write out HashMap capacity and load factor
+		s.writeInt(map.capacity());
+		s.writeFloat(map.loadFactor());
 
-        // Write out HashMap capacity and load factor
-        s.writeInt(map.capacity());
-        s.writeFloat(map.loadFactor());
+		// Write out size
+		s.writeInt(map.size());
 
-        // Write out size
-        s.writeInt(map.size());
+		// Write out all elements in the proper order.
+		for (E e : map.keySet())
+			s.writeObject(e);
+	}
 
-        // Write out all elements in the proper order.
-        for (E e : map.keySet())
-            s.writeObject(e);
-    }
+	/**
+	 * 从流中重构哈希集实例（即，反序列化）。
+	 * <p>
+	 * Reconstitute the <tt>HashSet</tt> instance from a stream (that is,
+	 * deserialize it).
+	 */
+	private void readObject(ObjectInputStream s)
+			throws IOException, ClassNotFoundException {
+		// Read in any hidden serialization magic
+		s.defaultReadObject();
 
-    /**
-     * 从流中重构哈希集实例（即，反序列化）。
-     *
-     * Reconstitute the <tt>HashSet</tt> instance from a stream (that is,
-     * deserialize it).
-     */
-    private void readObject(ObjectInputStream s)
-        throws IOException, ClassNotFoundException {
-        // Read in any hidden serialization magic
-        s.defaultReadObject();
+		// Read capacity and verify non-negative.
+		int capacity = s.readInt();
+		if (capacity < 0) {
+			throw new InvalidObjectException("Illegal capacity: " +
+					capacity);
+		}
 
-        // Read capacity and verify non-negative.
-        int capacity = s.readInt();
-        if (capacity < 0) {
-            throw new InvalidObjectException("Illegal capacity: " +
-                                             capacity);
-        }
+		// Read load factor and verify positive and non NaN.
+		float loadFactor = s.readFloat();
+		if (loadFactor <= 0 || Float.isNaN(loadFactor)) {
+			throw new InvalidObjectException("Illegal load factor: " +
+					loadFactor);
+		}
 
-        // Read load factor and verify positive and non NaN.
-        float loadFactor = s.readFloat();
-        if (loadFactor <= 0 || Float.isNaN(loadFactor)) {
-            throw new InvalidObjectException("Illegal load factor: " +
-                                             loadFactor);
-        }
+		// Read size and verify non-negative.
+		int size = s.readInt();
+		if (size < 0) {
+			throw new InvalidObjectException("Illegal size: " +
+					size);
+		}
+		// Set the capacity according to the size and load factor ensuring that
+		// the HashMap is at least 25% full but clamping to maximum capacity.
+		capacity = (int) Math.min(size * Math.min(1 / loadFactor, 4.0f),
+				HashMap.MAXIMUM_CAPACITY);
 
-        // Read size and verify non-negative.
-        int size = s.readInt();
-        if (size < 0) {
-            throw new InvalidObjectException("Illegal size: " +
-                                             size);
-        }
-        // Set the capacity according to the size and load factor ensuring that
-        // the HashMap is at least 25% full but clamping to maximum capacity.
-        capacity = (int) Math.min(size * Math.min(1 / loadFactor, 4.0f),
-                HashMap.MAXIMUM_CAPACITY);
+		// Constructing the backing map will lazily create an array when the first element is
+		// added, so check it before construction. Call HashMap.tableSizeFor to compute the
+		// actual allocation size. Check Map.Entry[].class since it's the nearest public type to
+		// what is actually created.
 
-        // Constructing the backing map will lazily create an array when the first element is
-        // added, so check it before construction. Call HashMap.tableSizeFor to compute the
-        // actual allocation size. Check Map.Entry[].class since it's the nearest public type to
-        // what is actually created.
+		// SharedSecrets.getJavaOISAccess()
+		//              .checkArray(s, Map.Entry[].class, HashMap.tableSizeFor(capacity));
 
-        // SharedSecrets.getJavaOISAccess()
-        //              .checkArray(s, Map.Entry[].class, HashMap.tableSizeFor(capacity));
+		// Create backing HashMap
+		map = (((HashSet<?>) this) instanceof LinkedHashSet ?
+				new LinkedHashMap<E, Object>(capacity, loadFactor) :
+				new HashMap<E, Object>(capacity, loadFactor));
 
-        // Create backing HashMap
-        map = (((HashSet<?>)this) instanceof LinkedHashSet ?
-               new LinkedHashMap<E,Object>(capacity, loadFactor) :
-               new HashMap<E,Object>(capacity, loadFactor));
+		// Read in all elements in the proper order.
+		for (int i = 0; i < size; i++) {
+			@SuppressWarnings("unchecked")
+			E e = (E) s.readObject();
+			map.put(e, PRESENT);
+		}
+	}
 
-        // Read in all elements in the proper order.
-        for (int i=0; i<size; i++) {
-            @SuppressWarnings("unchecked")
-                E e = (E) s.readObject();
-            map.put(e, PRESENT);
-        }
-    }
-
-    /**
-     * Creates a <em><a href="Spliterator.html#binding">late-binding</a></em>
-     * and <em>fail-fast</em> {@link Spliterator} over the elements in this
-     * set.
-     *
-     * <p>The {@code Spliterator} reports {@link Spliterator#SIZED} and
-     * {@link Spliterator#DISTINCT}.  Overriding implementations should document
-     * the reporting of additional characteristic values.
-     *
-     * @return a {@code Spliterator} over the elements in this set
-     * @since 1.8
-     */
-    public Spliterator<E> spliterator() {
-        return new HashMap.KeySpliterator<E,Object>(map, 0, -1, 0, 0);
-    }
+	/**
+	 * spliterator是java1.8新提出的能够进行并行遍历的迭代器。
+	 * <p>
+	 * Creates a <em><a href="Spliterator.html#binding">late-binding</a></em>
+	 * and <em>fail-fast</em> {@link Spliterator} over the elements in this
+	 * set.
+	 *
+	 * <p>The {@code Spliterator} reports {@link Spliterator#SIZED} and
+	 * {@link Spliterator#DISTINCT}.  Overriding implementations should document
+	 * the reporting of additional characteristic values.
+	 * @return a {@code Spliterator} over the elements in this set
+	 * @since 1.8
+	 */
+	public Spliterator<E> spliterator() {
+		return new HashMap.KeySpliterator<E, Object>(map, 0, -1, 0, 0);
+	}
 }
