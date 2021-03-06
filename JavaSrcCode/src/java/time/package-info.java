@@ -61,6 +61,7 @@
  */
 
 /**
+ * 日期、时间、实例和持续时间的主API。
  * <p>
  * The main API for dates, times, instants, and durations.
  * </p>
@@ -282,7 +283,6 @@
  *   }
  *
  * </pre>
- *
  * @since JDK1.8
  */
 package java.time;

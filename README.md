@@ -107,11 +107,11 @@
 ---
 ### 四、flink core源码阅读
     FlinkCore模块源码阅读，版本1.9.0。
-##### [1、api模块源码](FlinkCore/src/main/java/org/apache/flink/api)：
-##### [2、configuration模块源码](FlinkCore/src/main/java/org/apache/flink/configuration)：
-##### [3、core模块源码](FlinkCore/src/main/java/org/apache/flink/core)：
-##### [4、types模块源码](FlinkCore/src/main/java/org/apache/flink/types)：
-##### [5、util模块源码](FlinkCore/src/main/java/org/apache/flink/util)：
+##### [1、api模块源码](FlinkCore/src/main/java/org/apache/flink/api)：提供了核心对外操作API组件，包括state、time等。
+##### [2、configuration模块源码](FlinkCore/src/main/java/org/apache/flink/configuration)：提供相关配置方法类。
+##### [3、core模块源码](FlinkCore/src/main/java/org/apache/flink/core)：包括文件、IO、内存等核心操作组件。
+##### [4、types模块源码](FlinkCore/src/main/java/org/apache/flink/types)：数据类型相关操作类。
+##### [5、util模块源码](FlinkCore/src/main/java/org/apache/flink/util)：提供了众多工具类方法。
 
 ---
 ### 五、flink streaming源码阅读
@@ -147,29 +147,29 @@
 ##### [5、Collection功能模块源码](ScalaLibrary/src/main/scala/collection)： 包含使用和扩展Scala集合库所需的基本特性和对象。
 ##### [6、Compat功能模块源码](ScalaLibrary/src/main/scala/compat)： 
 ##### [7、Concurrent功能模块源码](ScalaLibrary/src/main/scala/concurrent)： 包含用于并发和并行编程的原语。
-##### [8、Io功能模块源码](ScalaLibrary/src/main/scala/io)： 
-##### [9、Math功能模块源码](ScalaLibrary/src/main/scala/math)： 
-##### [10、Ref功能模块源码](ScalaLibrary/src/main/scala/ref)： 
-##### [11、Reflect功能模块源码](ScalaLibrary/src/main/scala/reflect)： 
+##### [8、Io功能模块源码](ScalaLibrary/src/main/scala/io)： 数据IO相关操作。
+##### [9、Math功能模块源码](ScalaLibrary/src/main/scala/math)： 包含执行基本数值运算（如初等指数函数、对数函数、根函数和三角函数）的方法。
+##### [10、Ref功能模块源码](ScalaLibrary/src/main/scala/ref)： 引用操作。
+##### [11、Reflect功能模块源码](ScalaLibrary/src/main/scala/reflect)： Scala反射。
 ##### [12、Runtime功能模块源码](ScalaLibrary/src/main/scala/runtime)： 
-##### [13、Sys功能模块源码](ScalaLibrary/src/main/scala/sys)： 
-##### [14、Text功能模块源码](ScalaLibrary/src/main/scala/text)： 
-##### [15、Util功能模块源码](ScalaLibrary/src/main/scala/util)： 
+##### [13、Sys功能模块源码](ScalaLibrary/src/main/scala/sys)： 包含读取和更改虚拟机的核心方面以及虚拟机外部世界的方法。
+##### [14、Text功能模块源码](ScalaLibrary/src/main/scala/text)： 格式输出打印依赖。
+##### [15、Util功能模块源码](ScalaLibrary/src/main/scala/util)： 一些基本的Scala工具类。
 
 ---
 ### 八、java src源码阅读
     JavaSrc模块源码阅读，版本1.8.0。
-##### [1、applet模块源码]()
-##### [2、awt模块源码]()
-##### [3、beans模块源码]()
-##### [4、io模块源码]()
-##### [5、lang模块源码]()
-##### [6、math模块源码]()
-##### [7、net模块源码]()
-##### [8、nio模块源码]()
-##### [9、rmi模块源码]()
-##### [10、security模块源码]()
-##### [11、sql模块源码]()
-##### [12、text模块源码]()
-##### [13、time模块源码]()
-##### [14、util模块源码]()
+##### [1、applet模块源码](JavaSrcCode/src/java/applet)：applet是一个小程序，不自己运行，而是嵌入到另一个应用程序中。
+##### [2、awt模块源码](JavaSrcCode/src/java/awt)：桌面Application开发包。
+##### [3、beans模块源码](JavaSrcCode/src/java/beans)：包含了开发bean相关的类,各种操作自定义bean的类。
+##### [4、io模块源码](JavaSrcCode/src/java/io)：IO操作相关的类。
+##### [5、lang模块源码](JavaSrcCode/src/java/lang)：提供Java编程语言设计的基础类。
+##### [6、math模块源码](JavaSrcCode/src/java/math)：提供用于执行任意精度整数算术（{@code BigInteger}）和任意精度十进制算术（{@code BigDecimal}）的类。
+##### [7、net模块源码](JavaSrcCode/src/java/net)：提供用于实现网络应用程序的类。
+##### [8、nio模块源码](JavaSrcCode/src/java/nio)：非阻塞IO相关操作类。
+##### [9、rmi模块源码](JavaSrcCode/src/java/rmi)：RMI是Java的一组拥护开发分布式应用程序的API。RMI使用Java语言接口定义了远程对象，它集合了Java序列化和Java远程方法协议(Java Remote Method Protocol)。
+##### [10、security模块源码](JavaSrcCode/src/java/security)：提供安全框架的类和接口。这包括实现易于配置的，细粒度访问控制安全体系结构。
+##### [11、sql模块源码](JavaSrcCode/src/java/sql)：提供SQL操作相关类。
+##### [12、text模块源码](JavaSrcCode/src/java/text)：提供了对显示对象格式化的接口、类及异常处理等。
+##### [13、time模块源码](JavaSrcCode/src/java/time)：日期、时间、实例和持续时间的主API。
+##### [14、util模块源码](JavaSrcCode/src/java/util)：Java操作工具类，里面包括很多集合类。

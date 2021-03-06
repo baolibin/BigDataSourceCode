@@ -4,6 +4,10 @@ import java.lang.reflect.{ AccessibleObject => jAccessibleObject }
 
 package object reflect {
 
+  // 在新的方案中，ClassManifests被别名为ClassTags，这是因为我们希望集合中的“toArray”与ClassTags一起工作，
+  // 但将其更改为使用ClassTag上下文绑定而不别名ClassManifest将打破所有子类和重写“toArray”的人幸运的是，
+  // 别名不会妨碍向后兼容性，因此在这种情况下它是理想的，我希望我们也能对清单和类型标签做同样的事情
+
   // in the new scheme of things ClassManifests are aliased to ClassTags
   // this is done because we want `toArray` in collections work with ClassTags
   // but changing it to use the ClassTag context bound without aliasing ClassManifest

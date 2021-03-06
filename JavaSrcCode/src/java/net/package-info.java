@@ -24,6 +24,8 @@
  */
 
 /**
+ * 提供用于实现网络应用程序的类。
+ * <p>
  * Provides the classes for implementing networking applications.
  *
  * <p> The java.net package can be roughly divided in two sections:</p>
@@ -155,7 +157,6 @@
  *       <li><a href="doc-files/net-properties.html">
  *            Networking System Properties</a></li>
  * </ul>
- *
  * @since JDK1.0
  */
 package java.net;

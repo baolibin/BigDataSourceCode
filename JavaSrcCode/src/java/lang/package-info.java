@@ -24,6 +24,8 @@
  */
 
 /**
+ * 提供Java编程语言设计的基础类。
+ * <p>
  * Provides classes that are fundamental to the design of the Java
  * programming language. The most important classes are {@code
  * Object}, which is the root of the class hierarchy, and {@code
@@ -59,13 +61,12 @@
  *
  * <a name="charenc"></a>
  * <h3>Character Encodings</h3>
- *
+ * <p>
  * The specification of the {@link java.nio.charset.Charset
  * java.nio.charset.Charset} class describes the naming conventions
  * for character encodings as well as the set of standard encodings
  * that must be supported by every implementation of the Java
  * platform.
- *
  * @since JDK1.0
  */
 package java.lang;

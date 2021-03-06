@@ -24,6 +24,8 @@
  */
 
 /**
+ * 提供安全框架的类和接口。这包括实现易于配置的，细粒度访问控制安全体系结构。
+ * <p>
  * Provides the classes and interfaces for the security framework.
  * This includes classes that implement an easily configurable,
  * fine-grained access control security architecture.
@@ -33,7 +35,7 @@
  * including those for message digest and signature generation.  Finally,
  * this package provides classes that support signed/guarded objects
  * and secure random number generation.
- *
+ * <p>
  * Many of the classes provided in this package (the cryptographic
  * and secure random number generator classes in particular) are
  * provider-based.  The class itself defines a programming interface
@@ -60,7 +62,7 @@
  * </ul>
  *
  * <h2>Related Documentation</h2>
- *
+ * <p>
  * For further documentation, please see:
  * <ul>
  *   <li><a href=
@@ -106,7 +108,6 @@
  *     </li>
  *
  * </ul>
- *
  * @since 1.1
  */
 package java.security;
