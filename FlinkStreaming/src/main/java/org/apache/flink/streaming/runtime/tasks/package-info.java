@@ -16,6 +16,9 @@
  */
 
 /**
+ * 这个包包含实现流任务的类。这些任务是由分布式数据流运行时调度的可执行流使用者和生产者。
+ * 每个任务占用一个执行槽，并由一个执行线程运行。
+ * <p>
  * This package contains classes that realize streaming tasks. These tasks are
  * executable stream consumers and producers that are scheduled by the distributed
  * dataflow runtime. Each task occupies one execution slot and is run with by an

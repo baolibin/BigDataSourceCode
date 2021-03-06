@@ -32,10 +32,7 @@ import _root_.scala.reflect.ClassTag
 // import scala.language.experimental.macros
 
 /**
-  * Flink Scala API。
-  * [[org.apache.flink.api.scala.ExecutionEnvironment]]是任何Flink项目的起点。
-  * 它可以用来读取本地文件、hdf或其他源。
-  * [[org.apache.flink.api.scala.DataSet]]是Flink中数据的主要抽象。
+  * Flink Scala API。ExecutionEnvironment是任何Flink项目的起点。它可以用来读取本地文件、hdf或其他源。DataSet是Flink中数据的主要抽象。
   * 它提供通过转换创建新数据集的操作。
   * [[org.apache.flink.api.scala.GroupedDataSet]]提供对来自的分组数据的操作[[org.apache.flink.api.scala.DataSet.groupBy()]]。
   *

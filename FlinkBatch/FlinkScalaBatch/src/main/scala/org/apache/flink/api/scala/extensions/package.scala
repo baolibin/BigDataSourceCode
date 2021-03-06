@@ -52,6 +52,8 @@ import org.apache.flink.api.scala.extensions.impl.acceptPartialFunctions._
   *   }
   * }}}
   *
+  * 扩展包括对所有数据集表示的几个隐式转换，这些数据集表示可以从这个特性中获得。
+  *
   * The extension consists of several implicit conversions over all the data set representations
   * that could gain from this feature. To use this set of extensions methods the user has to
   * explicitly opt-in by importing `org.apache.flink.api.scala.extensions.acceptPartialFunctions`.

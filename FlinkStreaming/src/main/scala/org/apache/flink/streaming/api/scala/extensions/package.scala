@@ -18,10 +18,13 @@
 package org.apache.flink.streaming.api.scala
 
 import org.apache.flink.annotation.PublicEvolving
-import org.apache.flink.streaming.api.scala.extensions.impl.acceptPartialFunctions._
 import org.apache.flink.streaming.api.windowing.windows.Window
 
 /**
+  * acceptPartialFunctions使用具有唯一名称的方法扩展原始数据流，这些方法委托给核心高阶函数（例如“map”），
+  * 这样我们就可以解决以函数为参数的重载方法也不能接受部分函数的问题。
+  * 这使得可以直接应用模式匹配来分解元组、case类和集合等输入。
+  *
   * acceptPartialFunctions extends the original DataStream with methods with unique names
   * that delegate to core higher-order functions (e.g. `map`) so that we can work around
   * the fact that overloaded methods taking functions as parameters can't accept partial
@@ -53,6 +56,9 @@ import org.apache.flink.streaming.api.windowing.windows.Window
   *   }
   * }}}
   *
+  * 这个扩展包括对所有数据流表示的几个隐式转换，这些数据流表示可以从这个特性中获得。
+  * 要使用这组扩展方法，用户必须通过导入acceptPartialFunctions。
+  *
   * The extension consists of several implicit conversions over all the data stream representations
   * that could gain from this feature. To use this set of extensions methods the user has to
   * explicitly opt-in by importing
@@ -63,27 +69,27 @@ import org.apache.flink.streaming.api.windowing.windows.Window
   */
 package object extensions {
 
-  @PublicEvolving
-  implicit def acceptPartialFunctions[T](ds: DataStream[T]): OnDataStream[T] =
-    new OnDataStream[T](ds)
+    @PublicEvolving
+    implicit def acceptPartialFunctions[T](ds: DataStream[T]): OnDataStream[T] =
+        new OnDataStream[T](ds)
 
-  @PublicEvolving
-  implicit def acceptPartialFunctions[T, K](ds: KeyedStream[T, K]): OnKeyedStream[T, K] =
-    new OnKeyedStream[T, K](ds)
+    @PublicEvolving
+    implicit def acceptPartialFunctions[T, K](ds: KeyedStream[T, K]): OnKeyedStream[T, K] =
+        new OnKeyedStream[T, K](ds)
 
-  @PublicEvolving
-  implicit def acceptPartialFunctions[L, R, K, W <: Window](
-      ds: JoinedStreams[L, R]#Where[K]#EqualTo#WithWindow[W]): OnJoinedStream[L, R, K, W] =
-    new OnJoinedStream[L, R, K, W](ds)
+    @PublicEvolving
+    implicit def acceptPartialFunctions[L, R, K, W <: Window](
+                                                                     ds: JoinedStreams[L, R]#Where[K]#EqualTo#WithWindow[W]): OnJoinedStream[L, R, K, W] =
+        new OnJoinedStream[L, R, K, W](ds)
 
-  @PublicEvolving
-  implicit def acceptPartialFunctions[IN1, IN2](
-      ds: ConnectedStreams[IN1, IN2]): OnConnectedStream[IN1, IN2] =
-    new OnConnectedStream[IN1, IN2](ds)
+    @PublicEvolving
+    implicit def acceptPartialFunctions[IN1, IN2](
+                                                         ds: ConnectedStreams[IN1, IN2]): OnConnectedStream[IN1, IN2] =
+        new OnConnectedStream[IN1, IN2](ds)
 
-  @PublicEvolving
-  implicit def acceptPartialFunctions[T, K, W <: Window](
-      ds: WindowedStream[T, K, W]): OnWindowedStream[T, K, W] =
-    new OnWindowedStream[T, K, W](ds)
+    @PublicEvolving
+    implicit def acceptPartialFunctions[T, K, W <: Window](
+                                                                  ds: WindowedStream[T, K, W]): OnWindowedStream[T, K, W] =
+        new OnWindowedStream[T, K, W](ds)
 
 }

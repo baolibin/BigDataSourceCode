@@ -27,18 +27,18 @@ import org.apache.flink.api.java.io.CsvInputFormat;
 import org.apache.flink.api.java.typeutils.InputTypeConfigurable;
 import org.apache.flink.core.fs.Path;
 import org.apache.flink.types.StringValue;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import scala.Product;
 
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 
-import scala.Product;
-
 /**
+ * 这是将Scala元组序列化为文本的OutputFormat。
+ * <p>
  * This is an OutputFormat to serialize Scala Tuples to text. The output is
  * structured by record delimiters and field delimiters as common in CSV files.
  * Record delimiter separate records from each other ('\n' is common). Field
@@ -78,7 +78,6 @@ public class ScalaCsvOutputFormat<T extends Product> extends FileOutputFormat<T>
 	/**
 	 * Creates an instance of CsvOutputFormat. Lines are separated by the newline character '\n',
 	 * fields are separated by ','.
-	 *
 	 * @param outputPath The path where the CSV file is written.
 	 */
 	public ScalaCsvOutputFormat(Path outputPath) {
@@ -88,10 +87,8 @@ public class ScalaCsvOutputFormat<T extends Product> extends FileOutputFormat<T>
 	/**
 	 * Creates an instance of CsvOutputFormat. Lines are separated by the newline character '\n',
 	 * fields by the given field delimiter.
-	 *
-	 * @param outputPath The path where the CSV file is written.
-	 * @param fieldDelimiter
-	 *            The delimiter that is used to separate fields in a tuple.
+	 * @param outputPath     The path where the CSV file is written.
+	 * @param fieldDelimiter The delimiter that is used to separate fields in a tuple.
 	 */
 	public ScalaCsvOutputFormat(Path outputPath, String fieldDelimiter) {
 		this(outputPath, DEFAULT_LINE_DELIMITER, fieldDelimiter);
@@ -99,12 +96,9 @@ public class ScalaCsvOutputFormat<T extends Product> extends FileOutputFormat<T>
 
 	/**
 	 * Creates an instance of CsvOutputFormat.
-	 *
-	 * @param outputPath The path where the CSV file is written.
-	 * @param recordDelimiter
-	 *            The delimiter that is used to separate the tuples.
-	 * @param fieldDelimiter
-	 *            The delimiter that is used to separate fields in a tuple.
+	 * @param outputPath      The path where the CSV file is written.
+	 * @param recordDelimiter The delimiter that is used to separate the tuples.
+	 * @param fieldDelimiter  The delimiter that is used to separate fields in a tuple.
 	 */
 	public ScalaCsvOutputFormat(Path outputPath, String recordDelimiter, String fieldDelimiter) {
 		super(outputPath);
@@ -126,7 +120,6 @@ public class ScalaCsvOutputFormat<T extends Product> extends FileOutputFormat<T>
 	 * or to throw an exception when encountering a null field.
 	 *
 	 * <p>By default, null values are allowed.
-	 *
 	 * @param allowNulls Flag to indicate whether the output format should accept null values.
 	 */
 	public void setAllowNullValues(boolean allowNulls) {
@@ -136,7 +129,6 @@ public class ScalaCsvOutputFormat<T extends Product> extends FileOutputFormat<T>
 	/**
 	 * Sets the charset with which the CSV strings are written to the file.
 	 * If not specified, the output format uses the systems default character encoding.
-	 *
 	 * @param charsetName The name of charset to use for encoding the output.
 	 */
 	public void setCharsetName(String charsetName) {
@@ -149,7 +141,6 @@ public class ScalaCsvOutputFormat<T extends Product> extends FileOutputFormat<T>
 	 * all subclasses of the latter.
 	 *
 	 * <p>By default, strings are not quoted.
-	 *
 	 * @param quoteStrings Flag indicating whether string fields should be quoted.
 	 */
 	public void setQuoteStrings(boolean quoteStrings) {
@@ -224,7 +215,7 @@ public class ScalaCsvOutputFormat<T extends Product> extends FileOutputFormat<T>
 	public void setInputType(TypeInformation<?> type, ExecutionConfig executionConfig) {
 		if (!type.isTupleType()) {
 			throw new InvalidProgramException("The " + ScalaCsvOutputFormat.class.getSimpleName() +
-				" can only be used to write tuple data sets.");
+					" can only be used to write tuple data sets.");
 		}
 	}
 }

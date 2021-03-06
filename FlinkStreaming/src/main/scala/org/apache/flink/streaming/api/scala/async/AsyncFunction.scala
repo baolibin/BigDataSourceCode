@@ -18,12 +18,14 @@
 
 package org.apache.flink.streaming.api.scala.async
 
+import java.util.concurrent.TimeoutException
+
 import org.apache.flink.annotation.PublicEvolving
 import org.apache.flink.api.common.functions.Function
 
-import java.util.concurrent.TimeoutException
-
 /**
+  * 触发异步I/O操作的函数。
+  *
   * A function to trigger async I/O operations.
   *
   * For each asyncInvoke an async io operation can be triggered, and once it has been done,
@@ -35,29 +37,29 @@ import java.util.concurrent.TimeoutException
   * An error can also be propagate to the async IO operator by
   * [[ResultFuture.completeExceptionally(Throwable)]].
   *
-  * @tparam IN The type of the input element
+  * @tparam IN  The type of the input element
   * @tparam OUT The type of the output elements
   */
 @PublicEvolving
 trait AsyncFunction[IN, OUT] extends Function {
 
-  /**
-    * Trigger the async operation for each stream input
-    *
-    * @param input element coming from an upstream task
-    * @param resultFuture to be completed with the result data
-    */
-  def asyncInvoke(input: IN, resultFuture: ResultFuture[OUT]): Unit
+    /**
+      * Trigger the async operation for each stream input
+      *
+      * @param input        element coming from an upstream task
+      * @param resultFuture to be completed with the result data
+      */
+    def asyncInvoke(input: IN, resultFuture: ResultFuture[OUT]): Unit
 
-  /**
-    * [[AsyncFunction.asyncInvoke]] timeout occurred.
-    * By default, the result future is exceptionally completed with a timeout exception.
-    *
-    * @param input element coming from an upstream task
-    * @param resultFuture to be completed with the result data
-    */
-  def timeout(input: IN, resultFuture: ResultFuture[OUT]): Unit = {
-    resultFuture.completeExceptionally(new TimeoutException("Async function call has timed out."))
-  }
+    /**
+      * [[AsyncFunction.asyncInvoke]] timeout occurred.
+      * By default, the result future is exceptionally completed with a timeout exception.
+      *
+      * @param input        element coming from an upstream task
+      * @param resultFuture to be completed with the result data
+      */
+    def timeout(input: IN, resultFuture: ResultFuture[OUT]): Unit = {
+        resultFuture.completeExceptionally(new TimeoutException("Async function call has timed out."))
+    }
 
 }

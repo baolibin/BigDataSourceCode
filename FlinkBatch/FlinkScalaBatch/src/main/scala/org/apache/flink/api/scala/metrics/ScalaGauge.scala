@@ -21,6 +21,8 @@ package org.apache.flink.api.scala.metrics
 import org.apache.flink.metrics.Gauge
 
 /**
+  * 这个类允许使用函数引用从Scala简明地定义一个规范。
+  *
   * This class allows the concise definition of a gauge from Scala using function references.
   */
 class ScalaGauge[T](func: () => T) extends Gauge[T] {

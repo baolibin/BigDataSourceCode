@@ -98,11 +98,11 @@
 ##### [1、核心SparkStreaming功能模块源码](SparkStreaming/src/main/scala/org/apache/spark)： Spark流处理功能。[[org.apache.spark.streaming.StreamingContext]]作为Spark流处理的主要入口。[[org.apache.spark.streaming.dstream.DStream]]表示RDD的连续序列的数据类型，表示连续的数据流。
 ##### [2、Api功能模块源码](SparkStreaming/src/main/scala/org/apache/spark/streaming/api)：Spark streaming的Java与Python API。
 ##### [3、Dstream功能模块源码](SparkStreaming/src/main/scala/org/apache/spark/streaming/dstream)：DStream的各种实现。
-##### [4、Rdd功能模块源码](SparkStreaming/src/main/scala/org/apache/spark/streaming/rdd)：
-##### [5、Receiver功能模块源码](SparkStreaming/src/main/scala/org/apache/spark/streaming/receiver)：
-##### [6、Scheduler功能模块源码](SparkStreaming/src/main/scala/org/apache/spark/streaming/scheduler)：
-##### [7、Ui功能模块源码](SparkStreaming/src/main/scala/org/apache/spark/streaming/ui)：
-##### [8、Util功能模块源码](SparkStreaming/src/main/scala/org/apache/spark/streaming/util)：
+##### [4、Rdd功能模块源码](SparkStreaming/src/main/scala/org/apache/spark/streaming/rdd)：RDD存储“mapWithState”操作的键控状态和相应的映射数据。
+##### [5、Receiver功能模块源码](SparkStreaming/src/main/scala/org/apache/spark/streaming/receiver)：可在工作节点上运行以接收外部数据的接收器的抽象类。
+##### [6、Scheduler功能模块源码](SparkStreaming/src/main/scala/org/apache/spark/streaming/scheduler)：作业调度模块。
+##### [7、Ui功能模块源码](SparkStreaming/src/main/scala/org/apache/spark/streaming/ui)：实时流UI模块。
+##### [8、Util功能模块源码](SparkStreaming/src/main/scala/org/apache/spark/streaming/util)：相关操作工具类。
 
 ---
 ### 四、flink core源码阅读
@@ -116,23 +116,23 @@
 ---
 ### 五、flink streaming源码阅读
     FlinkStreaming模块源码阅读，版本1.9.0。
-##### [1、api模块源码](FlinkStreaming/src/main/java/org/apache/flink/streaming/api)：
-##### [2、experimental模块源码](FlinkStreaming/src/main/java/org/apache/flink/streaming/experimental)：
-##### [3、runtime模块源码](FlinkStreaming/src/main/java/org/apache/flink/streaming/runtime)：
-##### [4、util模块源码](FlinkStreaming/src/main/java/org/apache/flink/streaming/util)：
-##### [5、async模块源码](FlinkStreaming/src/main/scala/org/apache/flink/streaming/api/scala/async)：
-##### [6、extensions模块源码](FlinkStreaming/src/main/scala/org/apache/flink/streaming/api/scala/extensions)：
-##### [7、function模块源码](FlinkStreaming/src/main/scala/org/apache/flink/streaming/api/scala/function)：
-##### [8、核心模块源码](FlinkStreaming/src/main/scala/org/apache/flink/streaming/api/scala)：createTypeInformation当使用scalaapi时，我们总是生成类型信息。
+##### [1、api模块源码](FlinkStreaming/src/main/java/org/apache/flink/streaming/api)：包括API操作类。
+##### [2、experimental模块源码](FlinkStreaming/src/main/java/org/apache/flink/streaming/experimental)：这个包包含实验类。
+##### [3、runtime模块源码](FlinkStreaming/src/main/java/org/apache/flink/streaming/runtime)：包含实现流运行时的类。
+##### [4、util模块源码](FlinkStreaming/src/main/java/org/apache/flink/streaming/util)：流式计算相关操作工具类。
+##### [5、async模块源码](FlinkStreaming/src/main/scala/org/apache/flink/streaming/api/scala/async)：触发异步I/O操作的函数。
+##### [6、extensions模块源码](FlinkStreaming/src/main/scala/org/apache/flink/streaming/api/scala/extensions)：这个扩展包括对所有数据流表示的几个隐式转换，这些数据流表示可以从这个特性中获得。要使用这组扩展方法，用户必须通过导入acceptPartialFunctions。
+##### [7、function模块源码](FlinkStreaming/src/main/scala/org/apache/flink/streaming/api/scala/function)：主要包括一些窗口操作等方法类。
+##### [8、核心模块源码](FlinkStreaming/src/main/scala/org/apache/flink/streaming/api/scala)：流式计算相关主要操作类，包括DataStream、StreamExecutionEnvironment等。
 
 ---
 ### 六、flink batch源码阅读
     FlinkBatch模块源码阅读，版本1.9.0。
-##### [1、operators模块源码](FlinkBatch/FlinkScalaBatch/src/main/java/org/apache/flink/api/scala/operators)：
-##### [2、typeutils模块源码](FlinkBatch/FlinkScalaBatch/src/main/java/org/apache/flink/api/scala/typeutils)：
+##### [1、operators模块源码](FlinkBatch/FlinkScalaBatch/src/main/java/org/apache/flink/api/scala/operators)：对数据的一些操作。
+##### [2、typeutils模块源码](FlinkBatch/FlinkScalaBatch/src/main/java/org/apache/flink/api/scala/typeutils)：一些序列化类型工具类。
 ##### [3、codegen模块源码](FlinkBatch/FlinkScalaBatch/src/main/scala/org/apache/flink/api/scala/codegen)：
-##### [4、extensions模块源码](FlinkBatch/FlinkScalaBatch/src/main/scala/org/apache/flink/api/scala/extensions)：
-##### [5、metrics模块源码](FlinkBatch/FlinkScalaBatch/src/main/scala/org/apache/flink/api/scala/metrics)：
+##### [4、extensions模块源码](FlinkBatch/FlinkScalaBatch/src/main/scala/org/apache/flink/api/scala/extensions)：扩展包括对所有数据集表示的几个隐式转换，这些数据集表示可以从这个特性中获得。
+##### [5、metrics模块源码](FlinkBatch/FlinkScalaBatch/src/main/scala/org/apache/flink/api/scala/metrics)：这个类允许使用函数引用从Scala简明地定义一个规范。
 ##### [6、typeutils模块源码](FlinkBatch/FlinkScalaBatch/src/main/scala/org/apache/flink/api/scala/typeutils)：
 ##### [7、utils模块源码](FlinkBatch/FlinkScalaBatch/src/main/scala/org/apache/flink/api/scala/utils)：此类提供了简单的实用程序方法，用于使用索引或唯一标识符压缩数据集中的元素，从数据集中采样元素。
 ##### [8、核心模块源码](FlinkBatch/FlinkScalaBatch/src/main/java/org/apache/flink/api/scala)：Flink Scala API。
@@ -146,7 +146,7 @@
 ##### [4、Beans功能模块源码](ScalaLibrary/src/main/scala/beans)： 
 ##### [5、Collection功能模块源码](ScalaLibrary/src/main/scala/collection)： 包含使用和扩展Scala集合库所需的基本特性和对象。
 ##### [6、Compat功能模块源码](ScalaLibrary/src/main/scala/compat)： 
-##### [7、Concurrent功能模块源码](ScalaLibrary/src/main/scala/concurrent)： 
+##### [7、Concurrent功能模块源码](ScalaLibrary/src/main/scala/concurrent)： 包含用于并发和并行编程的原语。
 ##### [8、Io功能模块源码](ScalaLibrary/src/main/scala/io)： 
 ##### [9、Math功能模块源码](ScalaLibrary/src/main/scala/math)： 
 ##### [10、Ref功能模块源码](ScalaLibrary/src/main/scala/ref)： 

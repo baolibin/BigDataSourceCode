@@ -40,16 +40,16 @@ import org.apache.flink.api.java.typeutils.runtime.TupleSerializerBase;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.util.Collector;
 import org.apache.flink.util.Preconditions;
+import scala.Product;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import scala.Product;
-
 /**
+ * 此运算符表示对数据集应用“聚合”操作，以及函数生成的结果数据集。
+ * <p>
  * This operator represents the application of a "aggregate" operation on a data set, and the
  * result data set produced by the function.
- *
  * @param <IN> The type of the data set aggregated by the operator.
  */
 @Public
@@ -90,7 +90,6 @@ public class ScalaAggregateOperator<IN> extends SingleInputOperator<IN, IN, Scal
 
 	/**
 	 * Grouped aggregation.
-	 *
 	 * @param input
 	 * @param function
 	 * @param field
@@ -215,11 +214,9 @@ public class ScalaAggregateOperator<IN> extends SingleInputOperator<IN, IN, Scal
 			po.setCustomPartitioner(grouping.getCustomPartitioner());
 
 			return po;
-		}
-		else if (this.grouping.getKeys() instanceof Keys.SelectorFunctionKeys) {
+		} else if (this.grouping.getKeys() instanceof Keys.SelectorFunctionKeys) {
 			throw new UnsupportedOperationException("Aggregate does not support grouping with KeySelector functions, yet.");
-		}
-		else {
+		} else {
 			throw new UnsupportedOperationException("Unrecognized key type.");
 		}
 
@@ -229,8 +226,8 @@ public class ScalaAggregateOperator<IN> extends SingleInputOperator<IN, IN, Scal
 
 	@Internal
 	private static final class AggregatingUdf<T extends Product>
-		extends RichGroupReduceFunction<T, T>
-		implements GroupCombineFunction<T, T> {
+			extends RichGroupReduceFunction<T, T>
+			implements GroupCombineFunction<T, T> {
 
 		private static final long serialVersionUID = 1L;
 
