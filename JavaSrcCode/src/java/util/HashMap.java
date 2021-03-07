@@ -38,7 +38,7 @@ import java.util.function.Function;
 /**
  * hashMap术语介绍：
  *    哈希表： 就是hashmap的table数组
- *    bin: 就是挂在数组上的链表
+ *    bin（bucket）: 就是挂在数组上的链表
  *    TreeNode: 红黑树
  *    capacity： table总容量
  *    MIN_TREEIFY_CAPACITY ：64   转化为红黑树table最小大小
