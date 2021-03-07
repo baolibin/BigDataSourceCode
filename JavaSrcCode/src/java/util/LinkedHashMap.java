@@ -29,6 +29,9 @@ import java.util.function.Consumer;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.io.IOException;
+/**
+ * 基于哈希表+双向链表实现
+ */
 
 /**
  * <p>Hash table and linked list implementation of the <tt>Map</tt> interface,
@@ -187,6 +190,8 @@ public class LinkedHashMap<K,V>
      */
 
     /**
+     * 有序哈希表节点
+     *
      * HashMap.Node subclass for normal LinkedHashMap entries.
      */
     static class Entry<K,V> extends HashMap.Node<K,V> {
@@ -199,16 +204,22 @@ public class LinkedHashMap<K,V>
     private static final long serialVersionUID = 3801124242820219131L;
 
     /**
+     * 双链表中的头（老大）。
+     *
      * The head (eldest) of the doubly linked list.
      */
     transient LinkedHashMap.Entry<K,V> head;
 
     /**
+     * 双链表的尾部（最小的）。
+     *
      * The tail (youngest) of the doubly linked list.
      */
     transient LinkedHashMap.Entry<K,V> tail;
 
     /**
+     * 此链接哈希映射的迭代排序方法：true表示访问顺序，false表示插入顺序。
+     *
      * The iteration ordering method for this linked hash map: <tt>true</tt>
      * for access-order, <tt>false</tt> for insertion-order.
      *

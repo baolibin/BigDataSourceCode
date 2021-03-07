@@ -29,6 +29,9 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 /*import sun.misc.SharedSecrets;*/
+/**
+ * 基于动态数组实现
+ */
 
 /**
  * 列表接口是可调整大小的数组实现。
