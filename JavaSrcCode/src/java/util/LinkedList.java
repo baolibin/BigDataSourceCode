@@ -26,6 +26,9 @@
 package java.util;
 
 import java.util.function.Consumer;
+/**
+ * 底层数据结构基于双向链表实现。
+ */
 
 /**
  * {@code list}和{@code Deque}接口的双链表实现。
