@@ -48,6 +48,8 @@ public final class Array {
     }
 
     /**
+     * 创建具有指定组件类型和长度的新数组。
+     *
      * Creates a new array with the specified component type and
      * length.
      * Invoking this method is equivalent to creating an array
@@ -80,6 +82,8 @@ public final class Array {
     }
 
     /**
+     * 创建具有指定组件类型和尺寸的新数组。
+     *
      * Creates a new array
      * with the specified component type and dimensions.
      * If {@code componentType}
@@ -116,6 +120,8 @@ public final class Array {
     }
 
     /**
+     * 返回指定数组对象的长度，格式为{@code int}。
+     *
      * Returns the length of the specified array object, as an {@code int}.
      *
      * @param array the array
@@ -127,6 +133,8 @@ public final class Array {
             throws IllegalArgumentException;
 
     /**
+     * 返回指定数组对象中索引组件的值。如果对象具有基元类型，则该值将自动包装在对象中。
+     *
      * Returns the value of the indexed component in the specified
      * array object.  The value is automatically wrapped in an object
      * if it has a primitive type.
@@ -146,6 +154,8 @@ public final class Array {
             throws IllegalArgumentException, ArrayIndexOutOfBoundsException;
 
     /**
+     * 以{@code boolean}形式返回指定数组对象中索引组件的值。
+     *
      * Returns the value of the indexed component in the specified
      * array object, as a {@code boolean}.
      *
@@ -165,6 +175,8 @@ public final class Array {
             throws IllegalArgumentException, ArrayIndexOutOfBoundsException;
 
     /**
+     * 以{@code byte}形式返回指定数组对象中索引组件的值。
+     *
      * Returns the value of the indexed component in the specified
      * array object, as a {@code byte}.
      *
@@ -184,6 +196,8 @@ public final class Array {
             throws IllegalArgumentException, ArrayIndexOutOfBoundsException;
 
     /**
+     * 返回指定数组对象中索引组件的值，格式为{@code char}。
+     *
      * Returns the value of the indexed component in the specified
      * array object, as a {@code char}.
      *
@@ -203,6 +217,8 @@ public final class Array {
             throws IllegalArgumentException, ArrayIndexOutOfBoundsException;
 
     /**
+     * 返回指定数组对象中索引组件的值，格式为{@code short}。
+     *
      * Returns the value of the indexed component in the specified
      * array object, as a {@code short}.
      *
@@ -222,6 +238,8 @@ public final class Array {
             throws IllegalArgumentException, ArrayIndexOutOfBoundsException;
 
     /**
+     * 返回指定数组对象中索引组件的值，格式为{@code int}。
+     *
      * Returns the value of the indexed component in the specified
      * array object, as an {@code int}.
      *
@@ -241,6 +259,8 @@ public final class Array {
             throws IllegalArgumentException, ArrayIndexOutOfBoundsException;
 
     /**
+     * 返回指定数组对象中索引组件的值，格式为{@code long}。
+     *
      * Returns the value of the indexed component in the specified
      * array object, as a {@code long}.
      *
@@ -260,6 +280,8 @@ public final class Array {
             throws IllegalArgumentException, ArrayIndexOutOfBoundsException;
 
     /**
+     * 返回指定数组对象中索引组件的值，作为{@code float}。
+     *
      * Returns the value of the indexed component in the specified
      * array object, as a {@code float}.
      *
@@ -279,6 +301,8 @@ public final class Array {
             throws IllegalArgumentException, ArrayIndexOutOfBoundsException;
 
     /**
+     * 以{@code double}形式返回指定数组对象中索引组件的值。
+     *
      * Returns the value of the indexed component in the specified
      * array object, as a {@code double}.
      *
@@ -298,6 +322,8 @@ public final class Array {
             throws IllegalArgumentException, ArrayIndexOutOfBoundsException;
 
     /**
+     * 将指定数组对象的索引组件的值设置为指定的新值。如果数组具有基元组件类型，则首先自动展开新值。
+     *
      * Sets the value of the indexed component of the specified array
      * object to the specified new value.  The new value is first
      * automatically unwrapped if the array has a primitive component
@@ -319,6 +345,8 @@ public final class Array {
             throws IllegalArgumentException, ArrayIndexOutOfBoundsException;
 
     /**
+     * 将指定数组对象的索引组件的值设置为指定的{@code boolean}值。
+     *
      * Sets the value of the indexed component of the specified array
      * object to the specified {@code boolean} value.
      *
@@ -340,6 +368,8 @@ public final class Array {
             throws IllegalArgumentException, ArrayIndexOutOfBoundsException;
 
     /**
+     * 将指定数组对象的索引组件的值设置为指定的{@code byte}值。
+     *
      * Sets the value of the indexed component of the specified array
      * object to the specified {@code byte} value.
      *
@@ -361,6 +391,8 @@ public final class Array {
             throws IllegalArgumentException, ArrayIndexOutOfBoundsException;
 
     /**
+     * 将指定数组对象的索引组件的值设置为指定的{@code char}值。
+     *
      * Sets the value of the indexed component of the specified array
      * object to the specified {@code char} value.
      *
@@ -382,6 +414,8 @@ public final class Array {
             throws IllegalArgumentException, ArrayIndexOutOfBoundsException;
 
     /**
+     * 将指定数组对象的索引组件的值设置为指定的{@code short}值。
+     *
      * Sets the value of the indexed component of the specified array
      * object to the specified {@code short} value.
      *
@@ -403,6 +437,8 @@ public final class Array {
             throws IllegalArgumentException, ArrayIndexOutOfBoundsException;
 
     /**
+     * 将指定arrayobject的索引组件的值设置为指定的{@code int}值。
+     *
      * Sets the value of the indexed component of the specified array
      * object to the specified {@code int} value.
      *
@@ -424,6 +460,8 @@ public final class Array {
             throws IllegalArgumentException, ArrayIndexOutOfBoundsException;
 
     /**
+     * 将指定数组对象的索引组件的值设置为指定的{@code long}值。
+     *
      * Sets the value of the indexed component of the specified array
      * object to the specified {@code long} value.
      *
@@ -445,6 +483,8 @@ public final class Array {
             throws IllegalArgumentException, ArrayIndexOutOfBoundsException;
 
     /**
+     * 将指定数组对象的索引组件的值设置为指定的{@code float}值。
+     *
      * Sets the value of the indexed component of the specified array
      * object to the specified {@code float} value.
      *
@@ -466,6 +506,8 @@ public final class Array {
             throws IllegalArgumentException, ArrayIndexOutOfBoundsException;
 
     /**
+     * 将指定数组对象的索引组件的值设置为指定的{@code double}值。
+     *
      * Sets the value of the indexed component of the specified array
      * object to the specified {@code double} value.
      *
