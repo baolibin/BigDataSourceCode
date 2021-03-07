@@ -401,6 +401,9 @@ public class Object {
     public final native void wait(long timeout) throws InterruptedException;
 
     /**
+     * 使当前线程等待直到另一个线程调用notify()方法或notifyAll()方法,
+     * 或者其他线程中断当前线程，或者经过了一定的真实时间。
+     *
      * Causes the current thread to wait until another thread invokes the
      * {@link java.lang.Object#notify()} method or the
      * {@link java.lang.Object#notifyAll()} method for this object, or
@@ -480,6 +483,9 @@ public class Object {
     }
 
     /**
+     * 使当前线程等待直到另一个线程调用notify()方法或notifyAll()方法,
+     * 换句话说，这个方法的行为就像它只是执行调用{@code wait（0）}。
+     *
      * Causes the current thread to wait until another thread invokes the
      * {@link java.lang.Object#notify()} method or the
      * {@link java.lang.Object#notifyAll()} method for this object.
