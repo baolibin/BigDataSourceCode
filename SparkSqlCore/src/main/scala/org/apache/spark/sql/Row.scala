@@ -290,6 +290,8 @@ trait Row extends Serializable {
     def getString(i: Int): String = getAs[String](i)
 
     /**
+      * 返回十进制类型的位置i处的值java.math.BigDecimal文件.
+      *
       * Returns the value at position i of decimal type as java.math.BigDecimal.
       *
       * @throws ClassCastException when data type does not match.
@@ -297,6 +299,8 @@ trait Row extends Serializable {
     def getDecimal(i: Int): java.math.BigDecimal = getAs[java.math.BigDecimal](i)
 
     /**
+      * 将日期类型的位置i处的值返回为java.sql.Date日期.
+      *
       * Returns the value at position i of date type as java.sql.Date.
       *
       * @throws ClassCastException when data type does not match.
@@ -304,6 +308,8 @@ trait Row extends Serializable {
     def getDate(i: Int): java.sql.Date = getAs[java.sql.Date](i)
 
     /**
+      * 返回日期类型为的位置i处的值java.sql.Timestamp.
+      *
       * Returns the value at position i of date type as java.sql.Timestamp.
       *
       * @throws ClassCastException when data type does not match.
@@ -311,6 +317,8 @@ trait Row extends Serializable {
     def getTimestamp(i: Int): java.sql.Timestamp = getAs[java.sql.Timestamp](i)
 
     /**
+      * 以Scala Seq形式返回数组类型的位置i处的值。
+      *
       * Returns the value at position i of array type as a Scala Seq.
       *
       * @throws ClassCastException when data type does not match.
@@ -318,6 +326,8 @@ trait Row extends Serializable {
     def getSeq[T](i: Int): Seq[T] = getAs[Seq[T]](i)
 
     /**
+      * 返回数组类型的位置i处的值，为`java.util.List`.
+      *
       * Returns the value at position i of array type as `java.util.List`.
       *
       * @throws ClassCastException when data type does not match.
