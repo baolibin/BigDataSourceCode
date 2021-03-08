@@ -25,6 +25,9 @@ import org.apache.spark.sql.catalyst.expressions.GenericRow
 import org.apache.spark.sql.types.StructType
 
 /**
+  * 该类来源于源码包spark-catalyst_2.11-2.2.0.jar
+  */
+/**
   * @since 1.3.0
   */
 @InterfaceStability.Stable
@@ -126,13 +129,23 @@ object Row {
   */
 @InterfaceStability.Stable
 trait Row extends Serializable {
-    /** Number of elements in the Row. */
+    /**
+      * Row中的元素数。
+      *
+      * Number of elements in the Row.
+      */
     def size: Int = length
 
-    /** Number of elements in the Row. */
+    /**
+      * Row中的元素数。
+      *
+      * Number of elements in the Row.
+      */
     def length: Int
 
     /**
+      * DataFrame的Schema.
+      *
       * Schema for the row.
       */
     def schema: StructType = null
@@ -163,6 +176,8 @@ trait Row extends Serializable {
     def apply(i: Int): Any = get(i)
 
     /**
+      * 返回位置i处的值。如果该值为null，则返回null。
+      *
       * Returns the value at position i. If the value is null, null is returned. The following
       * is a mapping between Spark SQL types and return types:
       *
@@ -187,67 +202,87 @@ trait Row extends Serializable {
       */
     def get(i: Int): Any
 
-    /** Checks whether the value at position i is null. */
+    /**
+      * 检查位置i处的值是否为空。
+      *
+      * Checks whether the value at position i is null.
+      */
     def isNullAt(i: Int): Boolean = get(i) == null
 
     /**
+      * 以布尔值返回位置i处的值。
+      *
       * Returns the value at position i as a primitive boolean.
       *
-      * @throws ClassCastException when data type does not match.
+      * @throws ClassCastException   when data type does not match.
       * @throws NullPointerException when value is null.
       */
     def getBoolean(i: Int): Boolean = getAnyValAs[Boolean](i)
 
     /**
+      * 以byte返回位置i处的值。
+      *
       * Returns the value at position i as a primitive byte.
       *
-      * @throws ClassCastException when data type does not match.
+      * @throws ClassCastException   when data type does not match.
       * @throws NullPointerException when value is null.
       */
     def getByte(i: Int): Byte = getAnyValAs[Byte](i)
 
     /**
+      * 以short返回位置i处的值。
+      *
       * Returns the value at position i as a primitive short.
       *
-      * @throws ClassCastException when data type does not match.
+      * @throws ClassCastException   when data type does not match.
       * @throws NullPointerException when value is null.
       */
     def getShort(i: Int): Short = getAnyValAs[Short](i)
 
     /**
+      * 以int返回位置i处的值。
+      *
       * Returns the value at position i as a primitive int.
       *
-      * @throws ClassCastException when data type does not match.
+      * @throws ClassCastException   when data type does not match.
       * @throws NullPointerException when value is null.
       */
     def getInt(i: Int): Int = getAnyValAs[Int](i)
 
     /**
+      * 以long返回位置i处的值。
+      *
       * Returns the value at position i as a primitive long.
       *
-      * @throws ClassCastException when data type does not match.
+      * @throws ClassCastException   when data type does not match.
       * @throws NullPointerException when value is null.
       */
     def getLong(i: Int): Long = getAnyValAs[Long](i)
 
     /**
+      * 以float返回位置i处的值。
+      *
       * Returns the value at position i as a primitive float.
       * Throws an exception if the type mismatches or if the value is null.
       *
-      * @throws ClassCastException when data type does not match.
+      * @throws ClassCastException   when data type does not match.
       * @throws NullPointerException when value is null.
       */
     def getFloat(i: Int): Float = getAnyValAs[Float](i)
 
     /**
+      * 以double返回位置i处的值。
+      *
       * Returns the value at position i as a primitive double.
       *
-      * @throws ClassCastException when data type does not match.
+      * @throws ClassCastException   when data type does not match.
       * @throws NullPointerException when value is null.
       */
     def getDouble(i: Int): Double = getAnyValAs[Double](i)
 
     /**
+      * 以String返回位置i处的值。
+      *
       * Returns the value at position i as a String object.
       *
       * @throws ClassCastException when data type does not match.
@@ -291,6 +326,8 @@ trait Row extends Serializable {
         getSeq[T](i).asJava
 
     /**
+      * 以Scala Map的形式返回map类型在位置i处的值。
+      *
       * Returns the value at position i of map type as a Scala Map.
       *
       * @throws ClassCastException when data type does not match.
@@ -298,6 +335,8 @@ trait Row extends Serializable {
     def getMap[K, V](i: Int): scala.collection.Map[K, V] = getAs[Map[K, V]](i)
 
     /**
+      * 以java.util.Map的形式返回数组类型i处的值。
+      *
       * Returns the value at position i of array type as a `java.util.Map`.
       *
       * @throws ClassCastException when data type does not match.
@@ -306,6 +345,8 @@ trait Row extends Serializable {
         getMap[K, V](i).asJava
 
     /**
+      * 以[[Row]]对象的形式返回结构类型的位置i处的值。
+      *
       * Returns the value at position i of struct type as a [[Row]] object.
       *
       * @throws ClassCastException when data type does not match.
@@ -313,6 +354,8 @@ trait Row extends Serializable {
     def getStruct(i: Int): Row = getAs[Row](i)
 
     /**
+      * 返回位置i处的值。
+      *
       * Returns the value at position i.
       * For primitive types if value is null it returns 'zero value' specific for primitive
       * ie. 0 for Int - use isNullAt to ensure that value is not null
@@ -322,21 +365,25 @@ trait Row extends Serializable {
     def getAs[T](i: Int): T = get(i).asInstanceOf[T]
 
     /**
+      * 返回给定fieldName的值。
+      *
       * Returns the value of a given fieldName.
       * For primitive types if value is null it returns 'zero value' specific for primitive
       * ie. 0 for Int - use isNullAt to ensure that value is not null
       *
       * @throws UnsupportedOperationException when schema is not defined.
-      * @throws IllegalArgumentException when fieldName do not exist.
-      * @throws ClassCastException when data type does not match.
+      * @throws IllegalArgumentException      when fieldName do not exist.
+      * @throws ClassCastException            when data type does not match.
       */
     def getAs[T](fieldName: String): T = getAs[T](fieldIndex(fieldName))
 
     /**
+      * 返回给定字段名称的索引。
+      *
       * Returns the index of a given field name.
       *
       * @throws UnsupportedOperationException when schema is not defined.
-      * @throws IllegalArgumentException when a field `name` does not exist.
+      * @throws IllegalArgumentException      when a field `name` does not exist.
       */
     def fieldIndex(name: String): Int = {
         throw new UnsupportedOperationException("fieldIndex on a Row without schema is undefined.")
@@ -348,8 +395,8 @@ trait Row extends Serializable {
       * ie. 0 for Int - use isNullAt to ensure that value is not null
       *
       * @throws UnsupportedOperationException when schema is not defined.
-      * @throws IllegalArgumentException when fieldName do not exist.
-      * @throws ClassCastException when data type does not match.
+      * @throws IllegalArgumentException      when fieldName do not exist.
+      * @throws ClassCastException            when data type does not match.
       */
     def getValuesMap[T](fieldNames: Seq[String]): Map[String, T] = {
         fieldNames.map { name =>
@@ -360,16 +407,24 @@ trait Row extends Serializable {
     override def toString: String = s"[${this.mkString(",")}]"
 
     /**
+      * 复制当前的[[Row]]对象。
+      *
       * Make a copy of the current [[Row]] object.
       */
     def copy(): Row
 
-    /** Returns true if there are any NULL values in this row. */
+    /**
+      * 如果此行中有任何NULL值，则返回true。
+      *
+      * Returns true if there are any NULL values in this row.
+      */
     def anyNull: Boolean = {
         val len = length
         var i = 0
         while (i < len) {
-            if (isNullAt(i)) { return true }
+            if (isNullAt(i)) {
+                return true
+            }
             i += 1
         }
         false
@@ -400,11 +455,11 @@ trait Row extends Serializable {
                             return false
                         }
                     case f1: Float if java.lang.Float.isNaN(f1) =>
-                        if (!o2.isInstanceOf[Float] || ! java.lang.Float.isNaN(o2.asInstanceOf[Float])) {
+                        if (!o2.isInstanceOf[Float] || !java.lang.Float.isNaN(o2.asInstanceOf[Float])) {
                             return false
                         }
                     case d1: Double if java.lang.Double.isNaN(d1) =>
-                        if (!o2.isInstanceOf[Double] || ! java.lang.Double.isNaN(o2.asInstanceOf[Double])) {
+                        if (!o2.isInstanceOf[Double] || !java.lang.Double.isNaN(o2.asInstanceOf[Double])) {
                             return false
                         }
                     case d1: java.math.BigDecimal if o2.isInstanceOf[java.math.BigDecimal] =>
@@ -436,6 +491,8 @@ trait Row extends Serializable {
     /* ---------------------- utility methods for Scala ---------------------- */
 
     /**
+      * 返回表示该行的Scala Seq。元素在序列中以相同顺序放置。
+      *
       * Return a Scala Seq representing the row. Elements are placed in the same order in the Seq.
       */
     def toSeq: Seq[Any] = {
@@ -449,24 +506,36 @@ trait Row extends Serializable {
         values.toSeq
     }
 
-    /** Displays all elements of this sequence in a string (without a separator). */
+    /**
+      * 在字符串中显示此序列的所有元素（不带分隔符）。
+      *
+      * Displays all elements of this sequence in a string (without a separator).
+      */
     def mkString: String = toSeq.mkString
 
-    /** Displays all elements of this sequence in a string using a separator string. */
+    /**
+      * 使用分隔符字符串在字符串中显示此序列的所有元素。
+      *
+      * Displays all elements of this sequence in a string using a separator string.
+      */
     def mkString(sep: String): String = toSeq.mkString(sep)
 
     /**
+      * 用指定分隔符链接指定一段元素。
+      *
       * Displays all elements of this traversable or iterator in a string using
       * start, end, and separator strings.
       */
     def mkString(start: String, sep: String, end: String): String = toSeq.mkString(start, sep, end)
 
     /**
+      * 返回位置i处的值。
+      *
       * Returns the value at position i.
       *
       * @throws UnsupportedOperationException when schema is not defined.
-      * @throws ClassCastException when data type does not match.
-      * @throws NullPointerException when value is null.
+      * @throws ClassCastException            when data type does not match.
+      * @throws NullPointerException          when value is null.
       */
     private def getAnyValAs[T <: AnyVal](i: Int): T =
         if (isNullAt(i)) throw new NullPointerException(s"Value at index $i is null")
