@@ -217,6 +217,8 @@ class Dataset[T] private[sql](
     private[sql] implicit val exprEnc: ExpressionEncoder[T] = encoderFor(encoder)
 
     /**
+      * 编码器主要用作数据集中serde表达式的容器。
+      *
       * Encoder is used mostly as a container of serde expressions in Dataset.  We build logical
       * plans by these serde expressions and execute it within the query framework.  However, for
       * performance reasons we may want to use encoder as a function to deserialize internal rows to
@@ -255,6 +257,8 @@ class Dataset[T] private[sql](
     }
 
     /**
+      * 将此强类型数据集合转换为具有重命名列的泛型“DataFrame”。
+      *
       * Converts this strongly typed collection of data to generic `DataFrame` with columns renamed.
       * This can be quite convenient in conversion from an RDD of tuples into a `DataFrame` with
       * meaningful names. For example:
@@ -281,6 +285,8 @@ class Dataset[T] private[sql](
     }
 
     /**
+      * 返回此数据集的schema。
+    *
       * Returns the schema of this Dataset.
       *
       * @group basic
@@ -289,6 +295,8 @@ class Dataset[T] private[sql](
     def schema: StructType = queryExecution.analyzed.schema
 
     /**
+      * 以漂亮的树格式将schema打印到控制台。
+      *
       * Prints the schema to the console in a nice tree format.
       *
       * @group basic
@@ -321,6 +329,8 @@ class Dataset[T] private[sql](
     }
 
     /**
+      * 以数组形式返回所有列名及其数据类型。
+      *
       * Returns all column names and their data types as an array.
       *
       * @group basic
@@ -599,6 +609,8 @@ class Dataset[T] private[sql](
     }
 
     /**
+      * 将此强类型数据集合转换为泛型数据帧。
+      *
       * Converts this strongly typed collection of data to generic Dataframe. In contrast to the
       * strongly typed objects that Dataset operations work on, a Dataframe returns generic [[Row]]
       * objects that allow fields to be accessed by ordinal or name.
@@ -611,6 +623,8 @@ class Dataset[T] private[sql](
     def toDF(): DataFrame = new Dataset[Row](sparkSession, queryExecution, RowEncoder(schema))
 
     /**
+      * 以表格形式显示数据集的前20行。
+      *
       * Displays the top 20 rows of Dataset in a tabular form.
       *
       * @param truncate Whether truncate long strings. If true, strings more than 20 characters will
@@ -621,6 +635,8 @@ class Dataset[T] private[sql](
     def show(truncate: Boolean): Unit = show(20, truncate)
 
     /**
+      * 以表格形式显示数据集。
+      *
       * Displays the Dataset in a tabular form. For example:
       * {{{
       *   year  month AVG('Adj Close) MAX('Adj Close)
@@ -665,6 +681,8 @@ class Dataset[T] private[sql](
     def stat: DataFrameStatFunctions = new DataFrameStatFunctions(toDF())
 
     /**
+      * 与另一个“DataFrame”联接。
+      *
       * Join with another `DataFrame`.
       *
       * Behaves as an INNER JOIN and requires a subsequent join predicate.
@@ -995,6 +1013,8 @@ class Dataset[T] private[sql](
     def orderBy(sortCol: String, sortCols: String*): Dataset[T] = sort(sortCol, sortCols: _*)
 
     /**
+      * 返回按指定列排序的新数据集，全部按升序排列。
+      *
       * Returns a new Dataset sorted by the specified column, all in ascending order.
       * {{{
       *   // The following 3 are equivalent
@@ -1021,6 +1041,8 @@ class Dataset[T] private[sql](
     def apply(colName: String): Column = col(colName)
 
     /**
+      * 基于列名选择列，并将其作为[[列]]返回。
+      *
       * Selects column based on the column name and return it as a [[Column]].
       *
       * @note The column name can also reference to a nested column like `a.b`.
@@ -1843,6 +1865,8 @@ class Dataset[T] private[sql](
     }
 
     /**
+      * 返回重命名了列的新数据集。
+      *
       * Returns a new Dataset with a column renamed.
       * This is a no-op if schema doesn't contain existingName.
       *
@@ -2061,6 +2085,8 @@ class Dataset[T] private[sql](
     }
 
     /**
+      * 返回第一行。head（）的别名。
+      *
       * Returns the first row. Alias for head().
       *
       * @group action
@@ -2069,6 +2095,8 @@ class Dataset[T] private[sql](
     def first(): T = head()
 
     /**
+      * 返回第一行。
+      *
       * Returns the first row.
       *
       * @group action
@@ -2077,6 +2105,8 @@ class Dataset[T] private[sql](
     def head(): T = head(1).head
 
     /**
+      * 返回前'n'行。
+      *
       * Returns the first `n` rows.
       *
       * @note this method should only be used if the resulting array is expected to be small, as
@@ -2237,6 +2267,8 @@ class Dataset[T] private[sql](
     def foreach(func: ForeachFunction[T]): Unit = foreach(func.call(_))
 
     /**
+      * 将函数“f”应用于所有行。
+      *
       * Applies a function `f` to all rows.
       *
       * @group action
@@ -2278,6 +2310,8 @@ class Dataset[T] private[sql](
     def takeAsList(n: Int): java.util.List[T] = java.util.Arrays.asList(take(n): _*)
 
     /**
+      * 返回数据集中的前“n”行。
+      *
       * Returns the first `n` rows in the Dataset.
       *
       * Running take requires moving data into the application's driver process, and doing so with
@@ -2340,6 +2374,8 @@ class Dataset[T] private[sql](
     }
 
     /**
+      * 返回数据集中的行数。
+      *
       * Returns the number of rows in the Dataset.
       *
       * @group action
@@ -2396,6 +2432,8 @@ class Dataset[T] private[sql](
     }
 
     /**
+      * 返回一个新的数据集，该数据集正好有“numPartitions”分区。
+      *
       * Returns a new Dataset that has exactly `numPartitions` partitions.
       *
       * @group typedrel
@@ -2665,6 +2703,8 @@ class Dataset[T] private[sql](
     }
 
     /**
+      * 用于将非流数据集的内容保存到外部存储器的接口。
+      *
       * Interface for saving the content of the non-streaming Dataset out into external storage.
       *
       * @group basic
