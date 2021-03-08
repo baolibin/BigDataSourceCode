@@ -256,6 +256,7 @@ public class LinkedHashMap<K,V>
             a.before = dst;
     }
 
+    // HashMap钩子方法的重写
     // overrides of HashMap hook methods
 
     void reinitialize() {
