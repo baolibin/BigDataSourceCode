@@ -40,6 +40,11 @@ import org.apache.spark.sql.catalyst.plans._
 import org.apache.spark.sql.catalyst.plans.logical._
 import org.apache.spark.sql.catalyst.plans.physical.{Partitioning, PartitioningCollection}
 import org.apache.spark.sql.catalyst.util.{DateTimeUtils, usePrettyExpression}
+import org.apache.spark.sql.execution.command.{CreateViewCommand, DDLUtils, ExplainCommand, GlobalTempView, LocalTempView}
+import org.apache.spark.sql.execution.datasources.LogicalRelation
+import org.apache.spark.sql.execution.python.EvaluatePython
+import org.apache.spark.sql.execution.{FileRelation, LogicalRDD, QueryExecution, SQLExecution, SparkPlan}
+import org.apache.spark.sql.streaming.DataStreamWriter
 import org.apache.spark.sql.types._
 import org.apache.spark.storage.StorageLevel
 import org.apache.spark.unsafe.types.CalendarInterval
@@ -1698,6 +1703,8 @@ class Dataset[T] private[sql](
     }
 
     /**
+      * 返回一个Java列表，该列表包含随机拆分的数据集和提供的权重。
+      *
       * Returns a Java list that contains randomly split Dataset with the provided weights.
       *
       * @param weights weights for splits, will be normalized if they don't sum to 1.
@@ -1711,6 +1718,8 @@ class Dataset[T] private[sql](
     }
 
     /**
+      * 使用提供的权重随机拆分此数据集。
+      *
       * Randomly splits this Dataset with the provided weights.
       *
       * @param weights weights for splits, will be normalized if they don't sum to 1.
@@ -1750,6 +1759,8 @@ class Dataset[T] private[sql](
     }
 
     /**
+      * 使用默认存储级别（`MEMORY\u AND \u DISK`）持久化此数据集。
+      *
       * Persist this Dataset with the default storage level (`MEMORY_AND_DISK`).
       *
       * @group basic
@@ -1758,6 +1769,8 @@ class Dataset[T] private[sql](
     def cache(): this.type = persist()
 
     /**
+      * 使用默认存储级别（`MEMORY\u AND \u DISK`）持久化此数据集。
+      *
       * Persist this Dataset with the default storage level (`MEMORY_AND_DISK`).
       *
       * @group basic
@@ -1769,6 +1782,8 @@ class Dataset[T] private[sql](
     }
 
     /**
+      * 使用提供的权重随机拆分此数据集。
+      *
       * Randomly splits this Dataset with the provided weights.
       *
       * @param weights weights for splits, will be normalized if they don't sum to 1.
@@ -1906,6 +1921,8 @@ class Dataset[T] private[sql](
     }
 
     /**
+      * 返回已删除列的新数据集。
+      *
       * Returns a new Dataset with columns dropped.
       * This is a no-op if schema doesn't contain column name(s).
       *
@@ -1930,6 +1947,8 @@ class Dataset[T] private[sql](
     }
 
     /**
+      * 选择一组基于列的表达式。
+      *
       * Selects a set of column based expressions.
       * {{{
       *   ds.select($"colA", $"colB" + 1)
@@ -1944,6 +1963,8 @@ class Dataset[T] private[sql](
     }
 
     /**
+      * 返回已删除列的新数据集。
+      *
       * Returns a new Dataset with a column dropped.
       * This version of drop accepts a [[Column]] rather than a name.
       * This is a no-op if the Dataset doesn't have a column
@@ -1967,6 +1988,8 @@ class Dataset[T] private[sql](
     }
 
     /**
+      * 返回一个新的[[Dataset]]，删除重复的行，只考虑列的子集。
+      *
       * Returns a new [[Dataset]] with duplicate rows removed, considering only
       * the subset of columns.
       *
@@ -1986,6 +2009,8 @@ class Dataset[T] private[sql](
     }
 
     /**
+      * 返回一个新的数据集，其中删除了重复的行，只考虑列的子集。
+      *
       * (Scala-specific) Returns a new Dataset with duplicate rows removed, considering only
       * the subset of columns.
       *
@@ -2015,6 +2040,9 @@ class Dataset[T] private[sql](
     }
 
     /**
+      * 计算数值列和字符串列的统计信息，包括count、mean、stddev、min和max。
+      * 如果未给定任何列，此函数将计算所有数值列或字符串列的统计信息。
+      *
       * Computes statistics for numeric and string columns, including count, mean, stddev, min, and
       * max. If no columns are given, this function computes statistics for all numerical or string
       * columns.
@@ -2117,6 +2145,8 @@ class Dataset[T] private[sql](
     def head(n: Int): Array[T] = withAction("head", limit(n).queryExecution)(collectFromPlan)
 
     /**
+      * 通过获取前“n”行返回新的数据集。
+      *
       * Returns a new Dataset by taking the first `n` rows. The difference between this function
       * and `head` is that `head` is an action and returns an array (by triggering query execution)
       * while `limit` returns a new Dataset.
@@ -2129,6 +2159,8 @@ class Dataset[T] private[sql](
     }
 
     /**
+      * 链接自定义转换的简明语法。
+      *
       * Concise syntax for chaining custom transformations.
       * {{{
       *   def featurize(ds: Dataset[T]): Dataset[U] = ...
@@ -2144,6 +2176,8 @@ class Dataset[T] private[sql](
     def transform[U](t: Dataset[T] => Dataset[U]): Dataset[U] = t(this)
 
     /**
+      * 返回仅包含“func”返回“true”的元素的新数据集。
+      *
       * :: Experimental ::
       * (Scala-specific)
       * Returns a new Dataset that only contains elements where `func` returns `true`.
@@ -2158,6 +2192,8 @@ class Dataset[T] private[sql](
     }
 
     /**
+      * 返回仅包含“func”返回“true”的元素的新数据集。
+      *
       * :: Experimental ::
       * (Java-specific)
       * Returns a new Dataset that only contains elements where `func` returns `true`.
@@ -2177,6 +2213,8 @@ class Dataset[T] private[sql](
     }
 
     /**
+      * 返回一个新的数据集，其中包含对每个元素应用“func”的结果。
+      *
       * :: Experimental ::
       * (Java-specific)
       * Returns a new Dataset that contains the result of applying `func` to each element.
@@ -2192,6 +2230,8 @@ class Dataset[T] private[sql](
     }
 
     /**
+      * 返回一个新的数据集，其中包含对每个分区应用“f”的结果。
+      *
       * :: Experimental ::
       * (Java-specific)
       * Returns a new Dataset that contains the result of applying `f` to each partition.
@@ -2207,6 +2247,8 @@ class Dataset[T] private[sql](
     }
 
     /**
+      * 返回一个新的数据集，其中包含对每个分区应用“func”的结果。
+      *
       * :: Experimental ::
       * (Scala-specific)
       * Returns a new Dataset that contains the result of applying `func` to each partition.
@@ -2228,6 +2270,8 @@ class Dataset[T] private[sql](
     }
 
     /**
+      * 通过首先将函数应用于此数据集的所有元素，然后展平结果，返回新的数据集。
+      *
       * :: Experimental ::
       * (Java-specific)
       * Returns a new Dataset by first applying a function to all elements of this Dataset,
@@ -2244,6 +2288,8 @@ class Dataset[T] private[sql](
     }
 
     /**
+      * 通过首先将函数应用于此数据集的所有元素，然后展平结果，返回新的数据集。
+      *
       * :: Experimental ::
       * (Scala-specific)
       * Returns a new Dataset by first applying a function to all elements of this Dataset,
@@ -2258,6 +2304,8 @@ class Dataset[T] private[sql](
         mapPartitions(_.flatMap(func))
 
     /**
+      * 在此数据集的每个元素上运行“func”。
+      *
       * (Java-specific)
       * Runs `func` on each element of this Dataset.
       *
@@ -2279,6 +2327,8 @@ class Dataset[T] private[sql](
     }
 
     /**
+      * 在此数据集的每个分区上运行“func”。
+      *
       * (Java-specific)
       * Runs `func` on each partition of this Dataset.
       *
@@ -2289,6 +2339,8 @@ class Dataset[T] private[sql](
         foreachPartition(it => func.call(it.asJava))
 
     /**
+      * 将函数“f”应用于此数据集的每个分区。
+      *
       * Applies a function `f` to each partition of this Dataset.
       *
       * @group action
@@ -2299,6 +2351,8 @@ class Dataset[T] private[sql](
     }
 
     /**
+      * 以列表形式返回数据集中的前“n”行。
+      *
       * Returns the first `n` rows in the Dataset as a list.
       *
       * Running take requires moving data into the application's driver process, and doing so with
@@ -2323,6 +2377,8 @@ class Dataset[T] private[sql](
     def take(n: Int): Array[T] = head(n)
 
     /**
+      * 返回包含此数据集中所有行的数组。
+      *
       * Returns an array that contains all rows in this Dataset.
       *
       * Running collect requires moving all the data into the application's driver process, and
@@ -2357,6 +2413,8 @@ class Dataset[T] private[sql](
     }
 
     /**
+      * 返回包含此数据集中所有行的迭代器。
+      *
       * Return an iterator that contains all rows in this Dataset.
       *
       * The iterator will consume as much memory as the largest partition in this Dataset.
@@ -2386,6 +2444,8 @@ class Dataset[T] private[sql](
     }
 
     /**
+      * 使用指定的列对数据集进行分组，以便我们可以对它们运行聚合。
+      *
       * Groups the Dataset using the specified columns, so we can run aggregation on them. See
       * [[RelationalGroupedDataset]] for all the available aggregate functions.
       *
@@ -2409,6 +2469,8 @@ class Dataset[T] private[sql](
     }
 
     /**
+      * 包装Dataset操作以跟踪QueryExecution和时间开销，然后向用户注册的回调函数报告。
+      *
       * Wrap a Dataset action to track the QueryExecution and time cost, then report to the
       * user-registered callback functions.
       */
@@ -2458,6 +2520,8 @@ class Dataset[T] private[sql](
     }
 
     /**
+      * 返回按给定分区表达式分区的新数据集，使用`spark.sql.shuffle.partitions`作为分区数。结果数据集是哈希分区的。
+      *
       * Returns a new Dataset partitioned by the given partitioning expressions, using
       * `spark.sql.shuffle.partitions` as number of partitions.
       * The resulting Dataset is hash partitioned.
@@ -2474,6 +2538,8 @@ class Dataset[T] private[sql](
     }
 
     /**
+      * 当请求较少的分区时，返回一个新的数据集，该数据集正好有“numPartitions”分区。
+      *
       * Returns a new Dataset that has exactly `numPartitions` partitions, when the fewer partitions
       * are requested. If a larger number of partitions is requested, it will stay at the current
       * number of partitions. Similar to coalesce defined on an `RDD`, this operation results in
@@ -2495,6 +2561,8 @@ class Dataset[T] private[sql](
     }
 
     /**
+      * 返回仅包含此数据集中唯一行的新数据集。这是“dropDuplicates”的别名。
+      *
       * Returns a new Dataset that contains only the unique rows from this Dataset.
       * This is an alias for `dropDuplicates`.
       *
@@ -2506,6 +2574,8 @@ class Dataset[T] private[sql](
     def distinct(): Dataset[T] = dropDuplicates()
 
     /**
+      * 返回仅包含此数据集中唯一行的新数据集。这是“distinct”的别名。
+      *
       * Returns a new Dataset that contains only the unique rows from this Dataset.
       * This is an alias for `distinct`.
       *
@@ -2521,6 +2591,8 @@ class Dataset[T] private[sql](
     def dropDuplicates(): Dataset[T] = dropDuplicates(this.columns)
 
     /**
+      * 以数组形式返回所有列名。
+      *
       * Returns all column names as an array.
       *
       * @group basic
@@ -2529,6 +2601,8 @@ class Dataset[T] private[sql](
     def columns: Array[String] = schema.fields.map(_.name)
 
     /**
+      * 返回一个新的数据集，其中删除了重复的行，只考虑列的子集。
+      *
       * Returns a new Dataset with duplicate rows removed, considering only
       * the subset of columns.
       *
@@ -2544,6 +2618,8 @@ class Dataset[T] private[sql](
     def dropDuplicates(colNames: Array[String]): Dataset[T] = dropDuplicates(colNames.toSeq)
 
     /**
+      * 使用给定的存储级别持久化此数据集。
+      *
       * Persist this Dataset with the given storage level.
       *
       * @param newLevel One of: `MEMORY_ONLY`, `MEMORY_AND_DISK`, `MEMORY_ONLY_SER`,
@@ -2558,6 +2634,8 @@ class Dataset[T] private[sql](
     }
 
     /**
+      * 获取数据集的当前存储级别，或者存储级别。无如果不坚持。
+      *
       * Get the Dataset's current storage level, or StorageLevel.NONE if not persisted.
       *
       * @group basic
@@ -2570,6 +2648,8 @@ class Dataset[T] private[sql](
     }
 
     /**
+      * 将数据集标记为非持久性，并从内存和磁盘中删除该数据集的所有块。
+      *
       * Mark the Dataset as non-persistent, and remove all blocks for it from memory and disk.
       *
       * @group basic
@@ -2578,6 +2658,8 @@ class Dataset[T] private[sql](
     def unpersist(): this.type = unpersist(blocking = false)
 
     /**
+      * 将数据集标记为非持久性，并从内存和磁盘中删除该数据集的所有块。
+      *
       * Mark the Dataset as non-persistent, and remove all blocks for it from memory and disk.
       *
       * @param blocking Whether to block until all blocks are deleted.
@@ -2590,6 +2672,8 @@ class Dataset[T] private[sql](
     }
 
     /**
+      * 以“T”的“JavaRDD”形式返回数据集的内容。
+      *
       * Returns the content of the Dataset as a `JavaRDD` of `T`s.
       *
       * @group basic
@@ -2598,6 +2682,8 @@ class Dataset[T] private[sql](
     def javaRDD: JavaRDD[T] = toJavaRDD
 
     /**
+      * 以“T”的“JavaRDD”形式返回数据集的内容。
+      *
       * Returns the content of the Dataset as a `JavaRDD` of `T`s.
       *
       * @group basic
@@ -2606,6 +2692,8 @@ class Dataset[T] private[sql](
     def toJavaRDD: JavaRDD[T] = rdd.toJavaRDD()
 
     /**
+      * 使用给定名称将此数据集注册为临时表。此临时表的生存期与用于创建此数据集的[[SparkSession]]绑定。
+      *
       * Registers this Dataset as a temporary table using the given name. The lifetime of this
       * temporary table is tied to the [[SparkSession]] that was used to create this Dataset.
       *
@@ -2618,6 +2706,8 @@ class Dataset[T] private[sql](
     }
 
     /**
+      * 使用给定名称创建本地临时视图。此临时视图的生存期与用于创建此数据集的[[SparkSession]]相关联。
+      *
       * Creates a local temporary view using the given name. The lifetime of this
       * temporary view is tied to the [[SparkSession]] that was used to create this Dataset.
       *
@@ -2652,6 +2742,8 @@ class Dataset[T] private[sql](
     }
 
     /**
+      * 使用给定名称创建本地临时视图。此临时视图的生存期与用于创建此数据集的[[SparkSession]]相关联。
+      *
       * Creates a local temporary view using the given name. The lifetime of this
       * temporary view is tied to the [[SparkSession]] that was used to create this Dataset.
       *
@@ -2669,6 +2761,8 @@ class Dataset[T] private[sql](
     }
 
     /**
+      * 使用给定名称创建全局临时视图。此临时视图的生存期与此Spark应用程序相关。
+      *
       * Creates a global temporary view using the given name. The lifetime of this
       * temporary view is tied to this Spark application.
       *
@@ -2687,6 +2781,8 @@ class Dataset[T] private[sql](
     }
 
     /**
+      * 使用给定名称创建或替换全局临时视图。此临时视图的生存期与此Spark应用程序相关。
+      *
       * Creates or replaces a global temporary view using the given name. The lifetime of this
       * temporary view is tied to this Spark application.
       *
@@ -2734,6 +2830,8 @@ class Dataset[T] private[sql](
     def isStreaming: Boolean = logicalPlan.isStreaming
 
     /**
+      * 用于将流数据集的内容保存到外部存储器的接口。
+      *
       * Interface for saving the content of the streaming Dataset out into external storage.
       *
       * @group basic
@@ -2749,6 +2847,8 @@ class Dataset[T] private[sql](
     }
 
     /**
+      * 将数据集的内容作为JSON字符串的数据集返回。
+      *
       * Returns the content of the Dataset as a Dataset of JSON strings.
       *
       * @since 2.0.0
@@ -2780,7 +2880,8 @@ class Dataset[T] private[sql](
                 }
             }
         }
-        sparkSession.createDataset(rdd)
+        // sparkSession.createDataset(rdd)
+        null
     }
 
     /**
@@ -2814,6 +2915,8 @@ class Dataset[T] private[sql](
     }
 
     /**
+      * 使用提供的权重随机拆分此数据集。为pythonapi提供。
+      *
       * Randomly splits this Dataset with the provided weights. Provided for the Python Api.
       *
       * @param weights weights for splits, will be normalized if they don't sum to 1.
@@ -2824,6 +2927,8 @@ class Dataset[T] private[sql](
     }
 
     /**
+      * 通过添加包含元数据的列返回新的数据集。
+      *
       * Returns a new Dataset by adding a column with metadata.
       */
     private[spark] def withColumn(colName: String, col: Column, metadata: Metadata): DataFrame = {
@@ -2835,6 +2940,8 @@ class Dataset[T] private[sql](
     ////////////////////////////////////////////////////////////////////////////
 
     /**
+      * 通过添加列或替换具有相同名称的现有列返回新数据集。
+      *
       * Returns a new Dataset by adding a column or replacing the existing column that has
       * the same name.
       *
@@ -2860,6 +2967,8 @@ class Dataset[T] private[sql](
     }
 
     /**
+      * 通过计算每个元素的给定[[Column]]表达式返回新数据集。
+      *
       * :: Experimental ::
       * Returns a new Dataset by computing the given [[Column]] expressions for each element.
       *
@@ -2872,6 +2981,8 @@ class Dataset[T] private[sql](
         selectUntyped(c1, c2).asInstanceOf[Dataset[(U1, U2)]]
 
     /**
+      * 返回一个新的“DataFrame”，其中包含对每个分区应用序列化R函数“func”的结果。
+      *
       * Returns a new `DataFrame` that contains the result of applying a serialized R function
       * `func` to each partition.
       */
@@ -2911,6 +3022,8 @@ class Dataset[T] private[sql](
     }
 
     /**
+      * 将JavaRDD转换为PythonRDD。
+      *
       * Converts a JavaRDD to a PythonRDD.
       */
     private[sql] def javaToPython: JavaRDD[Array[Byte]] = {
