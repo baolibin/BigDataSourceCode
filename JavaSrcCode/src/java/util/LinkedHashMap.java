@@ -347,6 +347,8 @@ public class LinkedHashMap<K,V>
     }
 
     /**
+     * 构造一个空的插入顺序<tt>LinkedHashMap</tt>实例具有指定的初始容量和负载系数。
+
      * Constructs an empty insertion-ordered <tt>LinkedHashMap</tt> instance
      * with the specified initial capacity and load factor.
      *
