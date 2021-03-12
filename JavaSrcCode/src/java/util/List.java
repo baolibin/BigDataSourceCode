@@ -143,6 +143,8 @@ public interface List<E> extends Collection<E> {
     boolean contains(Object o);
 
     /**
+     * 按正确的顺序在列表中的元素上返回迭代器。
+     *
      * Returns an iterator over the elements in this list in proper sequence.
      * @return an iterator over the elements in this list in proper sequence
      */
