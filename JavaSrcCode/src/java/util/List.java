@@ -113,6 +113,8 @@ public interface List<E> extends Collection<E> {
     // Query Operations
 
     /**
+     * 返回此列表中的元素数。
+     *
      * Returns the number of elements in this list.  If this list contains
      * more than <tt>Integer.MAX_VALUE</tt> elements, returns
      * <tt>Integer.MAX_VALUE</tt>.
