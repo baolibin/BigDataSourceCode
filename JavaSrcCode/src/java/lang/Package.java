@@ -153,6 +153,8 @@ public class Package implements java.lang.reflect.AnnotatedElement {
     }
 
     /**
+     * 返回此包的标题。
+     *
      * Return the title of this package.
      * @return the title of the implementation, null is returned if it is not known.
      */
