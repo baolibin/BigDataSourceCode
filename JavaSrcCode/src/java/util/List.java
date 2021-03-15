@@ -113,6 +113,8 @@ public interface List<E> extends Collection<E> {
     // Query Operations
 
     /**
+     * 返回此列表中的元素数。
+     *
      * Returns the number of elements in this list.  If this list contains
      * more than <tt>Integer.MAX_VALUE</tt> elements, returns
      * <tt>Integer.MAX_VALUE</tt>.
@@ -143,6 +145,8 @@ public interface List<E> extends Collection<E> {
     boolean contains(Object o);
 
     /**
+     * 按正确的顺序在列表中的元素上返回迭代器。
+     *
      * Returns an iterator over the elements in this list in proper sequence.
      * @return an iterator over the elements in this list in proper sequence
      */
