@@ -150,6 +150,8 @@ class SparkSession private(
       */
     @transient lazy val catalog: Catalog = new CatalogImpl(self)
     /**
+      * 此会话的包装版本，格式为[[SQLContext]]，用于向后兼容。
+      *
       * A wrapped version of this session in the form of a [[SQLContext]], for backward compatibility.
       *
       * @since 2.0.0
@@ -158,6 +160,8 @@ class SparkSession private(
     val sqlContext: SQLContext = new SQLContext(this)
 
     /**
+      * 运行此应用程序的Spark版本。
+      *
       * The version of Spark on which this application is running.
       *
       * @since 2.0.0
@@ -187,6 +191,8 @@ class SparkSession private(
     def experimental: ExperimentalMethods = sessionState.experimentalMethods
 
     /**
+      * 用于注册用户定义函数（UDF）的方法集合。
+      *
       * A collection of methods for registering user-defined functions (UDF).
       *
       * The following example registers a Scala closure as UDF:
@@ -239,6 +245,8 @@ class SparkSession private(
      * --------------------------------- */
 
     /**
+      * 创建一个新的类型为T的[[Dataset]]包含零元素。
+      *
       * :: Experimental ::
       * Creates a new [[Dataset]] of type T containing zero elements.
       *
@@ -252,6 +260,8 @@ class SparkSession private(
     }
 
     /**
+      * 从产品的RDD（例如case类、元组）创建“DataFrame”。
+      *
       * :: Experimental ::
       * Creates a `DataFrame` from an RDD of Product (e.g. case classes, tuples).
       *
@@ -410,6 +420,8 @@ class SparkSession private(
     }
 
     /**
+      * 返回给定JavaBean类的Catalyst架构。
+      *
       * Returns a Catalyst Schema for the given java bean class.
       */
     private def getSchema(beanClass: Class[_]): Seq[AttributeReference] = {
@@ -559,6 +571,8 @@ class SparkSession private(
     }
 
     /**
+      * 以“DataFrame”的形式返回指定的表/视图。
+      *
       * Returns the specified table/view as a `DataFrame`.
       *
       * @param tableName is either a qualified or unqualified name that designates a table or view.
@@ -582,6 +596,8 @@ class SparkSession private(
     }
 
     /**
+      * 使用Spark执行SQL查询，并将结果作为“DataFrame”返回。
+      *
       * Executes a SQL query using Spark, returning the result as a `DataFrame`.
       * The dialect that is used for SQL parsing can be configured with 'spark.sql.dialect'.
       *

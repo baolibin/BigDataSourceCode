@@ -472,6 +472,8 @@ class Dataset[T] private[sql](
     }
 
     /**
+      * 以表格形式显示数据集的前20行。超过20个字符的字符串将被截断，所有单元格将右对齐。
+      *
       * Displays the top 20 rows of Dataset in a tabular form. Strings more than 20 characters
       * will be truncated, and all cells will be aligned right.
       *
@@ -1081,6 +1083,8 @@ class Dataset[T] private[sql](
     def orderBy(sortExprs: Column*): Dataset[T] = sort(sortExprs: _*)
 
     /**
+      * 返回按给定表达式排序的新数据集。
+      *
       * Returns a new Dataset sorted by the given expressions. For example:
       * {{{
       *   ds.sort($"col1", $"col2".desc)
@@ -1133,6 +1137,8 @@ class Dataset[T] private[sql](
     def alias(alias: String): Dataset[T] = as(alias)
 
     /**
+      * 返回具有别名集的新数据集。
+      *
       * Returns a new Dataset with an alias set.
       *
       * @group typedrel
@@ -1159,6 +1165,8 @@ class Dataset[T] private[sql](
     def as(alias: Symbol): Dataset[T] = as(alias.name)
 
     /**
+      * 选择一组列。这是“select”的变体，只能使用列名选择现有列
+      *
       * Selects a set of columns. This is a variant of `select` that can only select
       * existing columns using column names (i.e. cannot construct expressions).
       *
@@ -1310,6 +1318,8 @@ class Dataset[T] private[sql](
     }
 
     /**
+      * 使用给定条件筛选行。这是“filter”的别名。
+      *
       * Filters rows using the given condition. This is an alias for `filter`.
       * {{{
       *   // The following are equivalent:
@@ -1336,6 +1346,8 @@ class Dataset[T] private[sql](
     }
 
     /**
+      * 使用给定条件筛选行。
+      *
       * Filters rows using the given condition.
       * {{{
       *   // The following are equivalent:
@@ -1602,6 +1614,8 @@ class Dataset[T] private[sql](
     def agg(expr: Column, exprs: Column*): DataFrame = groupBy().agg(expr, exprs: _*)
 
     /**
+      * 返回一个新的数据集，其中包含此数据集和另一个数据集中的行的并集。
+      *
       * Returns a new Dataset containing union of rows in this Dataset and another Dataset.
       *
       * This is equivalent to `UNION ALL` in SQL. To do a SQL-style set union (that does
@@ -1616,6 +1630,8 @@ class Dataset[T] private[sql](
     def unionAll(other: Dataset[T]): Dataset[T] = union(other)
 
     /**
+      * 返回一个新的数据集，其中包含此数据集和另一个数据集中的行的并集。
+      *
       * Returns a new Dataset containing union of rows in this Dataset and another Dataset.
       *
       * This is equivalent to `UNION ALL` in SQL. To do a SQL-style set union (that does
@@ -1669,6 +1685,8 @@ class Dataset[T] private[sql](
     }
 
     /**
+      * 通过使用随机种子对部分行进行采样，返回新的[[Dataset]]。
+      *
       * Returns a new [[Dataset]] by sampling a fraction of rows, using a random seed.
       *
       * @param withReplacement Sample with replacement or not.
