@@ -539,7 +539,7 @@ class SQLContext private[sql](val sparkSession: SparkSession)
 
     /**
       * 使用Spark执行SQL查询，并将结果作为“DataFrame”返回。
-      * 
+      *
       * Executes a SQL query using Spark, returning the result as a `DataFrame`. The dialect that is
       * used for SQL parsing can be configured with 'spark.sql.dialect'.
       *
