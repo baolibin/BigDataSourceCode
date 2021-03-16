@@ -124,6 +124,8 @@ class SparkSession private(
      |  Session-related state  |
      * ----------------------- */
     /**
+      * Spark的运行时配置接口。
+      *
       * Runtime configuration interface for Spark.
       *
       * This is the interface through which the user can get and set all Spark and Hadoop
@@ -134,6 +136,8 @@ class SparkSession private(
       */
     @transient lazy val conf: RuntimeConfig = new RuntimeConfig(sessionState.conf)
     /**
+      * 返回没有行或列的“DataFrame”。
+      *
       * Returns a `DataFrame` with no rows or columns.
       *
       * @since 2.0.0
@@ -143,6 +147,8 @@ class SparkSession private(
         createDataFrame(sparkContext.emptyRDD[Row], StructType(Nil))
     }
     /**
+      * 用户可以通过该接口创建、删除、更改或查询底层数据库、表、函数等。
+      *
       * Interface through which the user may create, drop, alter or query underlying
       * databases, tables, functions etc.
       *
@@ -226,6 +232,8 @@ class SparkSession private(
     def streams: StreamingQueryManager = sessionState.streamingQueryManager
 
     /**
+      * 使用隔离的SQL配置启动新会话，临时表、已注册的函数是隔离的，但共享底层的“SparkContext”和缓存数据。
+      *
       * Start a new session with isolated SQL configurations, temporary tables, registered
       * functions are isolated, but sharing the underlying `SparkContext` and cached data.
       *
@@ -276,6 +284,8 @@ class SparkSession private(
     }
 
     /**
+      * 从Product的本地序列创建“DataFrame”。
+      *
       * :: Experimental ::
       * Creates a `DataFrame` from a local Seq of Product.
       *
@@ -608,6 +618,8 @@ class SparkSession private(
     }
 
     /**
+      * 返回一个[[DataFrameReader]]，可用于将非流式数据作为“DataFrame”读入。
+      *
       * Returns a [[DataFrameReader]] that can be used to read non-streaming data in as a
       * `DataFrame`.
       * {{{
@@ -624,6 +636,8 @@ class SparkSession private(
      * ----------------- */
 
     /**
+      * 返回一个“DataStreamReader”，可用于以“DataFrame”的形式读入流数据。
+      *
       * Returns a `DataStreamReader` that can be used to read streaming data in as a `DataFrame`.
       * {{{
       *   sparkSession.readStream.parquet("/path/to/directory/of/parquet/files")
@@ -636,6 +650,8 @@ class SparkSession private(
     def readStream: DataStreamReader = new DataStreamReader(self)
 
     /**
+      * 执行一些代码块，并将执行该块所用的时间打印到标准输出。
+      *
       * Executes some code block and prints to stdout the time taken to execute the block. This is
       * available in Scala only and is used primarily for interactive testing and debugging.
       *
@@ -652,6 +668,8 @@ class SparkSession private(
     }
 
     /**
+      * “stop（）”的同义词。
+      *
       * Synonym for `stop()`.
       *
       * @since 2.1.0
@@ -659,6 +677,8 @@ class SparkSession private(
     override def close(): Unit = stop()
 
     /**
+      * 停止底层的“SparkContext”。
+      *
       * Stop the underlying `SparkContext`.
       *
       * @since 2.0.0
@@ -686,6 +706,8 @@ class SparkSession private(
     }
 
     /**
+      * 创建此“SparkSession”的相同副本，共享基础“SparkContext”和共享状态。
+      *
       * Create an identical copy of this `SparkSession`, sharing the underlying `SparkContext`
       * and shared state. All the state of this session (i.e. SQL configurations, temporary tables,
       * registered functions) is copied over, and the cloned session is set up with the same shared
@@ -737,6 +759,8 @@ class SparkSession private(
     }
 
     /**
+      * Scala中可用的隐式方法，用于将普通Scala对象转换为“DataFrame”。
+      *
       * :: Experimental ::
       * (Scala-specific) Implicit methods available in Scala for converting
       * common Scala objects into `DataFrame`s.
@@ -770,6 +794,8 @@ object SparkSession {
         "org.apache.spark.sql.hive.HiveSessionStateBuilder"
 
     /**
+      * 创建[[SparkSession.Builder]]用于构造[[SparkSession]]。
+      *
       * Creates a [[SparkSession.Builder]] for constructing a [[SparkSession]].
       *
       * @since 2.0.0
@@ -777,6 +803,9 @@ object SparkSession {
     def builder(): Builder = new Builder
 
     /**
+      * 清除当前线程的活动SparkSession。
+      * 对getOrCreate的后续调用将返回第一个创建的上下文，而不是线程本地重写。
+      *
       * Clears the active SparkSession for current thread. Subsequent calls to getOrCreate will
       * return the first created context instead of a thread-local override.
       *
@@ -787,6 +816,8 @@ object SparkSession {
     }
 
     /**
+      * 清除生成器返回的默认SparkSession。
+      *
       * Clears the default SparkSession that is returned by the builder.
       *
       * @since 2.0.0
@@ -825,6 +856,8 @@ object SparkSession {
     def getDefaultSession: Option[SparkSession] = Option(defaultSession.get)
 
     /**
+      * 设置生成器返回的默认SparkSession。
+      *
       * Sets the default SparkSession that is returned by the builder.
       *
       * @since 2.0.0
@@ -859,6 +892,8 @@ object SparkSession {
     }
 
     /**
+      * 如果可以加载配置单元类，则返回true，否则返回false。
+      *
       * @return true if Hive classes can be loaded, otherwise false.
       */
     private[spark] def hiveClassesArePresent: Boolean = {
@@ -872,6 +907,8 @@ object SparkSession {
     }
 
     /**
+      * [[SparkSession]]的生成器。
+      *
       * Builder for [[SparkSession]].
       */
     @InterfaceStability.Stable

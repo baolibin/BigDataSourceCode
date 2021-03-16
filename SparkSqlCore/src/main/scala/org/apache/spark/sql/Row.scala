@@ -33,6 +33,8 @@ import org.apache.spark.sql.types.StructType
 @InterfaceStability.Stable
 object Row {
     /**
+      * 此方法可用于从模式匹配中的[[Row]]对象提取字段。
+      *
       * This method can be used to extract fields from a [[Row]] object in a pattern match. Example:
       * {{{
       * import org.apache.spark.sql._
@@ -46,11 +48,15 @@ object Row {
     def unapplySeq(row: Row): Some[Seq[Any]] = Some(row.toSeq)
 
     /**
+      * 此方法可用于构造具有给定值的[[Row]]。
+      *
       * This method can be used to construct a [[Row]] with the given values.
       */
     def apply(values: Any*): Row = new GenericRow(values.toArray)
 
     /**
+      * 此方法可用于从值的“Seq”构造[[Row]]。
+      *
       * This method can be used to construct a [[Row]] from a `Seq` of values.
       */
     def fromSeq(values: Seq[Any]): Row = new GenericRow(values.toArray)
@@ -58,6 +64,8 @@ object Row {
     def fromTuple(tuple: Product): Row = fromSeq(tuple.productIterator.toSeq)
 
     /**
+      * 将多行合并成一行，一行接一行。
+      *
       * Merge multiple rows into a single row, one after another.
       */
     def merge(rows: Row*): Row = {
@@ -65,12 +73,18 @@ object Row {
         new GenericRow(rows.flatMap(_.toSeq).toArray)
     }
 
-    /** Returns an empty row. */
+    /**
+      * 返回一个空行。
+      *
+      * Returns an empty row.
+      */
     val empty = apply()
 }
 
 
 /**
+  * 表示关系运算符的一行输出。
+  *
   * Represents one row of output from a relational operator.  Allows both generic access by ordinal,
   * which will incur boxing overhead for primitives, as well as native primitive access.
   *
@@ -151,6 +165,8 @@ trait Row extends Serializable {
     def schema: StructType = null
 
     /**
+      * 返回位置i处的值。如果值为null，则返回null。
+      *
       * Returns the value at position i. If the value is null, null is returned. The following
       * is a mapping between Spark SQL types and return types:
       *
