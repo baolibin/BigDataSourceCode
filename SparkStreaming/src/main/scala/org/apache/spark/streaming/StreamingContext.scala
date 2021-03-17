@@ -134,6 +134,8 @@ class StreamingContext private[streaming](
     private var shutdownHookRef: AnyRef = _
 
     /**
+      * 使用现有SparkContext创建StreamingContext。
+      *
       * Create a StreamingContext using an existing SparkContext.
       *
       * @param sparkContext  existing SparkContext
@@ -144,6 +146,8 @@ class StreamingContext private[streaming](
     }
 
     /**
+      * 通过提供新SparkContext所需的配置来创建StreamingContext。
+      *
       * Create a StreamingContext by providing the configuration necessary for a new SparkContext.
       *
       * @param conf          a org.apache.spark.SparkConf object specifying Spark parameters
@@ -154,6 +158,8 @@ class StreamingContext private[streaming](
     }
 
     /**
+      * 通过提供创建新SparkContext所需的详细信息来创建StreamingContext。
+      *
       * Create a StreamingContext by providing the details necessary for creating a new SparkContext.
       *
       * @param master        cluster URL to connect to (e.g. mesos://host:port, spark://host:port, local[4]).
@@ -172,6 +178,8 @@ class StreamingContext private[streaming](
     }
 
     /**
+      * 从检查点文件重新创建StreamingContext。
+      *
       * Recreate a StreamingContext from a checkpoint file.
       *
       * @param path       Path to the directory that was specified as the checkpoint directory
@@ -724,6 +732,8 @@ class StreamingContext private[streaming](
 object StreamingContext extends Logging {
 
     /**
+      * 用于保护StreamingContext的激活以及对getActiveOrCreate（）中单一活动StreamingContext的访问的锁。
+      *
       * Lock that guards activation of a StreamingContext as well as access to the singleton active
       * StreamingContext in getActiveOrCreate().
       */
@@ -734,6 +744,9 @@ object StreamingContext extends Logging {
     private val activeContext = new AtomicReference[StreamingContext](null)
 
     /**
+      *
+      * 返回“active”StreamingContext（即，已启动但未停止），或者创建一个新的StreamingContext
+      *
       * :: Experimental ::
       *
       * Either return the "active" StreamingContext (that is, started but not stopped), or create a
@@ -818,6 +831,8 @@ object StreamingContext extends Logging {
     }
 
     /**
+      * 找到从中加载给定类的JAR，以便于用户将JAR传递给StreamingContext。
+      *
       * Find the JAR from which a given class was loaded, to make it easy for users to pass
       * their JARs to StreamingContext.
       */
@@ -871,6 +886,8 @@ object StreamingContext extends Logging {
 private class StreamingContextPythonHelper {
 
     /**
+      * 这是一个私有方法，仅用于Python实现“getOrCreate”。
+      *
       * This is a private method only for Python to implement `getOrCreate`.
       */
     def tryRecoverFromCheckpoint(checkpointPath: String): Option[StreamingContext] = {
