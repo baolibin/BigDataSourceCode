@@ -96,10 +96,17 @@ sealed abstract class State[S] {
       */
     @inline final def getOption(): Option[S] = if (exists) Some(get()) else None
 
-    /** Whether the state already exists */
+    /**
+      * 状态是否已存在
+      *
+      * Whether the state already exists
+      */
     def exists(): Boolean
 
     /**
+      * 获取状态（如果存在），否则将抛出`java.util.NoSuchElementException异常`.
+      * 在调用“get（）”之前，用“exists（）”检查状态是否存在。
+      *
       * Get the state if it exists, otherwise it will throw `java.util.NoSuchElementException`.
       * Check with `exists()` whether the state exists or not before calling `get()`.
       *
@@ -108,6 +115,8 @@ sealed abstract class State[S] {
     def get(): S
 
     /**
+      * 使用新值更新状态。
+      *
       * Update the state with a new value.
       *
       * State cannot be updated if it has been already removed (that is, `remove()` has already been
@@ -127,6 +136,8 @@ sealed abstract class State[S] {
     def remove(): Unit
 
     /**
+      * 当前批处理之后，状态是否超时并将被系统删除。
+      *
       * Whether the state is timing out and going to be removed by the system after the current batch.
       * This timeout can occur if timeout duration has been specified in the
       * [[org.apache.spark.streaming.StateSpec StatSpec]] and the key has not received any new data
@@ -135,7 +146,11 @@ sealed abstract class State[S] {
     def isTimingOut(): Boolean
 }
 
-/** Internal implementation of the [[State]] interface */
+/**
+  * [[状态]]接口的内部实现
+  *
+  * Internal implementation of the [[State]] interface
+  */
 private[streaming] class StateImpl[S] extends State[S] {
 
     private var state: S = null.asInstanceOf[S]
@@ -179,17 +194,27 @@ private[streaming] class StateImpl[S] extends State[S] {
 
     // ========= Internal API =========
 
-    /** Whether the state has been marked for removing */
+    /**
+      * 是否已将状态标记为删除
+      *
+      * Whether the state has been marked for removing
+      */
     def isRemoved(): Boolean = {
         removed
     }
 
-    /** Whether the state has been updated */
+    /**
+      * 状态是否已更新
+      *
+      * Whether the state has been updated
+      */
     def isUpdated(): Boolean = {
         updated
     }
 
     /**
+      * 将“this”中的内部数据和标志更新为给定的状态选项。此方法允许跨多个状态记录重用“This”对象。
+      *
       * Update the internal data and flags in `this` to the given state option.
       * This method allows `this` object to be reused across many state records.
       */
@@ -209,6 +234,8 @@ private[streaming] class StateImpl[S] extends State[S] {
     }
 
     /**
+      * 将“this”中的内部数据和标志更新为将要超时的给定状态。
+      *
       * Update the internal data and flags in `this` to the given state that is going to be timed out.
       * This method allows `this` object to be reused across many state records.
       */
