@@ -27,13 +27,15 @@ import org.apache.flink.api.java.typeutils.MissingTypeInfo;
 import org.apache.flink.util.Preconditions;
 
 import javax.annotation.Nullable;
-
 import java.util.Collection;
 
 import static org.apache.flink.util.Preconditions.checkArgument;
 import static org.apache.flink.util.Preconditions.checkNotNull;
 
 /**
+ * {@code Transformation}表示创建数据流的操作。
+ * 每个数据流都有一个底层的{@code Transformation}，它是所述数据流的起源。
+ * <p>
  * A {@code Transformation} represents the operation that creates a
  * DataStream. Every DataStream has an underlying
  * {@code Transformation} that is the origin of said DataStream.
@@ -89,7 +91,6 @@ import static org.apache.flink.util.Preconditions.checkNotNull;
  *
  * <p>The information about partitioning, union, split/select end up being encoded in the edges
  * that connect the sources to the map operation.
- *
  * @param <T> The type of the elements that result from this {@code Transformation}
  */
 @Internal
@@ -125,14 +126,14 @@ public abstract class Transformation<T> {
 	private int maxParallelism = -1;
 
 	/**
-	 *  The minimum resources for this stream transformation. It defines the lower limit for
-	 *  dynamic resources resize in future plan.
+	 * The minimum resources for this stream transformation. It defines the lower limit for
+	 * dynamic resources resize in future plan.
 	 */
 	private ResourceSpec minResources = ResourceSpec.DEFAULT;
 
 	/**
-	 *  The preferred resources for this stream transformation. It defines the upper limit for
-	 *  dynamic resource resize in future plan.
+	 * The preferred resources for this stream transformation. It defines the upper limit for
+	 * dynamic resource resize in future plan.
 	 */
 	private ResourceSpec preferredResources = ResourceSpec.DEFAULT;
 
@@ -155,9 +156,8 @@ public abstract class Transformation<T> {
 
 	/**
 	 * Creates a new {@code Transformation} with the given name, output type and parallelism.
-	 *
-	 * @param name The name of the {@code Transformation}, this will be shown in Visualizations and the Log
-	 * @param outputType The output type of this {@code Transformation}
+	 * @param name        The name of the {@code Transformation}, this will be shown in Visualizations and the Log
+	 * @param outputType  The output type of this {@code Transformation}
 	 * @param parallelism The parallelism of this {@code Transformation}
 	 */
 	public Transformation(String name, TypeInformation<T> outputType, int parallelism) {
@@ -198,7 +198,6 @@ public abstract class Transformation<T> {
 
 	/**
 	 * Sets the parallelism of this {@code Transformation}.
-	 *
 	 * @param parallelism The new parallelism to set on this {@code Transformation}.
 	 */
 	public void setParallelism(int parallelism) {
@@ -210,7 +209,6 @@ public abstract class Transformation<T> {
 
 	/**
 	 * Gets the maximum parallelism for this stream transformation.
-	 *
 	 * @return Maximum parallelism of this transformation.
 	 */
 	public int getMaxParallelism() {
@@ -219,7 +217,6 @@ public abstract class Transformation<T> {
 
 	/**
 	 * Sets the maximum parallelism for this stream transformation.
-	 *
 	 * @param maxParallelism Maximum parallelism for this stream transformation.
 	 */
 	public void setMaxParallelism(int maxParallelism) {
@@ -232,8 +229,7 @@ public abstract class Transformation<T> {
 
 	/**
 	 * Sets the minimum and preferred resources for this stream transformation.
-	 *
-	 * @param minResources The minimum resource of this transformation.
+	 * @param minResources       The minimum resource of this transformation.
 	 * @param preferredResources The preferred resource of this transformation.
 	 */
 	public void setResources(ResourceSpec minResources, ResourceSpec preferredResources) {
@@ -243,7 +239,6 @@ public abstract class Transformation<T> {
 
 	/**
 	 * Gets the minimum resource of this stream transformation.
-	 *
 	 * @return The minimum resource of this transformation.
 	 */
 	public ResourceSpec getMinResources() {
@@ -252,7 +247,6 @@ public abstract class Transformation<T> {
 
 	/**
 	 * Gets the preferred resource of this stream transformation.
-	 *
 	 * @return The preferred resource of this transformation.
 	 */
 	public ResourceSpec getPreferredResources() {
@@ -276,9 +270,8 @@ public abstract class Transformation<T> {
 	 * that changes the automatically generated hashes. In this case, providing the previous hashes
 	 * directly through this method (e.g. obtained from old logs) can help to reestablish a lost
 	 * mapping from states to their target operator.
-	 *
 	 * @param uidHash The user provided hash for this operator. This will become the JobVertexID, which is shown in the
-	 *                 logs and web ui.
+	 *                logs and web ui.
 	 */
 	public void setUidHash(String uidHash) {
 
@@ -291,7 +284,6 @@ public abstract class Transformation<T> {
 
 	/**
 	 * Gets the user provided hash.
-	 *
 	 * @return The user provided hash.
 	 */
 	public String getUserProvidedNodeHash() {
@@ -307,7 +299,6 @@ public abstract class Transformation<T> {
 	 *
 	 * <p><strong>Important</strong>: this ID needs to be unique per
 	 * transformation and job. Otherwise, job submission will fail.
-	 *
 	 * @param uid The unique user-specified ID of this transformation.
 	 */
 	public void setUid(String uid) {
@@ -316,7 +307,6 @@ public abstract class Transformation<T> {
 
 	/**
 	 * Returns the user-specified ID of this transformation.
-	 *
 	 * @return The unique user-specified ID of this transformation.
 	 */
 	public String getUid() {
@@ -325,7 +315,6 @@ public abstract class Transformation<T> {
 
 	/**
 	 * Returns the slot sharing group of this transformation.
-	 *
 	 * @see #setSlotSharingGroup(String)
 	 */
 	public String getSlotSharingGroup() {
@@ -339,7 +328,6 @@ public abstract class Transformation<T> {
 	 *
 	 * <p>Initially, an operation is in the default slot sharing group. This can be explicitly
 	 * set using {@code setSlotSharingGroup("default")}.
-	 *
 	 * @param slotSharingGroup The slot sharing group name.
 	 */
 	public void setSlotSharingGroup(String slotSharingGroup) {
@@ -382,9 +370,7 @@ public abstract class Transformation<T> {
 	 * modifications if the type was accessed already. This ensures consistency
 	 * by making sure different parts of the operation do not assume different
 	 * type information.
-	 *
 	 * @param outputType The type information to fill in.
-	 *
 	 * @throws IllegalStateException Thrown, if the type information has been accessed before.
 	 */
 	public void setOutputType(TypeInformation<T> outputType) {
@@ -401,7 +387,6 @@ public abstract class Transformation<T> {
 	/**
 	 * Returns the output type of this {@code Transformation} as a {@link TypeInformation}. Once
 	 * this is used once the output type cannot be changed anymore using {@link #setOutputType}.
-	 *
 	 * @return The output type of this {@code Transformation}
 	 */
 	public TypeInformation<T> getOutputType() {
@@ -438,7 +423,6 @@ public abstract class Transformation<T> {
 
 	/**
 	 * Returns the buffer timeout of this {@code Transformation}.
-	 *
 	 * @see #setBufferTimeout(long)
 	 */
 	public long getBufferTimeout() {
@@ -449,7 +433,6 @@ public abstract class Transformation<T> {
 	 * Returns all transitive predecessor {@code Transformation}s of this {@code Transformation}. This
 	 * is, for example, used when determining whether a feedback edge of an iteration
 	 * actually has the iteration head as a predecessor.
-	 *
 	 * @return The list of transitive predecessors.
 	 */
 	public abstract Collection<Transformation<?>> getTransitivePredecessors();

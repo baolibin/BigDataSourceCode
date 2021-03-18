@@ -25,9 +25,11 @@ import org.apache.flink.util.StringUtils;
 import java.nio.ByteBuffer;
 
 /**
+ * Flink作业的唯一（至少在统计上是唯一的）标识符。Flink中的作业对应于数据流图。
+ * <p>
  * Unique (at least statistically unique) identifier for a Flink Job. Jobs in Flink correspond
  * to dataflow graphs.
- * 
+ *
  * <p>Jobs act simultaneously as <i>sessions</i>, because jobs can be created and submitted
  * incrementally in different parts. Newer fragments of a graph can be attached to existing
  * graphs, thereby extending the current data flow graphs.</p>
@@ -46,8 +48,7 @@ public final class JobID extends AbstractID {
 
 	/**
 	 * Creates a new JobID, using the given lower and upper parts.
-	 * 
-	 * @param lowerPart The lower 8 bytes of the ID. 
+	 * @param lowerPart The lower 8 bytes of the ID.
 	 * @param upperPart The upper 8 bytes of the ID.
 	 */
 	public JobID(long lowerPart, long upperPart) {
@@ -58,20 +59,18 @@ public final class JobID extends AbstractID {
 	 * Creates a new JobID from the given byte sequence. The byte sequence must be
 	 * exactly 16 bytes long. The first eight bytes make up the lower part of the ID,
 	 * while the next 8 bytes make up the upper part of the ID.
-	 *
 	 * @param bytes The byte sequence.
 	 */
 	public JobID(byte[] bytes) {
 		super(bytes);
 	}
-	
+
 	// ------------------------------------------------------------------------
 	//  Static factory methods
 	// ------------------------------------------------------------------------
 
 	/**
 	 * Creates a new (statistically) random JobID.
-	 * 
 	 * @return A new random JobID.
 	 */
 	public static JobID generate() {
@@ -82,9 +81,7 @@ public final class JobID extends AbstractID {
 	 * Creates a new JobID from the given byte sequence. The byte sequence must be
 	 * exactly 16 bytes long. The first eight bytes make up the lower part of the ID,
 	 * while the next 8 bytes make up the upper part of the ID.
-	 * 
 	 * @param bytes The byte sequence.
-	 *                 
 	 * @return A new JobID corresponding to the ID encoded in the bytes.
 	 */
 	public static JobID fromByteArray(byte[] bytes) {
@@ -99,7 +96,6 @@ public final class JobID extends AbstractID {
 
 	/**
 	 * Parses a JobID from the given string.
-	 *
 	 * @param hexString string representation of a JobID
 	 * @return Parsed JobID
 	 * @throws IllegalArgumentException if the JobID could not be parsed from the given string
@@ -109,7 +105,7 @@ public final class JobID extends AbstractID {
 			return new JobID(StringUtils.hexStringToByte(hexString));
 		} catch (Exception e) {
 			throw new IllegalArgumentException("Cannot parse JobID from \"" + hexString + "\". The expected format is " +
-				"[0-9a-fA-F]{32}, e.g. fd72014d4c864993a2e5a9287b4a9c5d.", e);
+					"[0-9a-fA-F]{32}, e.g. fd72014d4c864993a2e5a9287b4a9c5d.", e);
 		}
 	}
 }

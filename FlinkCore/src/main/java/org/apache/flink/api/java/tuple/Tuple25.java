@@ -27,6 +27,8 @@ import org.apache.flink.annotation.Public;
 import org.apache.flink.util.StringUtils;
 
 /**
+ * 包含25个字段的元组。元组是强类型的；每个字段可以是单独的类型。
+ * <p>
  * A tuple with 25 fields. Tuples are strongly typed; each field may be of a separate type.
  * The fields of the tuple can be accessed directly as public fields (f0, f1, ...) or via their position
  * through the {@link #getField(int)} method. The tuple field positions start at zero.
@@ -35,24 +37,22 @@ import org.apache.flink.util.StringUtils;
  * with Tuples to reuse objects in order to reduce pressure on the garbage collector.</p>
  *
  * <p>Warning: If you subclass Tuple25, then be sure to either <ul>
- *  <li> not add any new fields, or </li>
- *  <li> make it a POJO, and always declare the element type of your DataStreams/DataSets to your descendant
- *       type. (That is, if you have a "class Foo extends Tuple25", then don't use instances of
- *       Foo in a DataStream&lt;Tuple25&gt; / DataSet&lt;Tuple25&gt;, but declare it as
- *       DataStream&lt;Foo&gt; / DataSet&lt;Foo&gt;.) </li>
+ * <li> not add any new fields, or </li>
+ * <li> make it a POJO, and always declare the element type of your DataStreams/DataSets to your descendant
+ * type. (That is, if you have a "class Foo extends Tuple25", then don't use instances of
+ * Foo in a DataStream&lt;Tuple25&gt; / DataSet&lt;Tuple25&gt;, but declare it as
+ * DataStream&lt;Foo&gt; / DataSet&lt;Foo&gt;.) </li>
  * </ul></p>
- * @see Tuple
- *
- * @param <T0> The type of field 0
- * @param <T1> The type of field 1
- * @param <T2> The type of field 2
- * @param <T3> The type of field 3
- * @param <T4> The type of field 4
- * @param <T5> The type of field 5
- * @param <T6> The type of field 6
- * @param <T7> The type of field 7
- * @param <T8> The type of field 8
- * @param <T9> The type of field 9
+ * @param <T0>  The type of field 0
+ * @param <T1>  The type of field 1
+ * @param <T2>  The type of field 2
+ * @param <T3>  The type of field 3
+ * @param <T4>  The type of field 4
+ * @param <T5>  The type of field 5
+ * @param <T6>  The type of field 6
+ * @param <T7>  The type of field 7
+ * @param <T8>  The type of field 8
+ * @param <T9>  The type of field 9
  * @param <T10> The type of field 10
  * @param <T11> The type of field 11
  * @param <T12> The type of field 12
@@ -68,81 +68,132 @@ import org.apache.flink.util.StringUtils;
  * @param <T22> The type of field 22
  * @param <T23> The type of field 23
  * @param <T24> The type of field 24
+ * @see Tuple
  */
 @Public
 public class Tuple25<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24> extends Tuple {
 
 	private static final long serialVersionUID = 1L;
 
-	/** Field 0 of the tuple. */
+	/**
+	 * Field 0 of the tuple.
+	 */
 	public T0 f0;
-	/** Field 1 of the tuple. */
+	/**
+	 * Field 1 of the tuple.
+	 */
 	public T1 f1;
-	/** Field 2 of the tuple. */
+	/**
+	 * Field 2 of the tuple.
+	 */
 	public T2 f2;
-	/** Field 3 of the tuple. */
+	/**
+	 * Field 3 of the tuple.
+	 */
 	public T3 f3;
-	/** Field 4 of the tuple. */
+	/**
+	 * Field 4 of the tuple.
+	 */
 	public T4 f4;
-	/** Field 5 of the tuple. */
+	/**
+	 * Field 5 of the tuple.
+	 */
 	public T5 f5;
-	/** Field 6 of the tuple. */
+	/**
+	 * Field 6 of the tuple.
+	 */
 	public T6 f6;
-	/** Field 7 of the tuple. */
+	/**
+	 * Field 7 of the tuple.
+	 */
 	public T7 f7;
-	/** Field 8 of the tuple. */
+	/**
+	 * Field 8 of the tuple.
+	 */
 	public T8 f8;
-	/** Field 9 of the tuple. */
+	/**
+	 * Field 9 of the tuple.
+	 */
 	public T9 f9;
-	/** Field 10 of the tuple. */
+	/**
+	 * Field 10 of the tuple.
+	 */
 	public T10 f10;
-	/** Field 11 of the tuple. */
+	/**
+	 * Field 11 of the tuple.
+	 */
 	public T11 f11;
-	/** Field 12 of the tuple. */
+	/**
+	 * Field 12 of the tuple.
+	 */
 	public T12 f12;
-	/** Field 13 of the tuple. */
+	/**
+	 * Field 13 of the tuple.
+	 */
 	public T13 f13;
-	/** Field 14 of the tuple. */
+	/**
+	 * Field 14 of the tuple.
+	 */
 	public T14 f14;
-	/** Field 15 of the tuple. */
+	/**
+	 * Field 15 of the tuple.
+	 */
 	public T15 f15;
-	/** Field 16 of the tuple. */
+	/**
+	 * Field 16 of the tuple.
+	 */
 	public T16 f16;
-	/** Field 17 of the tuple. */
+	/**
+	 * Field 17 of the tuple.
+	 */
 	public T17 f17;
-	/** Field 18 of the tuple. */
+	/**
+	 * Field 18 of the tuple.
+	 */
 	public T18 f18;
-	/** Field 19 of the tuple. */
+	/**
+	 * Field 19 of the tuple.
+	 */
 	public T19 f19;
-	/** Field 20 of the tuple. */
+	/**
+	 * Field 20 of the tuple.
+	 */
 	public T20 f20;
-	/** Field 21 of the tuple. */
+	/**
+	 * Field 21 of the tuple.
+	 */
 	public T21 f21;
-	/** Field 22 of the tuple. */
+	/**
+	 * Field 22 of the tuple.
+	 */
 	public T22 f22;
-	/** Field 23 of the tuple. */
+	/**
+	 * Field 23 of the tuple.
+	 */
 	public T23 f23;
-	/** Field 24 of the tuple. */
+	/**
+	 * Field 24 of the tuple.
+	 */
 	public T24 f24;
 
 	/**
 	 * Creates a new tuple where all fields are null.
 	 */
-	public Tuple25() {}
+	public Tuple25() {
+	}
 
 	/**
 	 * Creates a new tuple and assigns the given values to the tuple's fields.
-	 *
-	 * @param value0 The value for field 0
-	 * @param value1 The value for field 1
-	 * @param value2 The value for field 2
-	 * @param value3 The value for field 3
-	 * @param value4 The value for field 4
-	 * @param value5 The value for field 5
-	 * @param value6 The value for field 6
-	 * @param value7 The value for field 7
-	 * @param value8 The value for field 8
-	 * @param value9 The value for field 9
+	 * @param value0  The value for field 0
+	 * @param value1  The value for field 1
+	 * @param value2  The value for field 2
+	 * @param value3  The value for field 3
+	 * @param value4  The value for field 4
+	 * @param value5  The value for field 5
+	 * @param value6  The value for field 6
+	 * @param value7  The value for field 7
+	 * @param value8  The value for field 8
+	 * @param value9  The value for field 9
 	 * @param value10 The value for field 10
 	 * @param value11 The value for field 11
 	 * @param value12 The value for field 12
@@ -195,40 +246,66 @@ public class Tuple25<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
 	@Override
 	@SuppressWarnings("unchecked")
 	public <T> T getField(int pos) {
-		switch(pos) {
-			case 0: return (T) this.f0;
-			case 1: return (T) this.f1;
-			case 2: return (T) this.f2;
-			case 3: return (T) this.f3;
-			case 4: return (T) this.f4;
-			case 5: return (T) this.f5;
-			case 6: return (T) this.f6;
-			case 7: return (T) this.f7;
-			case 8: return (T) this.f8;
-			case 9: return (T) this.f9;
-			case 10: return (T) this.f10;
-			case 11: return (T) this.f11;
-			case 12: return (T) this.f12;
-			case 13: return (T) this.f13;
-			case 14: return (T) this.f14;
-			case 15: return (T) this.f15;
-			case 16: return (T) this.f16;
-			case 17: return (T) this.f17;
-			case 18: return (T) this.f18;
-			case 19: return (T) this.f19;
-			case 20: return (T) this.f20;
-			case 21: return (T) this.f21;
-			case 22: return (T) this.f22;
-			case 23: return (T) this.f23;
-			case 24: return (T) this.f24;
-			default: throw new IndexOutOfBoundsException(String.valueOf(pos));
+		switch (pos) {
+			case 0:
+				return (T) this.f0;
+			case 1:
+				return (T) this.f1;
+			case 2:
+				return (T) this.f2;
+			case 3:
+				return (T) this.f3;
+			case 4:
+				return (T) this.f4;
+			case 5:
+				return (T) this.f5;
+			case 6:
+				return (T) this.f6;
+			case 7:
+				return (T) this.f7;
+			case 8:
+				return (T) this.f8;
+			case 9:
+				return (T) this.f9;
+			case 10:
+				return (T) this.f10;
+			case 11:
+				return (T) this.f11;
+			case 12:
+				return (T) this.f12;
+			case 13:
+				return (T) this.f13;
+			case 14:
+				return (T) this.f14;
+			case 15:
+				return (T) this.f15;
+			case 16:
+				return (T) this.f16;
+			case 17:
+				return (T) this.f17;
+			case 18:
+				return (T) this.f18;
+			case 19:
+				return (T) this.f19;
+			case 20:
+				return (T) this.f20;
+			case 21:
+				return (T) this.f21;
+			case 22:
+				return (T) this.f22;
+			case 23:
+				return (T) this.f23;
+			case 24:
+				return (T) this.f24;
+			default:
+				throw new IndexOutOfBoundsException(String.valueOf(pos));
 		}
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public <T> void setField(T value, int pos) {
-		switch(pos) {
+		switch (pos) {
 			case 0:
 				this.f0 = (T0) value;
 				break;
@@ -304,23 +381,23 @@ public class Tuple25<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
 			case 24:
 				this.f24 = (T24) value;
 				break;
-			default: throw new IndexOutOfBoundsException(String.valueOf(pos));
+			default:
+				throw new IndexOutOfBoundsException(String.valueOf(pos));
 		}
 	}
 
 	/**
 	 * Sets new values to all fields of the tuple.
-	 *
-	 * @param value0 The value for field 0
-	 * @param value1 The value for field 1
-	 * @param value2 The value for field 2
-	 * @param value3 The value for field 3
-	 * @param value4 The value for field 4
-	 * @param value5 The value for field 5
-	 * @param value6 The value for field 6
-	 * @param value7 The value for field 7
-	 * @param value8 The value for field 8
-	 * @param value9 The value for field 9
+	 * @param value0  The value for field 0
+	 * @param value1  The value for field 1
+	 * @param value2  The value for field 2
+	 * @param value3  The value for field 3
+	 * @param value4  The value for field 4
+	 * @param value5  The value for field 5
+	 * @param value6  The value for field 6
+	 * @param value7  The value for field 7
+	 * @param value8  The value for field 8
+	 * @param value9  The value for field 9
 	 * @param value10 The value for field 10
 	 * @param value11 The value for field 11
 	 * @param value12 The value for field 12
@@ -379,31 +456,31 @@ public class Tuple25<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
 	@Override
 	public String toString() {
 		return "(" + StringUtils.arrayAwareToString(this.f0)
-			+ "," + StringUtils.arrayAwareToString(this.f1)
-			+ "," + StringUtils.arrayAwareToString(this.f2)
-			+ "," + StringUtils.arrayAwareToString(this.f3)
-			+ "," + StringUtils.arrayAwareToString(this.f4)
-			+ "," + StringUtils.arrayAwareToString(this.f5)
-			+ "," + StringUtils.arrayAwareToString(this.f6)
-			+ "," + StringUtils.arrayAwareToString(this.f7)
-			+ "," + StringUtils.arrayAwareToString(this.f8)
-			+ "," + StringUtils.arrayAwareToString(this.f9)
-			+ "," + StringUtils.arrayAwareToString(this.f10)
-			+ "," + StringUtils.arrayAwareToString(this.f11)
-			+ "," + StringUtils.arrayAwareToString(this.f12)
-			+ "," + StringUtils.arrayAwareToString(this.f13)
-			+ "," + StringUtils.arrayAwareToString(this.f14)
-			+ "," + StringUtils.arrayAwareToString(this.f15)
-			+ "," + StringUtils.arrayAwareToString(this.f16)
-			+ "," + StringUtils.arrayAwareToString(this.f17)
-			+ "," + StringUtils.arrayAwareToString(this.f18)
-			+ "," + StringUtils.arrayAwareToString(this.f19)
-			+ "," + StringUtils.arrayAwareToString(this.f20)
-			+ "," + StringUtils.arrayAwareToString(this.f21)
-			+ "," + StringUtils.arrayAwareToString(this.f22)
-			+ "," + StringUtils.arrayAwareToString(this.f23)
-			+ "," + StringUtils.arrayAwareToString(this.f24)
-			+ ")";
+				+ "," + StringUtils.arrayAwareToString(this.f1)
+				+ "," + StringUtils.arrayAwareToString(this.f2)
+				+ "," + StringUtils.arrayAwareToString(this.f3)
+				+ "," + StringUtils.arrayAwareToString(this.f4)
+				+ "," + StringUtils.arrayAwareToString(this.f5)
+				+ "," + StringUtils.arrayAwareToString(this.f6)
+				+ "," + StringUtils.arrayAwareToString(this.f7)
+				+ "," + StringUtils.arrayAwareToString(this.f8)
+				+ "," + StringUtils.arrayAwareToString(this.f9)
+				+ "," + StringUtils.arrayAwareToString(this.f10)
+				+ "," + StringUtils.arrayAwareToString(this.f11)
+				+ "," + StringUtils.arrayAwareToString(this.f12)
+				+ "," + StringUtils.arrayAwareToString(this.f13)
+				+ "," + StringUtils.arrayAwareToString(this.f14)
+				+ "," + StringUtils.arrayAwareToString(this.f15)
+				+ "," + StringUtils.arrayAwareToString(this.f16)
+				+ "," + StringUtils.arrayAwareToString(this.f17)
+				+ "," + StringUtils.arrayAwareToString(this.f18)
+				+ "," + StringUtils.arrayAwareToString(this.f19)
+				+ "," + StringUtils.arrayAwareToString(this.f20)
+				+ "," + StringUtils.arrayAwareToString(this.f21)
+				+ "," + StringUtils.arrayAwareToString(this.f22)
+				+ "," + StringUtils.arrayAwareToString(this.f23)
+				+ "," + StringUtils.arrayAwareToString(this.f24)
+				+ ")";
 	}
 
 	/**
@@ -530,40 +607,42 @@ public class Tuple25<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
 	}
 
 	/**
-	* Shallow tuple copy.
-	* @return A new Tuple with the same fields as this.
-	*/
+	 * Shallow tuple copy.
+	 * @return A new Tuple with the same fields as this.
+	 */
 	@Override
 	@SuppressWarnings("unchecked")
 	public Tuple25<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24> copy() {
 		return new Tuple25<>(this.f0,
-			this.f1,
-			this.f2,
-			this.f3,
-			this.f4,
-			this.f5,
-			this.f6,
-			this.f7,
-			this.f8,
-			this.f9,
-			this.f10,
-			this.f11,
-			this.f12,
-			this.f13,
-			this.f14,
-			this.f15,
-			this.f16,
-			this.f17,
-			this.f18,
-			this.f19,
-			this.f20,
-			this.f21,
-			this.f22,
-			this.f23,
-			this.f24);
+				this.f1,
+				this.f2,
+				this.f3,
+				this.f4,
+				this.f5,
+				this.f6,
+				this.f7,
+				this.f8,
+				this.f9,
+				this.f10,
+				this.f11,
+				this.f12,
+				this.f13,
+				this.f14,
+				this.f15,
+				this.f16,
+				this.f17,
+				this.f18,
+				this.f19,
+				this.f20,
+				this.f21,
+				this.f22,
+				this.f23,
+				this.f24);
 	}
 
 	/**
+	 * 创建一个新元组并将给定的值赋给元组的字段。
+	 *
 	 * Creates a new tuple and assigns the given values to the tuple's fields.
 	 * This is more convenient than using the constructor, because the compiler can
 	 * infer the generic type arguments implicitly. For example:
@@ -573,29 +652,29 @@ public class Tuple25<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
 	 */
 	public static <T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24> Tuple25<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24> of(T0 value0, T1 value1, T2 value2, T3 value3, T4 value4, T5 value5, T6 value6, T7 value7, T8 value8, T9 value9, T10 value10, T11 value11, T12 value12, T13 value13, T14 value14, T15 value15, T16 value16, T17 value17, T18 value18, T19 value19, T20 value20, T21 value21, T22 value22, T23 value23, T24 value24) {
 		return new Tuple25<>(value0,
-			value1,
-			value2,
-			value3,
-			value4,
-			value5,
-			value6,
-			value7,
-			value8,
-			value9,
-			value10,
-			value11,
-			value12,
-			value13,
-			value14,
-			value15,
-			value16,
-			value17,
-			value18,
-			value19,
-			value20,
-			value21,
-			value22,
-			value23,
-			value24);
+				value1,
+				value2,
+				value3,
+				value4,
+				value5,
+				value6,
+				value7,
+				value8,
+				value9,
+				value10,
+				value11,
+				value12,
+				value13,
+				value14,
+				value15,
+				value16,
+				value17,
+				value18,
+				value19,
+				value20,
+				value21,
+				value22,
+				value23,
+				value24);
 	}
 }

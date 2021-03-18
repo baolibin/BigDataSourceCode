@@ -21,6 +21,8 @@ package org.apache.flink.api.common;
 import org.apache.flink.annotation.Public;
 
 /**
+ * 将作业提交给作业管理器的结果。
+ * <p>
  * The result of submitting a job to a JobManager.
  */
 @Public
@@ -34,7 +36,6 @@ public class JobSubmissionResult {
 
 	/**
 	 * Returns the JobID assigned to the job by the Flink runtime.
-	 *
 	 * @return jobID, or null if the job has been executed on a runtime without JobIDs or if the execution failed.
 	 */
 	public JobID getJobID() {

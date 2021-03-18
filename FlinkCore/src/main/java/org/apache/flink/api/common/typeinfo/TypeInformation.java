@@ -32,6 +32,9 @@ import java.util.Collections;
 import java.util.Map;
 
 /**
+ * 类型信息是Flink类型系统的核心类。Flink需要所有类型的类型信息，这些类型用作用户函数的输入或返回类型。
+ * 这个类型信息类充当工具来生成序列化器和比较器，并执行语义检查，例如用作连接/分组键的字段是否实际存在。
+ * <p>
  * TypeInformation is the core class of Flink's type system. Flink requires a type information
  * for all types that are used as input or return type of a user function. This type information
  * class acts as the tool to generate serializers and comparators, and to perform semantic checks
@@ -71,56 +74,63 @@ import java.util.Map;
  * <p>The types "id", "text", and "timestamp" are basic types that take up one field. The "InnerType"
  * has an arity of two, and also two fields totally. The "OuterType" has an arity of two fields,
  * and a total number of three fields ( it contains "id", "text", and "timestamp" through recursive flattening).
- *
  * @param <T> The type represented by this type information.
  */
 @Public
 public abstract class TypeInformation<T> implements Serializable {
 
 	private static final long serialVersionUID = -7742311969684489493L;
-
 	/**
+	 * implicit val inTypeInfo: TypeInformation[String] = createTypeInformation[String]
+	 */
+	/**
+	 * 检查此类型信息是否表示基本类型。
+	 *
 	 * Checks if this type information represents a basic type.
 	 * Basic types are defined in {@link BasicTypeInfo} and are primitives, their boxing types,
 	 * Strings, Date, Void, ...
-	 *
 	 * @return True, if this type information describes a basic type, false otherwise.
 	 */
 	@PublicEvolving
 	public abstract boolean isBasicType();
 
 	/**
+	 * 检查此类型信息是否表示元组类型。
+	 *
 	 * Checks if this type information represents a Tuple type.
 	 * Tuple types are subclasses of the Java API tuples.
-	 *
 	 * @return True, if this type information describes a tuple type, false otherwise.
 	 */
 	@PublicEvolving
 	public abstract boolean isTupleType();
 
 	/**
-	 * Gets the arity of this type - the number of fields without nesting.
+	 * 获取此类型的arity—不嵌套的字段数。
 	 *
+	 * Gets the arity of this type - the number of fields without nesting.
 	 * @return Gets the number of fields in this type without nesting.
 	 */
 	@PublicEvolving
 	public abstract int getArity();
 
 	/**
+	 * 获取此类型中逻辑字段的数目。对于复合类型，这包括其嵌套字段和传递嵌套字段。
+	 * 在上面的示例中，OuterType类型总共有三个字段。
+	 *
 	 * Gets the number of logical fields in this type. This includes its nested and transitively nested
 	 * fields, in the case of composite types. In the example above, the OuterType type has three
 	 * fields in total.
 	 *
 	 * <p>The total number of fields must be at least 1.
-	 *
 	 * @return The number of fields in this type, including its sub-fields (for composite types)
 	 */
 	@PublicEvolving
 	public abstract int getTotalFields();
 
 	/**
-	 * Gets the class of the type represented by this type information.
+	 * 获取由此类型信息表示的类型的类。
 	 *
+	 * Gets the class of the type represented by this type information.
 	 * @return The class of the type represented by this type information.
 	 */
 	@PublicEvolving
@@ -138,9 +148,8 @@ public abstract class TypeInformation<T> implements Serializable {
 	 * m.put("T1", this.getTypeAt(1));
 	 * return m;
 	 * </code>
-	 *
 	 * @return map of inferred subtypes; it does not have to contain all generic parameters as key;
-	 *         values may be null if type could not be inferred
+	 * values may be null if type could not be inferred
 	 */
 	@PublicEvolving
 	public Map<String, TypeInformation<?>> getGenericParameters() {
@@ -151,13 +160,14 @@ public abstract class TypeInformation<T> implements Serializable {
 	/**
 	 * Checks whether this type can be used as a key. As a bare minimum, types have
 	 * to be hashable and comparable to be keys.
-	 *
 	 * @return True, if the type can be used as a key, false otherwise.
 	 */
 	@PublicEvolving
 	public abstract boolean isKeyType();
 
 	/**
+	 * 检查此类型是否可以用作排序键。排序此类型所产生的顺序必须有意义。
+	 *
 	 * Checks whether this type can be used as a key for sorting.
 	 * The order produced by sorting this type must be meaningful.
 	 */
@@ -167,9 +177,10 @@ public abstract class TypeInformation<T> implements Serializable {
 	}
 
 	/**
+	 * 为类型创建序列化程序。序列化程序可以使用ExecutionConfig进行参数化。
+	 *
 	 * Creates a serializer for the type. The serializer may use the ExecutionConfig
 	 * for parameterization.
-	 *
 	 * @param config The config used to parameterize the serializer.
 	 * @return A serializer for this type.
 	 */
@@ -187,7 +198,6 @@ public abstract class TypeInformation<T> implements Serializable {
 
 	/**
 	 * Returns true if the given object can be equaled with this object. If not, it returns false.
-	 *
 	 * @param obj Object which wants to take part in the equality relation
 	 * @return true if obj can be equaled with this, otherwise false
 	 */
@@ -200,22 +210,19 @@ public abstract class TypeInformation<T> implements Serializable {
 	 *
 	 * <p>This method only works for non-generic types. For generic types, use the
 	 * {@link #of(TypeHint)} method.
-	 *
 	 * @param typeClass The class of the type.
-	 * @param <T> The generic type.
-	 *
+	 * @param <T>       The generic type.
 	 * @return The TypeInformation object for the type described by the hint.
 	 */
 	public static <T> TypeInformation<T> of(Class<T> typeClass) {
 		try {
 			return TypeExtractor.createTypeInfo(typeClass);
-		}
-		catch (InvalidTypesException e) {
+		} catch (InvalidTypesException e) {
 			throw new FlinkRuntimeException(
 					"Cannot extract TypeInformation from Class alone, because generic parameters are missing. " +
-					"Please use TypeInformation.of(TypeHint) instead, or another equivalent method in the API that " +
-					"accepts a TypeHint instead of a Class. " +
-					"For example for a Tuple2<Long, String> pass a 'new TypeHint<Tuple2<Long, String>>(){}'.");
+							"Please use TypeInformation.of(TypeHint) instead, or another equivalent method in the API that " +
+							"accepts a TypeHint instead of a Class. " +
+							"For example for a Tuple2<Long, String> pass a 'new TypeHint<Tuple2<Long, String>>(){}'.");
 		}
 	}
 
@@ -227,10 +234,8 @@ public abstract class TypeInformation<T> implements Serializable {
 	 * TypeInformation<Tuple2<String, Long>> info = TypeInformation.of(new TypeHint<Tuple2<String, Long>>(){});
 	 * }
 	 * </pre>
-	 *
 	 * @param typeHint The hint for the generic type.
-	 * @param <T> The generic type.
-	 *
+	 * @param <T>      The generic type.
 	 * @return The TypeInformation object for the type described by the hint.
 	 */
 	public static <T> TypeInformation<T> of(TypeHint<T> typeHint) {

@@ -21,10 +21,12 @@ package org.apache.flink.api.java.functions;
 import org.apache.flink.annotation.Internal;
 
 /**
+ * 用作虚拟的{@linkkeyselector}，允许对非键控用例使用键控操作符。
+ * 本质上，它为所有传入的记录提供相同的键，即{@code（byte）0}值。
+ * <p>
  * Used as a dummy {@link KeySelector} to allow using keyed operators
  * for non-keyed use cases. Essentially, it gives all incoming records
  * the same key, which is a {@code (byte) 0} value.
- *
  * @param <T> The type of the input element.
  */
 @Internal
