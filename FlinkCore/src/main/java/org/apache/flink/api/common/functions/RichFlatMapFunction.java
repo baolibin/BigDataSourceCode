@@ -22,12 +22,13 @@ import org.apache.flink.annotation.Public;
 import org.apache.flink.util.Collector;
 
 /**
+ * {@link FlatMapFunction}的丰富变体。
+ * <p>
  * Rich variant of the {@link FlatMapFunction}. As a {@link RichFunction}, it gives access to the
  * {@link RuntimeContext} and provides setup and teardown methods:
  * {@link RichFunction#open(org.apache.flink.configuration.Configuration)} and
  * {@link RichFunction#close()}.
- *
- * @param <IN> Type of the input elements.
+ * @param <IN>  Type of the input elements.
  * @param <OUT> Type of the returned elements.
  */
 @Public

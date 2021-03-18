@@ -21,6 +21,8 @@ package org.apache.flink.api.common.functions;
 import org.apache.flink.annotation.Public;
 
 /**
+ * 所有用户定义函数的基本接口。
+ * <p>
  * The base interface for all user-defined functions.
  *
  * <p>This interface is empty in order to allow extending interfaces to

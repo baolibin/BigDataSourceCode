@@ -22,6 +22,8 @@ import org.apache.flink.annotation.PublicEvolving;
 import java.io.Serializable;
 
 /**
+ * RangeBoundaries用于将记录拆分为多个范围。
+ *
  * RangeBoundaries is used to split the records into multiple ranges.
  *
  * @param <T> The boundary type.

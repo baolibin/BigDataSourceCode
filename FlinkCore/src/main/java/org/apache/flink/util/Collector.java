@@ -21,6 +21,8 @@ package org.apache.flink.util;
 import org.apache.flink.annotation.Public;
 
 /**
+ * 收集记录并转发。收集器是“push”对应项{@link java.util.Iterator}，将数据“拉入”。
+ * <p>
  * Collects a record and forwards it. The collector is the "push" counterpart of the
  * {@link java.util.Iterator}, which "pulls" data in.
  */
@@ -29,7 +31,6 @@ public interface Collector<T> {
 
 	/**
 	 * Emits a record.
-	 *
 	 * @param record The record to collect.
 	 */
 	void collect(T record);

@@ -25,16 +25,15 @@ import org.apache.flink.core.fs.Path;
 import java.io.File;
 import java.io.Serializable;
 import java.net.URI;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 /**
+ * DistributedCache提供静态方法将已注册的缓存文件写入作业配置或从作业配置对其进行解码。
+ * 它还提供用户对本地文件的访问。
+ * <p>
  * DistributedCache provides static methods to write the registered cache files into job configuration or decode
  * them from job configuration. It also provides user access to the file locally.
  */
@@ -56,17 +55,23 @@ public class DistributedCache {
 
 		public byte[] blobKey;
 
-		/** Client-side constructor used by the API for initial registration. */
+		/**
+		 * Client-side constructor used by the API for initial registration.
+		 */
 		public DistributedCacheEntry(String filePath, Boolean isExecutable) {
 			this(filePath, isExecutable, null);
 		}
 
-		/** Client-side constructor used during job-submission for zipped directory. */
+		/**
+		 * Client-side constructor used during job-submission for zipped directory.
+		 */
 		public DistributedCacheEntry(String filePath, boolean isExecutable, boolean isZipped) {
 			this(filePath, isExecutable, null, isZipped);
 		}
 
-		/** Server-side constructor used during job-submission for zipped directories. */
+		/**
+		 * Server-side constructor used during job-submission for zipped directories.
+		 */
 		public DistributedCacheEntry(String filePath, Boolean isExecutable, byte[] blobKey, boolean isZipped) {
 			this.filePath = filePath;
 			this.isExecutable = isExecutable;
@@ -74,19 +79,21 @@ public class DistributedCache {
 			this.isZipped = isZipped;
 		}
 
-		/** Server-side constructor used during job-submission for files. */
-		public DistributedCacheEntry(String filePath, Boolean isExecutable, byte[] blobKey){
+		/**
+		 * Server-side constructor used during job-submission for files.
+		 */
+		public DistributedCacheEntry(String filePath, Boolean isExecutable, byte[] blobKey) {
 			this(filePath, isExecutable, blobKey, false);
 		}
 
 		@Override
 		public String toString() {
 			return "DistributedCacheEntry{" +
-				"filePath='" + filePath + '\'' +
-				", isExecutable=" + isExecutable +
-				", isZipped=" + isZipped +
-				", blobKey=" + Arrays.toString(blobKey) +
-				'}';
+					"filePath='" + filePath + '\'' +
+					", isExecutable=" + isExecutable +
+					", isZipped=" + isZipped +
+					", blobKey=" + Arrays.toString(blobKey) +
+					'}';
 		}
 	}
 
@@ -115,11 +122,9 @@ public class DistributedCache {
 			final Path path = future.get();
 			URI tmp = path.makeQualified(path.getFileSystem()).toUri();
 			return new File(tmp);
-		}
-		catch (ExecutionException e) {
+		} catch (ExecutionException e) {
 			throw new RuntimeException("An error occurred while copying the file.", e.getCause());
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			throw new RuntimeException("Error while getting the file registered under '" + name +
 					"' from the distributed cache", e);
 		}
