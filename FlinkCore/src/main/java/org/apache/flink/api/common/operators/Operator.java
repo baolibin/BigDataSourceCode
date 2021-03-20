@@ -18,8 +18,6 @@
 
 package org.apache.flink.api.common.operators;
 
-import java.util.List;
-
 import org.apache.flink.annotation.Internal;
 import org.apache.flink.annotation.PublicEvolving;
 import org.apache.flink.api.common.ExecutionConfig;
@@ -28,21 +26,24 @@ import org.apache.flink.api.common.typeinfo.TypeInformation;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.util.Visitable;
 
+import java.util.List;
+
 /**
-* Abstract base class for all operators. An operator is a source, sink, or it applies an operation to
-* one or more inputs, producing a result.
- *
+ * 所有运算符的抽象基类。操作符是一个source、sink，或者它对一个或多个输入应用一个操作，从而产生一个结果。
+ * <p>
+ * Abstract base class for all operators. An operator is a source, sink, or it applies an operation to
+ * one or more inputs, producing a result.
  * @param <OUT> Output type of the records output by this operator
-*/
+ */
 @Internal
 public abstract class Operator<OUT> implements Visitable<Operator<?>> {
-	
-	protected final Configuration parameters;			// the parameters to parameterize the UDF
-	
-	protected CompilerHints compilerHints;				// hints to the compiler
-	
-	protected String name;								// the name of the contract instance. optional.
-		
+
+	protected final Configuration parameters;            // the parameters to parameterize the UDF
+
+	protected CompilerHints compilerHints;                // hints to the compiler
+
+	protected String name;                                // the name of the contract instance. optional.
+
 	private int parallelism = ExecutionConfig.PARALLELISM_DEFAULT;  // the number of parallel instances to use
 
 	private ResourceSpec minResources = ResourceSpec.DEFAULT;          // the minimum resource of the contract instance.
@@ -50,6 +51,8 @@ public abstract class Operator<OUT> implements Visitable<Operator<?>> {
 	private ResourceSpec preferredResources = ResourceSpec.DEFAULT;    // the preferred resource of the contract instance.
 
 	/**
+	 * 用户函数的返回类型。
+	 * <p>
 	 * The return type of the user function.
 	 */
 	protected final OperatorInformation<OUT> operatorInfo;
@@ -57,9 +60,10 @@ public abstract class Operator<OUT> implements Visitable<Operator<?>> {
 	// --------------------------------------------------------------------------------------------
 
 	/**
+	 * 用给定的名称创建一个新contract。默认情况下，参数为空，并且未设置编译器提示。
+	 *
 	 * Creates a new contract with the given name. The parameters are empty by default and
 	 * the compiler hints are not set.
-	 * 
 	 * @param name The name that is used to describe the contract.
 	 */
 	protected Operator(OperatorInformation<OUT> operatorInfo, String name) {
@@ -70,6 +74,8 @@ public abstract class Operator<OUT> implements Visitable<Operator<?>> {
 	}
 
 	/**
+	 * 获取有关运算符输入/输出类型的信息。
+	 *
 	 * Gets the information about the operators input/output types.
 	 */
 	public OperatorInformation<OUT> getOperatorInfo() {
@@ -79,28 +85,25 @@ public abstract class Operator<OUT> implements Visitable<Operator<?>> {
 	/**
 	 * Gets the name of the contract instance. The name is only used to describe the contract instance
 	 * in logging output and graphical representations.
-	 * 
 	 * @return The contract instance's name.
 	 */
 	public String getName() {
 		return this.name;
 	}
-	
+
 	/**
 	 * Sets the name of the contract instance. The name is only used to describe the contract instance
 	 * in logging output and graphical representations.
-	 * 
 	 * @param name The operator's name.
 	 */
 	public void setName(String name) {
 		this.name = name;
-	}	
+	}
 
 	/**
 	 * Gets the compiler hints for this contract instance. In the compiler hints, different fields may
 	 * be set (for example the selectivity) that will be evaluated by the pact compiler when generating
 	 * plan alternatives.
-	 * 
 	 * @return The compiler hints object.
 	 */
 	public CompilerHints getCompilerHints() {
@@ -112,7 +115,6 @@ public abstract class Operator<OUT> implements Visitable<Operator<?>> {
 	 * string or integer values. The map is accessible by the user code at runtime. Parameters that the
 	 * user code needs to access at runtime to configure its behavior are typically stored in that configuration
 	 * object.
-	 * 
 	 * @return The configuration containing the stub parameters.
 	 */
 	public Configuration getParameters() {
@@ -123,13 +125,9 @@ public abstract class Operator<OUT> implements Visitable<Operator<?>> {
 	 * Sets a stub parameters in the configuration of this contract. The stub parameters are accessible by the user
 	 * code at runtime. Parameters that the user code needs to access at runtime to configure its behavior are
 	 * typically stored as stub parameters.
-	 * 
+	 * @param key   The parameter key.
+	 * @param value The parameter value.
 	 * @see #getParameters()
-	 * 
-	 * @param key
-	 *        The parameter key.
-	 * @param value
-	 *        The parameter value.
 	 */
 	public void setParameter(String key, String value) {
 		this.parameters.setString(key, value);
@@ -139,13 +137,9 @@ public abstract class Operator<OUT> implements Visitable<Operator<?>> {
 	 * Sets a stub parameters in the configuration of this contract. The stub parameters are accessible by the user
 	 * code at runtime. Parameters that the user code needs to access at runtime to configure its behavior are
 	 * typically stored as stub parameters.
-	 * 
+	 * @param key   The parameter key.
+	 * @param value The parameter value.
 	 * @see #getParameters()
-	 * 
-	 * @param key
-	 *        The parameter key.
-	 * @param value
-	 *        The parameter value.
 	 */
 	public void setParameter(String key, int value) {
 		this.parameters.setInteger(key, value);
@@ -155,12 +149,9 @@ public abstract class Operator<OUT> implements Visitable<Operator<?>> {
 	 * Sets a stub parameters in the configuration of this contract. The stub parameters are accessible by the user
 	 * code at runtime. Parameters that the user code needs to access at runtime to configure its behavior are
 	 * typically stored as stub parameters.
-	 * 
+	 * @param key   The parameter key.
+	 * @param value The parameter value.
 	 * @see #getParameters()
-	 * @param key
-	 *        The parameter key.
-	 * @param value
-	 *        The parameter value.
 	 */
 	public void setParameter(String key, boolean value) {
 		this.parameters.setBoolean(key, value);
@@ -171,7 +162,6 @@ public abstract class Operator<OUT> implements Visitable<Operator<?>> {
 	 * parallel instances of the user function will be spawned during the execution. If this
 	 * value is {@link ExecutionConfig#PARALLELISM_DEFAULT}, then the system will decide the
 	 * number of parallel instances by itself.
-	 *
 	 * @return The parallelism.
 	 */
 	public int getParallelism() {
@@ -181,18 +171,18 @@ public abstract class Operator<OUT> implements Visitable<Operator<?>> {
 	/**
 	 * Sets the parallelism for this contract instance. The parallelism denotes
 	 * how many parallel instances of the user function will be spawned during the execution.
-	 *
 	 * @param parallelism The number of parallel instances to spawn. Set this value to
-	 *        {@link ExecutionConfig#PARALLELISM_DEFAULT} to let the system decide on its own.
+	 *                    {@link ExecutionConfig#PARALLELISM_DEFAULT} to let the system decide on its own.
 	 */
 	public void setParallelism(int parallelism) {
 		this.parallelism = parallelism;
 	}
 
 	/**
+	 * 获取此运算符的最小资源。
+	 *
 	 * Gets the minimum resources for this operator. The minimum resources denotes how many
 	 * resources will be needed at least minimum for the operator or user function during the execution.
-	 *
 	 * @return The minimum resources of this operator.
 	 */
 	@PublicEvolving
@@ -203,7 +193,6 @@ public abstract class Operator<OUT> implements Visitable<Operator<?>> {
 	/**
 	 * Gets the preferred resources for this contract instance. The preferred resources denote how many
 	 * resources will be needed in the maximum for the user function during the execution.
-	 *
 	 * @return The preferred resource of this operator.
 	 */
 	@PublicEvolving
@@ -214,8 +203,7 @@ public abstract class Operator<OUT> implements Visitable<Operator<?>> {
 	/**
 	 * Sets the minimum and preferred resources for this contract instance. The resource denotes
 	 * how many memories and cpu cores of the user function will be consumed during the execution.
-	 *
-	 * @param minResources The minimum resource of this operator.
+	 * @param minResources       The minimum resource of this operator.
 	 * @param preferredResources The preferred resource of this operator.
 	 */
 	@PublicEvolving
@@ -223,24 +211,22 @@ public abstract class Operator<OUT> implements Visitable<Operator<?>> {
 		this.minResources = minResources;
 		this.preferredResources = preferredResources;
 	}
-	
-	
+
+
 	/**
 	 * Gets the user code wrapper. In the case of a pact, that object will be the stub with the user function,
-	 * in the case of an input or output format, it will be the format object.  
-	 * 
+	 * in the case of an input or output format, it will be the format object.
 	 * @return The class with the user code.
 	 */
 	public UserCodeWrapper<?> getUserCodeWrapper() {
 		return null;
 	}
-	
+
 	// --------------------------------------------------------------------------------------------
-	
+
 	/**
 	 * Takes a list of operators and creates a cascade of unions of this inputs, if needed.
 	 * If not needed (there was only one operator in the list), then that operator is returned.
-	 * 
 	 * @param operators The operators.
 	 * @return The single operator or a cascade of unions of the operators.
 	 */
@@ -248,25 +234,22 @@ public abstract class Operator<OUT> implements Visitable<Operator<?>> {
 	public static <T> Operator<T> createUnionCascade(List<? extends Operator<T>> operators) {
 		return createUnionCascade((Operator<T>[]) operators.toArray(new Operator[operators.size()]));
 	}
-	
+
 	/**
 	 * Takes a list of operators and creates a cascade of unions of this inputs, if needed.
 	 * If not needed (there was only one operator in the list), then that operator is returned.
-	 * 
 	 * @param operators The operators.
 	 * @return The single operator or a cascade of unions of the operators.
 	 */
 	public static <T> Operator<T> createUnionCascade(Operator<T>... operators) {
 		return createUnionCascade(null, operators);
 	}
-	
+
 	/**
 	 * Takes a single Operator and a list of operators and creates a cascade of unions of this inputs, if needed.
 	 * If not needed there was only one operator as input, then this operator is returned.
-	 * 
 	 * @param input1 The first input operator.
 	 * @param input2 The other input operators.
-	 * 
 	 * @return The single operator or a cascade of unions of the operators.
 	 */
 	public static <T> Operator<T> createUnionCascade(Operator<T> input1, Operator<T>... input2) {
