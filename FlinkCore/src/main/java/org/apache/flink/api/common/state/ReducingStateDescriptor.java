@@ -27,10 +27,11 @@ import org.apache.flink.api.common.typeutils.TypeSerializer;
 import static org.apache.flink.util.Preconditions.checkNotNull;
 
 /**
+ * {@link StateDescriptor}的{@link ReducingState}。这可用于使用创建分区还原状态
+ * <p>
  * {@link StateDescriptor} for {@link ReducingState}. This can be used to create partitioned
  * reducing state using
  * {@link org.apache.flink.api.common.functions.RuntimeContext#getReducingState(ReducingStateDescriptor)}.
- *
  * @param <T> The type of the values that can be added to the list state.
  */
 @PublicEvolving
@@ -45,10 +46,9 @@ public class ReducingStateDescriptor<T> extends StateDescriptor<ReducingState<T>
 	 *
 	 * <p>If this constructor fails (because it is not possible to describe the type via a class),
 	 * consider using the {@link #ReducingStateDescriptor(String, ReduceFunction, TypeInformation)} constructor.
-	 *
-	 * @param name The (unique) name for the state.
+	 * @param name           The (unique) name for the state.
 	 * @param reduceFunction The {@code ReduceFunction} used to aggregate the state.
-	 * @param typeClass The type of the values in the state.
+	 * @param typeClass      The type of the values in the state.
 	 */
 	public ReducingStateDescriptor(String name, ReduceFunction<T> reduceFunction, Class<T> typeClass) {
 		super(name, typeClass, null);
@@ -60,11 +60,12 @@ public class ReducingStateDescriptor<T> extends StateDescriptor<ReducingState<T>
 	}
 
 	/**
+	 * 使用给定的名称和默认值创建一个新的{@code reducingstatescriptor}。
+	 * <p>
 	 * Creates a new {@code ReducingStateDescriptor} with the given name and default value.
-	 *
-	 * @param name The (unique) name for the state.
+	 * @param name           The (unique) name for the state.
 	 * @param reduceFunction The {@code ReduceFunction} used to aggregate the state.
-	 * @param typeInfo The type of the values in the state.
+	 * @param typeInfo       The type of the values in the state.
 	 */
 	public ReducingStateDescriptor(String name, ReduceFunction<T> reduceFunction, TypeInformation<T> typeInfo) {
 		super(name, typeInfo, null);
@@ -72,9 +73,10 @@ public class ReducingStateDescriptor<T> extends StateDescriptor<ReducingState<T>
 	}
 
 	/**
+	 * 使用给定的名称和默认值创建一个新的{@code ValueStateDescriptor}。
+	 * <p>
 	 * Creates a new {@code ValueStateDescriptor} with the given name and default value.
-	 *
-	 * @param name The (unique) name for the state.
+	 * @param name           The (unique) name for the state.
 	 * @param reduceFunction The {@code ReduceFunction} used to aggregate the state.
 	 * @param typeSerializer The type serializer of the values in the state.
 	 */
@@ -84,6 +86,8 @@ public class ReducingStateDescriptor<T> extends StateDescriptor<ReducingState<T>
 	}
 
 	/**
+	 * 返回要用于还原状态的reduce函数。
+	 * <p>
 	 * Returns the reduce function to be used for the reducing state.
 	 */
 	public ReduceFunction<T> getReduceFunction() {

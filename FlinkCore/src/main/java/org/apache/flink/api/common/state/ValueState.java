@@ -23,6 +23,8 @@ import org.apache.flink.annotation.PublicEvolving;
 import java.io.IOException;
 
 /**
+ * {@link State}用于分区单值状态的接口。可以检索或更新该值。
+ * <p>
  * {@link State} interface for partitioned single-value state. The value can be retrieved or
  * updated.
  *
@@ -33,13 +35,15 @@ import java.io.IOException;
  * automatically supplied by the system, so the function always sees the value mapped to the
  * key of the current element. That way, the system can handle stream and state partitioning
  * consistently together.
- *
  * @param <T> Type of the value in the state.
  */
 @PublicEvolving
 public interface ValueState<T> extends State {
 
 	/**
+	 * 返回状态的当前值。当状态没有分区时，对于给定操作符实例中的所有输入，返回值都是相同的。
+	 * 如果应用了状态分区，则返回的值取决于当前操作符的输入，因为操作符为每个分区维护一个独立的状态。
+	 * <p>
 	 * Returns the current value for the state. When the state is not
 	 * partitioned the returned value is the same for all inputs in a given
 	 * operator instance. If state partitioning is applied, the value returned
@@ -48,22 +52,20 @@ public interface ValueState<T> extends State {
 	 *
 	 * <p>If you didn't specify a default value when creating the {@link ValueStateDescriptor}
 	 * this will return {@code null} when to value was previously set using {@link #update(Object)}.
-	 *
 	 * @return The state value corresponding to the current input.
-	 *
 	 * @throws IOException Thrown if the system cannot access the state.
 	 */
 	T value() throws IOException;
 
 	/**
+	 * 将{@link#value（）}可访问的运算符状态更新为给定值。
+	 * <p>
 	 * Updates the operator state accessible by {@link #value()} to the given
 	 * value. The next time {@link #value()} is called (for the same state
 	 * partition) the returned state will represent the updated value. When a
 	 * partitioned state is updated with null, the state for the current key
 	 * will be removed and the default value is returned on the next access.
-	 *
 	 * @param value The new value for the state.
-	 *
 	 * @throws IOException Thrown if the system cannot access the state.
 	 */
 	void update(T value) throws IOException;

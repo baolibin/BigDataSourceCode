@@ -25,7 +25,6 @@ import org.apache.flink.util.Preconditions;
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.Serializable;
 import java.util.EnumMap;
 
@@ -39,6 +38,8 @@ import static org.apache.flink.util.Preconditions.checkArgument;
 import static org.apache.flink.util.Preconditions.checkNotNull;
 
 /**
+ * 状态TTL逻辑的配置。
+ * <p>
  * Configuration of state TTL logic.
  *
  * <p>Note: The map state with TTL currently supports {@code null} user values
@@ -53,17 +54,23 @@ public class StateTtlConfig implements Serializable {
 	private static final long serialVersionUID = -7592693245044289793L;
 
 	public static final StateTtlConfig DISABLED =
-		newBuilder(Time.milliseconds(Long.MAX_VALUE)).setUpdateType(UpdateType.Disabled).build();
+			newBuilder(Time.milliseconds(Long.MAX_VALUE)).setUpdateType(UpdateType.Disabled).build();
 
 	/**
 	 * This option value configures when to update last access timestamp which prolongs state TTL.
 	 */
 	public enum UpdateType {
-		/** TTL is disabled. State does not expire. */
+		/**
+		 * TTL is disabled. State does not expire.
+		 */
 		Disabled,
-		/** Last access timestamp is initialised when state is created and updated on every write operation. */
+		/**
+		 * Last access timestamp is initialised when state is created and updated on every write operation.
+		 */
 		OnCreateAndWrite,
-		/** The same as <code>OnCreateAndWrite</code> but also updated on read. */
+		/**
+		 * The same as <code>OnCreateAndWrite</code> but also updated on read.
+		 */
 		OnReadAndWrite
 	}
 
@@ -71,20 +78,25 @@ public class StateTtlConfig implements Serializable {
 	 * This option configures whether expired user value can be returned or not.
 	 */
 	public enum StateVisibility {
-		/** Return expired user value if it is not cleaned up yet. */
+		/**
+		 * Return expired user value if it is not cleaned up yet.
+		 */
 		ReturnExpiredIfNotCleanedUp,
-		/** Never return expired user value. */
+		/**
+		 * Never return expired user value.
+		 */
 		NeverReturnExpired
 	}
 
 	/**
 	 * This option configures time scale to use for ttl.
-	 *
 	 * @deprecated will be removed in a future version in favor of {@link TtlTimeCharacteristic}
 	 */
 	@Deprecated
 	public enum TimeCharacteristic {
-		/** Processing time, see also <code>TimeCharacteristic.ProcessingTime</code>. */
+		/**
+		 * Processing time, see also <code>TimeCharacteristic.ProcessingTime</code>.
+		 */
 		ProcessingTime
 	}
 
@@ -92,7 +104,9 @@ public class StateTtlConfig implements Serializable {
 	 * This option configures time scale to use for ttl.
 	 */
 	public enum TtlTimeCharacteristic {
-		/** Processing time, see also <code>org.apache.flink.streaming.api.TimeCharacteristic.ProcessingTime</code>. */
+		/**
+		 * Processing time, see also <code>org.apache.flink.streaming.api.TimeCharacteristic.ProcessingTime</code>.
+		 */
 		ProcessingTime
 	}
 
@@ -103,11 +117,11 @@ public class StateTtlConfig implements Serializable {
 	private final CleanupStrategies cleanupStrategies;
 
 	private StateTtlConfig(
-		UpdateType updateType,
-		StateVisibility stateVisibility,
-		TtlTimeCharacteristic ttlTimeCharacteristic,
-		Time ttl,
-		CleanupStrategies cleanupStrategies) {
+			UpdateType updateType,
+			StateVisibility stateVisibility,
+			TtlTimeCharacteristic ttlTimeCharacteristic,
+			Time ttl,
+			CleanupStrategies cleanupStrategies) {
 		this.updateType = checkNotNull(updateType);
 		this.stateVisibility = checkNotNull(stateVisibility);
 		this.ttlTimeCharacteristic = checkNotNull(ttlTimeCharacteristic);
@@ -148,11 +162,11 @@ public class StateTtlConfig implements Serializable {
 	@Override
 	public String toString() {
 		return "StateTtlConfig{" +
-			"updateType=" + updateType +
-			", stateVisibility=" + stateVisibility +
-			", ttlTimeCharacteristic=" + ttlTimeCharacteristic +
-			", ttl=" + ttl +
-			'}';
+				"updateType=" + updateType +
+				", stateVisibility=" + stateVisibility +
+				", ttlTimeCharacteristic=" + ttlTimeCharacteristic +
+				", ttl=" + ttl +
+				'}';
 	}
 
 	@Nonnull
@@ -171,7 +185,7 @@ public class StateTtlConfig implements Serializable {
 		private Time ttl;
 		private boolean isCleanupInBackground = false;
 		private final EnumMap<CleanupStrategies.Strategies, CleanupStrategies.CleanupStrategy> strategies =
-			new EnumMap<>(CleanupStrategies.Strategies.class);
+				new EnumMap<>(CleanupStrategies.Strategies.class);
 
 		public Builder(@Nonnull Time ttl) {
 			this.ttl = ttl;
@@ -179,7 +193,6 @@ public class StateTtlConfig implements Serializable {
 
 		/**
 		 * Sets the ttl update type.
-		 *
 		 * @param updateType The ttl update type configures when to update last access timestamp which prolongs state TTL.
 		 */
 		@Nonnull
@@ -200,7 +213,6 @@ public class StateTtlConfig implements Serializable {
 
 		/**
 		 * Sets the state visibility.
-		 *
 		 * @param stateVisibility The state visibility configures whether expired user value can be returned or not.
 		 */
 		@Nonnull
@@ -221,23 +233,20 @@ public class StateTtlConfig implements Serializable {
 
 		/**
 		 * Sets the time characteristic.
-		 *
 		 * @param timeCharacteristic The time characteristic configures time scale to use for ttl.
-		 *
 		 * @deprecated will be removed in a future version in favor of {@link #setTtlTimeCharacteristic}
 		 */
 		@Deprecated
 		@Nonnull
 		public Builder setTimeCharacteristic(@Nonnull TimeCharacteristic timeCharacteristic) {
 			checkArgument(timeCharacteristic.equals(TimeCharacteristic.ProcessingTime),
-				"Only support TimeCharacteristic.ProcessingTime, this function has replaced by setTtlTimeCharacteristic.");
+					"Only support TimeCharacteristic.ProcessingTime, this function has replaced by setTtlTimeCharacteristic.");
 			setTtlTimeCharacteristic(TtlTimeCharacteristic.ProcessingTime);
 			return this;
 		}
 
 		/**
 		 * Sets the time characteristic.
-		 *
 		 * @param ttlTimeCharacteristic The time characteristic configures time scale to use for ttl.
 		 */
 		@Nonnull
@@ -251,7 +260,9 @@ public class StateTtlConfig implements Serializable {
 			return setTtlTimeCharacteristic(ProcessingTime);
 		}
 
-		/** Cleanup expired state in full snapshot on checkpoint. */
+		/**
+		 * Cleanup expired state in full snapshot on checkpoint.
+		 */
 		@Nonnull
 		public Builder cleanupFullSnapshot() {
 			strategies.put(CleanupStrategies.Strategies.FULL_STATE_SCAN_SNAPSHOT, EMPTY_STRATEGY);
@@ -281,17 +292,16 @@ public class StateTtlConfig implements Serializable {
 		 * <p>Note: If heap state backend is used with synchronous snapshotting, the global iterator keeps a copy of all keys
 		 * while iterating because of its specific implementation which does not support concurrent modifications.
 		 * Enabling of this feature will increase memory consumption then. Asynchronous snapshotting does not have this problem.
-		 *
-		 * @param cleanupSize max number of keys pulled from queue for clean up upon state touch for any key
+		 * @param cleanupSize              max number of keys pulled from queue for clean up upon state touch for any key
 		 * @param runCleanupForEveryRecord run incremental cleanup per each processed record
 		 */
 		@Nonnull
 		public Builder cleanupIncrementally(
-			@Nonnegative int cleanupSize,
-			boolean runCleanupForEveryRecord) {
+				@Nonnegative int cleanupSize,
+				boolean runCleanupForEveryRecord) {
 			strategies.put(
-				CleanupStrategies.Strategies.INCREMENTAL_CLEANUP,
-				new IncrementalCleanupStrategy(cleanupSize, runCleanupForEveryRecord));
+					CleanupStrategies.Strategies.INCREMENTAL_CLEANUP,
+					new IncrementalCleanupStrategy(cleanupSize, runCleanupForEveryRecord));
 			return this;
 		}
 
@@ -308,7 +318,6 @@ public class StateTtlConfig implements Serializable {
 		 * cleanup is not properly guaranteed if put and merge operations are used at the same time:
 		 * https://github.com/facebook/rocksdb/blob/master/include/rocksdb/compaction_filter.h#L69
 		 * It means that the TTL filter should be tested for List state taking into account this caveat.
-		 *
 		 * @deprecated Use more general configuration method {@link #cleanupInBackground()} instead
 		 */
 		@Nonnull
@@ -324,14 +333,13 @@ public class StateTtlConfig implements Serializable {
 		 * used to check expiration, from Flink every time after processing {@code queryTimeAfterNumEntries} number of state entries.
 		 * Updating the timestamp more often can improve cleanup speed
 		 * but it decreases compaction performance because it uses JNI call from native code.
-		 *
 		 * @param queryTimeAfterNumEntries number of state entries to process by compaction filter before updating current timestamp
 		 */
 		@Nonnull
 		public Builder cleanupInRocksdbCompactFilter(long queryTimeAfterNumEntries) {
 			strategies.put(
-				CleanupStrategies.Strategies.ROCKSDB_COMPACTION_FILTER,
-				new RocksdbCompactFilterCleanupStrategy(queryTimeAfterNumEntries));
+					CleanupStrategies.Strategies.ROCKSDB_COMPACTION_FILTER,
+					new RocksdbCompactFilterCleanupStrategy(queryTimeAfterNumEntries));
 			return this;
 		}
 
@@ -359,11 +367,11 @@ public class StateTtlConfig implements Serializable {
 		@Nonnull
 		public StateTtlConfig build() {
 			return new StateTtlConfig(
-				updateType,
-				stateVisibility,
-				ttlTimeCharacteristic,
-				ttl,
-				new CleanupStrategies(strategies, isCleanupInBackground));
+					updateType,
+					stateVisibility,
+					ttlTimeCharacteristic,
+					ttl,
+					new CleanupStrategies(strategies, isCleanupInBackground));
 		}
 	}
 
@@ -383,14 +391,18 @@ public class StateTtlConfig implements Serializable {
 
 		private final EnumMap<Strategies, CleanupStrategy> strategies;
 
-		/** Fixed strategies ordinals in {@code strategies} config field. */
+		/**
+		 * Fixed strategies ordinals in {@code strategies} config field.
+		 */
 		enum Strategies {
 			FULL_STATE_SCAN_SNAPSHOT,
 			INCREMENTAL_CLEANUP,
 			ROCKSDB_COMPACTION_FILTER
 		}
 
-		/** Base interface for cleanup strategies configurations. */
+		/**
+		 * Base interface for cleanup strategies configurations.
+		 */
 		interface CleanupStrategy extends Serializable {
 
 		}
@@ -429,23 +441,29 @@ public class StateTtlConfig implements Serializable {
 		}
 	}
 
-	/** Configuration of cleanup strategy while taking the full snapshot.  */
+	/**
+	 * Configuration of cleanup strategy while taking the full snapshot.
+	 */
 	public static class IncrementalCleanupStrategy implements CleanupStrategies.CleanupStrategy {
 		private static final long serialVersionUID = 3109278696501988780L;
 
 		static final IncrementalCleanupStrategy DEFAULT_INCREMENTAL_CLEANUP_STRATEGY = new IncrementalCleanupStrategy(5, false);
 
-		/** Max number of keys pulled from queue for clean up upon state touch for any key. */
+		/**
+		 * Max number of keys pulled from queue for clean up upon state touch for any key.
+		 */
 		private final int cleanupSize;
 
-		/** Whether to run incremental cleanup per each processed record. */
+		/**
+		 * Whether to run incremental cleanup per each processed record.
+		 */
 		private final boolean runCleanupForEveryRecord;
 
 		private IncrementalCleanupStrategy(
-			int cleanupSize,
-			boolean runCleanupForEveryRecord) {
+				int cleanupSize,
+				boolean runCleanupForEveryRecord) {
 			Preconditions.checkArgument(cleanupSize >= 0,
-				"Number of incrementally cleaned up state entries cannot be negative.");
+					"Number of incrementally cleaned up state entries cannot be negative.");
 			this.cleanupSize = cleanupSize;
 			this.runCleanupForEveryRecord = runCleanupForEveryRecord;
 		}
@@ -459,14 +477,18 @@ public class StateTtlConfig implements Serializable {
 		}
 	}
 
-	/** Configuration of cleanup strategy using custom compaction filter in RocksDB.  */
+	/**
+	 * Configuration of cleanup strategy using custom compaction filter in RocksDB.
+	 */
 	public static class RocksdbCompactFilterCleanupStrategy implements CleanupStrategies.CleanupStrategy {
 		private static final long serialVersionUID = 3109278796506988980L;
 
 		static final RocksdbCompactFilterCleanupStrategy DEFAULT_ROCKSDB_COMPACT_FILTER_CLEANUP_STRATEGY =
-			new RocksdbCompactFilterCleanupStrategy(1000L);
+				new RocksdbCompactFilterCleanupStrategy(1000L);
 
-		/** Number of state entries to process by compaction filter before updating current timestamp. */
+		/**
+		 * Number of state entries to process by compaction filter before updating current timestamp.
+		 */
 		private final long queryTimeAfterNumEntries;
 
 		private RocksdbCompactFilterCleanupStrategy(long queryTimeAfterNumEntries) {
