@@ -23,18 +23,23 @@ import org.apache.flink.annotation.Internal;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
 
 /**
- *  A class for holding information about an operator, such as input/output TypeInformation.
- *
+ * 用于保存有关运算符的信息的类，如输入/输出类型信息。
+ * <p>
+ * A class for holding information about an operator, such as input/output TypeInformation.
  * @param <OUT> Output type of the records output by the operator described by this information
-*/
+ */
 @Internal
 public class OperatorInformation<OUT> {
 	/**
+	 * 运算符的输出类型
+	 *
 	 * Output type of the operator
 	 */
 	protected final TypeInformation<OUT> outputType;
 
 	/**
+	 * 运算符的输出类型
+	 *
 	 * @param outputType The output type of the operator
 	 */
 	public OperatorInformation(TypeInformation<OUT> outputType) {
@@ -42,6 +47,8 @@ public class OperatorInformation<OUT> {
 	}
 
 	/**
+	 * 获取用户代码函数的返回类型。
+	 *
 	 * Gets the return type of the user code function.
 	 */
 	public TypeInformation<OUT> getOutputType() {

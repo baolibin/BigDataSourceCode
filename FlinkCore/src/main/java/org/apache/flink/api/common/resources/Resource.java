@@ -26,6 +26,8 @@ import java.io.Serializable;
 import static org.apache.flink.util.Preconditions.checkNotNull;
 
 /**
+ * 可以指定的资源的基类。
+ * <p>
  * Base class for resources one can specify.
  */
 @Internal
@@ -67,7 +69,7 @@ public abstract class Resource implements Serializable {
 
 		final double aggregatedValue;
 		switch (resourceAggregateType) {
-			case AGGREGATE_TYPE_MAX :
+			case AGGREGATE_TYPE_MAX:
 				aggregatedValue = Math.max(value, other.value);
 				break;
 
@@ -87,7 +89,7 @@ public abstract class Resource implements Serializable {
 
 		final double subtractedValue;
 		switch (resourceAggregateType) {
-			case AGGREGATE_TYPE_MAX :
+			case AGGREGATE_TYPE_MAX:
 				// TODO: For max, should check if the latest max item is removed and change accordingly.
 				subtractedValue = value;
 				break;
@@ -135,9 +137,8 @@ public abstract class Resource implements Serializable {
 
 	/**
 	 * Create a resource of the same resource resourceAggregateType.
-	 *
 	 * @param value The value of the resource
-	 * @param type The aggregate resourceAggregateType of the resource
+	 * @param type  The aggregate resourceAggregateType of the resource
 	 * @return A new instance of the sub resource
 	 */
 	protected abstract Resource create(double value, ResourceAggregateType type);

@@ -21,6 +21,8 @@ package org.apache.flink.api.common.state;
 import org.apache.flink.annotation.PublicEvolving;
 
 /**
+ * 不同类型的分区状态必须实现的接口。
+ * <p>
  * Interface that different types of partitioned state must implement.
  *
  * <p>The state is only accessible by functions applied on a {@code KeyedStream}. The key is
@@ -32,6 +34,8 @@ import org.apache.flink.annotation.PublicEvolving;
 public interface State {
 
 	/**
+	 * 删除当前键下映射的值。
+	 * <p>
 	 * Removes the value mapped under the current key.
 	 */
 	void clear();

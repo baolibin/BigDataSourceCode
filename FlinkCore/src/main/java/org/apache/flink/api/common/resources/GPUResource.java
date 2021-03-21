@@ -22,6 +22,8 @@ import org.apache.flink.annotation.Internal;
 import org.apache.flink.api.common.operators.ResourceSpec;
 
 /**
+ * GPU资源。
+ * <p>
  * The GPU resource.
  */
 @Internal

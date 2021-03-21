@@ -18,30 +18,34 @@
 
 package org.apache.flink.api.common.operators;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.flink.annotation.Internal;
 import org.apache.flink.api.common.ExecutionConfig;
 import org.apache.flink.api.common.functions.AbstractRichFunction;
 import org.apache.flink.api.common.functions.RuntimeContext;
 import org.apache.flink.api.common.operators.util.UserCodeClassWrapper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
+ * 此运算符表示两个输入之间的并集。
+ * <p>
  * This operator represents a Union between two inputs.
  */
 @Internal
 public class Union<T> extends DualInputOperator<T, T, T, AbstractRichFunction> {
-	
-	
-	/** 
+
+
+	/**
+	 * 创建新的并集运算符。
+	 *
 	 * Creates a new Union operator.
 	 */
 	public Union(BinaryOperatorInformation<T, T, T> operatorInfo, String unionLocationName) {
 		// we pass it an AbstractFunction, because currently all operators expect some form of UDF
-		super(new UserCodeClassWrapper<AbstractRichFunction>(AbstractRichFunction.class), operatorInfo, "Union at "+unionLocationName);
+		super(new UserCodeClassWrapper<AbstractRichFunction>(AbstractRichFunction.class), operatorInfo, "Union at " + unionLocationName);
 	}
-	
+
 	public Union(Operator<T> input1, Operator<T> input2, String unionLocationName) {
 		this(new BinaryOperatorInformation<T, T, T>(input1.getOperatorInfo().getOutputType(),
 				input1.getOperatorInfo().getOutputType(), input1.getOperatorInfo().getOutputType()), unionLocationName);
