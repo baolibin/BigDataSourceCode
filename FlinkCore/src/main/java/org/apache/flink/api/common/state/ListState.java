@@ -23,6 +23,8 @@ import org.apache.flink.annotation.PublicEvolving;
 import java.util.List;
 
 /**
+ * {@link State}操作中分区列表状态的接口。
+ * <p>
  * {@link State} interface for partitioned list state in Operations.
  * The state is accessed and modified by user functions, and checkpointed consistently
  * by the system as part of the distributed snapshots.
@@ -37,34 +39,33 @@ import java.util.List;
  * <p>When it is an operator list state, the list is a collection of state items that are
  * independent from each other and eligible for redistribution across operator instances in case
  * of changed operator parallelism.
- *
  * @param <T> Type of values that this list state keeps.
  */
 @PublicEvolving
 public interface ListState<T> extends MergingState<T, Iterable<T>> {
 
 	/**
+	 * 通过将现有值更新到给定的值列表，更新{@link#get（）}可访问的运算符状态。
+	 * <p>
 	 * Updates the operator state accessible by {@link #get()} by updating existing values to
 	 * to the given list of values. The next time {@link #get()} is called (for the same state
 	 * partition) the returned state will represent the updated list.
 	 *
 	 * <p>If null or an empty list is passed in, the state value will be null.
-	 *
 	 * @param values The new values for the state.
-	 *
 	 * @throws Exception The method may forward exception thrown internally (by I/O or functions).
 	 */
 	void update(List<T> values) throws Exception;
 
 	/**
+	 * 通过将给定的值添加到现有的值列表，更新可由{@link#get（）}访问的运算符状态。
+	 * <p>
 	 * Updates the operator state accessible by {@link #get()} by adding the given values
 	 * to existing list of values. The next time {@link #get()} is called (for the same state
 	 * partition) the returned state will represent the updated list.
 	 *
 	 * <p>If null or an empty list is passed in, the state value remains unchanged.
-	 *
 	 * @param values The new values to be added to the state.
-	 *
 	 * @throws Exception The method may forward exception thrown internally (by I/O or functions).
 	 */
 	void addAll(List<T> values) throws Exception;

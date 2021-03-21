@@ -29,15 +29,11 @@ import org.apache.flink.streaming.api.windowing.assigners.MergingWindowAssigner;
 import org.apache.flink.util.MathUtils;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
+ * 一个{@link Window}，表示从{@code start}（包含）到{@code end}（排除）的时间间隔。
+ * <p>
  * A {@link Window} that represents a time interval from {@code start} (inclusive) to
  * {@code end} (exclusive).
  */
@@ -55,7 +51,6 @@ public class TimeWindow extends Window {
 	/**
 	 * Gets the starting timestamp of the window. This is the first timestamp that belongs
 	 * to this window.
-	 *
 	 * @return The starting timestamp of this window.
 	 */
 	public long getStart() {
@@ -65,7 +60,6 @@ public class TimeWindow extends Window {
 	/**
 	 * Gets the end timestamp of this window. The end timestamp is exclusive, meaning it
 	 * is the first timestamp that does not belong to this window any more.
-	 *
 	 * @return The exclusive end timestamp of this window.
 	 */
 	public long getEnd() {
@@ -76,9 +70,7 @@ public class TimeWindow extends Window {
 	 * Gets the largest timestamp that still belongs to this window.
 	 *
 	 * <p>This timestamp is identical to {@code getEnd() - 1}.
-	 *
 	 * @return The largest timestamp that still belongs to this window.
-	 *
 	 * @see #getEnd()
 	 */
 	@Override
@@ -229,7 +221,7 @@ public class TimeWindow extends Window {
 		List<Tuple2<TimeWindow, Set<TimeWindow>>> merged = new ArrayList<>();
 		Tuple2<TimeWindow, Set<TimeWindow>> currentMerge = null;
 
-		for (TimeWindow candidate: sortedWindows) {
+		for (TimeWindow candidate : sortedWindows) {
 			if (currentMerge == null) {
 				currentMerge = new Tuple2<>();
 				currentMerge.f0 = candidate;
@@ -251,7 +243,7 @@ public class TimeWindow extends Window {
 			merged.add(currentMerge);
 		}
 
-		for (Tuple2<TimeWindow, Set<TimeWindow>> m: merged) {
+		for (Tuple2<TimeWindow, Set<TimeWindow>> m : merged) {
 			if (m.f1.size() > 1) {
 				c.merge(m.f1, m.f0);
 			}
@@ -260,9 +252,8 @@ public class TimeWindow extends Window {
 
 	/**
 	 * Method to get the window start for a timestamp.
-	 *
-	 * @param timestamp epoch millisecond to get the window start.
-	 * @param offset The offset which window start would be shifted by.
+	 * @param timestamp  epoch millisecond to get the window start.
+	 * @param offset     The offset which window start would be shifted by.
 	 * @param windowSize The size of the generated windows.
 	 * @return window start
 	 */

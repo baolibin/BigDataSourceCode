@@ -29,6 +29,8 @@ import org.apache.flink.core.memory.DataOutputView;
 import java.io.IOException;
 
 /**
+ * 放置所有数据的默认窗口
+ * <p>
  * The default window into which all data is placed (via
  * {@link org.apache.flink.streaming.api.windowing.assigners.GlobalWindows}).
  */
@@ -37,7 +39,8 @@ public class GlobalWindow extends Window {
 
 	private static final GlobalWindow INSTANCE = new GlobalWindow();
 
-	private GlobalWindow() { }
+	private GlobalWindow() {
+	}
 
 	public static GlobalWindow get() {
 		return INSTANCE;
@@ -107,7 +110,7 @@ public class GlobalWindow extends Window {
 
 		@Override
 		public GlobalWindow deserialize(GlobalWindow reuse,
-				DataInputView source) throws IOException {
+		                                DataInputView source) throws IOException {
 			source.readByte();
 			return GlobalWindow.INSTANCE;
 		}

@@ -21,6 +21,8 @@ package org.apache.flink.streaming.api;
 import org.apache.flink.annotation.PublicEvolving;
 
 /**
+ * 时间特性定义了系统如何确定依赖于时间的顺序和依赖于时间的操作（如时间窗口）的时间。
+ * <p>
  * The time characteristic defines how the system determines time for time-dependent
  * order and operations that depend on time (such as time windows).
  */
@@ -28,6 +30,8 @@ import org.apache.flink.annotation.PublicEvolving;
 public enum TimeCharacteristic {
 
 	/**
+	 * 操作员的处理时间是指操作员使用机器的系统时钟来确定数据流的当前时间。
+	 * <p>
 	 * Processing time for operators means that the operator uses the system clock of the machine
 	 * to determine the current time of the data stream. Processing-time windows trigger based
 	 * on wall-clock time and include whatever elements happen to have arrived at the operator at
@@ -41,6 +45,8 @@ public enum TimeCharacteristic {
 	ProcessingTime,
 
 	/**
+	 * 摄取时间意味着流中每个单独元素的时间是在元素进入Flink流数据流时确定的。
+	 * <p>
 	 * Ingestion time means that the time of each individual element in the stream is determined
 	 * when the element enters the Flink streaming data flow. Operations like windows group the
 	 * elements based on that time, meaning that processing speed within the streaming dataflow
@@ -57,6 +63,8 @@ public enum TimeCharacteristic {
 	IngestionTime,
 
 	/**
+	 * 事件时间意味着流中每个单独元素（也称为事件）的时间由事件的单独自定义时间戳确定。
+	 * <p>
 	 * Event time means that the time of each individual element in the stream (also called event)
 	 * is determined by the event's individual custom timestamp. These timestamps either exist in
 	 * the elements from before they entered the Flink streaming dataflow, or are user-assigned at
