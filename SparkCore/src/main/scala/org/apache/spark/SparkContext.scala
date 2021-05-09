@@ -204,6 +204,8 @@ class SparkContext(config: SparkConf) extends Logging {
     }
 
     /**
+      * 返回此SparkContext配置的副本。无法在运行时更改配置“”。
+      *
       * Return a copy of this SparkContext's configuration. The configuration ''cannot'' be
       * changed at runtime.
       */
@@ -216,6 +218,8 @@ class SparkContext(config: SparkConf) extends Logging {
     def deployMode: String = _conf.getOption("org.apache.spark.submit.deployMode").getOrElse("client")
 
     /**
+      * 如果上下文已停止或正在停止，则返回true。
+      *
       * @return true if context is stopped or in the midst of stopping.
       */
     def isStopped: Boolean = stopped.get()
@@ -238,7 +242,11 @@ class SparkContext(config: SparkConf) extends Logging {
         Utils.setLogLevel(org.apache.log4j.Level.toLevel(upperCased))
     }
 
-    /** Set a human readable description of the current job. */
+    /**
+      * 设置当前作业的可读描述
+      *
+      * Set a human readable description of the current job.
+      */
     def setJobDescription(value: String) {
         setLocalProperty(SparkContext.SPARK_JOB_DESCRIPTION, value)
     }
