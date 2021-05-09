@@ -2179,6 +2179,7 @@ private[spark] object Utils extends Logging {
     }
 
     /**
+      * 返回是否为本地模式
       *
       * @return whether it is local mode
       */
@@ -2244,6 +2245,9 @@ private[spark] object Utils extends Logging {
     }
 
     /**
+      * 在YARN模式下，此方法返回由“org.apache.spark.jars”和“org.apache.spark.YARN.dist.jars”属性指向的jar文件的并集，
+      * 而在其他模式下，它只返回由“org.apache.spark.jars”属性指向的jar文件。
+      *
       * In YARN mode this method returns a union of the jar files pointed by "org.apache.spark.jars" and the
       * "org.apache.spark.yarn.dist.jars" properties, while in other modes it returns the jar files pointed by
       * only the "org.apache.spark.jars" property.

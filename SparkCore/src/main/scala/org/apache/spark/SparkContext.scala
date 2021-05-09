@@ -97,15 +97,19 @@ class SparkContext(config: SparkConf) extends Logging {
     // 构建此SparkContext的调用站点。
     // The call site where this SparkContext was constructed.
     private val creationSite: CallSite = Utils.getCallSite()
+    // 如果为true，则在多个SparkContext处于活动状态时记录警告，而不是引发异常
     // If true, log warnings instead of throwing exceptions when multiple SparkContexts are active
     private val allowMultipleContexts: Boolean =
         config.getBoolean("org.apache.spark.driver.allowMultipleContexts", false)
     private[spark] val stopped: AtomicBoolean = new AtomicBoolean(false)
+    // Spark事件的异步侦听器总线
     // An asynchronous listener bus for Spark events
     private[spark] val listenerBus = new LiveListenerBus(this)
+    // 用于存储每个静态文件/jar的URL以及文件的本地时间戳
     // Used to store a URL for each static file/jar together with the file's local timestamp
     private[spark] val addedFiles = new ConcurrentHashMap[String, Long]().asScala
 
+    // 可以使用默认参数合并以下构造函数。
     // NOTE: The below constructors could be consolidated using default arguments. Due to
     // Scala bug SI-8479, however, this causes the compile step to fail when generating docs.
     // Until we have a good workaround for that bug the constructors remain broken out.
@@ -175,6 +179,8 @@ class SparkContext(config: SparkConf) extends Logging {
     def this() = this(new SparkConf())
 
     /**
+      * 允许直接设置公共Spark属性的替代构造函数
+      *
       * Alternative constructor that allows setting common Spark properties directly
       *
       * @param master  Cluster URL to connect to (e.g. mesos://host:port, org.apache.spark://host:port, local[4]).
@@ -185,6 +191,8 @@ class SparkContext(config: SparkConf) extends Logging {
         this(SparkContext.updatedConf(conf, master, appName))
 
     /**
+      * 允许直接设置公共Spark属性的替代构造函数
+      *
       * Alternative constructor that allows setting common Spark properties directly
       *
       * @param master      Cluster URL to connect to (e.g. mesos://host:port, org.apache.spark://host:port, local[4]).
@@ -228,7 +236,10 @@ class SparkContext(config: SparkConf) extends Logging {
 
     def uiWebUrl: Option[String] = _ui.map(_.webUrl)
 
-    /** Control our logLevel. This overrides any user-defined log settings.
+    /**
+      * 控制我们的日志水平。这将覆盖任何用户定义的日志设置。
+      *
+      * Control our logLevel. This overrides any user-defined log settings.
       *
       * @param logLevel The desired log level as a string.
       *                 Valid log levels include: ALL, DEBUG, ERROR, FATAL, INFO, OFF, TRACE, WARN
@@ -252,6 +263,8 @@ class SparkContext(config: SparkConf) extends Logging {
     }
 
     /**
+      * 将组ID分配给此线程启动的所有作业，直到将组ID设置为其他值或清除为止。
+      *
       * Assigns a group ID to all the jobs started by this thread until the group ID is set to a
       * different value or cleared.
       *
@@ -285,7 +298,11 @@ class SparkContext(config: SparkConf) extends Logging {
         setLocalProperty(SparkContext.SPARK_JOB_INTERRUPT_ON_CANCEL, interruptOnCancel.toString)
     }
 
-    /** Clear the current thread's job group ID and its description. */
+    /**
+      * 清除当前线程的作业组ID及其描述。
+      *
+      * Clear the current thread's job group ID and its description.
+      */
     def clearJobGroup() {
         setLocalProperty(SparkContext.SPARK_JOB_DESCRIPTION, null)
         setLocalProperty(SparkContext.SPARK_JOB_GROUP_ID, null)
@@ -293,6 +310,8 @@ class SparkContext(config: SparkConf) extends Logging {
     }
 
     /**
+      * 创建一个新的RDD[Long]，其中包含从“start”到“end”（独占）的元素，每个元素都增加“step”。
+      *
       * Creates a new RDD[Long] containing elements from `start` to `end`(exclusive), increased by
       * `step` every element.
       *
@@ -388,6 +407,8 @@ class SparkContext(config: SparkConf) extends Logging {
     }
 
     /**
+      * 在一个作用域中执行一个代码块，这样在这个主体中创建的所有新RDD都将是同一作用域的一部分。
+      *
       * Execute a block of code in a scope such that all new RDDs created in this body will
       * be part of the same scope. For more detail, see {{org.apache.org.apache.spark.rdd.RDDOperationScope}}.
       *
@@ -395,7 +416,10 @@ class SparkContext(config: SparkConf) extends Logging {
       */
     private[spark] def withScope[U](body: => U): U = RDDOperationScope.withScope[U](this)(body)
 
-    /** Distribute a local Scala collection to form an RDD.
+    /**
+      * 分发本地Scala集合以形成RDD。
+      *
+      * Distribute a local Scala collection to form an RDD.
       *
       * @note Parallelize acts lazily. If `seq` is a mutable collection and is altered after the call
       *       to parallelize and before the first action on the RDD, the resultant RDD will reflect the
@@ -413,7 +437,10 @@ class SparkContext(config: SparkConf) extends Logging {
         new ParallelCollectionRDD[T](this, seq, numSlices, Map[Int, Seq[String]]())
     }
 
-    /** Distribute a local Scala collection to form an RDD.
+    /**
+      * 分发本地Scala集合以形成RDD。
+      *
+      * Distribute a local Scala collection to form an RDD.
       *
       * This method is identical to `parallelize`.
       *
@@ -428,6 +455,8 @@ class SparkContext(config: SparkConf) extends Logging {
     }
 
     /**
+      * 分发一个本地Scala集合以形成一个RDD，每个对象有一个或多个位置首选项（Spark节点的主机名）。为每个集合项创建一个新分区。
+      *
       * Distribute a local Scala collection to form an RDD, with one or more
       * location preferences (hostnames of Spark nodes) for each object.
       * Create a new partition for each collection item.
@@ -442,6 +471,8 @@ class SparkContext(config: SparkConf) extends Logging {
     }
 
     /**
+      * 从HDFS、本地文件系统（在所有节点上都可用）或任何Hadoop支持的文件系统URI读取文本文件，并将其作为字符串的RDD返回。
+      *
       * Read a text file from HDFS, a local file system (available on all nodes), or any
       * Hadoop-supported file system URI, and return it as an RDD of Strings.
       *
@@ -458,6 +489,8 @@ class SparkContext(config: SparkConf) extends Logging {
     }
 
     /**
+      * 从HDFS、本地文件系统（在所有节点上都可用）或任何Hadoop支持的文件系统URI读取文本文件目录。
+      *
       * Read a directory of text files from HDFS, a local file system (available on all nodes), or any
       * Hadoop-supported file system URI. Each file is read as a single record and returned in a
       * key-value pair, where the key is the path of each file, the value is the content of each file.
@@ -509,6 +542,8 @@ class SparkContext(config: SparkConf) extends Logging {
     }
 
     /**
+      * 获取Hadoop可读数据集的RDD作为每个文件的PortableDataStream
+      *
       * Get an RDD for a Hadoop-readable dataset as PortableDataStream for each file
       * (useful for binary data)
       *
@@ -560,6 +595,8 @@ class SparkContext(config: SparkConf) extends Logging {
     }
 
     /**
+      * 从平面二进制文件加载数据，假设每条记录的长度不变。
+      *
       * Load data from a flat binary file, assuming the length of each record is constant.
       *
       * @note We ensure that the byte array for each record in the resulting RDD
@@ -589,6 +626,8 @@ class SparkContext(config: SparkConf) extends Logging {
     }
 
     /**
+      * 根据Hadoop JobConf的InputFormat和其他必要信息，从Hadoop JobConf获取Hadoop可读数据集的RDD
+      *
       * Get an RDD for a Hadoop-readable dataset from a Hadoop JobConf given its InputFormat and other
       * necessary info (e.g. file name for a filesystem-based dataset, table name for HyperTable),
       * using the older MapReduce API (`org.apache.hadoop.mapred`).
@@ -626,6 +665,8 @@ class SparkContext(config: SparkConf) extends Logging {
     }
 
     /**
+      * hadoopFile（）的一个更智能的版本，它使用类标记来计算键、值和InputFormat的类，这样用户就不需要直接传递它们。
+      *
       * Smarter version of hadoopFile() that uses class tags to figure out the classes of keys,
       * values and the InputFormat so that users don't need to pass them directly. Instead, callers
       * can just write, for example,
@@ -648,6 +689,8 @@ class SparkContext(config: SparkConf) extends Logging {
     }
 
     /**
+      * hadoopFile（）的一个更智能的版本，它使用类标记来计算键、值和InputFormat的类，这样用户就不需要直接传递它们。
+      *
       * Smarter version of hadoopFile() that uses class tags to figure out the classes of keys,
       * values and the InputFormat so that users don't need to pass them directly. Instead, callers
       * can just write, for example,
@@ -676,6 +719,9 @@ class SparkContext(config: SparkConf) extends Logging {
     }
 
     /**
+      * 更智能的“newApiHadoopFile”版本，它使用类标记来计算键、值和“org.apache.hadoop.mapreduce.InputFormat”（新的mapreduce API）的类，
+      * 这样用户就不需要直接传递它们。
+      *
       * Smarter version of `newApiHadoopFile` that uses class tags to figure out the classes of keys,
       * values and the `org.apache.hadoop.mapreduce.InputFormat` (new MapReduce API) so that user
       * don't need to pass them directly. Instead, callers can just write, for example:
@@ -703,6 +749,8 @@ class SparkContext(config: SparkConf) extends Logging {
     }
 
     /**
+      * 获取给定Hadoop文件的RDD，其中包含任意新的API InputFormat和要传递到输入格式的额外配置选项。
+      *
       * Get an RDD for a given Hadoop file with an arbitrary new API InputFormat
       * and extra configuration options to pass to the input format.
       *
@@ -742,6 +790,8 @@ class SparkContext(config: SparkConf) extends Logging {
     }
 
     /**
+      * 我们重用的Hadoop代码（例如文件系统）的默认Hadoop配置。
+      *
       * A default Hadoop Configuration for the Hadoop code (e.g. file systems) that we reuse.
       *
       * @note As it will be reused in all Hadoop RDDs, it's better not to modify it unless you
@@ -750,6 +800,8 @@ class SparkContext(config: SparkConf) extends Logging {
     def hadoopConfiguration: Configuration = _hadoopConfiguration
 
     /**
+      * 获取给定Hadoop文件的RDD，其中包含任意新的API InputFormat和要传递到输入格式的额外配置选项。
+      *
       * Get an RDD for a given Hadoop file with an arbitrary new API InputFormat
       * and extra configuration options to pass to the input format.
       *
@@ -784,6 +836,8 @@ class SparkContext(config: SparkConf) extends Logging {
     }
 
     /**
+      * 获取具有给定键和值类型的Hadoop SequenceFile的RDD。
+      *
       * Get an RDD for a Hadoop SequenceFile with given key and value types.
       *
       * @note Because Hadoop's RecordReader class re-uses the same Writable object for each
@@ -806,6 +860,8 @@ class SparkContext(config: SparkConf) extends Logging {
     }
 
     /**
+      * 获取具有给定键和值类型的Hadoop SequenceFile的RDD。
+      *
       * Get an RDD for a Hadoop SequenceFile with given key and value types.
       *
       * @note Because Hadoop's RecordReader class re-uses the same Writable object for each
@@ -830,7 +886,10 @@ class SparkContext(config: SparkConf) extends Logging {
         hadoopFile(path, inputFormatClass, keyClass, valueClass, minPartitions)
     }
 
-    /** Get an RDD for a Hadoop file with an arbitrary InputFormat
+    /**
+      * 获取具有任意输入格式的Hadoop文件的RDD
+      *
+      * Get an RDD for a Hadoop file with an arbitrary InputFormat
       *
       * @note Because Hadoop's RecordReader class re-uses the same Writable object for each
       *       record, directly caching the returned RDD or directly passing it to an aggregation or shuffle
@@ -871,6 +930,9 @@ class SparkContext(config: SparkConf) extends Logging {
     }
 
     /**
+      * 向集群广播一个只读变量，返回一个org.apache.spark.Broadcast.Broadcast对象，以便在分布式函数中读取它。
+      * 变量将只发送到每个集群一次。
+      *
       * Broadcast a read-only variable to the cluster, returning a
       * [[org.apache.spark.broadcast.Broadcast]] object for reading it in distributed functions.
       * The variable will be sent to each cluster only once.
@@ -900,6 +962,8 @@ class SparkContext(config: SparkConf) extends Logging {
     private[spark] def cleaner: Option[ContextCleaner] = _cleaner
 
     /**
+      * 用户未给定时Hadoop RDD的默认最小分区数
+      *
       * Default min number of partitions for Hadoop RDDs when not given by user
       * Notice that we use math.min so the "defaultMinPartitions" cannot be higher than 2.
       * The reasons for this are discussed in https://github.com/mesos/org.apache.spark/pull/718
