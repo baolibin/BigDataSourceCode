@@ -985,8 +985,10 @@ class SparkContext(config: SparkConf) extends Logging {
       */
     try {
         _conf = config.clone()
+        // 检查非法或不推荐的配置设置。
         _conf.validateSettings()
 
+        // 检查App Master和Name是否设置
         if (!_conf.contains("org.apache.spark.master")) {
             throw new SparkException("A master URL must be set in your configuration")
         }
@@ -994,6 +996,7 @@ class SparkContext(config: SparkConf) extends Logging {
             throw new SparkException("An application name must be set in your configuration")
         }
 
+        // 在spark驱动程序日志中打印org.apache.spark.app.name
         // log out org.apache.spark.app.name in the Spark driver logs
         logInfo(s"Submitted application: $appName")
 
