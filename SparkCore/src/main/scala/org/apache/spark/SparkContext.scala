@@ -2575,6 +2575,7 @@ object SparkContext extends Logging {
     private[spark] val RDD_SCOPE_KEY = "org.apache.spark.rdd.scope"
     private[spark] val RDD_SCOPE_NO_OVERRIDE_KEY = "org.apache.spark.rdd.scope.noOverride"
     /**
+      * 集群模式driver运行在某个executor上
       * Executor id for the driver.  In earlier versions of Spark, this was `<driver>`, but this was
       * changed to `driver` because the angle brackets caused escaping issues in URLs and XML (see
       * SPARK-6716 for more details).
