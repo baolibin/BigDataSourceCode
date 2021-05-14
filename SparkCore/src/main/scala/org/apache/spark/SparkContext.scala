@@ -1017,6 +1017,7 @@ class SparkContext(config: SparkConf) extends Logging {
         _conf.set(DRIVER_HOST_ADDRESS, _conf.get(DRIVER_HOST_ADDRESS))
         _conf.setIfMissing("org.apache.spark.driver.port", "0")
 
+        // 配置driver运行节点
         _conf.set("org.apache.spark.executor.id", SparkContext.DRIVER_IDENTIFIER)
 
         _jars = Utils.getUserJars(_conf)
