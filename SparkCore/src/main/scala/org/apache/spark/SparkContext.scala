@@ -528,6 +528,7 @@ class SparkContext(config: SparkConf) extends Logging {
                               minPartitions: Int = defaultMinPartitions): RDD[(String, String)] = withScope {
         assertNotStopped()
         val job = NewHadoopJob.getInstance(hadoopConfiguration)
+        // 使用setInputPaths使wholeTextFiles与hadoopFile/textFile对齐
         // Use setInputPaths so that wholeTextFiles aligns with hadoopFile/textFile in taking
         // comma separated files as input. (see SPARK-7155)
         NewFileInputFormat.setInputPaths(job, path)
