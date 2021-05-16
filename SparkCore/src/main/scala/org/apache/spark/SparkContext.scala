@@ -986,8 +986,10 @@ class SparkContext(config: SparkConf) extends Logging {
       */
     try {
         _conf = config.clone()
+        // 检查非法或不推荐的配置设置。
         _conf.validateSettings()
 
+        // 检查App Master和Name是否设置
         if (!_conf.contains("org.apache.spark.master")) {
             throw new SparkException("A master URL must be set in your configuration")
         }
@@ -995,6 +997,7 @@ class SparkContext(config: SparkConf) extends Logging {
             throw new SparkException("An application name must be set in your configuration")
         }
 
+        // 在spark驱动程序日志中打印org.apache.spark.app.name
         // log out org.apache.spark.app.name in the Spark driver logs
         logInfo(s"Submitted application: $appName")
 
@@ -1015,6 +1018,7 @@ class SparkContext(config: SparkConf) extends Logging {
         _conf.set(DRIVER_HOST_ADDRESS, _conf.get(DRIVER_HOST_ADDRESS))
         _conf.setIfMissing("org.apache.spark.driver.port", "0")
 
+        // 配置driver运行节点
         _conf.set("org.apache.spark.executor.id", SparkContext.DRIVER_IDENTIFIER)
 
         _jars = Utils.getUserJars(_conf)
@@ -2573,6 +2577,7 @@ object SparkContext extends Logging {
     private[spark] val RDD_SCOPE_KEY = "org.apache.spark.rdd.scope"
     private[spark] val RDD_SCOPE_NO_OVERRIDE_KEY = "org.apache.spark.rdd.scope.noOverride"
     /**
+      * 集群模式driver运行在某个executor上
       * Executor id for the driver.  In earlier versions of Spark, this was `<driver>`, but this was
       * changed to `driver` because the angle brackets caused escaping issues in URLs and XML (see
       * SPARK-6716 for more details).

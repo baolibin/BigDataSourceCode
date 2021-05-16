@@ -508,6 +508,8 @@ class SparkConf(loadDefaults: Boolean) extends Cloneable with Logging with Seria
     private[spark] def getenv(name: String): String = System.getenv(name)
 
     /**
+      * 检查非法或不推荐的配置设置。为前者抛出一个例外。
+      *
       * Checks for illegal or deprecated config settings. Throws an exception for the former. Not
       * idempotent - may mutate this conf object to convert deprecated settings to supported ones.
       */

@@ -80,6 +80,8 @@ private[spark] trait TaskScheduler {
                                          blockManagerId: BlockManagerId): Boolean
 
     /**
+      * 获取与作业关联的应用程序ID。
+      *
       * Get an application ID associated with the job.
       *
       * @return An application ID
