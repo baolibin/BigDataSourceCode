@@ -239,6 +239,25 @@ private[spark] object Utils extends Logging {
     }
 
     /**
+      * 获取此线程上的上下文类加载器，或者，如果不存在，则获取加载Spark的类加载器。
+      *
+      * Get the Context ClassLoader on this thread or, if not present, the ClassLoader that
+      * loaded Spark.
+      *
+      * This should be used whenever passing a ClassLoader to Class.ForName or finding the currently
+      * active loader when setting up ClassLoader delegation chains.
+      */
+    def getContextOrSparkClassLoader: ClassLoader =
+        Option(Thread.currentThread().getContextClassLoader).getOrElse(getSparkClassLoader)
+
+    /**
+      * 获取加载Spark的类加载器。
+      *
+      * Get the ClassLoader which loaded Spark.
+      */
+    def getSparkClassLoader: ClassLoader = getClass.getClassLoader
+
+    /**
       * Primitive often used when writing [[java.nio.ByteBuffer]] to [[java.io.DataOutput]]
       */
     def writeByteBuffer(bb: ByteBuffer, out: DataOutput): Unit = {
@@ -1066,6 +1085,9 @@ private[spark] object Utils extends Logging {
     }
 
     /**
+      * 在org.apache.spark包中的类内部调用时，返回调用spark的用户代码类（在org.apache.spark package）的名称，以及调用的spark方法。
+      * 例如，这是用来告诉用户每个RDD是在他们的代码中创建的。
+      *
       * When called inside a class in the org.apache.spark package, returns the name of the user code class
       * (outside the org.apache.spark package) that called into Spark, as well as which Spark method they called.
       * This is used, for example, to tell users where in their code each RDD got created.
@@ -1977,6 +1999,17 @@ private[spark] object Utils extends Logging {
         (JavaUtils.byteStringAsBytes(str) / 1024 / 1024).toInt
     }
 
+    private implicit class Lock(lock: LockInfo) {
+        def lockString: String = {
+            lock match {
+                case monitor: MonitorInfo =>
+                    s"Monitor(${lock.getClassName}@${lock.getIdentityHashCode}})"
+                case _ =>
+                    s"Lock(${lock.getClassName}@${lock.getIdentityHashCode}})"
+            }
+        }
+    }
+
     /**
       * Return the prefix of a command that appends the given library paths to the
       * system-specific library path environment variable. On Unix, for instance,
@@ -2008,17 +2041,6 @@ private[spark] object Utils extends Logging {
             "DYLD_LIBRARY_PATH"
         } else {
             "LD_LIBRARY_PATH"
-        }
-    }
-
-    private implicit class Lock(lock: LockInfo) {
-        def lockString: String = {
-            lock match {
-                case monitor: MonitorInfo =>
-                    s"Monitor(${lock.getClassName}@${lock.getIdentityHashCode}})"
-                case _ =>
-                    s"Lock(${lock.getClassName}@${lock.getIdentityHashCode}})"
-            }
         }
     }
 
@@ -2101,25 +2123,6 @@ private[spark] object Utils extends Logging {
         Class.forName(className, true, getContextOrSparkClassLoader)
         // scalastyle:on classforname
     }
-
-    /**
-      * 获取此线程上的上下文类加载器，或者，如果不存在，则获取加载Spark的类加载器。
-      *
-      * Get the Context ClassLoader on this thread or, if not present, the ClassLoader that
-      * loaded Spark.
-      *
-      * This should be used whenever passing a ClassLoader to Class.ForName or finding the currently
-      * active loader when setting up ClassLoader delegation chains.
-      */
-    def getContextOrSparkClassLoader: ClassLoader =
-        Option(Thread.currentThread().getContextClassLoader).getOrElse(getSparkClassLoader)
-
-    /**
-      * 获取加载Spark的类加载器。
-      *
-      * Get the ClassLoader which loaded Spark.
-      */
-    def getSparkClassLoader: ClassLoader = getClass.getClassLoader
 
     /**
       * Split the comma delimited string of master URLs into a list.
@@ -2283,28 +2286,6 @@ private[spark] object Utils extends Logging {
         redact(redactionPattern, kvs)
     }
 
-    private def redact(redactionPattern: Regex, kvs: Seq[(String, String)]): Seq[(String, String)] = {
-        // If the sensitive information regex matches with either the key or the value, redact the value
-        // While the original intent was to only redact the value if the key matched with the regex,
-        // we've found that especially in verbose mode, the value of the property may contain sensitive
-        // information like so:
-        // "sun.java.command":"org.apache.org.apache.spark.deploy.SparkSubmit ... \
-        // --conf org.apache.spark.executorEnv.HADOOP_CREDSTORE_PASSWORD=secret_password ...
-        //
-        // And, in such cases, simply searching for the sensitive information regex in the key name is
-        // not sufficient. The values themselves have to be searched as well and redacted if matched.
-        // This does mean we may be accounting more false positives - for example, if the value of an
-        // arbitrary property contained the term 'password', we may redact the value from the UI and
-        // logs. In order to work around it, user would have to make the org.apache.spark.redaction.regex property
-        // more specific.
-        kvs.map { case (key, value) =>
-            redactionPattern.findFirstIn(key)
-                    .orElse(redactionPattern.findFirstIn(value))
-                    .map { _ => (key, REDACTION_REPLACEMENT_TEXT) }
-                    .getOrElse((key, value))
-        }
-    }
-
     /**
       * Redact the sensitive information in the given string.
       */
@@ -2326,6 +2307,28 @@ private[spark] object Utils extends Logging {
             SECRET_REDACTION_PATTERN.defaultValueString
         ).r
         redact(redactionPattern, kvs.toArray)
+    }
+
+    private def redact(redactionPattern: Regex, kvs: Seq[(String, String)]): Seq[(String, String)] = {
+        // If the sensitive information regex matches with either the key or the value, redact the value
+        // While the original intent was to only redact the value if the key matched with the regex,
+        // we've found that especially in verbose mode, the value of the property may contain sensitive
+        // information like so:
+        // "sun.java.command":"org.apache.org.apache.spark.deploy.SparkSubmit ... \
+        // --conf org.apache.spark.executorEnv.HADOOP_CREDSTORE_PASSWORD=secret_password ...
+        //
+        // And, in such cases, simply searching for the sensitive information regex in the key name is
+        // not sufficient. The values themselves have to be searched as well and redacted if matched.
+        // This does mean we may be accounting more false positives - for example, if the value of an
+        // arbitrary property contained the term 'password', we may redact the value from the UI and
+        // logs. In order to work around it, user would have to make the org.apache.spark.redaction.regex property
+        // more specific.
+        kvs.map { case (key, value) =>
+            redactionPattern.findFirstIn(key)
+                    .orElse(redactionPattern.findFirstIn(value))
+                    .map { _ => (key, REDACTION_REPLACEMENT_TEXT) }
+                    .getOrElse((key, value))
+        }
     }
 
     private def maxNumToStringFields = {

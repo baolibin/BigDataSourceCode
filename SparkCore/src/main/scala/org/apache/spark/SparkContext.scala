@@ -84,6 +84,7 @@ class SparkContext(config: SparkConf) extends Logging {
     // context as having started construction.
     // NOTE: this must be placed at the beginning of the SparkContext constructor.
     SparkContext.markPartiallyConstructed(this, allowMultipleContexts)
+    // 线程局部变量，用户可以使用它将信息传递到堆栈中
     // Thread Local variable that can be used by users to pass information down the stack
     protected[spark] val localProperties = new InheritableThreadLocal[Properties] {
         override protected def childValue(parent: Properties): Properties = {
@@ -114,6 +115,7 @@ class SparkContext(config: SparkConf) extends Logging {
     // Scala bug SI-8479, however, this causes the compile step to fail when generating docs.
     // Until we have a good workaround for that bug the constructors remain broken out.
     private[spark] val addedJars = new ConcurrentHashMap[String, Long]().asScala
+    // 跟踪所有持久化的RDD
     // Keeps track of all persisted RDDs
     private[spark] val persistentRdds = {
         val map: ConcurrentMap[Int, RDD[_]] = new MapMaker().weakValues().makeMap[Int, RDD[_]]()
