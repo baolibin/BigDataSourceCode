@@ -988,76 +988,41 @@ class SparkContext(config: SparkConf) extends Logging {
       */
     try {
         _conf = config.clone()
-        // 检查非法或不推荐的配置设置。
-        _conf.validateSettings()
-
+        _conf.validateSettings() // 检查非法或不推荐的配置设置。
         // 检查App Master和Name是否设置
-        if (!_conf.contains("org.apache.spark.master")) {
-            throw new SparkException("A master URL must be set in your configuration")
-        }
-        if (!_conf.contains("org.apache.spark.app.name")) {
-            throw new SparkException("An application name must be set in your configuration")
-        }
-
+        if (!_conf.contains("org.apache.spark.master")) throw new SparkException("A master URL must be set in your configuration")
+        if (!_conf.contains("org.apache.spark.app.name")) {throw new SparkException("An application name must be set in your configuration")}
         // 在spark驱动程序日志中打印org.apache.spark.app.name
         // log out org.apache.spark.app.name in the Spark driver logs
         logInfo(s"Submitted application: $appName")
-
         // 系统属性org.apache.spark.yarn.app.id如果AM在YARN集群上运行用户代码，则必须设置。
         // System property org.apache.spark.yarn.app.id must be set if user code ran by AM on a YARN cluster
         if (master == "yarn" && deployMode == "cluster" && !_conf.contains("org.apache.spark.yarn.app.id")) {
             throw new SparkException("Detected yarn cluster mode, but isn't running on a cluster. " +
-                    "Deployment to YARN is not supported directly by SparkContext. Please use org.apache.spark-submit.")
-        }
-
-        if (_conf.getBoolean("org.apache.spark.logConf", false)) {
-            logInfo("Spark configuration:\n" + _conf.toDebugString)
-        }
-
+                    "Deployment to YARN is not supported directly by SparkContext. Please use org.apache.spark-submit.")}
+        if (_conf.getBoolean("org.apache.spark.logConf", false)) {logInfo("Spark configuration:\n" + _conf.toDebugString)}
         // 设置Spark驱动程序主机和端口系统属性。这将显式地设置配置，而不是依赖于config常量的默认值。
         // Set Spark driver host and port system properties. This explicitly sets the configuration
         // instead of relying on the default value of the config constant.
         _conf.set(DRIVER_HOST_ADDRESS, _conf.get(DRIVER_HOST_ADDRESS))
         _conf.setIfMissing("org.apache.spark.driver.port", "0")
-
-        // 配置driver运行节点
-        _conf.set("org.apache.spark.executor.id", SparkContext.DRIVER_IDENTIFIER)
-
+        _conf.set("org.apache.spark.executor.id", SparkContext.DRIVER_IDENTIFIER) // 配置driver运行节点
         _jars = Utils.getUserJars(_conf)
-        _files = _conf.getOption("org.apache.spark.files").map(_.split(",")).map(_.filter(_.nonEmpty))
-                .toSeq.flatten
-
-        _eventLogDir =
-                if (isEventLogEnabled) {
-                    val unresolvedDir = conf.get("org.apache.spark.eventLog.dir", EventLoggingListener.DEFAULT_LOG_DIR)
-                            .stripSuffix("/")
-                    Some(Utils.resolveURI(unresolvedDir))
-                } else {
-                    None
-                }
-
-        _eventLogCodec = {
-            val compress = _conf.getBoolean("org.apache.spark.eventLog.compress", false)
-            if (compress && isEventLogEnabled) {
-                Some(CompressionCodec.getCodecName(_conf)).map(CompressionCodec.getShortName)
-            } else {
-                None
-            }
-        }
-
+        _files = _conf.getOption("org.apache.spark.files").map(_.split(",")).map(_.filter(_.nonEmpty)).toSeq.flatten
+        _eventLogDir = if (isEventLogEnabled) {val unresolvedDir = conf.get("org.apache.spark.eventLog.dir", EventLoggingListener.DEFAULT_LOG_DIR).stripSuffix("/")
+                    Some(Utils.resolveURI(unresolvedDir))} else {None}
+        _eventLogCodec = {val compress = _conf.getBoolean("org.apache.spark.eventLog.compress", false)
+            if (compress && isEventLogEnabled) {Some(CompressionCodec.getCodecName(_conf)).map(CompressionCodec.getShortName)} else {None}}
         if (master == "yarn" && deployMode == "client") System.setProperty("SPARK_YARN_MODE", "true")
-
         // "_jobProgressListener"应该在创建SparkEnv之前设置，因为在创建"SparkEnv",一些信息将被发布到“listenerBus”，我们不应该错过它们。
         // "_jobProgressListener" should be set up before creating SparkEnv because when creating
         // "SparkEnv", some messages will be posted to "listenerBus" and we should not miss them.
         _jobProgressListener = new JobProgressListener(_conf)
         listenerBus.addListener(jobProgressListener)
-
         // 创建Spark执行环境（缓存、map输出跟踪器等）
         // Create the Spark execution environment (cache, map output tracker, etc)
         _env = createSparkEnv(_conf, isLocal, listenerBus)
         SparkEnv.set(_env)
-
         // 如果运行REPL，请向文件服务器注册REPL的输出目录。
         // If running the REPL, register the repl's output dir with the file server.
         _conf.getOption("org.apache.spark.repl.class.outputDir").foreach { path =>
