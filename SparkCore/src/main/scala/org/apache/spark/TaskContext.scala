@@ -75,6 +75,7 @@ object TaskContext {
 
 
 /**
+  * 有关任务的上下文信息，可在执行过程中读取或修改。
   * Contextual information about a task which can be read or mutated during
   * execution. To access the TaskContext for a running task, use:
   * {{{
