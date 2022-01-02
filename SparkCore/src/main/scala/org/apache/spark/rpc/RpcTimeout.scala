@@ -85,6 +85,8 @@ private[spark] class RpcTimeout(val duration: FiniteDuration, val timeoutProp: S
 private[spark] object RpcTimeout {
 
     /**
+      * 在配置中查找timeout属性，并使用描述中的属性键创建RpcTimeout。
+      *
       * Lookup the timeout property in the configuration and create
       * a RpcTimeout with the property key in the description.
       *
