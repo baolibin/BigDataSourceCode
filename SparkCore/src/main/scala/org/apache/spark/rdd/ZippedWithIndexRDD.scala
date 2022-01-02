@@ -41,7 +41,7 @@ class ZippedWithIndexRDDPartition(val prev: Partition, val startIndex: Long)
   */
 private[spark]
 class ZippedWithIndexRDD[T: ClassTag](prev: RDD[T]) extends RDD[(T, Long)](prev) {
-
+    // ClassTag在运行时获得我们传递的类型参数的信息
     /** The start index of each partition. */
     @transient private val startIndices: Array[Long] = {
         val n = prev.partitions.length
