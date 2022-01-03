@@ -74,6 +74,16 @@ abstract class Broadcast[T: ClassTag](val id: Long) extends Serializable with Lo
         getValue()
     }
 
+    /** Check if this broadcast is valid. If not valid, exception is thrown. */
+    protected def assertValid() {
+        if (!_isValid) {
+            throw new SparkException(
+                "Attempted to use %s after it was destroyed (%s) ".format(toString, _destroySite))
+        }
+    }
+
+    override def toString: String = "Broadcast(" + id + ")"
+
     /**
       * Asynchronously delete cached copies of this broadcast on the executors.
       * If the broadcast is used after this is called, it will need to be re-sent to each executor.
@@ -92,7 +102,6 @@ abstract class Broadcast[T: ClassTag](val id: Long) extends Serializable with Lo
         assertValid()
         doUnpersist(blocking)
     }
-
 
     /**
       * Destroy all data and metadata related to this broadcast variable. Use this with caution;
@@ -116,16 +125,6 @@ abstract class Broadcast[T: ClassTag](val id: Long) extends Serializable with Lo
         logInfo("Destroying %s (from %s)".format(toString, _destroySite))
         doDestroy(blocking)
     }
-
-    /** Check if this broadcast is valid. If not valid, exception is thrown. */
-    protected def assertValid() {
-        if (!_isValid) {
-            throw new SparkException(
-                "Attempted to use %s after it was destroyed (%s) ".format(toString, _destroySite))
-        }
-    }
-
-    override def toString: String = "Broadcast(" + id + ")"
 
     /**
       * Actually get the broadcasted value. Concrete implementations of Broadcast class must

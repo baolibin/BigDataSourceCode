@@ -266,9 +266,6 @@ abstract class RDD[T: ClassTag](
       */
     protected def getPreferredLocations(split: Partition): Seq[String] = Nil
 
-    /** An Option holding our checkpoint RDD, if we are checkpointed */
-    private def checkpointRDD: Option[CheckpointRDD[T]] = checkpointData.flatMap(_.checkpointRDD)
-
     /**
       * Internal method to this RDD; will read from cache if applicable, or otherwise compute it.
       * This should ''not'' be called by users directly, but is available for implementors of custom
@@ -291,8 +288,6 @@ abstract class RDD[T: ClassTag](
         new MapPartitionsRDD[U, T](this, (context, pid, iter) => iter.flatMap(cleanF))
     }
 
-    // Transformations (return a new RDD)
-
     /**
       * Return a new RDD containing only the elements that satisfy a predicate.
       */
@@ -303,6 +298,8 @@ abstract class RDD[T: ClassTag](
             (context, pid, iter) => iter.filter(cleanF),
             preservesPartitioning = true)
     }
+
+    // Transformations (return a new RDD)
 
     /**
       * Return a new RDD containing the distinct elements in this RDD.
@@ -649,6 +646,29 @@ abstract class RDD[T: ClassTag](
         new MapPartitionsRDD[U, T](this, (context, pid, iter) => iter.map(cleanF))
     }
 
+    private def sc: SparkContext = {
+        if (_sc == null) {
+            throw new SparkException(
+                "This RDD lacks a SparkContext. It could happen in the following cases: \n(1) RDD " +
+                        "transformations and actions are NOT invoked by the driver, but inside of other " +
+                        "transformations; for example, rdd1.map(x => rdd2.values.count() * x) is invalid " +
+                        "because the values transformation and count action cannot be performed inside of the " +
+                        "rdd1.map transformation. For more information, see SPARK-5063.\n(2) When a Spark " +
+                        "Streaming job recovers from checkpoint, this exception will be hit if a reference to " +
+                        "an RDD not defined by the streaming job is used in DStream operations. For more " +
+                        "information, See SPARK-13758.")
+        }
+        _sc
+    }
+
+    /**
+      * Execute a block of code in a scope such that all new RDDs created in this body will
+      * be part of the same scope. For more detail, see {{org.apache.org.apache.spark.rdd.RDDOperationScope}}.
+      *
+      * Note: Return statements are NOT allowed in the given body.
+      */
+    private[spark] def withScope[U](body: => U): U = RDDOperationScope.withScope[U](sc)(body)
+
     /**
       * Return an RDD of grouped elements. Each group consists of a key and a sequence of elements
       * mapping to that key. The ordering of elements within each group is not guaranteed, and
@@ -749,12 +769,6 @@ abstract class RDD[T: ClassTag](
         }
     }
 
-    def zipPartitions[B: ClassTag, V: ClassTag]
-    (rdd2: RDD[B])
-    (f: (Iterator[T], Iterator[B]) => Iterator[V]): RDD[V] = withScope {
-        zipPartitions(rdd2, preservesPartitioning = false)(f)
-    }
-
     /**
       * Zip this RDD's partitions with one (or more) RDD(s) and return a new RDD by
       * applying a function to the zipped partitions. Assumes that all the RDDs have the
@@ -765,6 +779,12 @@ abstract class RDD[T: ClassTag](
     (rdd2: RDD[B], preservesPartitioning: Boolean)
     (f: (Iterator[T], Iterator[B]) => Iterator[V]): RDD[V] = withScope {
         new ZippedPartitionsRDD2(sc, sc.clean(f), this, rdd2, preservesPartitioning)
+    }
+
+    def zipPartitions[B: ClassTag, V: ClassTag]
+    (rdd2: RDD[B])
+    (f: (Iterator[T], Iterator[B]) => Iterator[V]): RDD[V] = withScope {
+        zipPartitions(rdd2, preservesPartitioning = false)(f)
     }
 
     def zipPartitions[B: ClassTag, C: ClassTag, V: ClassTag]
@@ -807,6 +827,9 @@ abstract class RDD[T: ClassTag](
         sc.runJob(this, (iter: Iterator[T]) => cleanF(iter))
     }
 
+
+    // Actions (launch a job to return a value to the user program)
+
     /**
       * Return an array that contains all of the elements in this RDD.
       *
@@ -817,9 +840,6 @@ abstract class RDD[T: ClassTag](
         val results = sc.runJob(this, (iter: Iterator[T]) => iter.toArray)
         Array.concat(results: _*)
     }
-
-
-    // Actions (launch a job to return a value to the user program)
 
     /**
       * Return an iterator that contains all of the elements in this RDD.
@@ -948,29 +968,6 @@ abstract class RDD[T: ClassTag](
         sc.runJob(this, foldPartition, mergeResult)
         jobResult
     }
-
-    private def sc: SparkContext = {
-        if (_sc == null) {
-            throw new SparkException(
-                "This RDD lacks a SparkContext. It could happen in the following cases: \n(1) RDD " +
-                        "transformations and actions are NOT invoked by the driver, but inside of other " +
-                        "transformations; for example, rdd1.map(x => rdd2.values.count() * x) is invalid " +
-                        "because the values transformation and count action cannot be performed inside of the " +
-                        "rdd1.map transformation. For more information, see SPARK-5063.\n(2) When a Spark " +
-                        "Streaming job recovers from checkpoint, this exception will be hit if a reference to " +
-                        "an RDD not defined by the streaming job is used in DStream operations. For more " +
-                        "information, See SPARK-13758.")
-        }
-        _sc
-    }
-
-    /**
-      * Execute a block of code in a scope such that all new RDDs created in this body will
-      * be part of the same scope. For more detail, see {{org.apache.org.apache.spark.rdd.RDDOperationScope}}.
-      *
-      * Note: Return statements are NOT allowed in the given body.
-      */
-    private[spark] def withScope[U](body: => U): U = RDDOperationScope.withScope[U](sc)(body)
 
     /**
       * Aggregates the elements of this RDD in a multi-level tree pattern.
@@ -1630,13 +1627,13 @@ abstract class RDD[T: ClassTag](
 
     private[spark] def getCreationSite: String = Option(creationSite).map(_.shortForm).getOrElse("")
 
-    // =======================================================================
-    // Other internal methods and fields
-    // =======================================================================
-
     def toJavaRDD(): JavaRDD[T] = {
         new JavaRDD(this)(elementClassTag)
     }
+
+    // =======================================================================
+    // Other internal methods and fields
+    // =======================================================================
 
     private[spark] def elementClassTag: ClassTag[T] = classTag[T]
 
@@ -1658,6 +1655,28 @@ abstract class RDD[T: ClassTag](
     protected[spark] def parent[U: ClassTag](j: Int) = {
         dependencies(j).rdd.asInstanceOf[RDD[U]]
     }
+
+    /**
+      * Get the list of dependencies of this RDD, taking into account whether the
+      * RDD is checkpointed or not.
+      */
+    final def dependencies: Seq[Dependency[_]] = {
+        checkpointRDD.map(r => List(new OneToOneDependency(r))).getOrElse {
+            if (dependencies_ == null) {
+                dependencies_ = getDependencies
+            }
+            dependencies_
+        }
+    }
+
+    /** An Option holding our checkpoint RDD, if we are checkpointed */
+    private def checkpointRDD: Option[CheckpointRDD[T]] = checkpointData.flatMap(_.checkpointRDD)
+
+    /**
+      * Implemented by subclasses to return how this RDD depends on parent RDDs. This method will only
+      * be called once, so it is safe to implement a time-consuming computation in it.
+      */
+    protected def getDependencies: Seq[Dependency[_]] = deps
 
     private[spark] def conf = sc.conf
 
@@ -1684,25 +1703,6 @@ abstract class RDD[T: ClassTag](
         // In case there is a cycle, do not include the root itself
         ancestors.filterNot(_ == this).toSeq
     }
-
-    /**
-      * Get the list of dependencies of this RDD, taking into account whether the
-      * RDD is checkpointed or not.
-      */
-    final def dependencies: Seq[Dependency[_]] = {
-        checkpointRDD.map(r => List(new OneToOneDependency(r))).getOrElse {
-            if (dependencies_ == null) {
-                dependencies_ = getDependencies
-            }
-            dependencies_
-        }
-    }
-
-    /**
-      * Implemented by subclasses to return how this RDD depends on parent RDDs. This method will only
-      * be called once, so it is safe to implement a time-consuming computation in it.
-      */
-    protected def getDependencies: Seq[Dependency[_]] = deps
 
     /**
       * Compute an RDD partition or read it from a checkpoint if the RDD is checkpointing.
