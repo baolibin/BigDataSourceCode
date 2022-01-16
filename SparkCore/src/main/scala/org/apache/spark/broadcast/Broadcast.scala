@@ -61,6 +61,7 @@ import scala.reflect.ClassTag
 abstract class Broadcast[T: ClassTag](val id: Long) extends Serializable with Logging {
 
     /**
+      * 表示广播变量是否有效的标志
       * Flag signifying whether the broadcast variable is valid
       * (that is, not already destroyed) or not.
       */
@@ -98,6 +99,7 @@ abstract class Broadcast[T: ClassTag](val id: Long) extends Serializable with Lo
     }
 
     /**
+      * 删除执行器上此广播的缓存副本。如果在调用后使用广播，则需要将广播重新发送给每个执行者。
       * Delete cached copies of this broadcast on the executors. If the broadcast is used after
       * this is called, it will need to be re-sent to each executor.
       *
@@ -109,6 +111,7 @@ abstract class Broadcast[T: ClassTag](val id: Long) extends Serializable with Lo
     }
 
     /**
+      * 销毁与此广播变量相关的所有数据和元数据。
       * Destroy all data and metadata related to this broadcast variable. Use this with caution;
       * once a broadcast variable has been destroyed, it cannot be used again.
       * This method blocks until destroy has completed
@@ -140,12 +143,14 @@ abstract class Broadcast[T: ClassTag](val id: Long) extends Serializable with Lo
     protected def getValue(): T
 
     /**
+      * 实际上，在执行器上取消广播值的持久性。广播类的具体实现必须定义自己的逻辑来取消持久化自己的数据。
       * Actually unpersist the broadcasted value on the executors. Concrete implementations of
       * Broadcast class must define their own logic to unpersist their own data.
       */
     protected def doUnpersist(blocking: Boolean)
 
     /**
+      * 实际销毁与此广播变量相关的所有数据和元数据。广播类的实现必须定义自己的逻辑来破坏自己的状态。
       * Actually destroy all data and metadata related to this broadcast variable.
       * Implementation of Broadcast class must define their own logic to destroy their own
       * state.
@@ -153,6 +158,7 @@ abstract class Broadcast[T: ClassTag](val id: Long) extends Serializable with Lo
     protected def doDestroy(blocking: Boolean)
 
     /**
+      * 该广播是否实际可用。一旦从驱动程序中删除持久状态，则该值应为false。
       * Whether this Broadcast is actually usable. This should be false once persisted state is
       * removed from the driver.
       */
