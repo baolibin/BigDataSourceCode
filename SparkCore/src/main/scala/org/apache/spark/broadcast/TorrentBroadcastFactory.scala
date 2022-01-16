@@ -40,6 +40,7 @@ private[spark] class TorrentBroadcastFactory extends BroadcastFactory {
     override def stop() {}
 
     /**
+      * 删除与具有给定ID的torrent广播关联的所有持久化状态。
       * Remove all persisted state associated with the torrent broadcast with the given ID.
       *
       * @param removeFromDriver Whether to remove state from the driver.

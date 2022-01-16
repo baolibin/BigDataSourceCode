@@ -34,6 +34,7 @@ private[spark] trait BroadcastFactory {
     def initialize(isDriver: Boolean, conf: SparkConf, securityMgr: SecurityManager): Unit
 
     /**
+      * 创建一个新的广播变量。
       * Creates a new broadcast variable.
       *
       * @param value   value to broadcast

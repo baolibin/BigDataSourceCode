@@ -141,18 +141,6 @@ private[spark] class TorrentBroadcast[T: ClassTag](obj: T, id: Long)
         blocks.length
     }
 
-    private def calcChecksum(block: ByteBuffer): Int = {
-        val adler = new Adler32()
-        if (block.hasArray) {
-            adler.update(block.array, block.arrayOffset + block.position, block.limit - block.position)
-        } else {
-            val bytes = new Array[Byte](block.remaining())
-            block.duplicate.get(bytes)
-            adler.update(bytes)
-        }
-        adler.getValue.toInt
-    }
-
     /** Used by the JVM when serializing this object. */
     private def writeObject(out: ObjectOutputStream): Unit = Utils.tryOrIOException {
         assertValid()
@@ -248,7 +236,20 @@ private[spark] class TorrentBroadcast[T: ClassTag](obj: T, id: Long)
         blocks
     }
 
+    private def calcChecksum(block: ByteBuffer): Int = {
+        val adler = new Adler32()
+        if (block.hasArray) {
+            adler.update(block.array, block.arrayOffset + block.position, block.limit - block.position)
+        } else {
+            val bytes = new Array[Byte](block.remaining())
+            block.duplicate.get(bytes)
+            adler.update(bytes)
+        }
+        adler.getValue.toInt
+    }
+
     /**
+      * 如果在任务中运行，请注册给定块的锁，以便在任务完成时释放。否则，如果未在任务中运行，则立即释放锁。
       * If running in a task, register the given block's locks for release upon task completion.
       * Otherwise, if not running in a task then immediately release the lock.
       */
