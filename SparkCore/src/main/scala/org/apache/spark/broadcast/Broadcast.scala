@@ -68,13 +68,17 @@ abstract class Broadcast[T: ClassTag](val id: Long) extends Serializable with Lo
 
     private var _destroySite = ""
 
-    /** Get the broadcasted value. */
+    /**
+      * 获取广播变量的值
+      * Get the broadcasted value. */
     def value: T = {
         assertValid()
         getValue()
     }
 
-    /** Check if this broadcast is valid. If not valid, exception is thrown. */
+    /**
+      * 检查广播变量的值是否有效，无效则抛出异常
+      * Check if this broadcast is valid. If not valid, exception is thrown. */
     protected def assertValid() {
         if (!_isValid) {
             throw new SparkException(
@@ -85,6 +89,7 @@ abstract class Broadcast[T: ClassTag](val id: Long) extends Serializable with Lo
     override def toString: String = "Broadcast(" + id + ")"
 
     /**
+      * 在执行器上异步删除此广播的缓存副本。
       * Asynchronously delete cached copies of this broadcast on the executors.
       * If the broadcast is used after this is called, it will need to be re-sent to each executor.
       */
@@ -113,6 +118,7 @@ abstract class Broadcast[T: ClassTag](val id: Long) extends Serializable with Lo
     }
 
     /**
+      * 销毁与此广播变量相关的所有数据和元数据。
       * Destroy all data and metadata related to this broadcast variable. Use this with caution;
       * once a broadcast variable has been destroyed, it cannot be used again.
       *
@@ -127,6 +133,7 @@ abstract class Broadcast[T: ClassTag](val id: Long) extends Serializable with Lo
     }
 
     /**
+      * 实际获取广播值。广播类的具体实现必须定义自己获取值的方法
       * Actually get the broadcasted value. Concrete implementations of Broadcast class must
       * define their own way to get the value.
       */
