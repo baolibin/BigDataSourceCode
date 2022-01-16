@@ -53,6 +53,8 @@ class SparkHadoopUtil extends Logging {
     private val HADOOP_CONF_PATTERN = "(\\$\\{hadoopconf-[^\\}\\$\\s]+\\})".r.unanchored
 
     /**
+      * 使用Hadoop UserGroupInformation作为线程局部变量（分布到子线程）运行给定函数，用于验证HDFS和线程调用。
+      *
       * Runs the given function with a Hadoop UserGroupInformation as a thread local variable
       * (distributed to child threads), used for authenticating HDFS and YARN calls.
       *
@@ -77,6 +79,7 @@ class SparkHadoopUtil extends Logging {
     }
 
     /**
+      * 返回适当的配置（子类）。创建配置可以初始化一些Hadoop子系统。
       * Return an appropriate (subclass) of Configuration. Creating config can initializes some Hadoop
       * subsystems.
       */
@@ -122,6 +125,7 @@ class SparkHadoopUtil extends Logging {
     }
 
     /**
+      * 向作业配置中添加在安全Hadoop集群上运行所需的任何用户凭据。
       * Add any user credentials to the job conf which are necessary for running on a secure Hadoop
       * cluster.
       */
