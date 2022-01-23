@@ -350,6 +350,7 @@ class SparkHadoopUtil extends Logging {
     }
 
     /**
+      * 将令牌转换为用于日志记录的字符串。
       * Convert a token to a string for logging.
       * If its an abstract delegation token, attempt to unmarshall it and then
       * print more details, including timestamps in human-readable form.
@@ -418,6 +419,7 @@ object SparkHadoopUtil {
     val SPARK_YARN_CREDS_COUNTER_DELIM = "-"
 
     /**
+      * 从HadoopRDDs读取时更新输入度量的记录数。
       * Number of records to update input metrics when reading from HadoopRDDs.
       *
       * Each update is potentially expensive because we need to use reflection to access the
