@@ -98,7 +98,9 @@ class ExternalShuffleService(sparkConf: SparkConf, securityManager: SecurityMana
         }
     }
 
-    /** Create a new shuffle block handler. Factored out for subclasses to override. */
+    /**
+      * 创建一个新的洗牌块处理程序。考虑到子类要重写。
+      * Create a new shuffle block handler. Factored out for subclasses to override. */
     protected def newShuffleBlockHandler(conf: TransportConf): ExternalShuffleBlockHandler = {
         new ExternalShuffleBlockHandler(conf, null)
     }
