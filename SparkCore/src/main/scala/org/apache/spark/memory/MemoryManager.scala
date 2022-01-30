@@ -46,6 +46,7 @@ private[spark] abstract class MemoryManager(
     // -- Methods related to memory allocation policies and bookkeeping ------------------------------
 
     /**
+      * 跟踪将使用sun在JVM堆上还是堆外分配内存。
       * Tracks whether Tungsten memory will be allocated on the JVM heap or off-heap using
       * sun.misc.Unsafe.
       */
@@ -61,6 +62,7 @@ private[spark] abstract class MemoryManager(
         }
     }
     /**
+      * 分配内存供不安全代码/代码使用。
       * Allocates memory for use by Unsafe/Tungsten code.
       */
     private[memory] final val tungstenMemoryAllocator: MemoryAllocator = {
