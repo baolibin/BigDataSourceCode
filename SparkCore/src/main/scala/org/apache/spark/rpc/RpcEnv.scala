@@ -61,6 +61,8 @@ private[spark] object RpcEnv {
 
 
 /**
+  * RPC环境。[[RpcEndpoint]]s需要向[[RpcEnv]]注册一个名称才能接收消息。
+  *
   * An RPC environment. [[RpcEndpoint]]s need to register itself with a name to [[RpcEnv]] to
   * receives messages. Then [[RpcEnv]] will process messages sent from [[RpcEndpointRef]] or remote
   * nodes, and deliver them to corresponding [[RpcEndpoint]]s. For uncaught exceptions caught by

@@ -72,6 +72,7 @@ private[spark] abstract class MemoryManager(
         }
     }
     /**
+      * 默认页面大小，以字节为单位。
       * The default page size, in bytes.
       *
       * If user didn't explicitly set "org.apache.spark.buffer.pageSize", we figure out the default value
