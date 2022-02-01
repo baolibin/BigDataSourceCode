@@ -129,6 +129,7 @@ private[spark] abstract class MemoryManager(
     def maxOffHeapStorageMemory: Long
 
     /**
+      * 设置此管理器用于移出缓存块的[[MemoryStore]]。
       * Set the [[MemoryStore]] used by this manager to evict cached blocks.
       * This must be set after construction due to initialization ordering constraints.
       */
