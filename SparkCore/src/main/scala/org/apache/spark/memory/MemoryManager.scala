@@ -139,6 +139,7 @@ private[spark] abstract class MemoryManager(
     }
 
     /**
+      * 获取N字节的内存以缓存给定的块，必要时逐出现有的块。
       * Acquire N bytes of memory to cache the given block, evicting existing ones if necessary.
       *
       * @return whether all N bytes were successfully granted.
