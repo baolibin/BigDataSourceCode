@@ -147,6 +147,7 @@ private[spark] abstract class MemoryManager(
     def acquireStorageMemory(blockId: BlockId, numBytes: Long, memoryMode: MemoryMode): Boolean
 
     /**
+      * 获取N字节的内存以展开给定的块，必要时逐出现有的块。
       * Acquire N bytes of memory to unroll the given block, evicting existing ones if necessary.
       *
       * This extra method allows subclasses to differentiate behavior between acquiring storage
