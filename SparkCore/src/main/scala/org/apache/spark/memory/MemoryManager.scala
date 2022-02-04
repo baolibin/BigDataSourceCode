@@ -184,6 +184,7 @@ private[spark] abstract class MemoryManager(
     }
 
     /**
+      * 当前正在使用的执行内存，以字节为单位。
       * Execution memory currently in use, in bytes.
       */
     final def executionMemoryUsed: Long = synchronized {
@@ -191,6 +192,7 @@ private[spark] abstract class MemoryManager(
     }
 
     /**
+      * 当前正在使用的存储内存，以字节为单位。
       * Storage memory currently in use, in bytes.
       */
     final def storageMemoryUsed: Long = synchronized {
