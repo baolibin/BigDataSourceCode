@@ -200,6 +200,7 @@ private[spark] abstract class MemoryManager(
     }
 
     /**
+      * 尝试为当前任务获取多达'numBytes'的执行内存，并返回获得的字节数，如果无法分配，则返回0。
       * Try to acquire up to `numBytes` of execution memory for the current task and return the
       * number of bytes obtained, or 0 if none can be allocated.
       *
@@ -217,6 +218,7 @@ private[spark] abstract class MemoryManager(
     // -- Fields related to Tungsten managed memory -------------------------------------------------
 
     /**
+      * 释放属于给定任务的数字节执行内存。
       * Release numBytes of execution memory belonging to the given task.
       */
     private[memory]
