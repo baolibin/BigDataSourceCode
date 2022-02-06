@@ -233,6 +233,7 @@ private[spark] abstract class MemoryManager(
     }
 
     /**
+      * 释放给定任务的所有内存，并将其标记为非活动（例如，当任务结束时）。
       * Release all memory for the given task and mark it as inactive (e.g. when a task ends).
       *
       * @return the number of bytes freed.
@@ -243,6 +244,7 @@ private[spark] abstract class MemoryManager(
     }
 
     /**
+      * 返回给定任务的执行内存消耗（字节）。
       * Returns the execution memory consumption, in bytes, for the given task.
       */
     private[memory] def getExecutionMemoryUsageForTask(taskAttemptId: Long): Long = synchronized {
