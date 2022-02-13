@@ -17,8 +17,6 @@
 
 package org.apache.spark.shuffle
 
-import org.apache.spark.{ShuffleDependency, TaskContext}
-
 /**
   * shuffle系统的可插拔接口。在SparkEnv中，在driver和每个executor上创建一个ShuffleManager。
   * 基于spark.shuffle.manager设置，driver向它注册shuffle，executors（或在driver中本地运行的任务）可以请求读写数据。
@@ -73,6 +71,8 @@ private[spark] trait ShuffleManager {
       */
     def shuffleBlockResolver: ShuffleBlockResolver
 
-    /** Shut down this ShuffleManager. */
+    /**
+      * 关闭这个ShuffleManager
+      * Shut down this ShuffleManager. */
     def stop(): Unit
 }

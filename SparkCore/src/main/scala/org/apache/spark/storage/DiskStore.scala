@@ -26,12 +26,7 @@ import java.util.concurrent.ConcurrentHashMap
 import com.google.common.io.Closeables
 import io.netty.channel.FileRegion
 import io.netty.util.AbstractReferenceCounted
-import org.apache.spark.internal.Logging
 import org.apache.spark.network.util.JavaUtils
-import org.apache.spark.security.CryptoStreamUtils
-import org.apache.spark.util.Utils
-import org.apache.spark.util.io.ChunkedByteBuffer
-import org.apache.spark.{SecurityManager, SparkConf}
 
 import scala.collection.mutable.ListBuffer
 
@@ -55,6 +50,7 @@ private[spark] class DiskStore(
     }
 
     /**
+      * 调用提供的回调函数来写入特定的块。
       * Invokes the provided callback function to write the specific block.
       *
       * @throws IllegalStateException if the block already exists in the disk store.
@@ -172,6 +168,8 @@ private class EncryptedBlockData(
 
     override def toInputStream(): InputStream = Channels.newInputStream(open())
 
+    override def toNetty(): Object = new ReadableChannelFileRegion(open(), blockSize)
+
     private def open(): ReadableByteChannel = {
         val channel = new FileInputStream(file).getChannel()
         try {
@@ -182,8 +180,6 @@ private class EncryptedBlockData(
                 throw e
         }
     }
-
-    override def toNetty(): Object = new ReadableChannelFileRegion(open(), blockSize)
 
     override def toChunkedByteBuffer(allocator: Int => ByteBuffer): ChunkedByteBuffer = {
         val source = open()
