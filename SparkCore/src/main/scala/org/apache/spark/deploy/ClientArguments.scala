@@ -26,10 +26,10 @@ import scala.annotation.tailrec
 import scala.collection.mutable.ListBuffer
 
 /**
-  * 驱动程序客户端的命令行解析器。
-  *
-  * Command-line parser for the driver client.
-  */
+ * 驱动程序客户端的命令行解析器。
+ *
+ * Command-line parser for the driver client.
+ */
 private[deploy] class ClientArguments(args: Array[String]) {
 
     import ClientArguments._
@@ -80,7 +80,7 @@ private[deploy] class ClientArguments(args: Array[String]) {
                 // scalastyle:off println
                 println(s"Jar url '${_jarUrl}' is not in valid format.")
                 println(s"Must be a jar file path in URL format " +
-                        "(e.g. hdfs://host:port/XX.jar, file:///XX.jar)")
+                  "(e.g. hdfs://host:port/XX.jar, file:///XX.jar)")
                 // scalastyle:on println
                 printUsageAndExit(-1)
             }
@@ -100,8 +100,9 @@ private[deploy] class ClientArguments(args: Array[String]) {
     }
 
     /**
-      * Print usage and exit JVM with the given exit code.
-      */
+     * 打印用法并使用给定的退出代码退出JVM
+     * Print usage and exit JVM with the given exit code.
+     */
     private def printUsageAndExit(exitCode: Int) {
         // TODO: It wouldn't be too hard to allow users to submit their app and dependency jars
         //       separately similar to in the YARN client.
