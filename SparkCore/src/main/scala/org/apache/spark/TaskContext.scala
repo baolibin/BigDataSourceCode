@@ -21,11 +21,7 @@ import java.io.Serializable
 import java.util.Properties
 
 import org.apache.spark.annotation.DeveloperApi
-import org.apache.spark.executor.TaskMetrics
 import org.apache.spark.memory.TaskMemoryManager
-import org.apache.spark.metrics.source.Source
-import org.apache.spark.shuffle.FetchFailedException
-import org.apache.spark.util.{AccumulatorV2, TaskCompletionListener, TaskFailureListener}
 
 /**
   * Task的上下文信息。
@@ -91,11 +87,13 @@ abstract class TaskContext extends Serializable {
     // Note: getters in this class are defined with parentheses to maintain backward compatibility.
 
     /**
+      * 如果任务已完成，则返回true。
       * Returns true if the task has completed.
       */
     def isCompleted(): Boolean
 
     /**
+      * 如果任务已终止，则返回true。
       * Returns true if the task has been killed.
       */
     def isInterrupted(): Boolean
