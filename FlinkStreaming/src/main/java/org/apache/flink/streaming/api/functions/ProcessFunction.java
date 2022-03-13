@@ -26,6 +26,7 @@ import org.apache.flink.util.Collector;
 import org.apache.flink.util.OutputTag;
 
 /**
+ * 处理流元素的函数。
  * A function that processes elements of a stream.
  *
  * <p>For every element in the input stream {@link #processElement(Object, Context, Collector)}
@@ -43,7 +44,6 @@ import org.apache.flink.util.OutputTag;
  * teardown methods can be implemented. See
  * {@link org.apache.flink.api.common.functions.RichFunction#open(org.apache.flink.configuration.Configuration)}
  * and {@link org.apache.flink.api.common.functions.RichFunction#close()}.
- *
  * @param <I> Type of the input elements.
  * @param <O> Type of the output elements.
  */
@@ -53,17 +53,16 @@ public abstract class ProcessFunction<I, O> extends AbstractRichFunction {
 	private static final long serialVersionUID = 1L;
 
 	/**
+	 * 处理输入流中的一个元素。
 	 * Process one element from the input stream.
 	 *
 	 * <p>This function can output zero or more elements using the {@link Collector} parameter
 	 * and also update internal state or set timers using the {@link Context} parameter.
-	 *
 	 * @param value The input value.
-	 * @param ctx A {@link Context} that allows querying the timestamp of the element and getting
-	 *            a {@link TimerService} for registering timers and querying the time. The
-	 *            context is only valid during the invocation of this method, do not store it.
-	 * @param out The collector for returning result values.
-	 *
+	 * @param ctx   A {@link Context} that allows querying the timestamp of the element and getting
+	 *              a {@link TimerService} for registering timers and querying the time. The
+	 *              context is only valid during the invocation of this method, do not store it.
+	 * @param out   The collector for returning result values.
 	 * @throws Exception This method may throw exceptions. Throwing an exception will cause the operation
 	 *                   to fail and may trigger recovery.
 	 */
@@ -71,18 +70,17 @@ public abstract class ProcessFunction<I, O> extends AbstractRichFunction {
 
 	/**
 	 * Called when a timer set using {@link TimerService} fires.
-	 *
 	 * @param timestamp The timestamp of the firing timer.
-	 * @param ctx An {@link OnTimerContext} that allows querying the timestamp of the firing timer,
-	 *            querying the {@link TimeDomain} of the firing timer and getting a
-	 *            {@link TimerService} for registering timers and querying the time.
-	 *            The context is only valid during the invocation of this method, do not store it.
-	 * @param out The collector for returning result values.
-	 *
+	 * @param ctx       An {@link OnTimerContext} that allows querying the timestamp of the firing timer,
+	 *                  querying the {@link TimeDomain} of the firing timer and getting a
+	 *                  {@link TimerService} for registering timers and querying the time.
+	 *                  The context is only valid during the invocation of this method, do not store it.
+	 * @param out       The collector for returning result values.
 	 * @throws Exception This method may throw exceptions. Throwing an exception will cause the operation
 	 *                   to fail and may trigger recovery.
 	 */
-	public void onTimer(long timestamp, OnTimerContext ctx, Collector<O> out) throws Exception {}
+	public void onTimer(long timestamp, OnTimerContext ctx, Collector<O> out) throws Exception {
+	}
 
 	/**
 	 * Information available in an invocation of {@link #processElement(Object, Context, Collector)}
@@ -105,9 +103,8 @@ public abstract class ProcessFunction<I, O> extends AbstractRichFunction {
 
 		/**
 		 * Emits a record to the side output identified by the {@link OutputTag}.
-		 *
 		 * @param outputTag the {@code OutputTag} that identifies the side output to emit to.
-		 * @param value The record to emit.
+		 * @param value     The record to emit.
 		 */
 		public abstract <X> void output(OutputTag<X> outputTag, X value);
 	}

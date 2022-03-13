@@ -55,6 +55,7 @@ public abstract class KeyedProcessFunction<K, I, O> extends AbstractRichFunction
 	private static final long serialVersionUID = 1L;
 
 	/**
+	 * 处理输入流中的一个元素。
 	 * Process one element from the input stream.
 	 *
 	 * <p>This function can output zero or more elements using the {@link Collector} parameter
