@@ -18,7 +18,6 @@
 package org.apache.spark
 
 import org.apache.spark.annotation.DeveloperApi
-import org.apache.spark.util.collection.ExternalAppendOnlyMap
 
 /**
   * 用于聚合数据的一组函数。
@@ -45,16 +44,9 @@ case class Aggregator[K, V, C](
         combiners.iterator
     }
 
-    def combineCombinersByKey(
-                                     iter: Iterator[_ <: Product2[K, C]],
-                                     context: TaskContext): Iterator[(K, C)] = {
-        val combiners = new ExternalAppendOnlyMap[K, C, C](identity, mergeCombiners, mergeCombiners)
-        combiners.insertAll(iter)
-        updateMetrics(context, combiners)
-        combiners.iterator
-    }
-
-    /** Update task metrics after populating the external map. */
+    /**
+      * 填充外部映射后更新任务度量。
+      * Update task metrics after populating the external map. */
     private def updateMetrics(context: TaskContext, map: ExternalAppendOnlyMap[_, _, _]): Unit = {
         Option(context).foreach { c =>
             c.taskMetrics().incMemoryBytesSpilled(map.memoryBytesSpilled)
