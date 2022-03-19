@@ -126,6 +126,7 @@ object SparkEnv extends Logging {
     @volatile private var env: SparkEnv = _
 
     /**
+      * 返回SparkEnv。
       * Returns the SparkEnv.
       */
     def get: SparkEnv = {
@@ -168,6 +169,7 @@ object SparkEnv extends Logging {
     }
 
     /**
+      * Helper方法为driver程序或执行器创建SparkEnv。
       * Helper method to create a SparkEnv for a driver or an executor.
       */
     private def create(
