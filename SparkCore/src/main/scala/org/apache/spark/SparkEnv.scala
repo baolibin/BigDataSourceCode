@@ -23,21 +23,6 @@ import java.util.Locale
 
 import com.google.common.collect.MapMaker
 import org.apache.spark.annotation.DeveloperApi
-import org.apache.spark.api.python.PythonWorkerFactory
-import org.apache.spark.broadcast.BroadcastManager
-import org.apache.spark.internal.Logging
-import org.apache.spark.internal.config._
-import org.apache.spark.memory.{MemoryManager, StaticMemoryManager, UnifiedMemoryManager}
-import org.apache.spark.metrics.MetricsSystem
-import org.apache.spark.network.netty.NettyBlockTransferService
-import org.apache.spark.rpc.{RpcEndpoint, RpcEndpointRef, RpcEnv}
-import org.apache.spark.scheduler.OutputCommitCoordinator.OutputCommitCoordinatorEndpoint
-import org.apache.spark.scheduler.{LiveListenerBus, OutputCommitCoordinator}
-import org.apache.spark.security.CryptoStreamUtils
-import org.apache.spark.serializer.{JavaSerializer, Serializer, SerializerManager}
-import org.apache.spark.shuffle.ShuffleManager
-import org.apache.spark.storage._
-import org.apache.spark.util.{RpcUtils, Utils}
 
 import scala.collection.mutable
 import scala.util.Properties
@@ -148,6 +133,7 @@ object SparkEnv extends Logging {
     }
 
     /**
+      * 为driver创建SparkEnv。
       * Create a SparkEnv for the driver.
       */
     private[spark] def createDriverEnv(
