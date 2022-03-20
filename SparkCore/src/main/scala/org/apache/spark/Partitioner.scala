@@ -19,11 +19,6 @@ package org.apache.spark
 
 import java.io.{IOException, ObjectInputStream, ObjectOutputStream}
 
-import org.apache.spark.rdd.{PartitionPruningRDD, RDD}
-import org.apache.spark.serializer.JavaSerializer
-import org.apache.spark.util.random.SamplingUtils
-import org.apache.spark.util.{CollectionsUtils, Utils}
-
 import scala.collection.mutable
 import scala.collection.mutable.ArrayBuffer
 import scala.reflect.ClassTag
@@ -255,6 +250,7 @@ class RangePartitioner[K: Ordering : ClassTag, V](
 private[spark] object RangePartitioner {
 
     /**
+      * 通过每个分区上的储层采样绘制输入RDD。
       * Sketches the input RDD via reservoir sampling on each partition.
       *
       * @param rdd                    the input RDD to sketch
@@ -277,6 +273,7 @@ private[spark] object RangePartitioner {
     }
 
     /**
+      * 根据候选项确定范围划分的界限，权重指示每个候选项代表多少项。通常情况下，这是1的概率用于抽样这个候选人。
       * Determines the bounds for range partitioning from candidates with weights indicating how many
       * items each represents. Usually this is 1 over the probability used to sample this candidate.
       *
