@@ -26,11 +26,7 @@ import com.google.common.hash.HashCodes
 import com.google.common.io.Files
 import javax.net.ssl._
 import org.apache.hadoop.io.Text
-import org.apache.spark.deploy.SparkHadoopUtil
-import org.apache.spark.internal.Logging
-import org.apache.spark.internal.config._
 import org.apache.spark.network.sasl.SecretKeyHolder
-import org.apache.spark.util.Utils
 
 /**
   * 负责spark安全的类。
@@ -340,13 +336,6 @@ private[spark] class SecurityManager(
     }
 
     /**
-      * Split a comma separated String, filter out any empty items, and return a Set of strings
-      */
-    private def stringToSet(list: String): Set[String] = {
-        list.split(',').map(_.trim).filter(!_.isEmpty).toSet
-    }
-
-    /**
       * Admin acls should be set before the view or modify acls.  If you modify the admin
       * acls you should also set the view and modify acls again to pick up the changes.
       */
@@ -401,6 +390,14 @@ private[spark] class SecurityManager(
         logInfo("Changing admin acls groups to: " + adminAclsGroups.mkString(","))
     }
 
+    /**
+      * 拆分逗号分隔的字符串，过滤掉所有空项，然后返回一组字符串
+      * Split a comma separated String, filter out any empty items, and return a Set of strings
+      */
+    private def stringToSet(list: String): Set[String] = {
+        list.split(',').map(_.trim).filter(!_.isEmpty).toSet
+    }
+
     def setAcls(aclSetting: Boolean) {
         aclsOn = aclSetting
         logInfo("Changing acls enabled to: " + aclsOn)
@@ -431,6 +428,7 @@ private[spark] class SecurityManager(
     }
 
     /**
+      * 检查UI的ACL是否已启用
       * Check to see if Acls for the UI are enabled
       *
       * @return true if UI authentication is enabled, otherwise false
@@ -460,6 +458,7 @@ private[spark] class SecurityManager(
     }
 
     /**
+      * 检查是否应启用网络加密。
       * Checks whether network encryption should be enabled.
       *
       * @return Whether to enable encryption when connecting to services that support it.
@@ -469,6 +468,7 @@ private[spark] class SecurityManager(
     }
 
     /**
+      * 获取用于验证HTTP连接的用户。目前，请使用一个硬编码用户。
       * Gets the user used for authenticating HTTP connections.
       * For now use a single hardcoded user.
       *
@@ -480,6 +480,7 @@ private[spark] class SecurityManager(
     override def getSaslUser(appId: String): String = getSaslUser()
 
     /**
+      * 获取用于验证SASL连接的用户。目前，请使用一个硬编码用户。
       * Gets the user used for authenticating SASL connections.
       * For now use a single hardcoded user.
       *
@@ -490,6 +491,7 @@ private[spark] class SecurityManager(
     override def getSecretKey(appId: String): String = getSecretKey()
 
     /**
+      * 获取密钥。
       * Gets the secret key.
       *
       * @return the secret key as a String if authentication is enabled, otherwise returns null
@@ -497,6 +499,7 @@ private[spark] class SecurityManager(
     def getSecretKey(): String = secretKey
 
     /**
+      * 生成或查找密钥。
       * Generates or looks up the secret key.
       *
       * The way the key is stored depends on the Spark deployment mode. Yarn
@@ -541,6 +544,7 @@ private[spark] class SecurityManager(
     }
 
     /**
+      * 检查Spark通信协议的身份验证是否已启用
       * Check to see if authentication for the Spark communication protocols is enabled
       *
       * @return true if authentication is enabled, otherwise false
