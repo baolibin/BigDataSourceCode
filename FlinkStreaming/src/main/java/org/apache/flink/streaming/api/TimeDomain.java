@@ -24,6 +24,7 @@ package org.apache.flink.streaming.api;
 public enum TimeDomain {
 
 	/**
+	 * 时间基于事件的时间戳。
 	 * Time is based on the timestamp of events.
 	 */
 	EVENT_TIME,
