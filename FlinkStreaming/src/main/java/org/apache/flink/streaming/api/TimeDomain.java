@@ -30,6 +30,7 @@ public enum TimeDomain {
 	EVENT_TIME,
 
 	/**
+	 * 时间基于进行加工的机器的当前加工时间。
 	 * Time is based on the current processing-time of a machine where processing happens.
 	 */
 	PROCESSING_TIME
