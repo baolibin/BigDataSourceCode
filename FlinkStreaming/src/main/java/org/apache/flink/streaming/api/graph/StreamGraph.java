@@ -43,37 +43,24 @@ import org.apache.flink.streaming.api.transformations.ShuffleMode;
 import org.apache.flink.streaming.runtime.partitioner.ForwardPartitioner;
 import org.apache.flink.streaming.runtime.partitioner.RebalancePartitioner;
 import org.apache.flink.streaming.runtime.partitioner.StreamPartitioner;
-import org.apache.flink.streaming.runtime.tasks.OneInputStreamTask;
-import org.apache.flink.streaming.runtime.tasks.SourceStreamTask;
-import org.apache.flink.streaming.runtime.tasks.StreamIterationHead;
-import org.apache.flink.streaming.runtime.tasks.StreamIterationTail;
-import org.apache.flink.streaming.runtime.tasks.TwoInputSelectableStreamTask;
-import org.apache.flink.streaming.runtime.tasks.TwoInputStreamTask;
+import org.apache.flink.streaming.runtime.tasks.*;
 import org.apache.flink.util.OutputTag;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static org.apache.flink.util.Preconditions.checkNotNull;
 
 /**
+ * 表示流拓扑的类。它包含为执行构建jobgraph所需的所有信息。
  * Class representing the streaming topology. It contains all the information
  * necessary to build the jobgraph for the execution.
- *
  */
 @Internal
 public class StreamGraph extends StreamingPlan {
@@ -132,7 +119,7 @@ public class StreamGraph extends StreamingPlan {
 		virtualSideOutputNodes = new HashMap<>();
 		virtualPartitionNodes = new HashMap<>();
 		vertexIDtoBrokerID = new HashMap<>();
-		vertexIDtoLoopTimeout  = new HashMap<>();
+		vertexIDtoLoopTimeout = new HashMap<>();
 		iterationSourceSinkPairs = new HashSet<>();
 		sources = new HashSet<>();
 		sinks = new HashSet<>();
@@ -217,23 +204,23 @@ public class StreamGraph extends StreamingPlan {
 	}
 
 	public <IN, OUT> void addSource(Integer vertexID,
-		@Nullable String slotSharingGroup,
-		@Nullable String coLocationGroup,
-		StreamOperatorFactory<OUT> operatorFactory,
-		TypeInformation<IN> inTypeInfo,
-		TypeInformation<OUT> outTypeInfo,
-		String operatorName) {
+	                                @Nullable String slotSharingGroup,
+	                                @Nullable String coLocationGroup,
+	                                StreamOperatorFactory<OUT> operatorFactory,
+	                                TypeInformation<IN> inTypeInfo,
+	                                TypeInformation<OUT> outTypeInfo,
+	                                String operatorName) {
 		addOperator(vertexID, slotSharingGroup, coLocationGroup, operatorFactory, inTypeInfo, outTypeInfo, operatorName);
 		sources.add(vertexID);
 	}
 
 	public <IN, OUT> void addSink(Integer vertexID,
-		@Nullable String slotSharingGroup,
-		@Nullable String coLocationGroup,
-		StreamOperatorFactory<OUT> operatorFactory,
-		TypeInformation<IN> inTypeInfo,
-		TypeInformation<OUT> outTypeInfo,
-		String operatorName) {
+	                              @Nullable String slotSharingGroup,
+	                              @Nullable String coLocationGroup,
+	                              StreamOperatorFactory<OUT> operatorFactory,
+	                              TypeInformation<IN> inTypeInfo,
+	                              TypeInformation<OUT> outTypeInfo,
+	                              String operatorName) {
 		addOperator(vertexID, slotSharingGroup, coLocationGroup, operatorFactory, inTypeInfo, outTypeInfo, operatorName);
 		sinks.add(vertexID);
 	}
@@ -284,7 +271,7 @@ public class StreamGraph extends StreamingPlan {
 			String operatorName) {
 
 		Class<? extends AbstractInvokable> vertexClass = taskOperatorFactory.isOperatorSelectiveReading() ?
-			TwoInputSelectableStreamTask.class : TwoInputStreamTask.class;
+				TwoInputSelectableStreamTask.class : TwoInputStreamTask.class;
 
 		addNode(vertexID, slotSharingGroup, coLocationGroup, vertexClass, taskOperatorFactory, operatorName);
 
@@ -304,24 +291,24 @@ public class StreamGraph extends StreamingPlan {
 	}
 
 	protected StreamNode addNode(Integer vertexID,
-		@Nullable String slotSharingGroup,
-		@Nullable String coLocationGroup,
-		Class<? extends AbstractInvokable> vertexClass,
-		StreamOperatorFactory<?> operatorFactory,
-		String operatorName) {
+	                             @Nullable String slotSharingGroup,
+	                             @Nullable String coLocationGroup,
+	                             Class<? extends AbstractInvokable> vertexClass,
+	                             StreamOperatorFactory<?> operatorFactory,
+	                             String operatorName) {
 
 		if (streamNodes.containsKey(vertexID)) {
 			throw new RuntimeException("Duplicate vertexID " + vertexID);
 		}
 
 		StreamNode vertex = new StreamNode(
-			vertexID,
-			slotSharingGroup,
-			coLocationGroup,
-			operatorFactory,
-			operatorName,
-			new ArrayList<OutputSelector<?>>(),
-			vertexClass);
+				vertexID,
+				slotSharingGroup,
+				coLocationGroup,
+				operatorFactory,
+				operatorName,
+				new ArrayList<OutputSelector<?>>(),
+				vertexClass);
 
 		streamNodes.put(vertexID, vertex);
 
@@ -334,9 +321,8 @@ public class StreamGraph extends StreamingPlan {
 	 *
 	 * <p>When adding an edge from the virtual node to a downstream node the connection will be made
 	 * to the original node, only with the selected names given here.
-	 *
-	 * @param originalId ID of the node that should be connected to.
-	 * @param virtualId ID of the virtual node.
+	 * @param originalId    ID of the node that should be connected to.
+	 * @param virtualId     ID of the virtual node.
 	 * @param selectedNames The selected names.
 	 */
 	public void addVirtualSelectNode(Integer originalId, Integer virtualId, List<String> selectedNames) {
@@ -352,10 +338,9 @@ public class StreamGraph extends StreamingPlan {
 	/**
 	 * Adds a new virtual node that is used to connect a downstream vertex to only the outputs with
 	 * the selected side-output {@link OutputTag}.
-	 *
 	 * @param originalId ID of the node that should be connected to.
-	 * @param virtualId ID of the virtual node.
-	 * @param outputTag The selected side-output {@code OutputTag}.
+	 * @param virtualId  ID of the virtual node.
+	 * @param outputTag  The selected side-output {@code OutputTag}.
 	 */
 	public void addVirtualSideOutputNode(Integer originalId, Integer virtualId, OutputTag outputTag) {
 
@@ -391,9 +376,8 @@ public class StreamGraph extends StreamingPlan {
 	 *
 	 * <p>When adding an edge from the virtual node to a downstream node the connection will be made
 	 * to the original node, but with the partitioning given here.
-	 *
-	 * @param originalId ID of the node that should be connected to.
-	 * @param virtualId ID of the virtual node.
+	 * @param originalId  ID of the node that should be connected to.
+	 * @param virtualId   ID of the virtual node.
 	 * @param partitioner The partitioner
 	 */
 	public void addVirtualPartitionNode(
@@ -440,12 +424,12 @@ public class StreamGraph extends StreamingPlan {
 	}
 
 	private void addEdgeInternal(Integer upStreamVertexID,
-			Integer downStreamVertexID,
-			int typeNumber,
-			StreamPartitioner<?> partitioner,
-			List<String> outputNames,
-			OutputTag outputTag,
-			ShuffleMode shuffleMode) {
+	                             Integer downStreamVertexID,
+	                             int typeNumber,
+	                             StreamPartitioner<?> partitioner,
+	                             List<String> outputNames,
+	                             OutputTag outputTag,
+	                             ShuffleMode shuffleMode) {
 
 		if (virtualSideOutputNodes.containsKey(upStreamVertexID)) {
 			int virtualId = upStreamVertexID;
@@ -649,34 +633,34 @@ public class StreamGraph extends StreamingPlan {
 	}
 
 	public Tuple2<StreamNode, StreamNode> createIterationSourceAndSink(
-		int loopId,
-		int sourceId,
-		int sinkId,
-		long timeout,
-		int parallelism,
-		int maxParallelism,
-		ResourceSpec minResources,
-		ResourceSpec preferredResources) {
+			int loopId,
+			int sourceId,
+			int sinkId,
+			long timeout,
+			int parallelism,
+			int maxParallelism,
+			ResourceSpec minResources,
+			ResourceSpec preferredResources) {
 
 		final String coLocationGroup = "IterationCoLocationGroup-" + loopId;
 
 		StreamNode source = this.addNode(sourceId,
-			null,
-			coLocationGroup,
-			StreamIterationHead.class,
-			null,
-			ITERATION_SOURCE_NAME_PREFIX + "-" + loopId);
+				null,
+				coLocationGroup,
+				StreamIterationHead.class,
+				null,
+				ITERATION_SOURCE_NAME_PREFIX + "-" + loopId);
 		sources.add(source.getId());
 		setParallelism(source.getId(), parallelism);
 		setMaxParallelism(source.getId(), maxParallelism);
 		setResources(source.getId(), minResources, preferredResources);
 
 		StreamNode sink = this.addNode(sinkId,
-			null,
-			coLocationGroup,
-			StreamIterationTail.class,
-			null,
-			ITERATION_SINK_NAME_PREFIX + "-" + loopId);
+				null,
+				coLocationGroup,
+				StreamIterationTail.class,
+				null,
+				ITERATION_SINK_NAME_PREFIX + "-" + loopId);
 		sinks.add(sink.getId());
 		setParallelism(sink.getId(), parallelism);
 		setMaxParallelism(sink.getId(), parallelism);
@@ -729,9 +713,9 @@ public class StreamGraph extends StreamingPlan {
 		// temporarily forbid checkpointing for iterative jobs
 		if (isIterative() && checkpointConfig.isCheckpointingEnabled() && !checkpointConfig.isForceCheckpointing()) {
 			throw new UnsupportedOperationException(
-				"Checkpointing is currently not supported by default for iterative jobs, as we cannot guarantee exactly once semantics. "
-					+ "State checkpoints happen normally, but records in-transit during the snapshot will be lost upon failure. "
-					+ "\nThe user can force enable state checkpoints with the reduced guarantees by calling: env.enableCheckpointing(interval,true)");
+					"Checkpointing is currently not supported by default for iterative jobs, as we cannot guarantee exactly once semantics. "
+							+ "State checkpoints happen normally, but records in-transit during the snapshot will be lost upon failure. "
+							+ "\nThe user can force enable state checkpoints with the reduced guarantees by calling: env.enableCheckpointing(interval,true)");
 		}
 
 		return StreamingJobGraphGenerator.createJobGraph(this, jobID);
@@ -741,8 +725,7 @@ public class StreamGraph extends StreamingPlan {
 	public String getStreamingPlanAsJSON() {
 		try {
 			return new JSONGenerator(this).getJSON();
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			throw new RuntimeException("JSON plan creation failed", e);
 		}
 	}

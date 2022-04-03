@@ -35,6 +35,7 @@ import org.apache.flink.annotation.Public;
 public enum CheckpointingMode {
 
 	/**
+	 * 将检查点模式设置为“恰好一次”
 	 * Sets the checkpointing mode to "exactly once". This mode means that the system will
 	 * checkpoint the operator and user function state in such a way that, upon recovery,
 	 * every record will be reflected exactly once in the operator state.
@@ -62,6 +63,7 @@ public enum CheckpointingMode {
 	EXACTLY_ONCE,
 
 	/**
+	 * 将检查点模式设置为“至少一次”。
 	 * Sets the checkpointing mode to "at least once". This mode means that the system will
 	 * checkpoint the operator and user function state in a simpler way. Upon failure and recovery,
 	 * some records may be reflected multiple times in the operator state.
