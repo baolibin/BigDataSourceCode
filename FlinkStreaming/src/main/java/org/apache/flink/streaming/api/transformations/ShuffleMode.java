@@ -21,6 +21,7 @@ package org.apache.flink.streaming.api.transformations;
 import org.apache.flink.annotation.PublicEvolving;
 
 /**
+ * 洗牌模式定义了操作员之间的数据交换模式。
  * The shuffle mode defines the data exchange mode between operators.
  */
 @PublicEvolving
