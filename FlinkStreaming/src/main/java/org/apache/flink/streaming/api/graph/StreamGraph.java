@@ -85,6 +85,7 @@ public class StreamGraph extends StreamingPlan {
 	private TimeCharacteristic timeCharacteristic;
 
 	/**
+	 * 如果有一些流边无法链接，并且没有指定边的洗牌模式，则将这些边转换为{@code BLOCKING}结果分区类型。
 	 * If there are some stream edges that can not be chained and the shuffle mode of edge is not
 	 * specified, translate these edges into {@code BLOCKING} result partition type.
 	 */
@@ -111,6 +112,7 @@ public class StreamGraph extends StreamingPlan {
 	}
 
 	/**
+	 * 删除所有注册的节点等。
 	 * Remove all registered nodes etc.
 	 */
 	public void clear() {
