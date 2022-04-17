@@ -55,6 +55,7 @@ class PartialResult[R](initialVal: R, isFinal: Boolean) {
     }
 
     /**
+      * 设置此PartialResult完成时要调用的处理程序。每个PartialResult只支持一个完成处理程序
       * Set a handler to be called when this PartialResult completes. Only one completion handler
       * is supported per PartialResult.
       */
@@ -71,6 +72,7 @@ class PartialResult[R](initialVal: R, isFinal: Boolean) {
     }
 
     /**
+      * 设置此PartialResult的作业失败时调用的处理程序。每个PartialResult只支持一个故障处理程序
       * Set a handler to be called if this PartialResult's job fails. Only one failure handler
       * is supported per PartialResult.
       */

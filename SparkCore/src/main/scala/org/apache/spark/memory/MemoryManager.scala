@@ -18,10 +18,6 @@
 package org.apache.spark.memory
 
 import javax.annotation.concurrent.GuardedBy
-import org.apache.spark.SparkConf
-import org.apache.spark.internal.Logging
-import org.apache.spark.storage.BlockId
-import org.apache.spark.storage.memory.MemoryStore
 import org.apache.spark.unsafe.Platform
 import org.apache.spark.unsafe.array.ByteArrayMethods
 import org.apache.spark.unsafe.memory.MemoryAllocator
@@ -159,6 +155,7 @@ private[spark] abstract class MemoryManager(
     def acquireUnrollMemory(blockId: BlockId, numBytes: Long, memoryMode: MemoryMode): Boolean
 
     /**
+      * 释放获取的所有存储内存
       * Release all storage memory acquired.
       */
     final def releaseAllStorageMemory(): Unit = synchronized {
@@ -167,6 +164,7 @@ private[spark] abstract class MemoryManager(
     }
 
     /**
+      * 释放N字节的展开内存
       * Release N bytes of unroll memory.
       */
     final def releaseUnrollMemory(numBytes: Long, memoryMode: MemoryMode): Unit = synchronized {
@@ -174,6 +172,7 @@ private[spark] abstract class MemoryManager(
     }
 
     /**
+      * 释放N字节的存储内存
       * Release N bytes of storage memory.
       */
     def releaseStorageMemory(numBytes: Long, memoryMode: MemoryMode): Unit = synchronized {
