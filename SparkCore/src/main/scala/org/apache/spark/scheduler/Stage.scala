@@ -17,11 +17,6 @@
 
 package org.apache.spark.scheduler
 
-import org.apache.spark.executor.TaskMetrics
-import org.apache.spark.internal.Logging
-import org.apache.spark.rdd.RDD
-import org.apache.spark.util.CallSite
-
 import scala.collection.mutable.HashSet
 
 /**
@@ -110,10 +105,16 @@ private[scheduler] abstract class Stage(
         nextAttemptId += 1
     }
 
-    /** Returns the StageInfo for the most recent attempt for this stage. */
+    /**
+      * 返回此阶段最近一次尝试的阶段信息
+      * Returns the StageInfo for the most recent attempt for this stage.
+      */
     def latestInfo: StageInfo = _latestInfo
 
-    /** Returns the sequence of partition ids that are missing (i.e. needs to be computed). */
+    /**
+      * 返回缺少的分区ID序列（即需要计算）
+      * Returns the sequence of partition ids that are missing (i.e. needs to be computed).
+      */
     def findMissingPartitions(): Seq[Int]
 
     private[scheduler] def clearFailures(): Unit = {
