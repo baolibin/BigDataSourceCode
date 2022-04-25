@@ -18,9 +18,6 @@
 package org.apache.spark.memory
 
 import javax.annotation.concurrent.GuardedBy
-import org.apache.spark.internal.Logging
-import org.apache.spark.storage.BlockId
-import org.apache.spark.storage.memory.MemoryStore
 
 /**
   * 为管理用于存储（缓存）的可调整大小的内存池执行簿记。
@@ -46,6 +43,7 @@ private[memory] class StorageMemoryPool(
     private var _memoryStore: MemoryStore = _
 
     /**
+      * 设置此管理器用于移出缓存块的[[MemoryStore]]。
       * Set the [[MemoryStore]] used by this manager to evict cached blocks.
       * This must be set after construction due to initialization ordering constraints.
       */
@@ -54,6 +52,7 @@ private[memory] class StorageMemoryPool(
     }
 
     /**
+      * 获取N字节的内存以缓存给定的块，必要时逐出现有的块。
       * Acquire N bytes of memory to cache the given block, evicting existing ones if necessary.
       *
       * @return whether all N bytes were successfully granted.
@@ -64,6 +63,7 @@ private[memory] class StorageMemoryPool(
     }
 
     /**
+      * 为给定的块获取N字节的存储内存，必要时逐出现有的内存。
       * Acquire N bytes of storage memory for the given block, evicting existing ones if necessary.
       *
       * @param blockId           the ID of the block we are acquiring storage memory for
