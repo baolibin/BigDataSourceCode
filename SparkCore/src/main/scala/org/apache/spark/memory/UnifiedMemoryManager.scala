@@ -17,9 +17,6 @@
 
 package org.apache.spark.memory
 
-import org.apache.spark.SparkConf
-import org.apache.spark.storage.BlockId
-
 /**
   * 一种[[MemoryManager]]，它在执行和存储之间强制一个软边界，这样任何一方都可以从另一方借用内存。
   *
@@ -107,7 +104,14 @@ private[spark] class UnifiedMemoryManager private[memory](
         maxOffHeapMemory - offHeapExecutionMemoryPool.memoryUsed
     }
 
+    private def assertInvariants(): Unit = {
+        assert(onHeapExecutionMemoryPool.poolSize + onHeapStorageMemoryPool.poolSize == maxHeapMemory)
+        assert(
+            offHeapExecutionMemoryPool.poolSize + offHeapStorageMemoryPool.poolSize == maxOffHeapMemory)
+    }
+
     /**
+      * 尝试为当前任务获取多达'numBytes'的执行内存，并返回获得的字节数，如果无法分配，则返回0。
       * Try to acquire up to `numBytes` of execution memory for the current task and return the
       * number of bytes obtained, or 0 if none can be allocated.
       *
@@ -136,6 +140,7 @@ private[spark] class UnifiedMemoryManager private[memory](
         }
 
         /**
+          * 通过逐出缓存块来增加执行池，从而缩小存储池。
           * Grow the execution pool by evicting cached blocks, thereby shrinking the storage pool.
           *
           * When acquiring memory for a task, the execution pool may need to make multiple
@@ -162,6 +167,7 @@ private[spark] class UnifiedMemoryManager private[memory](
         }
 
         /**
+          * 退出存储内存后执行池的大小。
           * The size the execution pool would have after evicting storage memory.
           *
           * The execution memory pool divides this quantity among the active tasks evenly to cap
@@ -180,12 +186,6 @@ private[spark] class UnifiedMemoryManager private[memory](
 
         executionPool.acquireMemory(
             numBytes, taskAttemptId, maybeGrowExecutionPool, computeMaxExecutionPoolSize)
-    }
-
-    private def assertInvariants(): Unit = {
-        assert(onHeapExecutionMemoryPool.poolSize + onHeapStorageMemoryPool.poolSize == maxHeapMemory)
-        assert(
-            offHeapExecutionMemoryPool.poolSize + offHeapStorageMemoryPool.poolSize == maxOffHeapMemory)
     }
 }
 
