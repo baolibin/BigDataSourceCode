@@ -22,11 +22,8 @@ import java.util.Locale
 
 import com.ning.compress.lzf.{LZFInputStream, LZFOutputStream}
 import net.jpountz.lz4.LZ4BlockOutputStream
-import org.xerial.snappy.{Snappy, SnappyInputStream, SnappyOutputStream}
-
-import org.apache.spark.SparkConf
 import org.apache.spark.annotation.DeveloperApi
-import org.apache.spark.util.Utils
+import org.xerial.snappy.{Snappy, SnappyInputStream, SnappyOutputStream}
 
 /**
   * CompressionCodec允许定制选择块存储中使用的不同压缩实现。
@@ -48,24 +45,21 @@ trait CompressionCodec {
 
 private[spark] object CompressionCodec {
 
+    val FALLBACK_COMPRESSION_CODEC = "snappy"
+    val DEFAULT_COMPRESSION_CODEC = "lz4"
+    val ALL_COMPRESSION_CODECS = shortCompressionCodecNames.values.toSeq
     private val configKey = "org.apache.spark.io.compression.codec"
-
-    private[spark] def supportsConcatenationOfSerializedStreams(codec: CompressionCodec): Boolean = {
-        (codec.isInstanceOf[SnappyCompressionCodec] || codec.isInstanceOf[LZFCompressionCodec]
-            || codec.isInstanceOf[LZ4CompressionCodec])
-    }
-
     private val shortCompressionCodecNames = Map(
         "lz4" -> classOf[LZ4CompressionCodec].getName,
         "lzf" -> classOf[LZFCompressionCodec].getName,
         "snappy" -> classOf[SnappyCompressionCodec].getName)
 
-    def getCodecName(conf: SparkConf): String = {
-        conf.get(configKey, DEFAULT_COMPRESSION_CODEC)
-    }
-
     def createCodec(conf: SparkConf): CompressionCodec = {
         createCodec(conf, getCodecName(conf))
+    }
+
+    def getCodecName(conf: SparkConf): String = {
+        conf.get(configKey, DEFAULT_COMPRESSION_CODEC)
     }
 
     def createCodec(conf: SparkConf, codecName: String): CompressionCodec = {
@@ -78,10 +72,11 @@ private[spark] object CompressionCodec {
             case _: ClassNotFoundException | _: IllegalArgumentException => None
         }
         codec.getOrElse(throw new IllegalArgumentException(s"Codec [$codecName] is not available. " +
-            s"Consider setting $configKey=$FALLBACK_COMPRESSION_CODEC"))
+                s"Consider setting $configKey=$FALLBACK_COMPRESSION_CODEC"))
     }
 
     /**
+      * 返回给定编解码器名称的简短版本。
       * Return the short version of the given codec name.
       * If it is already a short name, just return it.
       */
@@ -90,16 +85,17 @@ private[spark] object CompressionCodec {
             codecName
         } else {
             shortCompressionCodecNames
-                .collectFirst { case (k, v) if v == codecName => k }
-                .getOrElse {
-                    throw new IllegalArgumentException(s"No short name for codec $codecName.")
-                }
+                    .collectFirst { case (k, v) if v == codecName => k }
+                    .getOrElse {
+                        throw new IllegalArgumentException(s"No short name for codec $codecName.")
+                    }
         }
     }
 
-    val FALLBACK_COMPRESSION_CODEC = "snappy"
-    val DEFAULT_COMPRESSION_CODEC = "lz4"
-    val ALL_COMPRESSION_CODECS = shortCompressionCodecNames.values.toSeq
+    private[spark] def supportsConcatenationOfSerializedStreams(codec: CompressionCodec): Boolean = {
+        (codec.isInstanceOf[SnappyCompressionCodec] || codec.isInstanceOf[LZFCompressionCodec]
+                || codec.isInstanceOf[LZ4CompressionCodec])
+    }
 }
 
 /**
