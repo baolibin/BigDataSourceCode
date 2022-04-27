@@ -209,6 +209,7 @@ object UnifiedMemoryManager {
     }
 
     /**
+      * 返回执行和存储之间共享的内存总量（字节）。
       * Return the total amount of memory shared between execution and storage, in bytes.
       */
     private def getMaxMemory(conf: SparkConf): Long = {
