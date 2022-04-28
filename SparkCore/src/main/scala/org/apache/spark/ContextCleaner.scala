@@ -21,14 +21,10 @@ import java.lang.ref.{ReferenceQueue, WeakReference}
 import java.util.Collections
 import java.util.concurrent.{ConcurrentHashMap, ConcurrentLinkedQueue, ScheduledExecutorService, TimeUnit}
 
-import org.apache.spark.broadcast.Broadcast
-import org.apache.spark.internal.Logging
-import org.apache.spark.rdd.{RDD, ReliableRDDCheckpointData}
-import org.apache.spark.util.{AccumulatorContext, AccumulatorV2, ThreadUtils, Utils}
-
 import scala.collection.JavaConverters._
 
 /**
+  * 表示清洁任务的类。
   * Classes that represent cleaning tasks.
   */
 private sealed trait CleanupTask
@@ -170,14 +166,14 @@ private[spark] class ContextCleaner(sc: SparkContext) extends Logging {
         registerForCleanup(shuffleDependency, CleanShuffle(shuffleDependency.shuffleId))
     }
 
-    /** Register an object for cleanup. */
-    private def registerForCleanup(objectForCleanup: AnyRef, task: CleanupTask): Unit = {
-        referenceBuffer.add(new CleanupTaskWeakReference(task, objectForCleanup, referenceQueue))
-    }
-
     /** Register a Broadcast for cleanup when it is garbage collected. */
     def registerBroadcastForCleanup[T](broadcast: Broadcast[T]): Unit = {
         registerForCleanup(broadcast, CleanBroadcast(broadcast.id))
+    }
+
+    /** Register an object for cleanup. */
+    private def registerForCleanup(objectForCleanup: AnyRef, task: CleanupTask): Unit = {
+        referenceBuffer.add(new CleanupTaskWeakReference(task, objectForCleanup, referenceQueue))
     }
 
     /** Register a RDDCheckpointData for cleanup when it is garbage collected. */
