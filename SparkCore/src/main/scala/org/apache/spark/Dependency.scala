@@ -18,9 +18,6 @@
 package org.apache.spark
 
 import org.apache.spark.annotation.DeveloperApi
-import org.apache.spark.rdd.RDD
-import org.apache.spark.serializer.Serializer
-import org.apache.spark.shuffle.ShuffleHandle
 
 import scala.reflect.ClassTag
 
@@ -37,6 +34,7 @@ abstract class Dependency[T] extends Serializable {
 
 
 /**
+  * 依赖项的基类，其中子RDD的每个分区依赖于父RDD的少量分区。狭窄的依赖关系允许流水线执行。
   * :: DeveloperApi ::
   * Base class for dependencies where each partition of the child RDD depends on a small number
   * of partitions of the parent RDD. Narrow dependencies allow for pipelined execution.
@@ -44,6 +42,7 @@ abstract class Dependency[T] extends Serializable {
 @DeveloperApi
 abstract class NarrowDependency[T](_rdd: RDD[T]) extends Dependency[T] {
     /**
+      * 获取子分区的父分区。
       * Get the parent partitions for a child partition.
       *
       * @param partitionId a partition of the child RDD

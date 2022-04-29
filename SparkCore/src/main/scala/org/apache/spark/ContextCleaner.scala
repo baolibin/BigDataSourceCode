@@ -40,6 +40,7 @@ private case class CleanAccum(accId: Long) extends CleanupTask
 private case class CleanCheckpoint(rddId: Int) extends CleanupTask
 
 /**
+  * 与清理任务相关的弱引用。
   * A WeakReference associated with a CleanupTask.
   *
   * When the referent object becomes only weakly reachable, the corresponding
@@ -171,14 +172,14 @@ private[spark] class ContextCleaner(sc: SparkContext) extends Logging {
         registerForCleanup(broadcast, CleanBroadcast(broadcast.id))
     }
 
-    /** Register an object for cleanup. */
-    private def registerForCleanup(objectForCleanup: AnyRef, task: CleanupTask): Unit = {
-        referenceBuffer.add(new CleanupTaskWeakReference(task, objectForCleanup, referenceQueue))
-    }
-
     /** Register a RDDCheckpointData for cleanup when it is garbage collected. */
     def registerRDDCheckpointDataForCleanup[T](rdd: RDD[_], parentId: Int): Unit = {
         registerForCleanup(rdd, CleanCheckpoint(parentId))
+    }
+
+    /** Register an object for cleanup. */
+    private def registerForCleanup(objectForCleanup: AnyRef, task: CleanupTask): Unit = {
+        referenceBuffer.add(new CleanupTaskWeakReference(task, objectForCleanup, referenceQueue))
     }
 
     /** Keep cleaning RDD, shuffle, and broadcast state. */
