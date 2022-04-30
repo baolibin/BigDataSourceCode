@@ -20,6 +20,8 @@ package org.apache.spark;
 import java.io.Serializable;
 
 /**
+ * 暴露有关Spark执行器的信息。
+ *
  * Exposes information about Spark Executors.
  *
  * This interface is not designed to be implemented outside of Spark.  We may add additional methods
