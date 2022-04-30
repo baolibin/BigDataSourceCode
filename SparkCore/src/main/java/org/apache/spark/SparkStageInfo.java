@@ -20,6 +20,7 @@ package org.apache.spark;
 import java.io.Serializable;
 
 /**
+ * 公开有关Spark阶段的信息。
  * Exposes information about Spark Stages.
  *
  * This interface is not designed to be implemented outside of Spark.  We may add additional methods

@@ -20,6 +20,7 @@ package org.apache.spark;
 import org.apache.spark.scheduler.*;
 
 /**
+ * 类，该类允许用户接收所有SparkListener事件。用户应该重写OneEvent方法。
  * Class that allows users to receive all SparkListener events.
  * Users should override the onEvent method.
  *
