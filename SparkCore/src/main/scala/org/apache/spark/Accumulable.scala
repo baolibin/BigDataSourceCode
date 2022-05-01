@@ -68,6 +68,7 @@ class Accumulable[R, T] private(
     def this(initialValue: R, param: AccumulableParam[R, T]) = this(initialValue, param, None)
 
     /**
+     * 向该累加器/累加器添加更多数据
       * Add more data to this accumulator / accumulable
       *
       * @param term the data to add
@@ -77,6 +78,7 @@ class Accumulable[R, T] private(
     }
 
     /**
+     * 向该累加器/累加器添加更多数据
       * Add more data to this accumulator / accumulable
       *
       * @param term the data to add
