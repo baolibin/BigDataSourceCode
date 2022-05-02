@@ -92,6 +92,7 @@ class Accumulable[R, T] private(
     AccumulatorContext.register(newAcc)
 
     /**
+     * 将两个可累积的对象合并在一起
       * Merge two accumulable objects together
       *
       * Normally, a user will not want to use this version, but will instead call `+=`.
@@ -103,6 +104,7 @@ class Accumulable[R, T] private(
     }
 
     /**
+     * 将两个可累积的对象合并在一起
       * Merge two accumulable objects together
       *
       * Normally, a user will not want to use this version, but will instead call `add`.
