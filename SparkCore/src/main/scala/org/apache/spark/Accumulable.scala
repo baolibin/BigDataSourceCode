@@ -116,6 +116,7 @@ class Accumulable[R, T] private(
     }
 
     /**
+     * 访问累加器的当前值；只允许在driver上使用。
       * Access the accumulator's current value; only allowed on driver.
       */
     def value: R = {
@@ -127,6 +128,7 @@ class Accumulable[R, T] private(
     }
 
     /**
+     * 设置累加器的值；只允许在driver身上使用。
       * Set the accumulator's value; only allowed on driver.
       */
     def value_=(newValue: R) {
@@ -138,6 +140,7 @@ class Accumulable[R, T] private(
     }
 
     /**
+     * 从任务中获取此累加器的当前值。
       * Get the current value of this accumulator from within a task.
       *
       * This is NOT the global value of the accumulator.  To get the global value after a
