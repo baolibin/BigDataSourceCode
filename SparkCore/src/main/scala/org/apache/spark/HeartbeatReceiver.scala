@@ -171,6 +171,7 @@ private[spark] class HeartbeatReceiver(sc: SparkContext, clock: Clock)
     }
 
     /**
+     * 如果心跳接收器未停止，通知其执行器注册。
       * If the heartbeat receiver is not stopped, notify it of executor registrations.
       */
     override def onExecutorAdded(executorAdded: SparkListenerExecutorAdded): Unit = {
@@ -178,6 +179,7 @@ private[spark] class HeartbeatReceiver(sc: SparkContext, clock: Clock)
     }
 
     /**
+     * 将ExecutorRegistered发送到事件循环以添加新的执行器。只是为了测试。
       * Send ExecutorRegistered to the event loop to add a new executor. Only for test.
       *
       * @return if HeartbeatReceiver is stopped, return None. Otherwise, return a Some(Future) that
