@@ -17,8 +17,12 @@
 
 package org.apache.spark
 
-import java.io.{IOException, ObjectInputStream, ObjectOutputStream}
+import org.apache.spark.rdd.{PartitionPruningRDD, RDD}
+import org.apache.spark.serializer.JavaSerializer
+import org.apache.spark.util.random.SamplingUtils
+import org.apache.spark.util.{CollectionsUtils, Utils}
 
+import java.io.{IOException, ObjectInputStream, ObjectOutputStream}
 import scala.collection.mutable
 import scala.collection.mutable.ArrayBuffer
 import scala.reflect.ClassTag
@@ -38,6 +42,7 @@ abstract class Partitioner extends Serializable {
 
 object Partitioner {
     /**
+     * 选择一个分区器，用于在多个RDD之间执行类似cogroup的操作。如果任何RDD已经有一个分区器，请选择该分区器。
       * Choose a partitioner to use for a cogroup-like operation between a number of RDDs.
       * If any of the RDDs already has a partitioner, choose that one.
       *
