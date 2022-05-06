@@ -42,6 +42,7 @@ trait FutureAction[T] extends Future[T] {
     // documentation (with reference to the word "action").
 
     /**
+     *  取消此操作的执行。
       * Cancels the execution of this action.
       */
     def cancel(): Unit
