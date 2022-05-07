@@ -71,7 +71,10 @@ private[spark] trait ExecutorAllocationClient {
     killedExecutors.nonEmpty && killedExecutors(0).equals(executorId)
   }
 
-  /** Get the list of currently active executors */
+  /**
+   * 获取当前活动执行者的列表
+   * Get the list of currently active executors
+   */
   private[spark] def getExecutorIds(): Seq[String]
 
   /**
