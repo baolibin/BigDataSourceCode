@@ -18,6 +18,7 @@
 package org.apache.spark
 
 import org.apache.spark.annotation.DeveloperApi
+import org.apache.spark.util.collection.ExternalAppendOnlyMap
 
 /**
   * 用于聚合数据的一组函数。
@@ -31,13 +32,13 @@ import org.apache.spark.annotation.DeveloperApi
   */
 @DeveloperApi
 case class Aggregator[K, V, C](
-                                      createCombiner: V => C,
-                                      mergeValue: (C, V) => C,
-                                      mergeCombiners: (C, C) => C) {
+                                  createCombiner: V => C,
+                                  mergeValue: (C, V) => C,
+                                  mergeCombiners: (C, C) => C) {
 
     def combineValuesByKey(
-                                  iter: Iterator[_ <: Product2[K, V]],
-                                  context: TaskContext): Iterator[(K, C)] = {
+                              iter: Iterator[_ <: Product2[K, V]],
+                              context: TaskContext): Iterator[(K, C)] = {
         val combiners = new ExternalAppendOnlyMap[K, V, C](createCombiner, mergeValue, mergeCombiners)
         combiners.insertAll(iter)
         updateMetrics(context, combiners)

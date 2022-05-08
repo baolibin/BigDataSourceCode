@@ -54,13 +54,13 @@ import scala.reflect.ClassTag
   */
 @deprecated("use AccumulatorV2", "2.0.0")
 class Accumulable[R, T] private(
-                                       val id: Long,
-                                       // SI-8813: This must explicitly be a private val, or else scala 2.11 doesn't compile
-                                       @transient private val initialValue: R,
-                                       param: AccumulableParam[R, T],
-                                       val name: Option[String],
-                                       private[spark] val countFailedValues: Boolean)
-        extends Serializable {
+                                   val id: Long,
+                                   // SI-8813: This must explicitly be a private val, or else scala 2.11 doesn't compile
+                                   @transient private val initialValue: R,
+                                   param: AccumulableParam[R, T],
+                                   val name: Option[String],
+                                   private[spark] val countFailedValues: Boolean)
+    extends Serializable {
 
     val zero = param.zero(initialValue)
     private[spark] val newAcc = new LegacyAccumulatorWrapper(initialValue, param)
@@ -68,7 +68,7 @@ class Accumulable[R, T] private(
     def this(initialValue: R, param: AccumulableParam[R, T]) = this(initialValue, param, None)
 
     /**
-     * 向该累加器/累加器添加更多数据
+      * 向该累加器/累加器添加更多数据
       * Add more data to this accumulator / accumulable
       *
       * @param term the data to add
@@ -78,7 +78,7 @@ class Accumulable[R, T] private(
     }
 
     /**
-     * 向该累加器/累加器添加更多数据
+      * 向该累加器/累加器添加更多数据
       * Add more data to this accumulator / accumulable
       *
       * @param term the data to add
@@ -92,7 +92,7 @@ class Accumulable[R, T] private(
     AccumulatorContext.register(newAcc)
 
     /**
-     * 将两个可累积的对象合并在一起
+      * 将两个可累积的对象合并在一起
       * Merge two accumulable objects together
       *
       * Normally, a user will not want to use this version, but will instead call `+=`.
@@ -104,7 +104,7 @@ class Accumulable[R, T] private(
     }
 
     /**
-     * 将两个可累积的对象合并在一起
+      * 将两个可累积的对象合并在一起
       * Merge two accumulable objects together
       *
       * Normally, a user will not want to use this version, but will instead call `add`.
@@ -116,7 +116,7 @@ class Accumulable[R, T] private(
     }
 
     /**
-     * 访问累加器的当前值；只允许在driver上使用。
+      * 访问累加器的当前值；只允许在driver上使用。
       * Access the accumulator's current value; only allowed on driver.
       */
     def value: R = {
@@ -128,7 +128,7 @@ class Accumulable[R, T] private(
     }
 
     /**
-     * 设置累加器的值；只允许在driver身上使用。
+      * 设置累加器的值；只允许在driver身上使用。
       * Set the accumulator's value; only allowed on driver.
       */
     def value_=(newValue: R) {
@@ -140,7 +140,7 @@ class Accumulable[R, T] private(
     }
 
     /**
-     * 从任务中获取此累加器的当前值。
+      * 从任务中获取此累加器的当前值。
       * Get the current value of this accumulator from within a task.
       *
       * This is NOT the global value of the accumulator.  To get the global value after a
@@ -154,10 +154,10 @@ class Accumulable[R, T] private(
     override def toString: String = if (newAcc._value == null) "null" else newAcc._value.toString
 
     private[spark] def this(
-                                   initialValue: R,
-                                   param: AccumulableParam[R, T],
-                                   name: Option[String],
-                                   countFailedValues: Boolean) = {
+                               initialValue: R,
+                               param: AccumulableParam[R, T],
+                               name: Option[String],
+                               countFailedValues: Boolean) = {
         this(AccumulatorContext.newId(), initialValue, param, name, countFailedValues)
     }
 
@@ -229,7 +229,7 @@ trait AccumulableParam[R, T] extends Serializable {
 @deprecated("use AccumulatorV2", "2.0.0")
 private[spark] class
 GrowableAccumulableParam[R <% Growable[T] with TraversableOnce[T] with Serializable : ClassTag, T]
-        extends AccumulableParam[R, T] {
+    extends AccumulableParam[R, T] {
 
     def addAccumulator(growable: R, elem: T): R = {
         growable += elem

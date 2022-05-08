@@ -56,12 +56,12 @@ package org.apache.spark
   */
 @deprecated("use AccumulatorV2", "2.0.0")
 class Accumulator[T] private[spark](
-                                           // SI-8813: This must explicitly be a private val, or else scala 2.11 doesn't compile
-                                           @transient private val initialValue: T,
-                                           param: AccumulatorParam[T],
-                                           name: Option[String] = None,
-                                           countFailedValues: Boolean = false)
-        extends Accumulable[T, T](initialValue, param, name, countFailedValues)
+                                       // SI-8813: This must explicitly be a private val, or else scala 2.11 doesn't compile
+                                       @transient private val initialValue: T,
+                                       param: AccumulatorParam[T],
+                                       name: Option[String] = None,
+                                       countFailedValues: Boolean = false)
+    extends Accumulable[T, T](initialValue, param, name, countFailedValues)
 
 
 /**
