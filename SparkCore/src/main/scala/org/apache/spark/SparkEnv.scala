@@ -20,9 +20,10 @@ package org.apache.spark
 import java.io.File
 import java.net.Socket
 import java.util.Locale
-
 import com.google.common.collect.MapMaker
 import org.apache.spark.annotation.DeveloperApi
+import org.apache.spark.rpc.RpcEnv
+import org.apache.spark.serializer.Serializer
 
 import scala.collection.mutable
 import scala.util.Properties
