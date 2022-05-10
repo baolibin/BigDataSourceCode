@@ -58,6 +58,7 @@ abstract class NarrowDependency[T](_rdd: RDD[T]) extends Dependency[T] {
 
 
 /**
+  * 表示对洗牌阶段输出的依赖关系。请注意，在shuffle的情况下，RDD是暂时的，因为我们在执行器端不需要它。
   * :: DeveloperApi ::
   * Represents a dependency on the output of a shuffle stage. Note that in the case of shuffle,
   * the RDD is transient since we don't need it on the executor side.
@@ -73,13 +74,13 @@ abstract class NarrowDependency[T](_rdd: RDD[T]) extends Dependency[T] {
   */
 @DeveloperApi
 class ShuffleDependency[K: ClassTag, V: ClassTag, C: ClassTag](
-                                                                      @transient private val _rdd: RDD[_ <: Product2[K, V]],
-                                                                      val partitioner: Partitioner,
-                                                                      val serializer: Serializer = SparkEnv.get.serializer,
-                                                                      val keyOrdering: Option[Ordering[K]] = None,
-                                                                      val aggregator: Option[Aggregator[K, V, C]] = None,
-                                                                      val mapSideCombine: Boolean = false)
-        extends Dependency[Product2[K, V]] {
+                                                                  @transient private val _rdd: RDD[_ <: Product2[K, V]],
+                                                                  val partitioner: Partitioner,
+                                                                  val serializer: Serializer = SparkEnv.get.serializer,
+                                                                  val keyOrdering: Option[Ordering[K]] = None,
+                                                                  val aggregator: Option[Aggregator[K, V, C]] = None,
+                                                                  val mapSideCombine: Boolean = false)
+    extends Dependency[Product2[K, V]] {
 
     val shuffleId: Int = _rdd.context.newShuffleId()
     val shuffleHandle: ShuffleHandle = _rdd.context.env.shuffleManager.registerShuffle(
@@ -98,6 +99,7 @@ class ShuffleDependency[K: ClassTag, V: ClassTag, C: ClassTag](
 
 
 /**
+  * 表示父RDD和子RDD分区之间的一对一依赖关系。
   * :: DeveloperApi ::
   * Represents a one-to-one dependency between partitions of the parent and child RDDs.
   */
@@ -118,7 +120,7 @@ class OneToOneDependency[T](rdd: RDD[T]) extends NarrowDependency[T](rdd) {
   */
 @DeveloperApi
 class RangeDependency[T](rdd: RDD[T], inStart: Int, outStart: Int, length: Int)
-        extends NarrowDependency[T](rdd) {
+    extends NarrowDependency[T](rdd) {
 
     override def getParents(partitionId: Int): List[Int] = {
         if (partitionId >= outStart && partitionId < outStart + length) {
