@@ -214,6 +214,7 @@ private[spark] class ExecutorAllocationManager(
     }
 
     /**
+      * 更新我们的目标执行者数量，并将结果与群集管理器同步。
       * Updates our target number of executors and syncs the result with the cluster manager.
       *
       * Check to see whether our existing allocation and the requests we've made previously exceed our
@@ -258,6 +259,7 @@ private[spark] class ExecutorAllocationManager(
     }
 
     /**
+      * 在当前负载下，满足所有正在运行和挂起的任务所需的最大执行者数，四舍五入。
       * The maximum number of executors we would need under the current load to satisfy all running
       * and pending tasks, rounded up.
       */
@@ -267,6 +269,7 @@ private[spark] class ExecutorAllocationManager(
     }
 
     /**
+      * 向群集管理器请求多个执行器。
       * Request a number of executors from the cluster manager.
       * If the cap on the number of executors is reached, give up and reset the
       * number of executors to add next round instead of continuing to double it.
@@ -327,6 +330,7 @@ private[spark] class ExecutorAllocationManager(
     }
 
     /**
+      * 停止分配管理器。
       * Stop the allocation manager.
       */
     def stop(): Unit = {
