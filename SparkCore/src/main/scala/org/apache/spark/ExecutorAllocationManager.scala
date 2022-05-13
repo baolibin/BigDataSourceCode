@@ -388,6 +388,7 @@ private[spark] class ExecutorAllocationManager(
     }
 
     /**
+      * 请求群集管理器删除给定的执行器。返回请求是否已确认。
       * Request the cluster manager to remove the given executor.
       * Return whether the request is acknowledged.
       */
@@ -397,6 +398,7 @@ private[spark] class ExecutorAllocationManager(
     }
 
     /**
+      * 请求群集管理器删除给定的执行器。返回已删除的执行者列表。
       * Request the cluster manager to remove the given executors.
       * Returns the list of executors which are removed.
       */
@@ -445,6 +447,7 @@ private[spark] class ExecutorAllocationManager(
     }
 
     /**
+      * 确定给定的执行者是否可能被杀。
       * Determine if the given executor can be killed.
       */
     private def canBeKilled(executorId: String): Boolean = synchronized {
@@ -465,6 +468,7 @@ private[spark] class ExecutorAllocationManager(
     }
 
     /**
+      * 添加指定的执行器时调用回调。
       * Callback invoked when the specified executor has been added.
       */
     private def onExecutorAdded(executorId: String): Unit = synchronized {
