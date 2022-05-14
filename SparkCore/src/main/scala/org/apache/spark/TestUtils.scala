@@ -41,7 +41,6 @@ import scala.util.Try
 
 /**
   * 测试实用程序。包含在主代码库中，因为它被多个项目使用。
-  *
   * Utilities for tests. Included in main codebase since it's used by multiple
   * projects.
   *
@@ -54,16 +53,17 @@ private[spark] object TestUtils {
     private val SOURCE = JavaFileObject.Kind.SOURCE
 
     /**
+      * 创建一个用给定名称定义类的jar。
       * Create a jar that defines classes with the given names.
       *
       * Note: if this is used during class loader tests, class names should be unique
       * in order to avoid interference between tests.
       */
     def createJarWithClasses(
-                                    classNames: Seq[String],
-                                    toStringValue: String = "",
-                                    classNamesWithBase: Seq[(String, String)] = Seq(),
-                                    classpathUrls: Seq[URL] = Seq()): URL = {
+                                classNames: Seq[String],
+                                toStringValue: String = "",
+                                classNamesWithBase: Seq[(String, String)] = Seq(),
+                                classpathUrls: Seq[URL] = Seq()): URL = {
         val tempDir = Utils.createTempDir()
         val files1 = for (name <- classNames) yield {
             createCompiledClass(name, tempDir, toStringValue, classpathUrls = classpathUrls)
@@ -76,6 +76,7 @@ private[spark] object TestUtils {
     }
 
     /**
+      * 创建一个包含这组文件的jar文件。所有文件都将位于指定的目录或jar的根目录下。
       * Create a jar file that contains this set of files. All files will be located in the specified
       * directory or at the root of the jar.
       */
@@ -100,26 +101,32 @@ private[spark] object TestUtils {
         jarFile.toURI.toURL
     }
 
-    /** Creates a compiled class with the given name. Class file will be placed in destDir. */
+    /**
+      * 创建具有给定名称的已编译类。类文件将被放置在destDir中。
+      * Creates a compiled class with the given name. Class file will be placed in destDir.
+      */
     def createCompiledClass(
-                                   className: String,
-                                   destDir: File,
-                                   toStringValue: String = "",
-                                   baseClass: String = null,
-                                   classpathUrls: Seq[URL] = Seq()): File = {
+                               className: String,
+                               destDir: File,
+                               toStringValue: String = "",
+                               baseClass: String = null,
+                               classpathUrls: Seq[URL] = Seq()): File = {
         val extendsText = Option(baseClass).map { c => s" extends ${c}" }.getOrElse("")
         val sourceFile = new JavaSourceFromString(className,
             "public class " + className + extendsText + " implements java.io.Serializable {" +
-                    "  @Override public String toString() { return \"" + toStringValue + "\"; }}")
+                "  @Override public String toString() { return \"" + toStringValue + "\"; }}")
         createCompiledClass(className, destDir, sourceFile, classpathUrls)
     }
 
-    /** Creates a compiled class with the source file. Class file will be placed in destDir. */
+    /**
+      * 使用源文件创建已编译的类。类文件将被放置在destDir中。
+      * Creates a compiled class with the source file. Class file will be placed in destDir.
+      */
     def createCompiledClass(
-                                   className: String,
-                                   destDir: File,
-                                   sourceFile: JavaSourceFromString,
-                                   classpathUrls: Seq[URL]): File = {
+                               className: String,
+                               destDir: File,
+                               sourceFile: JavaSourceFromString,
+                               classpathUrls: Seq[URL]): File = {
         val compiler = ToolProvider.getSystemJavaCompiler
 
         // Calling this outputs a class file in pwd. It's easier to just rename the files than
@@ -147,6 +154,7 @@ private[spark] object TestUtils {
     }
 
     /**
+      * 创建一个包含多个文件的jar文件。“files”映射包含jar文件中的文件名到其内容的映射。
       * Create a jar file containing multiple files. The `files` map contains a mapping of
       * file names in the jar file to their contents.
       */
@@ -164,6 +172,7 @@ private[spark] object TestUtils {
     }
 
     /**
+      * 运行一些涉及提交到给定上下文的作业的代码，并断言这些作业溢出了
       * Run some code involving jobs submitted to the given context and assert that the jobs spilled.
       */
     def assertSpilled[T](sc: SparkContext, identifier: String)(body: => T): Unit = {
@@ -174,6 +183,7 @@ private[spark] object TestUtils {
     }
 
     /**
+      * 运行一些涉及提交到给定上下文的作业的代码，并断言这些作业没有溢出。
       * Run some code involving jobs submitted to the given context and assert that the jobs
       * did not spill.
       */
@@ -185,6 +195,7 @@ private[spark] object TestUtils {
     }
 
     /**
+      * 测试命令是否可用。
       * Test if a command is available.
       */
     def testCommandAvailable(command: String): Boolean = {
@@ -193,12 +204,13 @@ private[spark] object TestUtils {
     }
 
     /**
+      * 从HTTP（S）URL返回响应代码。
       * Returns the response code from an HTTP(S) URL.
       */
     def httpResponseCode(
-                                url: URL,
-                                method: String = "GET",
-                                headers: Seq[(String, String)] = Nil): Int = {
+                            url: URL,
+                            method: String = "GET",
+                            headers: Seq[(String, String)] = Nil): Int = {
         val connection = url.openConnection().asInstanceOf[HttpURLConnection]
         connection.setRequestMethod(method)
         headers.foreach { case (k, v) => connection.setRequestProperty(k, v) }
@@ -234,7 +246,7 @@ private[spark] object TestUtils {
     }
 
     private[spark] class JavaSourceFromString(val name: String, val code: String)
-            extends SimpleJavaFileObject(createURI(name), SOURCE) {
+        extends SimpleJavaFileObject(createURI(name), SOURCE) {
         override def getCharContent(ignoreEncodingErrors: Boolean): String = code
     }
 
@@ -242,6 +254,7 @@ private[spark] object TestUtils {
 
 
 /**
+  * 一种“SparkListener”，用于检测Spark作业中是否发生泄漏。
   * A `SparkListener` that detects whether spills have occurred in Spark jobs.
   */
 private class SpillListener extends SparkListener {
