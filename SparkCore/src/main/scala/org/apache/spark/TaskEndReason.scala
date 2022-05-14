@@ -30,7 +30,8 @@ import org.apache.spark.util.{AccumulatorV2, Utils}
 // ==============================================================================================
 
 /**
-  * 任务结束的各种可能原因。low-level的TaskScheduler应该为“短暂”的失败重试几次任务，并且只报告需要重新提交一些旧阶段的失败，
+  * 任务结束的各种可能原因。
+  * low-level的TaskScheduler应该为“短暂”的失败重试几次任务，并且只报告需要重新提交一些旧阶段的失败，
   * 例如shuffle map fetch失败。
   *
   * :: DeveloperApi ::
@@ -42,6 +43,7 @@ import org.apache.spark.util.{AccumulatorV2, Utils}
 sealed trait TaskEndReason
 
 /**
+  * 任务成功了。
   * :: DeveloperApi ::
   * Task succeeded.
   */
@@ -49,15 +51,22 @@ sealed trait TaskEndReason
 case object Success extends TaskEndReason
 
 /**
+  * 任务失败的各种可能原因。
   * :: DeveloperApi ::
   * Various possible reasons why a task failed.
   */
 @DeveloperApi
 sealed trait TaskFailedReason extends TaskEndReason {
-    /** Error message displayed in the web UI. */
+    /**
+      * web UI中显示的错误消息。
+      * Error message displayed in the web UI.
+      */
     def toErrorString: String
 
     /**
+      * 此任务失败是否应计入在阶段中止前允许任务失败的最大次数。
+      * 如果任务失败与任务无关，则设置为false；例如，如果任务失败是因为它所运行的执行器被杀死。
+      *
       * Whether this task failure should be counted towards the maximum number of times the task is
       * allowed to fail before the stage is aborted.  Set to false in cases where the task's failure
       * was unrelated to the task; for example, if the task failed because the executor it was running
@@ -84,16 +93,16 @@ case object Resubmitted extends TaskFailedReason {
   */
 @DeveloperApi
 case class FetchFailed(
-                              bmAddress: BlockManagerId, // Note that bmAddress can be null
-                              shuffleId: Int,
-                              mapId: Int,
-                              reduceId: Int,
-                              message: String)
-        extends TaskFailedReason {
+                          bmAddress: BlockManagerId, // Note that bmAddress can be null
+                          shuffleId: Int,
+                          mapId: Int,
+                          reduceId: Int,
+                          message: String)
+    extends TaskFailedReason {
     override def toErrorString: String = {
         val bmAddressString = if (bmAddress == null) "null" else bmAddress.toString
         s"FetchFailed($bmAddressString, shuffleId=$shuffleId, mapId=$mapId, reduceId=$reduceId, " +
-                s"message=\n$message\n)"
+            s"message=\n$message\n)"
     }
 
     /**
@@ -125,14 +134,14 @@ case class FetchFailed(
   */
 @DeveloperApi
 case class ExceptionFailure(
-                                   className: String,
-                                   description: String,
-                                   stackTrace: Array[StackTraceElement],
-                                   fullStackTrace: String,
-                                   private val exceptionWrapper: Option[ThrowableSerializationWrapper],
-                                   accumUpdates: Seq[AccumulableInfo] = Seq.empty,
-                                   private[spark] var accums: Seq[AccumulatorV2[_, _]] = Nil)
-        extends TaskFailedReason {
+                               className: String,
+                               description: String,
+                               stackTrace: Array[StackTraceElement],
+                               fullStackTrace: String,
+                               private val exceptionWrapper: Option[ThrowableSerializationWrapper],
+                               accumUpdates: Seq[AccumulableInfo] = Seq.empty,
+                               private[spark] var accums: Seq[AccumulatorV2[_, _]] = Nil)
+    extends TaskFailedReason {
 
     def exception: Option[Throwable] = exceptionWrapper.flatMap(w => Option(w.exception))
 
@@ -150,9 +159,9 @@ case class ExceptionFailure(
       * Note: It does not include the exception's causes, and is only used for backward compatibility.
       */
     private def exceptionString(
-                                       className: String,
-                                       description: String,
-                                       stackTrace: Array[StackTraceElement]): String = {
+                                   className: String,
+                                   description: String,
+                                   stackTrace: Array[StackTraceElement]): String = {
         val desc = if (description == null) "" else description
         val st = if (stackTrace == null) "" else stackTrace.map("        " + _).mkString("\n")
         s"$className: $desc\n$st"
@@ -164,9 +173,9 @@ case class ExceptionFailure(
       * serializable.
       */
     private[spark] def this(
-                                   e: Throwable,
-                                   accumUpdates: Seq[AccumulableInfo],
-                                   preserveCause: Boolean) {
+                               e: Throwable,
+                               accumUpdates: Seq[AccumulableInfo],
+                               preserveCause: Boolean) {
         this(e.getClass.getName, e.getMessage, e.getStackTrace, Utils.exceptionString(e),
             if (preserveCause) Some(new ThrowableSerializationWrapper(e)) else None, accumUpdates)
     }
@@ -187,7 +196,7 @@ case class ExceptionFailure(
   * but the stacktrace and message will be preserved correctly in SparkException.
   */
 private[spark] class ThrowableSerializationWrapper(var exception: Throwable) extends
-        Serializable with Logging {
+    Serializable with Logging {
     private def writeObject(out: ObjectOutputStream): Unit = {
         out.writeObject(exception)
     }
@@ -202,6 +211,7 @@ private[spark] class ThrowableSerializationWrapper(var exception: Throwable) ext
 }
 
 /**
+  * 任务成功完成，但在获取之前，执行者的块管理器丢失了结果。
   * :: DeveloperApi ::
   * The task finished successfully, but the result was lost from the executor's block manager before
   * it was fetched.
@@ -212,6 +222,7 @@ case object TaskResultLost extends TaskFailedReason {
 }
 
 /**
+  * 任务被故意终止，需要重新安排。
   * :: DeveloperApi ::
   * Task was killed intentionally and needs to be rescheduled.
   */
@@ -223,16 +234,17 @@ case class TaskKilled(reason: String) extends TaskFailedReason {
 }
 
 /**
+  * 任务请求驱动程序提交，但被拒绝。
   * :: DeveloperApi ::
   * Task requested the driver to commit, but was denied.
   */
 @DeveloperApi
 case class TaskCommitDenied(
-                                   jobID: Int,
-                                   partitionID: Int,
-                                   attemptNumber: Int) extends TaskFailedReason {
+                               jobID: Int,
+                               partitionID: Int,
+                               attemptNumber: Int) extends TaskFailedReason {
     override def toErrorString: String = s"TaskCommitDenied (Driver denied task commit)" +
-            s" for job: $jobID, partition: $partitionID, attemptNumber: $attemptNumber"
+        s" for job: $jobID, partition: $partitionID, attemptNumber: $attemptNumber"
 
     /**
       * If a task failed because its attempt to commit was denied, do not count this failure
@@ -243,15 +255,16 @@ case class TaskCommitDenied(
 }
 
 /**
+  * 任务失败，因为运行它的执行器丢失。这可能是因为任务使JVM崩溃。
   * :: DeveloperApi ::
   * The task failed because the executor that it was running on was lost. This may happen because
   * the task crashed the JVM.
   */
 @DeveloperApi
 case class ExecutorLostFailure(
-                                      execId: String,
-                                      exitCausedByApp: Boolean = true,
-                                      reason: Option[String]) extends TaskFailedReason {
+                                  execId: String,
+                                  exitCausedByApp: Boolean = true,
+                                  reason: Option[String]) extends TaskFailedReason {
     override def toErrorString: String = {
         val exitBehavior = if (exitCausedByApp) {
             "caused by one of the running tasks"
@@ -259,7 +272,7 @@ case class ExecutorLostFailure(
             "unrelated to the running tasks"
         }
         s"ExecutorLostFailure (executor ${execId} exited ${exitBehavior})" +
-                reason.map { r => s" Reason: $r" }.getOrElse("")
+            reason.map { r => s" Reason: $r" }.getOrElse("")
     }
 
     override def countTowardsTaskFailures: Boolean = exitCausedByApp
