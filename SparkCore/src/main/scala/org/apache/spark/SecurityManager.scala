@@ -21,12 +21,16 @@ import java.lang.{Byte => JByte}
 import java.net.{Authenticator, PasswordAuthentication}
 import java.security.cert.X509Certificate
 import java.security.{KeyStore, SecureRandom}
-
 import com.google.common.hash.HashCodes
 import com.google.common.io.Files
+
 import javax.net.ssl._
 import org.apache.hadoop.io.Text
+import org.apache.spark.deploy.SparkHadoopUtil
+import org.apache.spark.internal.Logging
+import org.apache.spark.internal.config.{NETWORK_AUTH_ENABLED, NETWORK_ENCRYPTION_ENABLED, SASL_ENCRYPTION_ENABLED}
 import org.apache.spark.network.sasl.SecretKeyHolder
+import org.apache.spark.util.Utils
 
 /**
   * 负责spark安全的类。
@@ -71,12 +75,12 @@ import org.apache.spark.network.sasl.SecretKeyHolder
   * different underlying mechanisms are used depending on the protocol:
   *
   *  - HTTP for broadcast and file server (via HttpServer) ->  Spark currently uses Jetty
-  * for the HttpServer. Jetty supports multiple authentication mechanisms -
-  * Basic, Digest, Form, Spnego, etc. It also supports multiple different login
-  * services - Hash, JAAS, Spnego, JDBC, etc.  Spark currently uses the HashLoginService
-  * to authenticate using DIGEST-MD5 via a single user and the shared secret.
-  * Since we are using DIGEST-MD5, the shared secret is not passed on the wire
-  * in plaintext.
+  *    for the HttpServer. Jetty supports multiple authentication mechanisms -
+  *    Basic, Digest, Form, Spnego, etc. It also supports multiple different login
+  *    services - Hash, JAAS, Spnego, JDBC, etc.  Spark currently uses the HashLoginService
+  *    to authenticate using DIGEST-MD5 via a single user and the shared secret.
+  *    Since we are using DIGEST-MD5, the shared secret is not passed on the wire
+  *    in plaintext.
   *
   * We currently support SSL (https) for this communication protocol (see the details
   * below).
@@ -87,18 +91,18 @@ import org.apache.spark.network.sasl.SecretKeyHolder
   * and in this case gets the user name and password from the request.
   *
   *  - BlockTransferService -> The Spark BlockTransferServices uses java nio to asynchronously
-  * exchange messages.  For this we use the Java SASL
-  * (Simple Authentication and Security Layer) API and again use DIGEST-MD5
-  * as the authentication mechanism. This means the shared secret is not passed
-  * over the wire in plaintext.
-  * Note that SASL is pluggable as to what mechanism it uses.  We currently use
-  * DIGEST-MD5 but this could be changed to use Kerberos or other in the future.
-  * Spark currently supports "auth" for the quality of protection, which means
-  * the connection does not support integrity or privacy protection (encryption)
-  * after authentication. SASL also supports "auth-int" and "auth-conf" which
-  * SPARK could support in the future to allow the user to specify the quality
-  * of protection they want. If we support those, the messages will also have to
-  * be wrapped and unwrapped via the SaslServer/SaslClient.wrap/unwrap API's.
+  *    exchange messages.  For this we use the Java SASL
+  *    (Simple Authentication and Security Layer) API and again use DIGEST-MD5
+  *    as the authentication mechanism. This means the shared secret is not passed
+  *    over the wire in plaintext.
+  *    Note that SASL is pluggable as to what mechanism it uses.  We currently use
+  *    DIGEST-MD5 but this could be changed to use Kerberos or other in the future.
+  *    Spark currently supports "auth" for the quality of protection, which means
+  *    the connection does not support integrity or privacy protection (encryption)
+  *    after authentication. SASL also supports "auth-int" and "auth-conf" which
+  *    SPARK could support in the future to allow the user to specify the quality
+  *    of protection they want. If we support those, the messages will also have to
+  *    be wrapped and unwrapped via the SaslServer/SaslClient.wrap/unwrap API's.
   *
   * Since the NioBlockTransferService does asynchronous messages passing, the SASL
   * authentication is a bit more complex. A ConnectionManager can be both a client
@@ -114,13 +118,13 @@ import org.apache.spark.network.sasl.SecretKeyHolder
   * SaslClientBootstrap on the client side and SaslRpcHandler on the server side.
   *
   *  - HTTP for the Spark UI -> the UI was changed to use servlets so that javax servlet filters
-  * can be used. Yarn requires a specific AmIpFilter be installed for security to work
-  *            properly. For non-Yarn deployments, users can write a filter to go through their
-  * organization's normal login service. If an authentication filter is in place then the
-  * SparkUI can be configured to check the logged in user against the list of users who
-  * have view acls to see if that user is authorized.
-  * The filters can also be used for many different purposes. For instance filters
-  * could be used for logging, encryption, or compression.
+  *    can be used. Yarn requires a specific AmIpFilter be installed for security to work
+  *    properly. For non-Yarn deployments, users can write a filter to go through their
+  *    organization's normal login service. If an authentication filter is in place then the
+  *    SparkUI can be configured to check the logged in user against the list of users who
+  *    have view acls to see if that user is authorized.
+  *    The filters can also be used for many different purposes. For instance filters
+  *    could be used for logging, encryption, or compression.
   *
   * The exact mechanisms used to generate/distribute the shared secret are deployment-specific.
   *
@@ -136,17 +140,17 @@ import org.apache.spark.network.sasl.SecretKeyHolder
   * authorization against the view acls.
   *
   * For other Spark deployments, the shared secret must be specified via the
-  *  org.apache.spark.authenticate.secret config.
+  * org.apache.spark.authenticate.secret config.
   * All the nodes (Master and Workers) and the applications need to have the same shared secret.
   * This again is not ideal as one user could potentially affect another users application.
   * This should be enhanced in the future to provide better protection.
   * If the UI needs to be secure, the user needs to install a javax servlet filter to do the
-  *  authentication. Spark will then use that user to compare against the view acls to do
-  *  authorization. If not filter is in place the user is generally null and no authorization
+  * authentication. Spark will then use that user to compare against the view acls to do
+  * authorization. If not filter is in place the user is generally null and no authorization
   * can take place.
   *
   * When authentication is being used, encryption can also be enabled by setting the option
-  *  org.apache.spark.authenticate.enableSaslEncryption to true. This is only supported by communication
+  * org.apache.spark.authenticate.enableSaslEncryption to true. This is only supported by communication
   * channels that use the network-common library, and can be used as an alternative to SSL in those
   * cases.
   *
@@ -182,9 +186,9 @@ import org.apache.spark.network.sasl.SecretKeyHolder
   */
 
 private[spark] class SecurityManager(
-                                            sparkConf: SparkConf,
-                                            val ioEncryptionKey: Option[Array[Byte]] = None)
-        extends Logging with SecretKeyHolder {
+                                        sparkConf: SparkConf,
+                                        val ioEncryptionKey: Option[Array[Byte]] = None)
+    extends Logging with SecretKeyHolder {
 
     import SecurityManager._
 
@@ -258,11 +262,11 @@ private[spark] class SecurityManager(
     setModifyAclsGroups(sparkConf.get("org.apache.spark.modify.acls.groups", ""));
     private var viewAcls: Set[String] = _
     logInfo("SecurityManager: authentication " + (if (authOn) "enabled" else "disabled") +
-            "; ui acls " + (if (aclsOn) "enabled" else "disabled") +
-            "; users  with view permissions: " + viewAcls.toString() +
-            "; groups with view permissions: " + viewAclsGroups.toString() +
-            "; users  with modify permissions: " + modifyAcls.toString() +
-            "; groups with modify permissions: " + modifyAclsGroups.toString())
+        "; ui acls " + (if (aclsOn) "enabled" else "disabled") +
+        "; users  with view permissions: " + viewAcls.toString() +
+        "; groups with view permissions: " + viewAclsGroups.toString() +
+        "; users  with modify permissions: " + modifyAcls.toString() +
+        "; groups with modify permissions: " + modifyAclsGroups.toString())
 
     // Set our own authenticator to properly negotiate user/password for HTTP connections.
     // This is needed by the HTTP client fetching from the HttpServer. Put here so its
@@ -364,6 +368,8 @@ private[spark] class SecurityManager(
     }
 
     /**
+      * 管理ACL应该在查看或修改ACL之前设置。如果修改管理ACL，还应设置视图并再次修改ACL以获取更改。
+      *
       * Admin acls groups should be set before the view or modify acls groups. If you modify the admin
       * acls groups you should also set the view and modify acls groups again to pick up the changes.
       */
@@ -373,6 +379,8 @@ private[spark] class SecurityManager(
     }
 
     /**
+      * 管理ACL应该在查看或修改ACL之前设置。如果修改管理ACL，还应设置视图并再次修改ACL以获取更改。
+      *
       * Admin acls should be set before the view or modify acls.  If you modify the admin
       * acls you should also set the view and modify acls again to pick up the changes.
       */
@@ -392,6 +400,7 @@ private[spark] class SecurityManager(
 
     /**
       * 拆分逗号分隔的字符串，过滤掉所有空项，然后返回一组字符串
+      *
       * Split a comma separated String, filter out any empty items, and return a Set of strings
       */
     private def stringToSet(list: String): Set[String] = {
@@ -417,9 +426,9 @@ private[spark] class SecurityManager(
       */
     def checkUIViewPermissions(user: String): Boolean = {
         logDebug("user=" + user + " aclsEnabled=" + aclsEnabled() + " viewAcls=" +
-                viewAcls.mkString(",") + " viewAclsGroups=" + viewAclsGroups.mkString(","))
+            viewAcls.mkString(",") + " viewAclsGroups=" + viewAclsGroups.mkString(","))
         if (!aclsEnabled || user == null || viewAcls.contains(user) ||
-                viewAcls.contains(WILDCARD_ACL) || viewAclsGroups.contains(WILDCARD_ACL)) {
+            viewAcls.contains(WILDCARD_ACL) || viewAclsGroups.contains(WILDCARD_ACL)) {
             return true
         }
         val currentUserGroups = Utils.getCurrentUserGroups(sparkConf, user)
@@ -429,6 +438,7 @@ private[spark] class SecurityManager(
 
     /**
       * 检查UI的ACL是否已启用
+      *
       * Check to see if Acls for the UI are enabled
       *
       * @return true if UI authentication is enabled, otherwise false
@@ -447,9 +457,9 @@ private[spark] class SecurityManager(
       */
     def checkModifyPermissions(user: String): Boolean = {
         logDebug("user=" + user + " aclsEnabled=" + aclsEnabled() + " modifyAcls=" +
-                modifyAcls.mkString(",") + " modifyAclsGroups=" + modifyAclsGroups.mkString(","))
+            modifyAcls.mkString(",") + " modifyAclsGroups=" + modifyAclsGroups.mkString(","))
         if (!aclsEnabled || user == null || modifyAcls.contains(user) ||
-                modifyAcls.contains(WILDCARD_ACL) || modifyAclsGroups.contains(WILDCARD_ACL)) {
+            modifyAcls.contains(WILDCARD_ACL) || modifyAclsGroups.contains(WILDCARD_ACL)) {
             return true
         }
         val currentUserGroups = Utils.getCurrentUserGroups(sparkConf, user)
@@ -469,6 +479,7 @@ private[spark] class SecurityManager(
 
     /**
       * 获取用于验证HTTP连接的用户。目前，请使用一个硬编码用户。
+      *
       * Gets the user used for authenticating HTTP connections.
       * For now use a single hardcoded user.
       *
@@ -481,6 +492,7 @@ private[spark] class SecurityManager(
 
     /**
       * 获取用于验证SASL连接的用户。目前，请使用一个硬编码用户。
+      *
       * Gets the user used for authenticating SASL connections.
       * For now use a single hardcoded user.
       *
@@ -492,6 +504,7 @@ private[spark] class SecurityManager(
 
     /**
       * 获取密钥。
+      *
       * Gets the secret key.
       *
       * @return the secret key as a String if authentication is enabled, otherwise returns null
@@ -500,6 +513,7 @@ private[spark] class SecurityManager(
 
     /**
       * 生成或查找密钥。
+      *
       * Generates or looks up the secret key.
       *
       * The way the key is stored depends on the Spark deployment mode. Yarn
@@ -533,18 +547,19 @@ private[spark] class SecurityManager(
             // user must have set org.apache.spark.authenticate.secret config
             // For Master/Worker, auth secret is in conf; for Executors, it is in env variable
             Option(sparkConf.getenv(SecurityManager.ENV_AUTH_SECRET))
-                    .orElse(sparkConf.getOption(SecurityManager.SPARK_AUTH_SECRET_CONF)) match {
+                .orElse(sparkConf.getOption(SecurityManager.SPARK_AUTH_SECRET_CONF)) match {
                 case Some(value) => value
                 case None =>
                     throw new IllegalArgumentException(
                         "Error: a secret key must be specified via the " +
-                                SecurityManager.SPARK_AUTH_SECRET_CONF + " config")
+                            SecurityManager.SPARK_AUTH_SECRET_CONF + " config")
             }
         }
     }
 
     /**
       * 检查Spark通信协议的身份验证是否已启用
+      *
       * Check to see if authentication for the Spark communication protocols is enabled
       *
       * @return true if authentication is enabled, otherwise false

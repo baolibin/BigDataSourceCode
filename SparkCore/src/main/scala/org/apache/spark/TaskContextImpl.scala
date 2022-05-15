@@ -48,22 +48,28 @@ import scala.collection.mutable.ArrayBuffer
   * `TaskMetrics` & `MetricsSystem` objects are not thread safe.
   */
 private[spark] class TaskContextImpl(
-                                            val stageId: Int,
-                                            val partitionId: Int,
-                                            override val taskAttemptId: Long,
-                                            override val attemptNumber: Int,
-                                            override val taskMemoryManager: TaskMemoryManager,
-                                            localProperties: Properties,
-                                            @transient private val metricsSystem: MetricsSystem,
-                                            // The default value is only used in tests.
-                                            override val taskMetrics: TaskMetrics = TaskMetrics.empty)
-        extends TaskContext
-                with Logging {
+                                        val stageId: Int,
+                                        val partitionId: Int,
+                                        override val taskAttemptId: Long,
+                                        override val attemptNumber: Int,
+                                        override val taskMemoryManager: TaskMemoryManager,
+                                        localProperties: Properties,
+                                        @transient private val metricsSystem: MetricsSystem,
+                                        // The default value is only used in tests.
+                                        override val taskMetrics: TaskMetrics = TaskMetrics.empty)
+    extends TaskContext
+        with Logging {
 
-    /** List of callback functions to execute when the task completes. */
+    /**
+      * 任务完成时要执行的回调函数列表
+      * List of callback functions to execute when the task completes.
+      */
     @transient private val onCompleteCallbacks = new ArrayBuffer[TaskCompletionListener]
 
-    /** List of callback functions to execute when the task fails. */
+    /**
+      * 任务失败时要执行的回调函数列表
+      * List of callback functions to execute when the task fails.
+      */
     @transient private val onFailureCallbacks = new ArrayBuffer[TaskFailureListener]
 
     // If defined, the corresponding task has been killed and this option contains the reason.
@@ -116,7 +122,10 @@ private[spark] class TaskContextImpl(
     override def getMetricsSources(sourceName: String): Seq[Source] =
         metricsSystem.getSourcesByName(sourceName)
 
-    /** Marks the task as failed and triggers the failure listeners. */
+    /**
+      * 将任务标记为失败并触发失败侦听器
+      * Marks the task as failed and triggers the failure listeners.
+      */
     @GuardedBy("this")
     private[spark] def markTaskFailed(error: Throwable): Unit = synchronized {
         if (failed) return
@@ -127,7 +136,10 @@ private[spark] class TaskContextImpl(
         }
     }
 
-    /** Marks the task as completed and triggers the completion listeners. */
+    /**
+      * 将任务标记为已完成并触发完成侦听器
+      * Marks the task as completed and triggers the completion listeners.
+      */
     @GuardedBy("this")
     private[spark] def markTaskCompleted(error: Option[Throwable]): Unit = synchronized {
         if (completed) return
@@ -138,10 +150,10 @@ private[spark] class TaskContextImpl(
     }
 
     private def invokeListeners[T](
-                                          listeners: Seq[T],
-                                          name: String,
-                                          error: Option[Throwable])(
-                                          callback: T => Unit): Unit = {
+                                      listeners: Seq[T],
+                                      name: String,
+                                      error: Option[Throwable])(
+                                      callback: T => Unit): Unit = {
         val errorMsgs = new ArrayBuffer[String](2)
         // Process callbacks in the reverse order of registration
         listeners.reverse.foreach { listener =>
@@ -158,7 +170,10 @@ private[spark] class TaskContextImpl(
         }
     }
 
-    /** Marks the task for interruption, i.e. cancellation. */
+    /**
+      * 将任务标记为中断，即取消。
+      * Marks the task for interruption, i.e. cancellation.
+      */
     private[spark] def markInterrupted(reason: String): Unit = {
         reasonIfKilled = Some(reason)
     }

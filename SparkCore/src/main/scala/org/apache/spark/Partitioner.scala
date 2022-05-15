@@ -42,7 +42,8 @@ abstract class Partitioner extends Serializable {
 
 object Partitioner {
     /**
-     * 选择一个分区器，用于在多个RDD之间执行类似cogroup的操作。如果任何RDD已经有一个分区器，请选择该分区器。
+      * 选择一个分区器，用于在多个RDD之间执行类似cogroup的操作。如果任何RDD已经有一个分区器，请选择该分区器。
+      *
       * Choose a partitioner to use for a cogroup-like operation between a number of RDDs.
       * If any of the RDDs already has a partitioner, choose that one.
       *
@@ -104,6 +105,7 @@ class HashPartitioner(partitions: Int) extends Partitioner {
 
 /**
   * 每个分区被分割成大致相等的范围，范围是通过抽样内容决定的。
+  *
   * A [[org.apache.spark.Partitioner]] that partitions sortable records by range into roughly
   * equal ranges. The ranges are determined by sampling the content of the RDD passed in.
   *
@@ -114,10 +116,10 @@ class HashPartitioner(partitions: Int) extends Partitioner {
   *       the value of `partitions`.
   */
 class RangePartitioner[K: Ordering : ClassTag, V](
-                                                         partitions: Int,
-                                                         rdd: RDD[_ <: Product2[K, V]],
-                                                         private var ascending: Boolean = true)
-        extends Partitioner {
+                                                     partitions: Int,
+                                                     rdd: RDD[_ <: Product2[K, V]],
+                                                     private var ascending: Boolean = true)
+    extends Partitioner {
 
     // We allow partitions = 0, which happens when sorting an empty RDD under the default settings.
     require(partitions >= 0, s"Number of partitions cannot be negative but found $partitions.")
@@ -256,6 +258,7 @@ private[spark] object RangePartitioner {
 
     /**
       * 通过每个分区上的储层采样绘制输入RDD。
+      *
       * Sketches the input RDD via reservoir sampling on each partition.
       *
       * @param rdd                    the input RDD to sketch
@@ -263,8 +266,8 @@ private[spark] object RangePartitioner {
       * @return (total number of items, an array of (partitionId, number of items, sample))
       */
     def sketch[K: ClassTag](
-                                   rdd: RDD[K],
-                                   sampleSizePerPartition: Int): (Long, Array[(Int, Long, Array[K])]) = {
+                               rdd: RDD[K],
+                               sampleSizePerPartition: Int): (Long, Array[(Int, Long, Array[K])]) = {
         val shift = rdd.id
         // val classTagK = classTag[K] // to avoid serializing the entire partitioner object
         val sketched = rdd.mapPartitionsWithIndex { (idx, iter) =>
@@ -279,6 +282,7 @@ private[spark] object RangePartitioner {
 
     /**
       * 根据候选项确定范围划分的界限，权重指示每个候选项代表多少项。通常情况下，这是1的概率用于抽样这个候选人。
+      *
       * Determines the bounds for range partitioning from candidates with weights indicating how many
       * items each represents. Usually this is 1 over the probability used to sample this candidate.
       *
@@ -287,8 +291,8 @@ private[spark] object RangePartitioner {
       * @return selected bounds
       */
     def determineBounds[K: Ordering : ClassTag](
-                                                       candidates: ArrayBuffer[(K, Float)],
-                                                       partitions: Int): Array[K] = {
+                                                   candidates: ArrayBuffer[(K, Float)],
+                                                   partitions: Int): Array[K] = {
         val ordering = implicitly[Ordering[K]]
         val ordered = candidates.sortBy(_._1)
         val numCandidates = ordered.size
