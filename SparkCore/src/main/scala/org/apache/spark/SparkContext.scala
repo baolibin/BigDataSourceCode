@@ -1360,6 +1360,8 @@ class SparkContext(config: SparkConf) extends Logging {
     // Methods for creating RDDs
 
     /**
+      * 从“可变集合”类型创建累加器。
+      *
       * Create an accumulator from a "mutable collection" type.
       *
       * Growable and TraversableOnce are the standard APIs that guarantee += and ++=, implemented by
@@ -2924,7 +2926,8 @@ private object SparkMasterRegex {
 }
 
 /**
-  * 一个类，它封装了如何将某个类型“T”从“writeable”转换成“T”。它存储与“T”对应的“Writable”类（例如，“Int”的“IntWritable”）和一个用于进行转换的函数。
+  * 一个类，它封装了如何将某个类型“T”从“writeable”转换成“T”。
+  * 它存储与“T”对应的“Writable”类（例如，“Int”的“IntWritable”）和一个用于进行转换的函数。
   *
   * A class encapsulating how to convert some type `T` from `Writable`. It stores both the `Writable`
   * class corresponding to `T` (e.g. `IntWritable` for `Int`) and a function for doing the
@@ -2982,7 +2985,8 @@ object WritableConverter {
 }
 
 /**
-  * 封装如何将某个类型“T”转换为“Writable”的类。它存储与“T”对应的“Writable”类（例如，“Int”的“IntWritable”）和一个用于进行转换的函数。
+  * 封装如何将某个类型“T”转换为“Writable”的类。
+  * 它存储与“T”对应的“Writable”类（例如，“Int”的“IntWritable”）和一个用于进行转换的函数。
   *
   * A class encapsulating how to convert some type `T` to `Writable`. It stores both the `Writable`
   * class corresponding to `T` (e.g. `IntWritable` for `Int`) and a function for doing the
