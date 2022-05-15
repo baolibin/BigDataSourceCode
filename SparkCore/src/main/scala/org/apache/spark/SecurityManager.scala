@@ -34,10 +34,10 @@ import org.apache.spark.util.Utils
 
 /**
   * 负责spark安全的类。
+  * 一般来说，这个类应该由SparkEnv实例化，大多数组件应该从SparkEnv访问它。
+  * 有些情况下SparkEnv还没有初始化，必须直接实例化这个类。
   *
   * Spark class responsible for security.
-  *
-  * 一般来说，这个类应该由SparkEnv实例化，大多数组件应该从SparkEnv访问它。有些情况下SparkEnv还没有初始化，必须直接实例化这个类。
   *
   * In general this class should be instantiated by the SparkEnv and most components
   * should access it from that. There are some cases where the SparkEnv hasn't been
