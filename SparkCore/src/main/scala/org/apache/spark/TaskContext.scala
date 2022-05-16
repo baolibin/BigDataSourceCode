@@ -19,9 +19,12 @@ package org.apache.spark
 
 import java.io.Serializable
 import java.util.Properties
-
 import org.apache.spark.annotation.DeveloperApi
+import org.apache.spark.executor.TaskMetrics
 import org.apache.spark.memory.TaskMemoryManager
+import org.apache.spark.metrics.source.Source
+import org.apache.spark.shuffle.FetchFailedException
+import org.apache.spark.util.{AccumulatorV2, TaskCompletionListener, TaskFailureListener}
 
 /**
   * Task的上下文信息。
@@ -149,11 +152,13 @@ abstract class TaskContext extends Serializable {
     }
 
     /**
+      * 此任务所属阶段的ID。
       * The ID of the stage that this task belong to.
       */
     def stageId(): Int
 
     /**
+      * 此任务计算的RDD分区的ID。
       * The ID of the RDD partition that is computed by this task.
       */
     def partitionId(): Int
@@ -188,21 +193,25 @@ abstract class TaskContext extends Serializable {
     def getMetricsSources(sourceName: String): Seq[Source]
 
     /**
+      * 如果任务被中断，抛出TaskKilledException并说明中断原因。
       * If the task is interrupted, throws TaskKilledException with the reason for the interrupt.
       */
     private[spark] def killTaskIfInterrupted(): Unit
 
     /**
+      * 如果任务被中断，说明此任务被终止的原因，否则说明无。
       * If the task is interrupted, the reason this task was killed, otherwise None.
       */
     private[spark] def getKillReason(): Option[String]
 
     /**
+      * 返回此任务的托管内存的管理器。
       * Returns the manager for this task's managed memory.
       */
     private[spark] def taskMemoryManager(): TaskMemoryManager
 
     /**
+      * 注册属于此任务的累加器。累加器在执行器中反序列化时必须调用此方法。
       * Register an accumulator that belongs to this task. Accumulators must call this method when
       * deserializing in executors.
       */

@@ -49,19 +49,19 @@ import org.eclipse.jetty.util.ssl.SslContextFactory
   * @param enabledAlgorithms  a set of encryption algorithms that may be used
   */
 private[spark] case class SSLOptions(
-                                            enabled: Boolean = false,
-                                            port: Option[Int] = None,
-                                            keyStore: Option[File] = None,
-                                            keyStorePassword: Option[String] = None,
-                                            keyPassword: Option[String] = None,
-                                            keyStoreType: Option[String] = None,
-                                            needClientAuth: Boolean = false,
-                                            trustStore: Option[File] = None,
-                                            trustStorePassword: Option[String] = None,
-                                            trustStoreType: Option[String] = None,
-                                            protocol: Option[String] = None,
-                                            enabledAlgorithms: Set[String] = Set.empty)
-        extends Logging {
+                                        enabled: Boolean = false,
+                                        port: Option[Int] = None,
+                                        keyStore: Option[File] = None,
+                                        keyStorePassword: Option[String] = None,
+                                        keyPassword: Option[String] = None,
+                                        keyStoreType: Option[String] = None,
+                                        needClientAuth: Boolean = false,
+                                        trustStore: Option[File] = None,
+                                        trustStorePassword: Option[String] = None,
+                                        trustStoreType: Option[String] = None,
+                                        protocol: Option[String] = None,
+                                        enabledAlgorithms: Set[String] = Set.empty)
+    extends Logging {
 
     /*
      * The supportedAlgorithms set is a subset of the enabledAlgorithms that
@@ -95,11 +95,13 @@ private[spark] case class SSLOptions(
         val supported = enabledAlgorithms & providerAlgorithms
         require(supported.nonEmpty || sys.env.contains("SPARK_TESTING"),
             "SSLContext does not support any of the enabled algorithms: " +
-                    enabledAlgorithms.mkString(","))
+                enabledAlgorithms.mkString(","))
         supported
     }
 
     /**
+      * 根据此对象表示的SSL设置创建Jetty SSL上下文工厂。
+      *
       * Creates a Jetty SSL context factory according to the SSL settings represented by this object.
       */
     def createJettySslContextFactory(): Option[SslContextFactory] = {
@@ -126,17 +128,22 @@ private[spark] case class SSLOptions(
         }
     }
 
-    /** Returns a string representation of this SSLOptions with all the passwords masked. */
+    /**
+      * 返回此SSLOptions的字符串表示形式，并屏蔽所有密码。
+      * Returns a string representation of this SSLOptions with all the passwords masked.
+      */
     override def toString: String = s"SSLOptions{enabled=$enabled, " +
-            s"keyStore=$keyStore, keyStorePassword=${keyStorePassword.map(_ => "xxx")}, " +
-            s"trustStore=$trustStore, trustStorePassword=${trustStorePassword.map(_ => "xxx")}, " +
-            s"protocol=$protocol, enabledAlgorithms=$enabledAlgorithms}"
+        s"keyStore=$keyStore, keyStorePassword=${keyStorePassword.map(_ => "xxx")}, " +
+        s"trustStore=$trustStore, trustStorePassword=${trustStorePassword.map(_ => "xxx")}, " +
+        s"protocol=$protocol, enabledAlgorithms=$enabledAlgorithms}"
 
 }
 
 private[spark] object SSLOptions extends Logging {
 
     /**
+      * 从给定命名空间的给定Spark配置对象解析SSLOptions设置。
+      *
       * Resolves SSLOptions settings from a given Spark configuration object at a given namespace.
       *
       * The following settings are allowed:
@@ -174,36 +181,36 @@ private[spark] object SSLOptions extends Logging {
         }
 
         val keyStore = conf.getOption(s"$ns.keyStore").map(new File(_))
-                .orElse(defaults.flatMap(_.keyStore))
+            .orElse(defaults.flatMap(_.keyStore))
 
         val keyStorePassword = conf.getOption(s"$ns.keyStorePassword")
-                .orElse(defaults.flatMap(_.keyStorePassword))
+            .orElse(defaults.flatMap(_.keyStorePassword))
 
         val keyPassword = conf.getOption(s"$ns.keyPassword")
-                .orElse(defaults.flatMap(_.keyPassword))
+            .orElse(defaults.flatMap(_.keyPassword))
 
         val keyStoreType = conf.getOption(s"$ns.keyStoreType")
-                .orElse(defaults.flatMap(_.keyStoreType))
+            .orElse(defaults.flatMap(_.keyStoreType))
 
         val needClientAuth =
             conf.getBoolean(s"$ns.needClientAuth", defaultValue = defaults.exists(_.needClientAuth))
 
         val trustStore = conf.getOption(s"$ns.trustStore").map(new File(_))
-                .orElse(defaults.flatMap(_.trustStore))
+            .orElse(defaults.flatMap(_.trustStore))
 
         val trustStorePassword = conf.getOption(s"$ns.trustStorePassword")
-                .orElse(defaults.flatMap(_.trustStorePassword))
+            .orElse(defaults.flatMap(_.trustStorePassword))
 
         val trustStoreType = conf.getOption(s"$ns.trustStoreType")
-                .orElse(defaults.flatMap(_.trustStoreType))
+            .orElse(defaults.flatMap(_.trustStoreType))
 
         val protocol = conf.getOption(s"$ns.protocol")
-                .orElse(defaults.flatMap(_.protocol))
+            .orElse(defaults.flatMap(_.protocol))
 
         val enabledAlgorithms = conf.getOption(s"$ns.enabledAlgorithms")
-                .map(_.split(",").map(_.trim).filter(_.nonEmpty).toSet)
-                .orElse(defaults.map(_.enabledAlgorithms))
-                .getOrElse(Set.empty)
+            .map(_.split(",").map(_.trim).filter(_.nonEmpty).toSet)
+            .orElse(defaults.map(_.enabledAlgorithms))
+            .getOrElse(Set.empty)
 
         new SSLOptions(
             enabled,
