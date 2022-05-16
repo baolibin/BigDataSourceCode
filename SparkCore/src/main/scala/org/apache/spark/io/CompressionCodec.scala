@@ -19,9 +19,9 @@ package org.apache.spark.io
 
 import java.io._
 import java.util.Locale
-
 import com.ning.compress.lzf.{LZFInputStream, LZFOutputStream}
 import net.jpountz.lz4.LZ4BlockOutputStream
+import org.apache.spark.SparkConf
 import org.apache.spark.annotation.DeveloperApi
 import org.xerial.snappy.{Snappy, SnappyInputStream, SnappyOutputStream}
 

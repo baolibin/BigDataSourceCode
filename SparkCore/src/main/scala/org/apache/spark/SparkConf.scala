@@ -226,6 +226,8 @@ class SparkConf(loadDefaults: Boolean) extends Cloneable with Logging with Seria
     }
 
     /**
+      * 以秒为单位获取时间参数；如果未设置，则抛出NosTouchElementException。如果未提供后缀，则假定为秒。
+      *
       * Get a time parameter as seconds; throws a NoSuchElementException if it's not set. If no
       * suffix is provided then seconds are assumed.
       *
@@ -236,6 +238,8 @@ class SparkConf(loadDefaults: Boolean) extends Cloneable with Logging with Seria
     }
 
     /**
+      * 以秒为单位获取时间参数，如果未设置，则返回默认值。如果未提供后缀，则假定为秒。
+      *
       * Get a time parameter as seconds, falling back to a default if not set. If no
       * suffix is provided then seconds are assumed.
       */

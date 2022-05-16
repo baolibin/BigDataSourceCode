@@ -17,6 +17,8 @@
 
 package org.apache.spark.memory
 
+import org.apache.spark.SparkConf
+
 /**
   * 一种[[MemoryManager]]，它在执行和存储之间强制一个软边界，这样任何一方都可以从另一方借用内存。
   *

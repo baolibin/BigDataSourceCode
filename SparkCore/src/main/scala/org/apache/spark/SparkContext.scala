@@ -60,14 +60,16 @@ import scala.reflect.{ClassTag, classTag}
 import scala.util.control.NonFatal
 
 /**
-  * Spark功能的主要入口点。SparkContext表示到Spark集群的连接，可用于在该集群上创建RDD、累加器和广播变量。
+  * Spark功能的主要入口点。SparkContext表示与Spark群集的连接，可用于在该群集上创建RDD、累加器和广播变量。
+  * 每个JVM只能有一个SparkContext处于活动状态。在创建新的SparkContext之前，必须“stop（）”激活SparkContext。
   *
   * Main entry point for Spark functionality. A SparkContext represents the connection to a Spark
   * cluster, and can be used to create RDDs, accumulators and broadcast variables on that cluster.
   *
-  * 在每一个JVM中只能有一个活跃的sc，创建新的之前需要把之前的sc stop掉
   * Only one SparkContext may be active per JVM.  You must `stop()` the active SparkContext before
   * creating a new one.  This limitation may eventually be removed; see SPARK-2243 for more details.
+  *
+  * 描述应用程序配置的Spark Config对象。此配置中的任何设置都会覆盖默认配置以及系统属性。
   *
   * @param config a Spark Config object describing the application configuration. Any settings in
   *               this config overrides the default configs as well as system properties.
@@ -2567,6 +2569,7 @@ object SparkContext extends Logging {
     private[spark] val SPARK_JOB_INTERRUPT_ON_CANCEL = "org.apache.spark.job.interruptOnCancel"
     private[spark] val RDD_SCOPE_KEY = "org.apache.spark.rdd.scope"
     private[spark] val RDD_SCOPE_NO_OVERRIDE_KEY = "org.apache.spark.rdd.scope.noOverride"
+
     /**
       * 集群模式driver运行在某个executor上
       * Executor id for the driver.  In earlier versions of Spark, this was `<driver>`, but this was
@@ -2574,12 +2577,14 @@ object SparkContext extends Logging {
       * SPARK-6716 for more details).
       */
     private[spark] val DRIVER_IDENTIFIER = "driver"
+
     /**
       * 驱动程序标识符的旧版本，为向后兼容而保留。
       *
       * Legacy version of DRIVER_IDENTIFIER, retained for backwards-compatibility.
       */
     private[spark] val LEGACY_DRIVER_IDENTIFIER = "<driver>"
+
     /**
       * Points to a partially-constructed SparkContext if some thread is in the SparkContext
       * constructor, or `None` if no SparkContext is being constructed.
