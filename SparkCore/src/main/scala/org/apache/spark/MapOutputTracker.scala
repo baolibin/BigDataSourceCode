@@ -37,16 +37,19 @@ import scala.util.control.NonFatal
 private[spark] sealed trait MapOutputTrackerMessage
 
 private[spark] case class GetMapOutputStatuses(shuffleId: Int)
-        extends MapOutputTrackerMessage
+    extends MapOutputTrackerMessage
 
 private[spark] case object StopMapOutputTracker extends MapOutputTrackerMessage
 
 private[spark] case class GetMapOutputMessage(shuffleId: Int, context: RpcCallContext)
 
-/** RpcEndpoint class for MapOutputTrackerMaster */
+/**
+  * MapOutputTrackerMaster的RpcEndpoint类
+  * RpcEndpoint class for MapOutputTrackerMaster
+  */
 private[spark] class MapOutputTrackerMasterEndpoint(
-                                                           override val rpcEnv: RpcEnv, tracker: MapOutputTrackerMaster, conf: SparkConf)
-        extends RpcEndpoint with Logging {
+                                                       override val rpcEnv: RpcEnv, tracker: MapOutputTrackerMaster, conf: SparkConf)
+    extends RpcEndpoint with Logging {
 
     logDebug("init") // force eager creation of logger
 
@@ -174,7 +177,7 @@ private[spark] abstract class MapOutputTracker(conf: SparkConf) extends Logging 
                 }
             }
             logDebug(s"Fetching map output statuses for shuffle $shuffleId took " +
-                    s"${System.currentTimeMillis - startTime} ms")
+                s"${System.currentTimeMillis - startTime} ms")
 
             if (fetchedStatuses != null) {
                 return fetchedStatuses
@@ -264,7 +267,7 @@ private[spark] abstract class MapOutputTracker(conf: SparkConf) extends Logging 
   */
 private[spark] class MapOutputTrackerMaster(conf: SparkConf,
                                             broadcastManager: BroadcastManager, isLocal: Boolean)
-        extends MapOutputTracker(conf) {
+    extends MapOutputTracker(conf) {
 
     // HashMaps for storing mapStatuses and cached serialized statuses in the driver.
     // Statuses are dropped only by explicit de-registering.
@@ -315,8 +318,8 @@ private[spark] class MapOutputTrackerMaster(conf: SparkConf,
     // we use broadcast to send large map output statuses.
     if (minSizeForBroadcast > maxRpcMessageSize) {
         val msg = s"org.apache.spark.shuffle.mapOutput.minSizeForBroadcast ($minSizeForBroadcast bytes) must " +
-                s"be <= org.apache.spark.rpc.message.maxSize ($maxRpcMessageSize bytes) to prevent sending an rpc " +
-                "message that is too large."
+            s"be <= org.apache.spark.rpc.message.maxSize ($maxRpcMessageSize bytes) to prevent sending an rpc " +
+            "message that is too large."
         logError(msg)
         throw new IllegalArgumentException(msg)
     }
@@ -397,7 +400,7 @@ private[spark] class MapOutputTrackerMaster(conf: SparkConf,
     def getPreferredLocationsForShuffle(dep: ShuffleDependency[_, _, _], partitionId: Int)
     : Seq[String] = {
         if (shuffleLocalityEnabled && dep.rdd.partitions.length < SHUFFLE_PREF_MAP_THRESHOLD &&
-                dep.partitioner.numPartitions < SHUFFLE_PREF_REDUCE_THRESHOLD) {
+            dep.partitioner.numPartitions < SHUFFLE_PREF_REDUCE_THRESHOLD) {
             val blockManagerIds = getLocationsWithLargestOutputs(dep.shuffleId, partitionId,
                 dep.partitioner.numPartitions, REDUCER_PREF_LOCS_FRACTION)
             if (blockManagerIds.nonEmpty) {
@@ -421,10 +424,10 @@ private[spark] class MapOutputTrackerMaster(conf: SparkConf,
       *                          for it to be considered large.
       */
     def getLocationsWithLargestOutputs(
-                                              shuffleId: Int,
-                                              reducerId: Int,
-                                              numReducers: Int,
-                                              fractionThreshold: Double)
+                                          shuffleId: Int,
+                                          reducerId: Int,
+                                          numReducers: Int,
+                                          fractionThreshold: Double)
     : Option[Array[BlockManagerId]] = {
 
         val statuses = mapStatuses.get(shuffleId).orNull
@@ -567,7 +570,7 @@ private[spark] class MapOutputTrackerMaster(conf: SparkConf,
                         val shuffleId = data.shuffleId
                         val hostPort = context.senderAddress.hostPort
                         logDebug("Handling request to send map output locations for shuffle " + shuffleId +
-                                " to " + hostPort)
+                            " to " + hostPort)
                         val mapOutputStatuses = getSerializedMapOutputStatuses(shuffleId)
                         context.reply(mapOutputStatuses)
                     } catch {
@@ -652,9 +655,9 @@ private[spark] object MapOutputTracker extends Logging {
             case BROADCAST =>
                 // deserialize the Broadcast, pull .value array out of it, and then deserialize that
                 val bcast = deserializeObject(bytes, 1, bytes.length - 1).
-                        asInstanceOf[Broadcast[Array[Byte]]]
+                    asInstanceOf[Broadcast[Array[Byte]]]
                 logInfo("Broadcast mapstatuses size = " + bytes.length +
-                        ", actual size = " + bcast.value.length)
+                    ", actual size = " + bcast.value.length)
                 // Important - ignore the DIRECT tag ! Start from offset 1
                 deserializeObject(bcast.value, 1, bcast.value.length - 1).asInstanceOf[Array[MapStatus]]
             case _ => throw new IllegalArgumentException("Unexpected byte tag = " + bytes(0))
@@ -678,10 +681,10 @@ private[spark] object MapOutputTracker extends Logging {
       *         describing the shuffle blocks that are stored at that block manager.
       */
     private def convertMapStatuses(
-                                          shuffleId: Int,
-                                          startPartition: Int,
-                                          endPartition: Int,
-                                          statuses: Array[MapStatus]): Seq[(BlockManagerId, Seq[(BlockId, Long)])] = {
+                                      shuffleId: Int,
+                                      startPartition: Int,
+                                      endPartition: Int,
+                                      statuses: Array[MapStatus]): Seq[(BlockManagerId, Seq[(BlockId, Long)])] = {
         assert(statuses != null)
         val splitsByAddress = new HashMap[BlockManagerId, ArrayBuffer[(BlockId, Long)]]
         for ((status, mapId) <- statuses.zipWithIndex) {
@@ -692,7 +695,7 @@ private[spark] object MapOutputTracker extends Logging {
             } else {
                 for (part <- startPartition until endPartition) {
                     splitsByAddress.getOrElseUpdate(status.location, ArrayBuffer()) +=
-                            ((ShuffleBlockId(shuffleId, mapId, part), status.getSizeForBlock(part)))
+                        ((ShuffleBlockId(shuffleId, mapId, part), status.getSizeForBlock(part)))
                 }
             }
         }

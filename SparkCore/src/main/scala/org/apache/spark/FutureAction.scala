@@ -42,7 +42,7 @@ trait FutureAction[T] extends Future[T] {
     // documentation (with reference to the word "action").
 
     /**
-     *  取消此操作的执行。
+      * 取消此操作的执行。
       * Cancels the execution of this action.
       */
     def cancel(): Unit
@@ -115,7 +115,7 @@ trait FutureAction[T] extends Future[T] {
   */
 @DeveloperApi
 class SimpleFutureAction[T] private[spark](jobWaiter: JobWaiter[_], resultFunc: => T)
-        extends FutureAction[T] {
+    extends FutureAction[T] {
 
     @volatile private var _cancelled: Boolean = false
 
@@ -152,6 +152,8 @@ class SimpleFutureAction[T] private[spark](jobWaiter: JobWaiter[_], resultFunc: 
 
 
 /**
+  * 句柄，通过该句柄，传递给[[ComplexFutureAction]]的“run”函数可以提交作业以供执行。
+  *
   * Handle via which a "run" function passed to a [[ComplexFutureAction]]
   * can submit jobs for execution.
   */
@@ -163,11 +165,11 @@ trait JobSubmitter {
       * to enable cancellation.
       */
     def submitJob[T, U, R](
-                                  rdd: RDD[T],
-                                  processPartition: Iterator[T] => U,
-                                  partitions: Seq[Int],
-                                  resultHandler: (Int, U) => Unit,
-                                  resultFunc: => R): FutureAction[R]
+                              rdd: RDD[T],
+                              processPartition: Iterator[T] => U,
+                              partitions: Seq[Int],
+                              resultHandler: (Int, U) => Unit,
+                              resultFunc: => R): FutureAction[R]
 }
 
 
@@ -178,7 +180,7 @@ trait JobSubmitter {
   */
 @DeveloperApi
 class ComplexFutureAction[T](run: JobSubmitter => Future[T])
-        extends FutureAction[T] {
+    extends FutureAction[T] {
     self =>
 
     // A promise used to signal the future.
@@ -216,11 +218,11 @@ class ComplexFutureAction[T](run: JobSubmitter => Future[T])
 
     private def jobSubmitter = new JobSubmitter {
         def submitJob[T, U, R](
-                                      rdd: RDD[T],
-                                      processPartition: Iterator[T] => U,
-                                      partitions: Seq[Int],
-                                      resultHandler: (Int, U) => Unit,
-                                      resultFunc: => R): FutureAction[R] = self.synchronized {
+                                  rdd: RDD[T],
+                                  processPartition: Iterator[T] => U,
+                                  partitions: Seq[Int],
+                                  resultHandler: (Int, U) => Unit,
+                                  resultFunc: => R): FutureAction[R] = self.synchronized {
             // If the action hasn't been cancelled yet, submit the job. The check and the submitJob
             // command need to be in an atomic block.
             if (!isCancelled) {
@@ -245,7 +247,7 @@ class ComplexFutureAction[T](run: JobSubmitter => Future[T])
 
 private[spark]
 class JavaFutureActionWrapper[S, T](futureAction: FutureAction[S], converter: S => T)
-        extends JavaFutureAction[T] {
+    extends JavaFutureAction[T] {
 
     import scala.collection.JavaConverters._
 
