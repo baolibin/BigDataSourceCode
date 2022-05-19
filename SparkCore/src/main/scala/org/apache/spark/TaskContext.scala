@@ -164,6 +164,7 @@ abstract class TaskContext extends Serializable {
     def partitionId(): Int
 
     /**
+      * 此任务已尝试了多少次。第一次任务尝试将分配attemptNumber=0，后续尝试的尝试次数将增加。
       * How many times this task has been attempted.  The first task attempt will be assigned
       * attemptNumber = 0, and subsequent attempts will have increasing attempt numbers.
       */
@@ -176,6 +177,7 @@ abstract class TaskContext extends Serializable {
     def taskAttemptId(): Long
 
     /**
+      * 获取驱动程序上游的本地属性集，如果缺少，则为null。
       * Get a local property set upstream in the driver, or null if it is missing. See also
       * `org.apache.org.apache.spark.SparkContext.setLocalProperty`.
       */
