@@ -376,6 +376,7 @@ object SparkEnv extends Logging {
     }
 
     /**
+      * 为执行者创建SparkEnv。在粗粒度模式下，执行器提供已经实例化的RpcEnv。
       * Create a SparkEnv for an executor.
       * In coarse-grained mode, the executor provides an RpcEnv that is already instantiated.
       */
@@ -406,6 +407,9 @@ object SparkEnv extends Logging {
     }
 
     /**
+      * 返回jvm信息、Spark属性、系统属性和类路径的映射表示。贴图键定义类别，贴图值将相应属性表示为KV对序列。
+      * 这主要用于SparkListenerEnvironmentUpdate。
+      *
       * Return a map representation of jvm information, Spark properties, system properties, and
       * class paths. Map keys define the category, and map values represent the corresponding
       * attributes as a sequence of KV pairs. This is used mainly for SparkListenerEnvironmentUpdate.

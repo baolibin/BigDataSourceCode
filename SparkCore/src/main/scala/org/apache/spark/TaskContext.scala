@@ -102,6 +102,7 @@ abstract class TaskContext extends Serializable {
     def isInterrupted(): Boolean
 
     /**
+      * 如果任务在驱动程序中本地运行，则返回true。
       * Returns true if the task is running locally in the driver program.
       *
       * @return false
