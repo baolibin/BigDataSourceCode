@@ -43,7 +43,7 @@ private[spark] case class TimeStampedValue[V](value: V, timestamp: Long)
   * @param updateTimeStampOnGet Whether timestamp of a pair will be updated when it is accessed
   */
 private[spark] class TimeStampedHashMap[A, B](updateTimeStampOnGet: Boolean = false)
-        extends mutable.Map[A, B]() with Logging {
+    extends mutable.Map[A, B]() with Logging {
 
     private val internalMap = new ConcurrentHashMap[A, TimeStampedValue[B]]()
 
@@ -130,7 +130,11 @@ private[spark] class TimeStampedHashMap[A, B](updateTimeStampOnGet: Boolean = fa
         getEntrySet.iterator.asScala.map(kv => (kv.getKey, kv.getValue.value))
     }
 
-    /** Removes old key-value pairs that have timestamp earlier than `threshTime`. */
+    /**
+      * 删除时间戳早于“threshTime”的旧键值对`
+      *
+      * Removes old key-value pairs that have timestamp earlier than `threshTime`.
+      */
     def clearOldValues(threshTime: Long) {
         clearOldValues(threshTime, (_, _) => ())
     }

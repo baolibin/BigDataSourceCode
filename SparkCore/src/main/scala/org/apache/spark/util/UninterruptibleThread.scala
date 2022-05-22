@@ -32,18 +32,28 @@ import javax.annotation.concurrent.GuardedBy
   * Note: "runUninterruptibly" should be called only in `this` thread.
   */
 private[spark] class UninterruptibleThread(
-                                                  target: Runnable,
-                                                  name: String) extends Thread(target, name) {
+                                              target: Runnable,
+                                              name: String) extends Thread(target, name) {
 
-    /** A monitor to protect "uninterruptible" and "interrupted" */
-    private val uninterruptibleLock = new Object
     /**
+      * 保护“不间断”和“中断”的监视器
+      *
+      * A monitor to protect "uninterruptible" and "interrupted"
+      */
+    private val uninterruptibleLock = new Object
+
+    /**
+      * 指示“this”线程是否处于不间断状态。如果是这样，中断“this”将被推迟，直到“this”进入可中断状态。
+      *
       * Indicates if `this`  thread are in the uninterruptible status. If so, interrupting
       * "this" will be deferred until `this`  enters into the interruptible status.
       */
     @GuardedBy("uninterruptibleLock")
     private var uninterruptible = false
+
     /**
+      * 指示离开不间断区域时是否应中断“this”。
+      *
       * Indicates if we should interrupt `this` when we are leaving the uninterruptible zone.
       */
     @GuardedBy("uninterruptibleLock")
@@ -65,7 +75,7 @@ private[spark] class UninterruptibleThread(
     def runUninterruptibly[T](f: => T): T = {
         if (Thread.currentThread() != this) {
             throw new IllegalStateException(s"Call runUninterruptibly in a wrong thread. " +
-                    s"Expected: $this but was ${Thread.currentThread()}")
+                s"Expected: $this but was ${Thread.currentThread()}")
         }
 
         if (uninterruptibleLock.synchronized {
