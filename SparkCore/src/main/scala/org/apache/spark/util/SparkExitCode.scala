@@ -18,15 +18,26 @@
 package org.apache.spark.util
 
 private[spark] object SparkExitCode {
-  /** The default uncaught exception handler was reached. */
-  val UNCAUGHT_EXCEPTION = 50
+    /**
+      * 已达到默认的未捕获异常处理程序。
+      * The default uncaught exception handler was reached.
+      */
+    val UNCAUGHT_EXCEPTION = 50
 
-  /** The default uncaught exception handler was called and an exception was encountered while
-      logging the exception. */
-  val UNCAUGHT_EXCEPTION_TWICE = 51
+    /**
+      * 调用了默认的未捕获异常处理程序，在记录异常时遇到异常。
+      *
+      * The default uncaught exception handler was called and an exception was encountered while
+      * logging the exception.
+      */
+    val UNCAUGHT_EXCEPTION_TWICE = 51
 
-  /** The default uncaught exception handler was reached, and the uncaught exception was an
-      OutOfMemoryError. */
-  val OOM = 52
+    /**
+      * 已达到默认的未捕获异常处理程序，未捕获异常是OutOfMemoryError
+      *
+      * The default uncaught exception handler was reached, and the uncaught exception was an
+      * OutOfMemoryError.
+      */
+    val OOM = 52
 
 }
