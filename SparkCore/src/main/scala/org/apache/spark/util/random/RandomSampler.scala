@@ -39,17 +39,27 @@ import scala.reflect.ClassTag
 @DeveloperApi
 trait RandomSampler[T, U] extends Pseudorandom with Cloneable with Serializable {
 
-    /** take a random sample */
+    /**
+      * 随机抽取样本
+      *
+      * take a random sample
+      */
     def sample(items: Iterator[T]): Iterator[U] =
         items.filter(_ => sample > 0).asInstanceOf[Iterator[U]]
 
     /**
+      * 是否对下一个项目进行取样。返回下一个项目的采样次数。如果未采样，则返回0。
+      *
       * Whether to sample the next item or not.
       * Return how many times the next item will be sampled. Return 0 if it is not sampled.
       */
     def sample(): Int
 
-    /** return a copy of the RandomSampler object */
+    /**
+      * 返回RandomSampler对象的副本。
+      *
+      * return a copy of the RandomSampler object
+      */
     override def clone: RandomSampler[T, U] =
         throw new NotImplementedError("clone() is not implemented.")
 }
@@ -96,7 +106,7 @@ object RandomSampler {
   */
 @DeveloperApi
 class BernoulliCellSampler[T](lb: Double, ub: Double, complement: Boolean = false)
-        extends RandomSampler[T, T] {
+    extends RandomSampler[T, T] {
 
     /** epsilon slop to avoid failure from floating point jitter. */
     require(
@@ -124,6 +134,8 @@ class BernoulliCellSampler[T](lb: Double, ub: Double, complement: Boolean = fals
     }
 
     /**
+      * 返回一个取样器，该取样器是当前取样器指定范围的补充。
+      *
       * Return a sampler that is the complement of the range specified of the current sampler.
       */
     def cloneComplement(): BernoulliCellSampler[T] =
@@ -146,7 +158,7 @@ class BernoulliSampler[T: ClassTag](fraction: Double) extends RandomSampler[T, T
     /** epsilon slop to avoid failure from floating point jitter */
     require(
         fraction >= (0.0 - RandomSampler.roundingEpsilon)
-                && fraction <= (1.0 + RandomSampler.roundingEpsilon),
+            && fraction <= (1.0 + RandomSampler.roundingEpsilon),
         s"Sampling fraction ($fraction) must be on interval [0, 1]")
 
     private lazy val gapSampling: GapSampling =
@@ -185,8 +197,8 @@ class BernoulliSampler[T: ClassTag](fraction: Double) extends RandomSampler[T, T
   */
 @DeveloperApi
 class PoissonSampler[T](
-                               fraction: Double,
-                               useGapSamplingIfPossible: Boolean) extends RandomSampler[T, T] {
+                           fraction: Double,
+                           useGapSamplingIfPossible: Boolean) extends RandomSampler[T, T] {
 
     private lazy val gapSamplingReplacement =
         new GapSamplingReplacement(fraction, rngGap, RandomSampler.rngEpsilon)
@@ -211,7 +223,7 @@ class PoissonSampler[T](
         if (fraction <= 0.0) {
             0
         } else if (useGapSamplingIfPossible &&
-                fraction <= RandomSampler.defaultMaxGapSamplingFraction) {
+            fraction <= RandomSampler.defaultMaxGapSamplingFraction) {
             gapSamplingReplacement.sample()
         } else {
             rng.sample()
@@ -223,7 +235,7 @@ class PoissonSampler[T](
             Iterator.empty
         } else {
             val useGapSampling = useGapSamplingIfPossible &&
-                    fraction <= RandomSampler.defaultMaxGapSamplingFraction
+                fraction <= RandomSampler.defaultMaxGapSamplingFraction
 
             items.flatMap { item =>
                 val count = if (useGapSampling) gapSamplingReplacement.sample() else rng.sample()
@@ -238,9 +250,9 @@ class PoissonSampler[T](
 
 private[spark]
 class GapSampling(
-                         f: Double,
-                         rng: Random = RandomSampler.newDefaultRNG,
-                         epsilon: Double = RandomSampler.rngEpsilon) extends Serializable {
+                     f: Double,
+                     rng: Random = RandomSampler.newDefaultRNG,
+                     epsilon: Double = RandomSampler.rngEpsilon) extends Serializable {
 
     require(f > 0.0 && f < 1.0, s"Sampling fraction ($f) must reside on open interval (0, 1)")
     require(epsilon > 0.0, s"epsilon ($epsilon) must be > 0")
@@ -262,7 +274,7 @@ class GapSampling(
     /**
       * Decide the number of elements that won't be sampled,
       * according to geometric dist P(k) = (f)(1-f)^k.
-      **/
+      * */
     private def advance(): Unit = {
         val u = math.max(rng.nextDouble(), epsilon)
         countForDropping = (math.log(u) / lnq).toInt
@@ -278,9 +290,9 @@ class GapSampling(
 
 private[spark]
 class GapSamplingReplacement(
-                                    val f: Double,
-                                    val rng: Random = RandomSampler.newDefaultRNG,
-                                    epsilon: Double = RandomSampler.rngEpsilon) extends Serializable {
+                                val f: Double,
+                                val rng: Random = RandomSampler.newDefaultRNG,
+                                epsilon: Double = RandomSampler.rngEpsilon) extends Serializable {
 
     require(f > 0.0, s"Sampling fraction ($f) must be > 0")
     require(epsilon > 0.0, s"epsilon ($epsilon) must be > 0")
