@@ -42,6 +42,8 @@ private[spark] class Distribution(val data: Array[Double], val startIdx: Int, va
     def this(data: Traversable[Double]) = this(data.toArray, 0, data.size)
 
     /**
+      * 将此分发的摘要打印到给定的PrintStream。
+      *
       * print a summary of this distribution to the given PrintStream.
       *
       * @param out
@@ -62,6 +64,8 @@ private[spark] class Distribution(val data: Array[Double], val startIdx: Int, va
     }
 
     /**
+      * 获得给定概率下的分布值。概率应为0到1
+      *
       * Get the value of the distribution at the given probabilities.  Probabilities should be
       * given from 0 to 1
       *
