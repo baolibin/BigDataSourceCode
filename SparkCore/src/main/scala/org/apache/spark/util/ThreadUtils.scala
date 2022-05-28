@@ -49,6 +49,8 @@ private[spark] object ThreadUtils {
     }
 
     /**
+      * newCachedThreadPool上的包装器。线程名称的格式为前缀ID，其中ID是唯一的、按顺序分配的整数。
+      *
       * Wrapper over newCachedThreadPool. Thread names are formatted as prefix-ID, where ID is a
       * unique, sequentially assigned integer.
       */
@@ -58,6 +60,8 @@ private[spark] object ThreadUtils {
     }
 
     /**
+      * 创建最大线程数为“maxThreadNumber”的缓存线程池。线程名称的格式为前缀ID，其中ID是唯一的、按顺序分配的整数。
+      *
       * Create a cached thread pool whose max number of threads is `maxThreadNumber`. Thread names
       * are formatted as prefix-ID, where ID is a unique, sequentially assigned integer.
       */
