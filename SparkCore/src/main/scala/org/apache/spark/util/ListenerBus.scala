@@ -36,6 +36,8 @@ private[spark] trait ListenerBus[L <: AnyRef, E] extends Logging {
     private[spark] val listeners = new CopyOnWriteArrayList[L]
 
     /**
+      * 添加侦听器以侦听事件。此方法是线程安全的，可以在任何线程中调用。
+      *
       * Add a listener to listen events. This method is thread-safe and can be called in any thread.
       */
     final def addListener(listener: L): Unit = {
@@ -43,6 +45,8 @@ private[spark] trait ListenerBus[L <: AnyRef, E] extends Logging {
     }
 
     /**
+      * 删除侦听器，它将不会接收任何事件。此方法是线程安全的，可以在任何线程中调用。
+      *
       * Remove a listener and it won't receive any events. This method is thread-safe and can be called
       * in any thread.
       */
@@ -51,6 +55,8 @@ private[spark] trait ListenerBus[L <: AnyRef, E] extends Logging {
     }
 
     /**
+      * 将事件发布到所有注册的侦听器。“postToAll”调用方应保证在同一线程中为所有事件调用“postToAll”。
+      *
       * Post the event to all registered listeners. The `postToAll` caller should guarantee calling
       * `postToAll` in the same thread for all events.
       */
@@ -71,6 +77,8 @@ private[spark] trait ListenerBus[L <: AnyRef, E] extends Logging {
     }
 
     /**
+      * 将事件发布到指定的侦听器`onPostEvent `保证在同一线程中为所有侦听器调用。
+      *
       * Post an event to the specified listener. `onPostEvent` is guaranteed to be called in the same
       * thread for all listeners.
       */
