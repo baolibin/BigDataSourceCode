@@ -38,10 +38,16 @@ class StatCounter(values: TraversableOnce[Double]) extends Serializable {
 
     merge(values)
 
-    /** Initialize the StatCounter with no values. */
+    /**
+      * 初始化不带值的StatCounter。
+      *
+      * Initialize the StatCounter with no values.
+      */
     def this() = this(Nil)
 
-    /** Add multiple values into this StatCounter, updating the internal statistics. */
+    /**
+      * 
+      * Add multiple values into this StatCounter, updating the internal statistics. */
     def merge(values: TraversableOnce[Double]): StatCounter = {
         values.foreach(v => merge(v))
         this
