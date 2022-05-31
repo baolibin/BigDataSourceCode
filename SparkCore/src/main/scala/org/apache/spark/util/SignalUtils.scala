@@ -52,6 +52,8 @@ private[spark] object SignalUtils extends Logging {
     }
 
     /**
+      * 添加此进程接收到给定信号时要运行的操作。
+      *
       * Adds an action to be run when a given signal is received by this process.
       *
       * Note that signals are only supported on unix-like operating systems and work on a best-effort
@@ -74,6 +76,8 @@ private[spark] object SignalUtils extends Logging {
     }
 
     /**
+      * 运行操作集合的给定信号的处理程序。
+      *
       * A handler for the given signal that runs a collection of actions.
       */
     private class ActionHandler(signal: Signal) extends SignalHandler {
