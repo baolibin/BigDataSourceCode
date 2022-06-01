@@ -109,6 +109,8 @@ private[spark] object ThreadUtils {
     }
 
     /**
+      *
+      * 
       * Run a piece of code in a new thread and return the result. Exception in the new thread is
       * thrown in the caller thread with an adjusted stack trace that removes references to this
       * method for clarity. The exception stack traces will be like the following
