@@ -113,6 +113,8 @@ private[spark] object SignalUtils extends Logging {
         }
 
         /**
+          *
+          * 
           * Adds an action to be run by this handler.
           *
           * @param action An action to be run when a signal is received. Return true if the signal
