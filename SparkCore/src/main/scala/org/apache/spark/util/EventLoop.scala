@@ -75,6 +75,8 @@ private[spark] abstract class EventLoop[E](name: String) extends Logging {
     }
 
     /**
+      * 在调用“start（）”但在事件线程启动之前调用。
+      *
       * Invoked when `start()` is called but before the event thread starts.
       */
     protected def onStart(): Unit = {}
@@ -103,6 +105,8 @@ private[spark] abstract class EventLoop[E](name: String) extends Logging {
     }
 
     /**
+      * 在调用“stop（）”且事件线程退出时调用。
+      *
       * Invoked when `stop()` is called and the event thread exits.
       */
     protected def onStop(): Unit = {}
