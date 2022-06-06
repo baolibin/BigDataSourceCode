@@ -57,6 +57,8 @@ private[spark] class ConsoleProgressBar(sc: SparkContext) extends Logging {
     }, firstDelayMSec, updatePeriodMSec)
 
     /**
+      * 尝试在每个周期刷新进度条
+      *
       * Try to refresh the progress bar in every cycle
       */
     private def refresh(): Unit = synchronized {
@@ -105,6 +107,8 @@ private[spark] class ConsoleProgressBar(sc: SparkContext) extends Logging {
     }
 
     /**
+      * 如果显示，请清除进度条。
+      *
       * Clear the progress bar if showed.
       */
     private def clear() {
