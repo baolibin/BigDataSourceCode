@@ -75,6 +75,9 @@ private[spark] class ConsoleProgressBar(sc: SparkContext) extends Logging {
     }
 
     /**
+      * 在控制台中显示进度条。进度条将显示在上次输出后的下一行中，并不断覆盖自身以保持在一行中。
+      * 日志记录将跟随进度条，然后进度条将显示在下一行中，而不覆盖日志。
+      *
       * Show progress bar in console. The progress bar is displayed in the next line
       * after your last output, keeps overwriting itself to hold in one line. The logging will follow
       * the progress bar, then progress bar will be showed in next line without overwrite logs.
