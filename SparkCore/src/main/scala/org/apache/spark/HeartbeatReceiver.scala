@@ -39,11 +39,13 @@ import scala.concurrent.Future
   * org.apache.spark.executor.heartbeatInterval should be significantly less than org.apache.spark.network.timeout.
   */
 private[spark] case class Heartbeat(
-                                           executorId: String,
-                                           accumUpdates: Array[(Long, Seq[AccumulatorV2[_, _]])], // taskId -> accumulator updates
-                                           blockManagerId: BlockManagerId)
+                                       executorId: String,
+                                       accumUpdates: Array[(Long, Seq[AccumulatorV2[_, _]])], // taskId -> accumulator updates
+                                       blockManagerId: BlockManagerId)
 
 /**
+  * SparkContext用于通知HeartbeatReceiver SparkContext的事件。已创建taskScheduler。
+  *
   * An event that SparkContext uses to notify HeartbeatReceiver that SparkContext.taskScheduler is
   * created.
   */
@@ -63,7 +65,7 @@ private[spark] case class HeartbeatResponse(reregisterBlockManager: Boolean)
   * Lives in the driver to receive heartbeats from executors..
   */
 private[spark] class HeartbeatReceiver(sc: SparkContext, clock: Clock)
-        extends SparkListener with ThreadSafeRpcEndpoint with Logging {
+    extends SparkListener with ThreadSafeRpcEndpoint with Logging {
 
     override val rpcEnv: RpcEnv = sc.env.rpcEnv
 
@@ -154,9 +156,9 @@ private[spark] class HeartbeatReceiver(sc: SparkContext, clock: Clock)
         for ((executorId, lastSeenMs) <- executorLastSeen) {
             if (now - lastSeenMs > executorTimeoutMs) {
                 logWarning(s"Removing executor $executorId with no recent heartbeats: " +
-                        s"${now - lastSeenMs} ms exceeds timeout $executorTimeoutMs ms")
+                    s"${now - lastSeenMs} ms exceeds timeout $executorTimeoutMs ms")
                 scheduler.executorLost(executorId, SlaveLost("Executor heartbeat " +
-                        s"timed out after ${now - lastSeenMs} ms"))
+                    s"timed out after ${now - lastSeenMs} ms"))
                 // Asynchronously kill the executor to avoid blocking the current thread
                 killExecutorThread.submit(new Runnable {
                     override def run(): Unit = Utils.tryLogNonFatalError {
@@ -171,7 +173,8 @@ private[spark] class HeartbeatReceiver(sc: SparkContext, clock: Clock)
     }
 
     /**
-     * 如果心跳接收器未停止，通知其执行器注册。
+      * 如果心跳接收器未停止，通知其执行器注册。
+      *
       * If the heartbeat receiver is not stopped, notify it of executor registrations.
       */
     override def onExecutorAdded(executorAdded: SparkListenerExecutorAdded): Unit = {
@@ -179,7 +182,8 @@ private[spark] class HeartbeatReceiver(sc: SparkContext, clock: Clock)
     }
 
     /**
-     * 将ExecutorRegistered发送到事件循环以添加新的执行器。只是为了测试。
+      * 将ExecutorRegistered发送到事件循环以添加新的执行器。只是为了测试。
+      *
       * Send ExecutorRegistered to the event loop to add a new executor. Only for test.
       *
       * @return if HeartbeatReceiver is stopped, return None. Otherwise, return a Some(Future) that
@@ -190,6 +194,8 @@ private[spark] class HeartbeatReceiver(sc: SparkContext, clock: Clock)
     }
 
     /**
+      * 如果心跳接收器未停止，则通知它执行器已删除，以便它不会记录多余的错误。
+      *
       * If the heartbeat receiver is not stopped, notify it of executor removals so it doesn't
       * log superfluous errors.
       *
@@ -204,6 +210,8 @@ private[spark] class HeartbeatReceiver(sc: SparkContext, clock: Clock)
     }
 
     /**
+      * 将ExecutorRemoved发送到事件循环以删除执行器。仅用于测试。
+      *
       * Send ExecutorRemoved to the event loop to remove an executor. Only for test.
       *
       * @return if HeartbeatReceiver is stopped, return None. Otherwise, return a Some(Future) that

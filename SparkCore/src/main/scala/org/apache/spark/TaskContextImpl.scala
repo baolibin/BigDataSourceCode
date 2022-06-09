@@ -62,12 +62,14 @@ private[spark] class TaskContextImpl(
 
     /**
       * 任务完成时要执行的回调函数列表
+      *
       * List of callback functions to execute when the task completes.
       */
     @transient private val onCompleteCallbacks = new ArrayBuffer[TaskCompletionListener]
 
     /**
       * 任务失败时要执行的回调函数列表
+      *
       * List of callback functions to execute when the task fails.
       */
     @transient private val onFailureCallbacks = new ArrayBuffer[TaskFailureListener]
@@ -124,6 +126,7 @@ private[spark] class TaskContextImpl(
 
     /**
       * 将任务标记为失败并触发失败侦听器
+      *
       * Marks the task as failed and triggers the failure listeners.
       */
     @GuardedBy("this")
@@ -138,6 +141,7 @@ private[spark] class TaskContextImpl(
 
     /**
       * 将任务标记为已完成并触发完成侦听器
+      *
       * Marks the task as completed and triggers the completion listeners.
       */
     @GuardedBy("this")
@@ -172,6 +176,7 @@ private[spark] class TaskContextImpl(
 
     /**
       * 将任务标记为中断，即取消。
+      *
       * Marks the task for interruption, i.e. cancellation.
       */
     private[spark] def markInterrupted(reason: String): Unit = {

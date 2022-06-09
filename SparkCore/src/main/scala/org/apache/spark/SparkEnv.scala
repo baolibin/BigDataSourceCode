@@ -141,6 +141,7 @@ object SparkEnv extends Logging {
 
     /**
       * 返回SparkEnv。
+      *
       * Returns the SparkEnv.
       */
     def get: SparkEnv = {
@@ -149,6 +150,7 @@ object SparkEnv extends Logging {
 
     /**
       * 为driver创建SparkEnv。
+      *
       * Create a SparkEnv for the driver.
       */
     private[spark] def createDriverEnv(

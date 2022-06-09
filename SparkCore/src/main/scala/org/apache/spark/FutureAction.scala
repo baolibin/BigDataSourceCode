@@ -160,6 +160,8 @@ class SimpleFutureAction[T] private[spark](jobWaiter: JobWaiter[_], resultFunc: 
 @DeveloperApi
 trait JobSubmitter {
     /**
+      * 提交作业以执行，并返回保存结果的FutureAction。这是对SparkContext提供的用于启用取消的相同功能的包装。
+      *
       * Submit a job for execution and return a FutureAction holding the result.
       * This is a wrapper around the same functionality provided by SparkContext
       * to enable cancellation.
