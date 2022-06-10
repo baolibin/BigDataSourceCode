@@ -28,6 +28,7 @@ private[spark] trait ExecutorAllocationClient {
 
     /**
       * 向群集管理器请求额外数量的执行器。
+      *
       * Request an additional number of executors from the cluster manager.
       *
       * @return whether the request is acknowledged by the cluster manager.
@@ -36,6 +37,7 @@ private[spark] trait ExecutorAllocationClient {
 
     /**
       * 请求群集管理器杀死指定的执行器。
+      *
       * Request that the cluster manager kill the specified executors.
       *
       * When asking the executor to be replaced, the executor loss is considered a failure, and
@@ -54,6 +56,7 @@ private[spark] trait ExecutorAllocationClient {
 
     /**
       * 请求群集管理器杀死指定主机上的每个执行器。
+      *
       * Request that the cluster manager kill every executor on the specified host.
       *
       * @return whether the request is acknowledged by the cluster manager.
@@ -62,6 +65,7 @@ private[spark] trait ExecutorAllocationClient {
 
     /**
       * 请求群集管理器杀死指定的执行器。
+      *
       * Request that the cluster manager kill the specified executor.
       *
       * @return whether the request is acknowledged by the cluster manager.
@@ -73,11 +77,14 @@ private[spark] trait ExecutorAllocationClient {
 
     /**
       * 获取当前活动执行者的列表
+      *
       * Get the list of currently active executors
       */
     private[spark] def getExecutorIds(): Seq[String]
 
     /**
+      * 根据调度需要更新群集管理器。包含三位信息以帮助it部门做出决策。
+      *
       * Update the cluster manager on our scheduling needs. Three bits of information are included
       * to help it make decisions.
       *

@@ -469,6 +469,7 @@ private[spark] class ExecutorAllocationManager(
 
     /**
       * 添加指定的执行器时调用回调。
+      *
       * Callback invoked when the specified executor has been added.
       */
     private def onExecutorAdded(executorId: String): Unit = synchronized {
@@ -486,6 +487,8 @@ private[spark] class ExecutorAllocationManager(
     }
 
     /**
+      * 当指定的执行器不再运行任何任务时调用回调。
+      *
       * Callback invoked when the specified executor is no longer running any tasks.
       * This sets a time in the future that decides when this executor should be removed if
       * the executor is not already marked as idle.
@@ -517,6 +520,8 @@ private[spark] class ExecutorAllocationManager(
     }
 
     /**
+      * 移除指定的执行器时调用回调。
+      *
       * Callback invoked when the specified executor has been removed.
       */
     private def onExecutorRemoved(executorId: String): Unit = synchronized {
