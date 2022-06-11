@@ -540,6 +540,8 @@ private[spark] class ExecutorAllocationManager(
     }
 
     /**
+      * 当调度程序接收到新的挂起任务时调用回调。
+      *
       * Callback invoked when the scheduler receives new pending tasks.
       * This sets a time in the future that decides when executors should be added
       * if it is not already set.
@@ -553,6 +555,8 @@ private[spark] class ExecutorAllocationManager(
     }
 
     /**
+      * 在排干调度程序队列时调用回调。这将重置用于添加执行器的所有变量。
+      *
       * Callback invoked when the scheduler queue is drained.
       * This resets all variables used for adding executors.
       */
@@ -563,6 +567,8 @@ private[spark] class ExecutorAllocationManager(
     }
 
     /**
+      * 当指定的执行器现在正在运行任务时调用回调。这将重置用于删除此执行器的所有变量。
+      *
       * Callback invoked when the specified executor is now running a task.
       * This resets all variables used for removing this executor.
       */
@@ -572,6 +578,8 @@ private[spark] class ExecutorAllocationManager(
     }
 
     /**
+      * 通知给定分配管理器何时添加和删除执行器的侦听器。
+      *
       * A listener that notifies the given allocation manager of when to add and remove executors.
       *
       * This class is intentionally conservative in its assumptions about the relative ordering
