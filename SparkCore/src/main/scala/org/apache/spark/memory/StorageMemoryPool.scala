@@ -17,6 +17,8 @@
 
 package org.apache.spark.memory
 
+import org.apache.spark.storage.memory.MemoryStore
+
 import javax.annotation.concurrent.GuardedBy
 
 /**
@@ -29,8 +31,8 @@ import javax.annotation.concurrent.GuardedBy
   * @param memoryMode the type of memory tracked by this pool (on- or off-heap)
   */
 private[memory] class StorageMemoryPool(
-                                               lock: Object,
-                                               memoryMode: MemoryMode
+                                           lock: Object,
+                                           memoryMode: MemoryMode
                                        ) extends MemoryPool(lock) with Logging {
 
     private[this] val poolName: String = memoryMode match {
@@ -44,6 +46,7 @@ private[memory] class StorageMemoryPool(
 
     /**
       * 设置此管理器用于移出缓存块的[[MemoryStore]]。
+      *
       * Set the [[MemoryStore]] used by this manager to evict cached blocks.
       * This must be set after construction due to initialization ordering constraints.
       */
@@ -53,6 +56,7 @@ private[memory] class StorageMemoryPool(
 
     /**
       * 获取N字节的内存以缓存给定的块，必要时逐出现有的块。
+      *
       * Acquire N bytes of memory to cache the given block, evicting existing ones if necessary.
       *
       * @return whether all N bytes were successfully granted.
@@ -64,6 +68,7 @@ private[memory] class StorageMemoryPool(
 
     /**
       * 为给定的块获取N字节的存储内存，必要时逐出现有的内存。
+      *
       * Acquire N bytes of storage memory for the given block, evicting existing ones if necessary.
       *
       * @param blockId           the ID of the block we are acquiring storage memory for
@@ -72,9 +77,9 @@ private[memory] class StorageMemoryPool(
       * @return whether all N bytes were successfully granted.
       */
     def acquireMemory(
-                             blockId: BlockId,
-                             numBytesToAcquire: Long,
-                             numBytesToFree: Long): Boolean = lock.synchronized {
+                         blockId: BlockId,
+                         numBytesToAcquire: Long,
+                         numBytesToFree: Long): Boolean = lock.synchronized {
         assert(numBytesToAcquire >= 0)
         assert(numBytesToFree >= 0)
         assert(memoryUsed <= poolSize)
@@ -98,7 +103,7 @@ private[memory] class StorageMemoryPool(
     def releaseMemory(size: Long): Unit = lock.synchronized {
         if (size > _memoryUsed) {
             logWarning(s"Attempted to release $size bytes of storage " +
-                    s"memory when we only have ${_memoryUsed} bytes")
+                s"memory when we only have ${_memoryUsed} bytes")
             _memoryUsed = 0
         } else {
             _memoryUsed -= size
@@ -110,6 +115,9 @@ private[memory] class StorageMemoryPool(
     }
 
     /**
+      * 释放空间以将此存储内存池的大小缩减“spaceToFree”字节。
+      * 注意：此方法实际上并没有减少池大小，但依赖于调用方来减少池大小
+      *
       * Free space to shrink the size of this storage memory pool by `spaceToFree` bytes.
       * Note: this method doesn't actually reduce the pool size but relies on the caller to do so.
       *

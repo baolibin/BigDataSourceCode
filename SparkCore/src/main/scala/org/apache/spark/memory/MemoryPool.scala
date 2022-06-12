@@ -36,6 +36,7 @@ private[memory] abstract class MemoryPool(lock: Object) {
 
     /**
       * 返回当前内存池的大小
+      *
       * Returns the current size of the pool, in bytes.
       */
     final def poolSize: Long = lock.synchronized {
@@ -44,6 +45,7 @@ private[memory] abstract class MemoryPool(lock: Object) {
 
     /**
       * 返回内存池里的空闲内存大小
+      *
       * Returns the amount of free memory in the pool, in bytes.
       */
     final def memoryFree: Long = lock.synchronized {
@@ -52,6 +54,7 @@ private[memory] abstract class MemoryPool(lock: Object) {
 
     /**
       * 根据delta值，对内存池大小进行扩展
+      *
       * Expands the pool by `delta` bytes.
       */
     final def incrementPoolSize(delta: Long): Unit = lock.synchronized {
@@ -61,6 +64,7 @@ private[memory] abstract class MemoryPool(lock: Object) {
 
     /**
       * 根据delta值，收缩内存池大小
+      *
       * Shrinks the pool by `delta` bytes.
       */
     final def decrementPoolSize(delta: Long): Unit = lock.synchronized {
@@ -72,6 +76,7 @@ private[memory] abstract class MemoryPool(lock: Object) {
 
     /**
       * 返回内存池中的可用内存
+      *
       * Returns the amount of used memory in this pool (in bytes).
       */
     def memoryUsed: Long

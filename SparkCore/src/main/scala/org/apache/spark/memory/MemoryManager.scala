@@ -17,6 +17,11 @@
 
 package org.apache.spark.memory
 
+import org.apache.spark.SparkConf
+import org.apache.spark.internal.Logging
+import org.apache.spark.storage.BlockId
+import org.apache.spark.storage.memory.MemoryStore
+
 import javax.annotation.concurrent.GuardedBy
 import org.apache.spark.unsafe.Platform
 import org.apache.spark.unsafe.array.ByteArrayMethods
@@ -34,15 +39,16 @@ import org.apache.spark.unsafe.memory.MemoryAllocator
   * internal data across the cluster. There exists one MemoryManager per JVM.
   */
 private[spark] abstract class MemoryManager(
-                                                   conf: SparkConf,
-                                                   numCores: Int,
-                                                   onHeapStorageMemory: Long,
-                                                   onHeapExecutionMemory: Long) extends Logging {
+                                               conf: SparkConf,
+                                               numCores: Int,
+                                               onHeapStorageMemory: Long,
+                                               onHeapExecutionMemory: Long) extends Logging {
 
     // -- Methods related to memory allocation policies and bookkeeping ------------------------------
 
     /**
       * 跟踪将使用sun在JVM堆上还是堆外分配内存。
+      *
       * Tracks whether Tungsten memory will be allocated on the JVM heap or off-heap using
       * sun.misc.Unsafe.
       */
@@ -59,6 +65,7 @@ private[spark] abstract class MemoryManager(
     }
     /**
       * 分配内存供不安全代码/代码使用。
+      *
       * Allocates memory for use by Unsafe/Tungsten code.
       */
     private[memory] final val tungstenMemoryAllocator: MemoryAllocator = {
@@ -69,6 +76,7 @@ private[spark] abstract class MemoryManager(
     }
     /**
       * 默认页面大小，以字节为单位。
+      *
       * The default page size, in bytes.
       *
       * If user didn't explicitly set "org.apache.spark.buffer.pageSize", we figure out the default value
@@ -111,6 +119,7 @@ private[spark] abstract class MemoryManager(
 
     /**
       * 最大堆内存储内存
+      *
       * Total available on heap memory for storage, in bytes. This amount can vary over time,
       * depending on the MemoryManager implementation.
       * In this model, this is equivalent to the amount of memory not occupied by execution.
@@ -119,6 +128,7 @@ private[spark] abstract class MemoryManager(
 
     /**
       * 最大堆外存储内存
+      *
       * Total available off heap memory for storage, in bytes. This amount can vary over time,
       * depending on the MemoryManager implementation.
       */
@@ -126,6 +136,7 @@ private[spark] abstract class MemoryManager(
 
     /**
       * 设置此管理器用于移出缓存块的[[MemoryStore]]。
+      *
       * Set the [[MemoryStore]] used by this manager to evict cached blocks.
       * This must be set after construction due to initialization ordering constraints.
       */
@@ -136,6 +147,7 @@ private[spark] abstract class MemoryManager(
 
     /**
       * 获取N字节的内存以缓存给定的块，必要时逐出现有的块。
+      *
       * Acquire N bytes of memory to cache the given block, evicting existing ones if necessary.
       *
       * @return whether all N bytes were successfully granted.
@@ -144,6 +156,7 @@ private[spark] abstract class MemoryManager(
 
     /**
       * 获取N字节的内存以展开给定的块，必要时逐出现有的块。
+      *
       * Acquire N bytes of memory to unroll the given block, evicting existing ones if necessary.
       *
       * This extra method allows subclasses to differentiate behavior between acquiring storage
@@ -156,6 +169,7 @@ private[spark] abstract class MemoryManager(
 
     /**
       * 释放获取的所有存储内存
+      *
       * Release all storage memory acquired.
       */
     final def releaseAllStorageMemory(): Unit = synchronized {
@@ -165,6 +179,7 @@ private[spark] abstract class MemoryManager(
 
     /**
       * 释放N字节的展开内存
+      *
       * Release N bytes of unroll memory.
       */
     final def releaseUnrollMemory(numBytes: Long, memoryMode: MemoryMode): Unit = synchronized {
@@ -173,6 +188,7 @@ private[spark] abstract class MemoryManager(
 
     /**
       * 释放N字节的存储内存
+      *
       * Release N bytes of storage memory.
       */
     def releaseStorageMemory(numBytes: Long, memoryMode: MemoryMode): Unit = synchronized {
@@ -184,6 +200,7 @@ private[spark] abstract class MemoryManager(
 
     /**
       * 当前正在使用的执行内存，以字节为单位。
+      *
       * Execution memory currently in use, in bytes.
       */
     final def executionMemoryUsed: Long = synchronized {
@@ -192,6 +209,7 @@ private[spark] abstract class MemoryManager(
 
     /**
       * 当前正在使用的存储内存，以字节为单位。
+      *
       * Storage memory currently in use, in bytes.
       */
     final def storageMemoryUsed: Long = synchronized {
@@ -200,6 +218,7 @@ private[spark] abstract class MemoryManager(
 
     /**
       * 尝试为当前任务获取多达'numBytes'的执行内存，并返回获得的字节数，如果无法分配，则返回0。
+      *
       * Try to acquire up to `numBytes` of execution memory for the current task and return the
       * number of bytes obtained, or 0 if none can be allocated.
       *
@@ -210,21 +229,22 @@ private[spark] abstract class MemoryManager(
       */
     private[memory]
     def acquireExecutionMemory(
-                                      numBytes: Long,
-                                      taskAttemptId: Long,
-                                      memoryMode: MemoryMode): Long
+                                  numBytes: Long,
+                                  taskAttemptId: Long,
+                                  memoryMode: MemoryMode): Long
 
     // -- Fields related to Tungsten managed memory -------------------------------------------------
 
     /**
       * 释放属于给定任务的数字节执行内存。
+      *
       * Release numBytes of execution memory belonging to the given task.
       */
     private[memory]
     def releaseExecutionMemory(
-                                      numBytes: Long,
-                                      taskAttemptId: Long,
-                                      memoryMode: MemoryMode): Unit = synchronized {
+                                  numBytes: Long,
+                                  taskAttemptId: Long,
+                                  memoryMode: MemoryMode): Unit = synchronized {
         memoryMode match {
             case MemoryMode.ON_HEAP => onHeapExecutionMemoryPool.releaseMemory(numBytes, taskAttemptId)
             case MemoryMode.OFF_HEAP => offHeapExecutionMemoryPool.releaseMemory(numBytes, taskAttemptId)
@@ -233,21 +253,23 @@ private[spark] abstract class MemoryManager(
 
     /**
       * 释放给定任务的所有内存，并将其标记为非活动（例如，当任务结束时）。
+      *
       * Release all memory for the given task and mark it as inactive (e.g. when a task ends).
       *
       * @return the number of bytes freed.
       */
     private[memory] def releaseAllExecutionMemoryForTask(taskAttemptId: Long): Long = synchronized {
         onHeapExecutionMemoryPool.releaseAllMemoryForTask(taskAttemptId) +
-                offHeapExecutionMemoryPool.releaseAllMemoryForTask(taskAttemptId)
+            offHeapExecutionMemoryPool.releaseAllMemoryForTask(taskAttemptId)
     }
 
     /**
       * 返回给定任务的执行内存消耗（字节）。
+      *
       * Returns the execution memory consumption, in bytes, for the given task.
       */
     private[memory] def getExecutionMemoryUsageForTask(taskAttemptId: Long): Long = synchronized {
         onHeapExecutionMemoryPool.getMemoryUsageForTask(taskAttemptId) +
-                offHeapExecutionMemoryPool.getMemoryUsageForTask(taskAttemptId)
+            offHeapExecutionMemoryPool.getMemoryUsageForTask(taskAttemptId)
     }
 }

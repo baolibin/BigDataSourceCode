@@ -30,15 +30,15 @@ import org.apache.spark.storage.BlockId
   * regions are cleanly separated such that neither usage can borrow memory from the other.
   */
 private[spark] class StaticMemoryManager(
-                                                conf: SparkConf,
-                                                maxOnHeapExecutionMemory: Long,
-                                                override val maxOnHeapStorageMemory: Long,
-                                                numCores: Int)
-        extends MemoryManager(
-            conf,
-            numCores,
-            maxOnHeapStorageMemory,
-            maxOnHeapExecutionMemory) {
+                                            conf: SparkConf,
+                                            maxOnHeapExecutionMemory: Long,
+                                            override val maxOnHeapStorageMemory: Long,
+                                            numCores: Int)
+    extends MemoryManager(
+        conf,
+        numCores,
+        maxOnHeapStorageMemory,
+        maxOnHeapExecutionMemory) {
 
     // Max number of bytes worth of blocks to evict when unrolling
     private val maxUnrollMemory: Long = {
@@ -60,15 +60,15 @@ private[spark] class StaticMemoryManager(
     override def maxOffHeapStorageMemory: Long = 0L
 
     override def acquireStorageMemory(
-                                             blockId: BlockId,
-                                             numBytes: Long,
-                                             memoryMode: MemoryMode): Boolean = synchronized {
+                                         blockId: BlockId,
+                                         numBytes: Long,
+                                         memoryMode: MemoryMode): Boolean = synchronized {
         require(memoryMode != MemoryMode.OFF_HEAP,
             "StaticMemoryManager does not support off-heap storage memory")
         if (numBytes > maxOnHeapStorageMemory) {
             // Fail fast if the block simply won't fit
             logInfo(s"Will not store $blockId as the required space ($numBytes bytes) exceeds our " +
-                    s"memory limit ($maxOnHeapStorageMemory bytes)")
+                s"memory limit ($maxOnHeapStorageMemory bytes)")
             false
         } else {
             onHeapStorageMemoryPool.acquireMemory(blockId, numBytes)
@@ -76,9 +76,9 @@ private[spark] class StaticMemoryManager(
     }
 
     override def acquireUnrollMemory(
-                                            blockId: BlockId,
-                                            numBytes: Long,
-                                            memoryMode: MemoryMode): Boolean = synchronized {
+                                        blockId: BlockId,
+                                        numBytes: Long,
+                                        memoryMode: MemoryMode): Boolean = synchronized {
         require(memoryMode != MemoryMode.OFF_HEAP,
             "StaticMemoryManager does not support off-heap unroll memory")
         val currentUnrollMemory = onHeapStorageMemoryPool.memoryStore.currentUnrollMemory
@@ -95,9 +95,9 @@ private[spark] class StaticMemoryManager(
 
     private[memory]
     override def acquireExecutionMemory(
-                                               numBytes: Long,
-                                               taskAttemptId: Long,
-                                               memoryMode: MemoryMode): Long = synchronized {
+                                           numBytes: Long,
+                                           taskAttemptId: Long,
+                                           memoryMode: MemoryMode): Long = synchronized {
         memoryMode match {
             case MemoryMode.ON_HEAP => onHeapExecutionMemoryPool.acquireMemory(numBytes, taskAttemptId)
             case MemoryMode.OFF_HEAP => offHeapExecutionMemoryPool.acquireMemory(numBytes, taskAttemptId)
@@ -112,6 +112,7 @@ private[spark] object StaticMemoryManager {
 
     /**
       * 返回最大可获得的存储内存字节数
+      *
       * Return the total amount of memory available for the storage region, in bytes.
       */
     private def getMaxStorageMemory(conf: SparkConf): Long = {
@@ -126,6 +127,7 @@ private[spark] object StaticMemoryManager {
 
     /**
       * 返回最大可获得的执行内存字节数
+      *
       * Return the total amount of memory available for the execution region, in bytes.
       */
     private def getMaxExecutionMemory(conf: SparkConf): Long = {
@@ -134,15 +136,15 @@ private[spark] object StaticMemoryManager {
 
         if (systemMaxMemory < MIN_MEMORY_BYTES) {
             throw new IllegalArgumentException(s"System memory $systemMaxMemory must " +
-                    s"be at least $MIN_MEMORY_BYTES. Please increase heap size using the --driver-memory " +
-                    s"option or org.apache.spark.driver.memory in Spark configuration.")
+                s"be at least $MIN_MEMORY_BYTES. Please increase heap size using the --driver-memory " +
+                s"option or org.apache.spark.driver.memory in Spark configuration.")
         }
         if (conf.contains("org.apache.spark.executor.memory")) {
             val executorMemory = conf.getSizeAsBytes("org.apache.spark.executor.memory")
             if (executorMemory < MIN_MEMORY_BYTES) {
                 throw new IllegalArgumentException(s"Executor memory $executorMemory must be at least " +
-                        s"$MIN_MEMORY_BYTES. Please increase executor memory using the " +
-                        s"--executor-memory option or org.apache.spark.executor.memory in Spark configuration.")
+                    s"$MIN_MEMORY_BYTES. Please increase executor memory using the " +
+                    s"--executor-memory option or org.apache.spark.executor.memory in Spark configuration.")
             }
         }
         // 执行内存占系统最大内存比例

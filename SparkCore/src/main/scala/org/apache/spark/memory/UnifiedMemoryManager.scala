@@ -46,45 +46,45 @@ import org.apache.spark.SparkConf
   *                                storage memory usage exceeds this region.
   */
 private[spark] class UnifiedMemoryManager private[memory](
-                                                                 conf: SparkConf,
-                                                                 val maxHeapMemory: Long,
-                                                                 onHeapStorageRegionSize: Long,
-                                                                 numCores: Int)
-        extends MemoryManager(
-            conf,
-            numCores,
-            onHeapStorageRegionSize,
-            maxHeapMemory - onHeapStorageRegionSize) {
+                                                             conf: SparkConf,
+                                                             val maxHeapMemory: Long,
+                                                             onHeapStorageRegionSize: Long,
+                                                             numCores: Int)
+    extends MemoryManager(
+        conf,
+        numCores,
+        onHeapStorageRegionSize,
+        maxHeapMemory - onHeapStorageRegionSize) {
 
     override def acquireUnrollMemory(
-                                            blockId: BlockId,
-                                            numBytes: Long,
-                                            memoryMode: MemoryMode): Boolean = synchronized {
+                                        blockId: BlockId,
+                                        numBytes: Long,
+                                        memoryMode: MemoryMode): Boolean = synchronized {
         acquireStorageMemory(blockId, numBytes, memoryMode)
     }
 
     assertInvariants()
 
     override def acquireStorageMemory(
-                                             blockId: BlockId,
-                                             numBytes: Long,
-                                             memoryMode: MemoryMode): Boolean = synchronized {
+                                         blockId: BlockId,
+                                         numBytes: Long,
+                                         memoryMode: MemoryMode): Boolean = synchronized {
         assertInvariants()
         assert(numBytes >= 0)
         val (executionPool, storagePool, maxMemory) = memoryMode match {
             case MemoryMode.ON_HEAP => (
-                    onHeapExecutionMemoryPool,
-                    onHeapStorageMemoryPool,
-                    maxOnHeapStorageMemory)
+                onHeapExecutionMemoryPool,
+                onHeapStorageMemoryPool,
+                maxOnHeapStorageMemory)
             case MemoryMode.OFF_HEAP => (
-                    offHeapExecutionMemoryPool,
-                    offHeapStorageMemoryPool,
-                    maxOffHeapStorageMemory)
+                offHeapExecutionMemoryPool,
+                offHeapStorageMemoryPool,
+                maxOffHeapStorageMemory)
         }
         if (numBytes > maxMemory) {
             // Fail fast if the block simply won't fit
             logInfo(s"Will not store $blockId as the required space ($numBytes bytes) exceeds our " +
-                    s"memory limit ($maxMemory bytes)")
+                s"memory limit ($maxMemory bytes)")
             return false
         }
         if (numBytes > storagePool.memoryFree) {
@@ -114,6 +114,7 @@ private[spark] class UnifiedMemoryManager private[memory](
 
     /**
       * 尝试为当前任务获取多达'numBytes'的执行内存，并返回获得的字节数，如果无法分配，则返回0。
+      *
       * Try to acquire up to `numBytes` of execution memory for the current task and return the
       * number of bytes obtained, or 0 if none can be allocated.
       *
@@ -123,26 +124,27 @@ private[spark] class UnifiedMemoryManager private[memory](
       * but an older task had a lot of memory already.
       */
     override private[memory] def acquireExecutionMemory(
-                                                               numBytes: Long,
-                                                               taskAttemptId: Long,
-                                                               memoryMode: MemoryMode): Long = synchronized {
+                                                           numBytes: Long,
+                                                           taskAttemptId: Long,
+                                                           memoryMode: MemoryMode): Long = synchronized {
         assertInvariants()
         assert(numBytes >= 0)
         val (executionPool, storagePool, storageRegionSize, maxMemory) = memoryMode match {
             case MemoryMode.ON_HEAP => (
-                    onHeapExecutionMemoryPool,
-                    onHeapStorageMemoryPool,
-                    onHeapStorageRegionSize,
-                    maxHeapMemory)
+                onHeapExecutionMemoryPool,
+                onHeapStorageMemoryPool,
+                onHeapStorageRegionSize,
+                maxHeapMemory)
             case MemoryMode.OFF_HEAP => (
-                    offHeapExecutionMemoryPool,
-                    offHeapStorageMemoryPool,
-                    offHeapStorageMemory,
-                    maxOffHeapMemory)
+                offHeapExecutionMemoryPool,
+                offHeapStorageMemoryPool,
+                offHeapStorageMemory,
+                maxOffHeapMemory)
         }
 
         /**
           * 通过逐出缓存块来增加执行池，从而缩小存储池。
+          *
           * Grow the execution pool by evicting cached blocks, thereby shrinking the storage pool.
           *
           * When acquiring memory for a task, the execution pool may need to make multiple
@@ -170,6 +172,7 @@ private[spark] class UnifiedMemoryManager private[memory](
 
         /**
           * 退出存储内存后执行池的大小。
+          *
           * The size the execution pool would have after evicting storage memory.
           *
           * The execution memory pool divides this quantity among the active tasks evenly to cap
@@ -206,12 +209,13 @@ object UnifiedMemoryManager {
             conf,
             maxHeapMemory = maxMemory,
             onHeapStorageRegionSize =
-                    (maxMemory * conf.getDouble("org.apache.spark.memory.storageFraction", 0.5)).toLong,
+                (maxMemory * conf.getDouble("org.apache.spark.memory.storageFraction", 0.5)).toLong,
             numCores = numCores)
     }
 
     /**
       * 返回执行和存储之间共享的内存总量（字节）。
+      *
       * Return the total amount of memory shared between execution and storage, in bytes.
       */
     private def getMaxMemory(conf: SparkConf): Long = {
@@ -223,16 +227,16 @@ object UnifiedMemoryManager {
         val minSystemMemory = (reservedMemory * 1.5).ceil.toLong
         if (systemMemory < minSystemMemory) {
             throw new IllegalArgumentException(s"System memory $systemMemory must " +
-                    s"be at least $minSystemMemory. Please increase heap size using the --driver-memory " +
-                    s"option or org.apache.spark.driver.memory in Spark configuration.")
+                s"be at least $minSystemMemory. Please increase heap size using the --driver-memory " +
+                s"option or org.apache.spark.driver.memory in Spark configuration.")
         }
         // SPARK-12759 Check executor memory to fail fast if memory is insufficient
         if (conf.contains("org.apache.spark.executor.memory")) {
             val executorMemory = conf.getSizeAsBytes("org.apache.spark.executor.memory")
             if (executorMemory < minSystemMemory) {
                 throw new IllegalArgumentException(s"Executor memory $executorMemory must be at least " +
-                        s"$minSystemMemory. Please increase executor memory using the " +
-                        s"--executor-memory option or org.apache.spark.executor.memory in Spark configuration.")
+                    s"$minSystemMemory. Please increase executor memory using the " +
+                    s"--executor-memory option or org.apache.spark.executor.memory in Spark configuration.")
             }
         }
         // 可用内存
