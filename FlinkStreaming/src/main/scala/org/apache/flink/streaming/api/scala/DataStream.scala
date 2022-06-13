@@ -134,6 +134,8 @@ class DataStream[T](stream: JavaStream[T]) {
 
 
     /**
+      * 返回此操作的并行度。
+      *
       * Returns the parallelism of this operation.
       */
     def parallelism: Int = stream.getParallelism()
@@ -626,6 +628,8 @@ class DataStream[T](stream: JavaStream[T]) {
     }
 
     /**
+      * 通过将给定函数应用于此数据流的每个元素来创建新的数据流。
+      *
       * Creates a new DataStream by applying the given function to every element of this DataStream.
       */
     def map[R: TypeInformation](fun: T => R): DataStream[R] = {
@@ -641,6 +645,8 @@ class DataStream[T](stream: JavaStream[T]) {
     }
 
     /**
+      * 通过将给定函数应用于此数据流的每个元素来创建新的数据流。
+      *
       * Creates a new DataStream by applying the given function to every element of this DataStream.
       */
     def map[R: TypeInformation](mapper: MapFunction[T, R]): DataStream[R] = {
@@ -653,6 +659,8 @@ class DataStream[T](stream: JavaStream[T]) {
     }
 
     /**
+      * 通过将给定函数应用于每个元素并展平结果来创建新的数据流。
+      *
       * Creates a new DataStream by applying the given function to every element and flattening
       * the results.
       */
