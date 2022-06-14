@@ -35,6 +35,8 @@ import org.apache.flink.streaming.api.datastream.{SplitStream => SplitJavaStream
 class SplitStream[T](javaStream: SplitJavaStream[T]) extends DataStream[T](javaStream) {
 
     /**
+      * 设置下一个运算符将接收其值的输出名称。
+      *
       * Sets the output names for which the next operator will receive values.
       */
     def select(outputNames: String*): DataStream[T] =

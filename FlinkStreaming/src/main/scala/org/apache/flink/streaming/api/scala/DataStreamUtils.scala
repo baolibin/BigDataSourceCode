@@ -39,6 +39,8 @@ import scala.reflect.ClassTag
 class DataStreamUtils[T: TypeInformation : ClassTag](val self: DataStream[T]) {
 
     /**
+      * 返回一个scala迭代器来迭代数据流的元素。
+      *
       * Returns a scala iterator to iterate over the elements of the DataStream.
       *
       * @return The iterator
@@ -48,6 +50,8 @@ class DataStreamUtils[T: TypeInformation : ClassTag](val self: DataStream[T]) {
     }
 
     /**
+      * 将给定的[[数据流]]重新解释为[[键流]]，它提取具有给定[[键选择器WithType]]的键。
+      *
       * Reinterprets the given [[DataStream]] as a [[KeyedStream]], which extracts keys with the
       * given [[KeySelectorWithType]].
       *

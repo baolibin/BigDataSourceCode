@@ -60,6 +60,8 @@ import org.apache.flink.util.Collector
 class JoinedStreams[T1, T2](input1: DataStream[T1], input2: DataStream[T2]) {
 
     /**
+      * 为来自第一个输入的元素指定[[键选择器]]。
+      *
       * Specifies a [[KeySelector]] for elements from the first input.
       */
     def where[KEY: TypeInformation](keySelector: T1 => KEY): Where[KEY] = {
@@ -74,6 +76,8 @@ class JoinedStreams[T1, T2](input1: DataStream[T1], input2: DataStream[T2]) {
     }
 
     /**
+      * 为第一个输入定义了[[键选择器]]的联接操作。
+      *
       * A join operation that has a [[KeySelector]] defined for the first input.
       *
       * You need to specify a [[KeySelector]] for the second input using [[equalTo()]]
@@ -98,6 +102,8 @@ class JoinedStreams[T1, T2](input1: DataStream[T1], input2: DataStream[T2]) {
         }
 
         /**
+          * 为第一个和第二个输入定义了[[键选择器]]的联接操作。
+          *
           * A join operation that has a [[KeySelector]] defined for the first and the second input.
           *
           * A window can now be specified using [[window()]].
@@ -119,6 +125,8 @@ class JoinedStreams[T1, T2](input1: DataStream[T1], input2: DataStream[T2]) {
             }
 
             /**
+              * 一种联接操作，它为两个输入定义了[[键选择器]]以及[[窗口赋值器]]。
+              *
               * A join operation that has [[KeySelector]]s defined for both inputs as
               * well as a [[WindowAssigner]].
               *
@@ -131,6 +139,8 @@ class JoinedStreams[T1, T2](input1: DataStream[T1], input2: DataStream[T2]) {
                                              val allowedLateness: Time) {
 
                 /**
+                  * 设置应用于触发窗口发射的[[Trigger]]。
+                  *
                   * Sets the [[Trigger]] that should be used to trigger window emission.
                   */
                 @PublicEvolving
@@ -161,6 +171,8 @@ class JoinedStreams[T1, T2](input1: DataStream[T1], input2: DataStream[T2]) {
                 }
 
                 /**
+                  * 使用为窗口组执行的用户函数完成连接操作。
+                  *
                   * Completes the join operation with the user function that is executed
                   * for windowed groups.
                   */
@@ -178,6 +190,8 @@ class JoinedStreams[T1, T2](input1: DataStream[T1], input2: DataStream[T2]) {
                 }
 
                 /**
+                  * 使用为窗口组执行的用户函数完成连接操作。
+                  *
                   * Completes the join operation with the user function that is executed
                   * for windowed groups.
                   */
@@ -195,6 +209,8 @@ class JoinedStreams[T1, T2](input1: DataStream[T1], input2: DataStream[T2]) {
                 }
 
                 /**
+                  * 使用为窗口组执行的用户函数完成连接操作。
+                  *
                   * Completes the join operation with the user function that is executed
                   * for windowed groups.
                   */

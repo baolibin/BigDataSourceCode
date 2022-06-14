@@ -37,7 +37,7 @@ import org.apache.flink.util.{OutputTag => JOutputTag}
   */
 @PublicEvolving
 class OutputTag[T: TypeInformation](
-                                           id: String) extends JOutputTag[T](id, implicitly[TypeInformation[T]])
+                                       id: String) extends JOutputTag[T](id, implicitly[TypeInformation[T]])
 
 object OutputTag {
     def apply[T: TypeInformation](id: String): OutputTag[T] = new OutputTag(id)
