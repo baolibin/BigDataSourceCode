@@ -127,6 +127,8 @@ class DataStream[T](stream: JavaStream[T]) {
     def executionConfig: ExecutionConfig = stream.getExecutionConfig()
 
     /**
+      * 返回与此数据流关联的[[StreamExecutionEnvironment]]
+      *
       * Returns the [[StreamExecutionEnvironment]] associated with this data stream
       */
     def executionEnvironment: StreamExecutionEnvironment =
@@ -141,6 +143,8 @@ class DataStream[T](stream: JavaStream[T]) {
     def parallelism: Int = stream.getParallelism()
 
     /**
+      * 设置此操作的并行度。该值必须至少为1。
+      *
       * Sets the parallelism of this operation. This must be at least 1.
       */
     def setParallelism(parallelism: Int): DataStream[T] = {
@@ -165,12 +169,16 @@ class DataStream[T](stream: JavaStream[T]) {
     }
 
     /**
+      * 返回此操作的最小资源。
+      *
       * Returns the minimum resources of this operation.
       */
     @PublicEvolving
     def minResources: ResourceSpec = stream.getMinResources()
 
     /**
+      * 返回此操作的首选资源。
+      *
       * Returns the preferred resources of this operation.
       */
     @PublicEvolving
@@ -203,6 +211,8 @@ class DataStream[T](stream: JavaStream[T]) {
     //  }
 
     /**
+      * 获取当前数据流的名称。此名称在运行时由可视化和日志记录使用。
+      *
       * Gets the name of the current data stream. This name is
       * used by the visualization and logging during runtime.
       *
@@ -217,6 +227,8 @@ class DataStream[T](stream: JavaStream[T]) {
     // --------------------------------------------------------------------------
 
     /**
+      * 获取当前数据流的名称。此名称在运行时由可视化和日志记录使用。
+      *
       * Gets the name of the current data stream. This name is
       * used by the visualization and logging during runtime.
       *
@@ -228,6 +240,8 @@ class DataStream[T](stream: JavaStream[T]) {
     def getName: String = name
 
     /**
+      * 设置当前数据流的名称。此名称在运行时由可视化和日志记录使用。
+      *
       * Sets the name of the current data stream. This name is
       * used by the visualization and logging during runtime.
       *
@@ -240,6 +254,8 @@ class DataStream[T](stream: JavaStream[T]) {
     }
 
     /**
+      * 设置此运算符的ID。
+      *
       * Sets an ID for this operator.
       *
       * The specified ID is used to assign the same operator ID across job
@@ -265,6 +281,8 @@ class DataStream[T](stream: JavaStream[T]) {
     }
 
     /**
+      * 设置用户为此运算符提供的哈希。这将与创建JobVertexID一样使用。
+      *
       * Sets an user provided hash for this operator. This will be used AS IS the create
       * the JobVertexID.
       * <p/>
@@ -306,6 +324,8 @@ class DataStream[T](stream: JavaStream[T]) {
     }
 
     /**
+      * 启动从此操作员开始的新任务链。即使可能，此操作符也不会链接到任何以前的任务（线程位于同一位置以提高性能）。
+      *
       * Starts a new task chain beginning at this operator. This operator will
       * not be chained (thread co-located for increased performance) to any
       * previous tasks even if possible.
@@ -404,12 +424,16 @@ class DataStream[T](stream: JavaStream[T]) {
         asScalaStream(stream.connect(broadcastStream))
 
     /**
+      * 按给定的键位置（对于元组/数组类型）对数据流的元素进行分组，以便与分组运算符（如分组reduce或分组聚合）一起使用。
+      *
       * Groups the elements of a DataStream by the given key positions (for tuple/array types) to
       * be used with grouped operators like grouped reduce or grouped aggregations.
       */
     def keyBy(fields: Int*): KeyedStream[T, JavaTuple] = asScalaStream(stream.keyBy(fields: _*))
 
     /**
+      * 按给定的字段表达式对数据流的元素进行分组，以便与分组运算符（如分组reduce或分组聚合）一起使用。
+      *
       * Groups the elements of a DataStream by the given field expressions to
       * be used with grouped operators like grouped reduce or grouped aggregations.
       */

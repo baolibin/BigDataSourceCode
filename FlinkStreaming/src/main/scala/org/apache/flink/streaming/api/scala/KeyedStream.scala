@@ -43,6 +43,8 @@ class KeyedStream[T, K](javaStream: KeyedJavaStream[T, K]) extends DataStream[T]
     // ------------------------------------------------------------------------
 
     /**
+      * 将给定的[[ProcessFunction]]应用于输入流，从而创建转换后的输出流。
+      *
       * Applies the given [[ProcessFunction]] on the input stream, thereby
       * creating a transformed output stream.
       *
@@ -61,7 +63,7 @@ class KeyedStream[T, K](javaStream: KeyedJavaStream[T, K]) extends DataStream[T]
     @deprecated("will be removed in a future version")
     @PublicEvolving
     override def process[R: TypeInformation](
-                                                    processFunction: ProcessFunction[T, R]): DataStream[R] = {
+                                                processFunction: ProcessFunction[T, R]): DataStream[R] = {
 
         if (processFunction == null) {
             throw new NullPointerException("ProcessFunction must not be null.")
@@ -93,7 +95,7 @@ class KeyedStream[T, K](javaStream: KeyedJavaStream[T, K]) extends DataStream[T]
       */
     @PublicEvolving
     def process[R: TypeInformation](
-                                           keyedProcessFunction: KeyedProcessFunction[K, T, R]): DataStream[R] = {
+                                       keyedProcessFunction: KeyedProcessFunction[K, T, R]): DataStream[R] = {
 
         if (keyedProcessFunction == null) {
             throw new NullPointerException("KeyedProcessFunction must not be null.")
@@ -255,7 +257,7 @@ class KeyedStream[T, K](javaStream: KeyedJavaStream[T, K]) extends DataStream[T]
         val outType: TypeInformation[R] = implicitly[TypeInformation[R]]
 
         asScalaStream(javaStream.fold(initialValue, folder).
-                returns(outType).asInstanceOf[JavaStream[R]])
+            returns(outType).asInstanceOf[JavaStream[R]])
     }
 
     /**
@@ -338,7 +340,7 @@ class KeyedStream[T, K](javaStream: KeyedJavaStream[T, K]) extends DataStream[T]
             getType().createSerializer(getExecutionConfig))
 
         new DataStream[T](javaStream.transform("aggregation", javaStream.getType(), invokable))
-                .asInstanceOf[DataStream[T]]
+            .asInstanceOf[DataStream[T]]
     }
 
     /**
@@ -366,7 +368,7 @@ class KeyedStream[T, K](javaStream: KeyedJavaStream[T, K]) extends DataStream[T]
       * as having one field).
       */
     def minBy(position: Int): DataStream[T] = aggregate(AggregationType
-            .MINBY, position)
+        .MINBY, position)
 
     /**
       * Applies an aggregation that that gives the current minimum element of the data stream by
@@ -382,7 +384,7 @@ class KeyedStream[T, K](javaStream: KeyedJavaStream[T, K]) extends DataStream[T]
       * (which is considered as having only one field).
       */
     def minBy(field: String): DataStream[T] = aggregate(AggregationType
-            .MINBY, field)
+        .MINBY, field)
 
     /**
       * Applies an aggregation that that gives the current maximum element of the data stream by
@@ -421,7 +423,7 @@ class KeyedStream[T, K](javaStream: KeyedJavaStream[T, K]) extends DataStream[T]
       * Note that the user state object needs to be serializable.
       */
     def filterWithState[S: TypeInformation](
-                                                   fun: (T, Option[S]) => (Boolean, Option[S])): DataStream[T] = {
+                                               fun: (T, Option[S]) => (Boolean, Option[S])): DataStream[T] = {
         if (fun == null) {
             throw new NullPointerException("Filter function must not be null.")
         }
@@ -450,7 +452,7 @@ class KeyedStream[T, K](javaStream: KeyedJavaStream[T, K]) extends DataStream[T]
       * Note that the user state object needs to be serializable.
       */
     def mapWithState[R: TypeInformation, S: TypeInformation](
-                                                                    fun: (T, Option[S]) => (R, Option[S])): DataStream[R] = {
+                                                                fun: (T, Option[S]) => (R, Option[S])): DataStream[R] = {
         if (fun == null) {
             throw new NullPointerException("Map function must not be null.")
         }
@@ -479,7 +481,7 @@ class KeyedStream[T, K](javaStream: KeyedJavaStream[T, K]) extends DataStream[T]
       * Note that the user state object needs to be serializable.
       */
     def flatMapWithState[R: TypeInformation, S: TypeInformation](
-                                                                        fun: (T, Option[S]) => (TraversableOnce[R], Option[S])): DataStream[R] = {
+                                                                    fun: (T, Option[S]) => (TraversableOnce[R], Option[S])): DataStream[R] = {
         if (fun == null) {
             throw new NullPointerException("Flatmap function must not be null.")
         }
@@ -528,8 +530,8 @@ class KeyedStream[T, K](javaStream: KeyedJavaStream[T, K]) extends DataStream[T]
       */
     @PublicEvolving
     def asQueryableState(
-                                queryableStateName: String,
-                                stateDescriptor: ValueStateDescriptor[T]): QueryableStateStream[K, T] = {
+                            queryableStateName: String,
+                            stateDescriptor: ValueStateDescriptor[T]): QueryableStateStream[K, T] = {
 
         transform(
             s"Queryable state: $queryableStateName",
@@ -553,8 +555,8 @@ class KeyedStream[T, K](javaStream: KeyedJavaStream[T, K]) extends DataStream[T]
     @PublicEvolving
     @deprecated("will be removed in a future version")
     def asQueryableState[ACC](
-                                     queryableStateName: String,
-                                     stateDescriptor: FoldingStateDescriptor[T, ACC]): QueryableStateStream[K, ACC] = {
+                                 queryableStateName: String,
+                                 stateDescriptor: FoldingStateDescriptor[T, ACC]): QueryableStateStream[K, ACC] = {
 
         transform(
             s"Queryable state: $queryableStateName",
@@ -577,8 +579,8 @@ class KeyedStream[T, K](javaStream: KeyedJavaStream[T, K]) extends DataStream[T]
       */
     @PublicEvolving
     def asQueryableState(
-                                queryableStateName: String,
-                                stateDescriptor: ReducingStateDescriptor[T]): QueryableStateStream[K, T] = {
+                            queryableStateName: String,
+                            stateDescriptor: ReducingStateDescriptor[T]): QueryableStateStream[K, T] = {
 
         transform(
             s"Queryable state: $queryableStateName",
@@ -674,7 +676,7 @@ class KeyedStream[T, K](javaStream: KeyedJavaStream[T, K]) extends DataStream[T]
           */
         @PublicEvolving
         def process[OUT: TypeInformation](
-                                                 processJoinFunction: ProcessJoinFunction[IN1, IN2, OUT])
+                                             processJoinFunction: ProcessJoinFunction[IN1, IN2, OUT])
         : DataStream[OUT] = {
 
             val outType: TypeInformation[OUT] = implicitly[TypeInformation[OUT]]
