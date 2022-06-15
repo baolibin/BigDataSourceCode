@@ -297,6 +297,8 @@ class KeyedStream[T, K](javaStream: KeyedJavaStream[T, K]) extends DataStream[T]
     def min(position: Int): DataStream[T] = aggregate(AggregationType.MIN, position)
 
     /**
+      * 应用聚合，该聚合通过给定键在给定字段处提供数据流的当前最小值。每个密钥保留一个独立的聚合。
+      *
       * Applies an aggregation that that gives the current minimum of the data stream at
       * the given field by the given key. An independent aggregate is kept per key.
       *
@@ -344,6 +346,8 @@ class KeyedStream[T, K](javaStream: KeyedJavaStream[T, K]) extends DataStream[T]
     }
 
     /**
+      * 应用聚合，将给定字段处的数据流按给定键求和。每个密钥保留一个独立的聚合。
+      *
       * Applies an aggregation that sums the data stream at the given field by the given
       * key. An independent aggregate is kept per key.
       *
@@ -507,6 +511,8 @@ class KeyedStream[T, K](javaStream: KeyedJavaStream[T, K]) extends DataStream[T]
     // ------------------------------------------------------------------------
 
     /**
+      * 将键控流发布为可查询的ValueState实例。
+      *
       * Publishes the keyed stream as a queryable ValueState instance.
       *
       * @param queryableStateName Name under which to the publish the queryable state instance
@@ -522,6 +528,8 @@ class KeyedStream[T, K](javaStream: KeyedJavaStream[T, K]) extends DataStream[T]
     }
 
     /**
+      * 将键控流发布为可查询的ValueState实例。
+      *
       * Publishes the keyed stream as a queryable ValueState instance.
       *
       * @param queryableStateName Name under which to the publish the queryable state instance
@@ -546,6 +554,8 @@ class KeyedStream[T, K](javaStream: KeyedJavaStream[T, K]) extends DataStream[T]
     }
 
     /**
+      * 将键控流发布为可查询的FoldingState实例。
+      *
       * Publishes the keyed stream as a queryable FoldingState instance.
       *
       * @param queryableStateName Name under which to the publish the queryable state instance
@@ -571,6 +581,8 @@ class KeyedStream[T, K](javaStream: KeyedJavaStream[T, K]) extends DataStream[T]
     }
 
     /**
+      * 将键控流发布为可查询的ReductionState实例。
+      *
       * Publishes the keyed stream as a queryable ReducingState instance.
       *
       * @param queryableStateName Name under which to the publish the queryable state instance
