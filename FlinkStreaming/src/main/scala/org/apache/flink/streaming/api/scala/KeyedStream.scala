@@ -30,6 +30,7 @@ import org.apache.flink.streaming.api.functions.co.ProcessJoinFunction
 import org.apache.flink.streaming.api.functions.query.{QueryableAppendingStateOperator, QueryableValueStateOperator}
 import org.apache.flink.streaming.api.functions.{KeyedProcessFunction, ProcessFunction}
 import org.apache.flink.streaming.api.operators.StreamGroupedReduce
+import org.apache.flink.streaming.api.scala.function.StatefulFunction
 import org.apache.flink.streaming.api.windowing.assigners._
 import org.apache.flink.streaming.api.windowing.time.Time
 import org.apache.flink.streaming.api.windowing.windows.{GlobalWindow, TimeWindow, Window}
@@ -137,6 +138,8 @@ class KeyedStream[T, K](javaStream: KeyedJavaStream[T, K]) extends DataStream[T]
     }
 
     /**
+      * 将此[[KeyedStream]]窗口设置为滑动计数窗口。
+      *
       * Windows this [[KeyedStream]] into sliding count windows.
       *
       * @param size  The size of the windows in number of elements.
@@ -147,6 +150,8 @@ class KeyedStream[T, K](javaStream: KeyedJavaStream[T, K]) extends DataStream[T]
     }
 
     /**
+      * 将此[[KeyedStream]]窗口切换到翻滚计数窗口。
+      *
       * Windows this [[KeyedStream]] into tumbling count windows.
       *
       * @param size The size of the windows in number of elements.
@@ -160,6 +165,8 @@ class KeyedStream[T, K](javaStream: KeyedJavaStream[T, K]) extends DataStream[T]
     // ------------------------------------------------------------------------
 
     /**
+      * 将此[[KeyedStream]]窗口设置为滑动时间窗口。
+      *
       * Windows this [[KeyedStream]] into sliding time windows.
       *
       * This is a shortcut for either `.window(SlidingEventTimeWindows.of(size))` or
@@ -191,6 +198,8 @@ class KeyedStream[T, K](javaStream: KeyedJavaStream[T, K]) extends DataStream[T]
     }
 
     /**
+      * 通过使用关联reduce函数减少此数据流的元素，创建一个新的[[数据流]]。每个密钥保留一个独立的聚合。
+      *
       * Creates a new [[DataStream]] by reducing the elements of this DataStream
       * using an associative reduce function. An independent aggregate is kept per key.
       */
@@ -208,6 +217,8 @@ class KeyedStream[T, K](javaStream: KeyedJavaStream[T, K]) extends DataStream[T]
     }
 
     /**
+      * 通过使用关联reduce函数减少此数据流的元素，创建一个新的[[数据流]]。每个密钥保留一个独立的聚合。
+      *
       * Creates a new [[DataStream]] by reducing the elements of this DataStream
       * using an associative reduce function. An independent aggregate is kept per key.
       */
@@ -243,6 +254,8 @@ class KeyedStream[T, K](javaStream: KeyedJavaStream[T, K]) extends DataStream[T]
     // ------------------------------------------------------------------------
 
     /**
+      * 通过使用关联折叠函数和初始值折叠此数据流的元素，创建一个新的[[数据流]]。每个密钥保留一个独立的聚合。
+      *
       * Creates a new [[DataStream]] by folding the elements of this DataStream
       * using an associative fold function and an initial value. An independent
       * aggregate is kept per key.
@@ -272,6 +285,8 @@ class KeyedStream[T, K](javaStream: KeyedJavaStream[T, K]) extends DataStream[T]
     def max(position: Int): DataStream[T] = aggregate(AggregationType.MAX, position)
 
     /**
+      * 应用一个聚合，该聚合通过给定键在给定字段处提供数据流的当前最大值。每个密钥保留一个独立的聚合。
+      *
       * Applies an aggregation that that gives the current maximum of the data stream at
       * the given field by the given key. An independent aggregate is kept per key.
       *
@@ -286,6 +301,8 @@ class KeyedStream[T, K](javaStream: KeyedJavaStream[T, K]) extends DataStream[T]
     def max(field: String): DataStream[T] = aggregate(AggregationType.MAX, field)
 
     /**
+      * 应用聚合，该聚合通过给定键在给定位置提供数据流的当前最小值。每个密钥保留一个独立的聚合。
+      *
       * Applies an aggregation that that gives the current minimum of the data stream at
       * the given position by the given key. An independent aggregate is kept per key.
       *
@@ -318,6 +335,8 @@ class KeyedStream[T, K](javaStream: KeyedJavaStream[T, K]) extends DataStream[T]
     }
 
     /**
+      * 应用聚合，将给定位置处的数据流按给定键求和。每个密钥保留一个独立的聚合。
+      *
       * Applies an aggregation that sums the data stream at the given position by the given
       * key. An independent aggregate is kept per key.
       *
