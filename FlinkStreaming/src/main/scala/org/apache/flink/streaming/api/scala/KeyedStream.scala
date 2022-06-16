@@ -274,6 +274,8 @@ class KeyedStream[T, K](javaStream: KeyedJavaStream[T, K]) extends DataStream[T]
     }
 
     /**
+      * 应用聚合，该聚合通过给定键在给定位置提供数据流的当前最大值。每个密钥保留一个独立的聚合。
+      *
       * Applies an aggregation that that gives the current maximum of the data stream at
       * the given position by the given key. An independent aggregate is kept per key.
       *
@@ -394,6 +396,9 @@ class KeyedStream[T, K](javaStream: KeyedJavaStream[T, K]) extends DataStream[T]
         .MINBY, position)
 
     /**
+      * 应用聚合，该聚合通过给定的字段和给定的键给出数据流的当前最小元素。每个密钥保留一个独立的聚合。
+      * 当相等时，第一个元素返回最小值。
+      *
       * Applies an aggregation that that gives the current minimum element of the data stream by
       * the given field by the given key. An independent aggregate is kept per key.
       * When equality, the first element is returned with the minimal value.
@@ -410,6 +415,9 @@ class KeyedStream[T, K](javaStream: KeyedJavaStream[T, K]) extends DataStream[T]
         .MINBY, field)
 
     /**
+      * 应用一个聚合，该聚合按给定键的给定位置给出数据流的当前最大元素。每个密钥保留一个独立的聚合。
+      * 当相等时，第一个元素返回最大值。
+      *
       * Applies an aggregation that that gives the current maximum element of the data stream by
       * the given position by the given key. An independent aggregate is kept per key.
       * When equality, the first element is returned with the maximal value.
@@ -423,6 +431,9 @@ class KeyedStream[T, K](javaStream: KeyedJavaStream[T, K]) extends DataStream[T]
         aggregate(AggregationType.MAXBY, position)
 
     /**
+      * 应用聚合，该聚合通过给定的字段和给定的键给出数据流的当前最大元素。每个密钥保留一个独立的聚合。
+      * 当相等时，第一个元素返回最大值。
+      *
       * Applies an aggregation that that gives the current maximum element of the data stream by
       * the given field by the given key. An independent aggregate is kept per key.
       * When equality, the first element is returned with the maximal value.
@@ -439,6 +450,9 @@ class KeyedStream[T, K](javaStream: KeyedJavaStream[T, K]) extends DataStream[T]
         aggregate(AggregationType.MAXBY, field)
 
     /**
+      * 创建一个新的数据流，该数据流只包含满足给定有状态过滤器谓词的元素。要使用状态分区，必须使用定义键。
+      * keyBy（..），在这种情况下，每个密钥将保持一个独立的状态。
+      *
       * Creates a new DataStream that contains only the elements satisfying the given stateful filter
       * predicate. To use state partitioning, a key must be defined using .keyBy(..), in which case
       * an independent state will be kept per key.
@@ -468,6 +482,9 @@ class KeyedStream[T, K](javaStream: KeyedJavaStream[T, K]) extends DataStream[T]
     }
 
     /**
+      * 通过将给定的有状态函数应用于此数据流的每个元素，创建一个新的数据流。要使用状态分区，必须使用定义键。
+      * keyBy（..），在这种情况下，每个密钥将保持一个独立的状态。
+      *
       * Creates a new DataStream by applying the given stateful function to every element of this
       * DataStream. To use state partitioning, a key must be defined using .keyBy(..), in which
       * case an independent state will be kept per key.
@@ -497,6 +514,9 @@ class KeyedStream[T, K](javaStream: KeyedJavaStream[T, K]) extends DataStream[T]
     }
 
     /**
+      * 通过将给定的有状态函数应用于每个元素并展平结果，创建一个新的数据流。要使用状态分区，必须使用定义键。
+      * keyBy（..），在这种情况下，每个密钥将保持一个独立的状态。
+      *
       * Creates a new DataStream by applying the given stateful function to every element and
       * flattening the results. To use state partitioning, a key must be defined using .keyBy(..),
       * in which case an independent state will be kept per key.
@@ -634,6 +654,8 @@ class KeyedStream[T, K](javaStream: KeyedJavaStream[T, K]) extends DataStream[T]
     def getKeyType = javaStream.getKeyType()
 
     /**
+      * 在一段时间间隔内执行联接。
+      *
       * Perform a join over a time interval.
       *
       * @tparam IN1 The type parameter of the elements in the first streams
@@ -663,6 +685,8 @@ class KeyedStream[T, K](javaStream: KeyedJavaStream[T, K]) extends DataStream[T]
     }
 
     /**
+      * IntervalJoined是一个包含两个流的容器，这两个流的两侧都有键，并且元素应该在时间边界上连接。
+      *
       * IntervalJoined is a container for two streams that have keys for both sides as well as
       * the time boundaries over which elements should be joined.
       *
