@@ -79,6 +79,8 @@ class KeyedStream[T, K](javaStream: KeyedJavaStream[T, K]) extends DataStream[T]
     // ------------------------------------------------------------------------
 
     /**
+      * 将给定的[[KeyedProcessFunction]]应用于输入流，从而创建转换后的输出流。
+      *
       * Applies the given [[KeyedProcessFunction]] on the input stream, thereby
       * creating a transformed output stream.
       *
@@ -106,6 +108,8 @@ class KeyedStream[T, K](javaStream: KeyedJavaStream[T, K]) extends DataStream[T]
     }
 
     /**
+      * 在可以用[[IntervalJoin.between]]指定的时间间隔内，将此[[KeyedStream]]的元素与另一个[[KeyedStream]]的元素连接起来。
+      *
       * Join elements of this [[KeyedStream]] with elements of another [[KeyedStream]] over
       * a time interval that can be specified with [[IntervalJoin.between]].
       *
@@ -124,6 +128,8 @@ class KeyedStream[T, K](javaStream: KeyedJavaStream[T, K]) extends DataStream[T]
     // ------------------------------------------------------------------------
 
     /**
+      * 将此[[KeyedStream]]窗口设置为翻滚时间窗口。
+      *
       * Windows this [[KeyedStream]] into tumbling time windows.
       *
       * This is a shortcut for either `.window(TumblingEventTimeWindows.of(size))` or
@@ -181,6 +187,9 @@ class KeyedStream[T, K](javaStream: KeyedJavaStream[T, K]) extends DataStream[T]
     }
 
     /**
+      * Windows将此数据流转换为[[WindowedStream]]，该数据流在密钥分组流上评估Windows。
+      * 元素由[[WindowAssigner]]放入windows。元素的分组由键和窗口完成。
+      *
       * Windows this data stream to a [[WindowedStream]], which evaluates windows
       * over a key grouped stream. Elements are put into windows by a [[WindowAssigner]]. The
       * grouping of elements is done both by key and by window.
@@ -231,6 +240,8 @@ class KeyedStream[T, K](javaStream: KeyedJavaStream[T, K]) extends DataStream[T]
     }
 
     /**
+      * 通过使用关联折叠函数和初始值折叠此数据流的元素，创建一个新的[[数据流]]。每个密钥保留一个独立的聚合。
+      *
       * Creates a new [[DataStream]] by folding the elements of this DataStream
       * using an associative fold function and an initial value. An independent
       * aggregate is kept per key.
@@ -383,6 +394,9 @@ class KeyedStream[T, K](javaStream: KeyedJavaStream[T, K]) extends DataStream[T]
     def sum(field: String): DataStream[T] = aggregate(AggregationType.SUM, field)
 
     /**
+      * 应用一个聚合，该聚合按给定键的给定位置给出数据流的当前最小元素。每个密钥保留一个独立的聚合。
+      * 当相等时，第一个元素返回最小值。
+      *
       * Applies an aggregation that that gives the current minimum element of the data stream by
       * the given position by the given key. An independent aggregate is kept per key.
       * When equality, the first element is returned with the minimal value.
