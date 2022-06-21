@@ -88,6 +88,8 @@ class JoinedStreams[T1, T2](input1: DataStream[T1], input2: DataStream[T2]) {
     class Where[KEY](keySelector1: KeySelector[T1, KEY], keyType: TypeInformation[KEY]) {
 
         /**
+          * 为来自第二个输入的元素指定[[键选择器]]。
+          *
           * Specifies a [[KeySelector]] for elements from the second input.
           */
         def equalTo(keySelector: T2 => KEY): EqualTo = {
@@ -150,6 +152,8 @@ class JoinedStreams[T1, T2](input1: DataStream[T1], input2: DataStream[T2]) {
                 }
 
                 /**
+                  * 设置在发射之前应用于从窗口逐出图元的[[逐出器]]。
+                  *
                   * Sets the [[Evictor]] that should be used to evict elements from a window before emission.
                   *
                   * Note: When using an evictor window performance will degrade significantly, since
@@ -162,6 +166,8 @@ class JoinedStreams[T1, T2](input1: DataStream[T1], input2: DataStream[T2]) {
                 }
 
                 /**
+                  * 设置允许元素延迟的时间。
+                  *
                   * Sets the time by which elements are allowed to be late.
                   * Delegates to [[WindowedStream#allowedLateness(Time)]]
                   */
@@ -229,6 +235,8 @@ class JoinedStreams[T1, T2](input1: DataStream[T1], input2: DataStream[T2]) {
                 }
 
                 /**
+                  * 使用为窗口组执行的用户函数完成连接操作。
+                  *
                   * Completes the join operation with the user function that is executed
                   * for windowed groups.
                   */
@@ -252,6 +260,9 @@ class JoinedStreams[T1, T2](input1: DataStream[T1], input2: DataStream[T2]) {
     }
 
     /**
+      * 返回给定函数的“closure cleaned”版本。
+      * 仅当[[org.apache.flink.api.common.ExecutionConfig]]中未禁用闭包清理时才进行清理。
+      *
       * Returns a "closure-cleaned" version of the given function. Cleans only if closure cleaning
       * is not disabled in the [[org.apache.flink.api.common.ExecutionConfig]].
       */

@@ -342,6 +342,8 @@ class DataStream[T](stream: JavaStream[T]) {
     }
 
     /**
+      * 设置此操作的插槽共享组。如果可能，同一插槽共享组中的并行操作实例将位于同一TaskManager插槽中。
+      *
       * Sets the slot sharing group of this operation. Parallel instances of
       * operations that are in the same slot sharing group will be co-located in the same
       * TaskManager slot, if possible.
@@ -365,6 +367,8 @@ class DataStream[T](stream: JavaStream[T]) {
     }
 
     /**
+      * 设置输出缓冲区刷新的最大时间频率（ms）。默认情况下，输出缓冲区仅在满时刷新。
+      *
       * Sets the maximum time frequency (ms) for the flushing of the output
       * buffer. By default the output buffers flush only when they are full.
       *
@@ -1197,6 +1201,8 @@ class DataStream[T](stream: JavaStream[T]) {
     }
 
     /**
+      * 使用自定义[[OneInputStreamOperator]]转换[[数据流]]。
+      *
       * Transforms the [[DataStream]] by using a custom [[OneInputStreamOperator]].
       *
       * @param operatorName name of the operator, for logging purposes
