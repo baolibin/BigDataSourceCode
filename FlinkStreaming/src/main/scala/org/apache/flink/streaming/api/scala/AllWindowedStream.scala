@@ -60,6 +60,8 @@ import org.apache.flink.util.Preconditions.checkNotNull
 class AllWindowedStream[T, W <: Window](javaStream: JavaAllWStream[T, W]) {
 
     /**
+      * 将允许的延迟设置为用户指定的值。
+      *
       * Sets the allowed lateness to a user-specified value.
       * If not explicitly set, the allowed lateness is [[0L]].
       * Setting the allowed lateness is only valid for event-time windows.
@@ -88,6 +90,8 @@ class AllWindowedStream[T, W <: Window](javaStream: JavaAllWStream[T, W]) {
     }
 
     /**
+      * 设置应用于触发窗口发射的[[触发器]]。
+      *
       * Sets the [[Trigger]] that should be used to trigger window emission.
       */
     @PublicEvolving

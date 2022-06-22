@@ -62,6 +62,8 @@ import scala.collection.JavaConverters._
 class CoGroupedStreams[T1, T2](input1: DataStream[T1], input2: DataStream[T2]) {
 
     /**
+      * 为来自第一个输入的元素指定[[键选择器]]。
+      *
       * Specifies a [[KeySelector]] for elements from the first input.
       */
     def where[KEY: TypeInformation](keySelector: T1 => KEY): Where[KEY] = {
@@ -76,6 +78,8 @@ class CoGroupedStreams[T1, T2](input1: DataStream[T1], input2: DataStream[T2]) {
     }
 
     /**
+      * 为第一个输入定义了[[键选择器]]的协作组操作。
+      *
       * A co-group operation that has [[KeySelector]]s defined for the first input.
       *
       * You need to specify a [[KeySelector]] for the second input using [[equalTo()]]

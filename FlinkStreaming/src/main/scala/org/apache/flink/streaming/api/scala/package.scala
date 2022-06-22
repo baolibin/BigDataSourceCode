@@ -36,8 +36,8 @@ package object scala {
     implicit def createTypeInformation[T]: TypeInformation[T] = macro TypeUtils.createTypeInfo[T]
 
     def createTuple2TypeInformation[T1, T2](
-                                                   t1: TypeInformation[T1],
-                                                   t2: TypeInformation[T2]): TypeInformation[(T1, T2)] =
+                                               t1: TypeInformation[T1],
+                                               t2: TypeInformation[T2]): TypeInformation[(T1, T2)] =
         apiTupleCreator[T1, T2](t1, t2)
 
     /**
@@ -76,22 +76,22 @@ package object scala {
     = new BroadcastConnectedStream[IN1, IN2](stream)
 
     private[flink] def fieldNames2Indices(
-                                                 typeInfo: TypeInformation[_],
-                                                 fields: Array[String]): Array[Int] = {
+                                             typeInfo: TypeInformation[_],
+                                             fields: Array[String]): Array[Int] = {
         typeInfo match {
             case ti: CaseClassTypeInfo[_] =>
                 val result = ti.getFieldIndices(fields)
 
                 if (result.contains(-1)) {
                     throw new IllegalArgumentException("Fields '" + fields.mkString(", ") +
-                            "' are not valid for '" + ti.toString + "'.")
+                        "' are not valid for '" + ti.toString + "'.")
                 }
 
                 result
 
             case _ =>
                 throw new UnsupportedOperationException("Specifying fields by name is only" +
-                        "supported on Case Classes (for now).")
+                    "supported on Case Classes (for now).")
         }
     }
 }

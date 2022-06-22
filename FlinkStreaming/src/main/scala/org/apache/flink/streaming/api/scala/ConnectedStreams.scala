@@ -52,6 +52,8 @@ class ConnectedStreams[IN1, IN2](javaStream: JavaCStream[IN1, IN2]) {
     // ------------------------------------------------------
 
     /**
+      * 在连接的流上应用CoMap转换。
+      *
       * Applies a CoMap transformation on the connected streams.
       *
       * The transformation consists of two separate functions, where

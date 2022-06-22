@@ -59,10 +59,10 @@ object AsyncDataStream {
       * @return the resulting stream containing the asynchronous results
       */
     def unorderedWait[IN, OUT: TypeInformation](
-                                                       input: DataStream[IN],
-                                                       asyncFunction: AsyncFunction[IN, OUT],
-                                                       timeout: Long,
-                                                       timeUnit: TimeUnit)
+                                                   input: DataStream[IN],
+                                                   asyncFunction: AsyncFunction[IN, OUT],
+                                                   timeout: Long,
+                                                   timeUnit: TimeUnit)
     : DataStream[OUT] = {
 
         unorderedWait(input, asyncFunction, timeout, timeUnit, DEFAULT_QUEUE_CAPACITY)
@@ -84,11 +84,11 @@ object AsyncDataStream {
       * @return the resulting stream containing the asynchronous results
       */
     def unorderedWait[IN, OUT: TypeInformation](
-                                                       input: DataStream[IN],
-                                                       asyncFunction: AsyncFunction[IN, OUT],
-                                                       timeout: Long,
-                                                       timeUnit: TimeUnit,
-                                                       capacity: Int)
+                                                   input: DataStream[IN],
+                                                   asyncFunction: AsyncFunction[IN, OUT],
+                                                   timeout: Long,
+                                                   timeUnit: TimeUnit,
+                                                   capacity: Int)
     : DataStream[OUT] = {
 
         val javaAsyncFunction = wrapAsJavaAsyncFunction(asyncFunction)
@@ -117,10 +117,10 @@ object AsyncDataStream {
       * @return the resulting stream containing the asynchronous results
       */
     def unorderedWait[IN, OUT: TypeInformation](
-                                                       input: DataStream[IN],
-                                                       timeout: Long,
-                                                       timeUnit: TimeUnit)(
-                                                       asyncFunction: (IN, ResultFuture[OUT]) => Unit)
+                                                   input: DataStream[IN],
+                                                   timeout: Long,
+                                                   timeUnit: TimeUnit)(
+                                                   asyncFunction: (IN, ResultFuture[OUT]) => Unit)
     : DataStream[OUT] = {
         unorderedWait(input, timeout, timeUnit, DEFAULT_QUEUE_CAPACITY)(asyncFunction)
     }
@@ -141,11 +141,11 @@ object AsyncDataStream {
       * @return the resulting stream containing the asynchronous results
       */
     def unorderedWait[IN, OUT: TypeInformation](
-                                                       input: DataStream[IN],
-                                                       timeout: Long,
-                                                       timeUnit: TimeUnit,
-                                                       capacity: Int)(
-                                                       asyncFunction: (IN, ResultFuture[OUT]) => Unit)
+                                                   input: DataStream[IN],
+                                                   timeout: Long,
+                                                   timeUnit: TimeUnit,
+                                                   capacity: Int)(
+                                                   asyncFunction: (IN, ResultFuture[OUT]) => Unit)
     : DataStream[OUT] = {
 
         Preconditions.checkNotNull(asyncFunction)
@@ -170,6 +170,8 @@ object AsyncDataStream {
     }
 
     /**
+      * 在输入数据流上应用异步函数。输出顺序与元素的输入顺序相同。
+      *
       * Apply an asynchronous function on the input data stream. The output order is the same as the
       * input order of the elements.
       *
@@ -182,15 +184,17 @@ object AsyncDataStream {
       * @return the resulting stream containing the asynchronous results
       */
     def orderedWait[IN, OUT: TypeInformation](
-                                                     input: DataStream[IN],
-                                                     asyncFunction: AsyncFunction[IN, OUT],
-                                                     timeout: Long,
-                                                     timeUnit: TimeUnit)
+                                                 input: DataStream[IN],
+                                                 asyncFunction: AsyncFunction[IN, OUT],
+                                                 timeout: Long,
+                                                 timeUnit: TimeUnit)
     : DataStream[OUT] = {
         orderedWait(input, asyncFunction, timeout, timeUnit, DEFAULT_QUEUE_CAPACITY)
     }
 
     /**
+      * 在输入数据流上应用异步函数。输出顺序与元素的输入顺序相同。
+      *
       * Apply an asynchronous function on the input data stream. The output order is the same as the
       * input order of the elements.
       *
@@ -205,11 +209,11 @@ object AsyncDataStream {
       * @return the resulting stream containing the asynchronous results
       */
     def orderedWait[IN, OUT: TypeInformation](
-                                                     input: DataStream[IN],
-                                                     asyncFunction: AsyncFunction[IN, OUT],
-                                                     timeout: Long,
-                                                     timeUnit: TimeUnit,
-                                                     capacity: Int)
+                                                 input: DataStream[IN],
+                                                 asyncFunction: AsyncFunction[IN, OUT],
+                                                 timeout: Long,
+                                                 timeUnit: TimeUnit,
+                                                 capacity: Int)
     : DataStream[OUT] = {
 
         val javaAsyncFunction = wrapAsJavaAsyncFunction(asyncFunction)
@@ -225,7 +229,7 @@ object AsyncDataStream {
     }
 
     private def wrapAsJavaAsyncFunction[IN, OUT: TypeInformation](
-                                                                         asyncFunction: AsyncFunction[IN, OUT])
+                                                                     asyncFunction: AsyncFunction[IN, OUT])
     : JavaAsyncFunction[IN, OUT] = asyncFunction match {
         case richAsyncFunction: RichAsyncFunction[IN, OUT] =>
             new ScalaRichAsyncFunctionWrapper[IN, OUT](richAsyncFunction)
@@ -243,6 +247,7 @@ object AsyncDataStream {
 
     /**
       * 在输入数据流上应用异步函数。输出顺序与元素的输入顺序相同。
+      *
       * Apply an asynchronous function on the input data stream. The output order is the same as the
       * input order of the elements.
       *
@@ -255,16 +260,18 @@ object AsyncDataStream {
       * @return the resulting stream containing the asynchronous results
       */
     def orderedWait[IN, OUT: TypeInformation](
-                                                     input: DataStream[IN],
-                                                     timeout: Long,
-                                                     timeUnit: TimeUnit)(
-                                                     asyncFunction: (IN, ResultFuture[OUT]) => Unit)
+                                                 input: DataStream[IN],
+                                                 timeout: Long,
+                                                 timeUnit: TimeUnit)(
+                                                 asyncFunction: (IN, ResultFuture[OUT]) => Unit)
     : DataStream[OUT] = {
 
         orderedWait(input, timeout, timeUnit, DEFAULT_QUEUE_CAPACITY)(asyncFunction)
     }
 
     /**
+      * 在输入数据流上应用异步函数。输出顺序与元素的输入顺序相同。
+      *
       * Apply an asynchronous function on the input data stream. The output order is the same as the
       * input order of the elements.
       *
@@ -279,11 +286,11 @@ object AsyncDataStream {
       * @return the resulting stream containing the asynchronous results
       */
     def orderedWait[IN, OUT: TypeInformation](
-                                                     input: DataStream[IN],
-                                                     timeout: Long,
-                                                     timeUnit: TimeUnit,
-                                                     capacity: Int)(
-                                                     asyncFunction: (IN, ResultFuture[OUT]) => Unit)
+                                                 input: DataStream[IN],
+                                                 timeout: Long,
+                                                 timeUnit: TimeUnit,
+                                                 capacity: Int)(
+                                                 asyncFunction: (IN, ResultFuture[OUT]) => Unit)
     : DataStream[OUT] = {
 
         Preconditions.checkNotNull(asyncFunction)
