@@ -24,6 +24,8 @@ import org.apache.flink.streaming.api.functions.async
 import scala.collection.JavaConverters._
 
 /**
+  * 映射Flink的Java API的内部包装类
+  *
   * Internal wrapper class to map a Flink's Java API
   * [[org.apache.flink.streaming.api.functions.async.ResultFuture]] to a Scala
   * [[org.apache.flink.streaming.api.scala.async.ResultFuture]].
@@ -33,12 +35,12 @@ import scala.collection.JavaConverters._
   */
 @Internal
 class JavaResultFutureWrapper[OUT](val javaResultFuture: async.ResultFuture[OUT])
-  extends ResultFuture[OUT] {
-  override def complete(result: Iterable[OUT]): Unit = {
-    javaResultFuture.complete(result.asJavaCollection)
-  }
+    extends ResultFuture[OUT] {
+    override def complete(result: Iterable[OUT]): Unit = {
+        javaResultFuture.complete(result.asJavaCollection)
+    }
 
-  override def completeExceptionally(throwable: Throwable): Unit = {
-    javaResultFuture.completeExceptionally(throwable)
-  }
+    override def completeExceptionally(throwable: Throwable): Unit = {
+        javaResultFuture.completeExceptionally(throwable)
+    }
 }

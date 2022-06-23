@@ -21,6 +21,8 @@ package org.apache.flink.streaming.api.scala.async
 import org.apache.flink.annotation.PublicEvolving
 
 /**
+  * 结果future在处理异步I/O操作时从用户代码中收集数据/错误。
+  *
   * The result future collects data/errors from the user code while processing
   * asynchronous I/O operations.
   *
@@ -29,22 +31,26 @@ import org.apache.flink.annotation.PublicEvolving
 @PublicEvolving
 trait ResultFuture[OUT] {
 
-  /**
-    * Complete the ResultFuture with a set of result elements.
-    *
-    * Note that it should be called for exactly one time in the user code.
-    * Calling this function for multiple times will cause data lose.
-    *
-    * Put all results in a [[Iterable]] and then issue ResultFuture.complete(Iterable).
-    *
-    * @param result to complete the async collector with
-    */
-  def complete(result: Iterable[OUT])
+    /**
+      * 使用一组结果元素完成ResultFuture。
+      *
+      * Complete the ResultFuture with a set of result elements.
+      *
+      * Note that it should be called for exactly one time in the user code.
+      * Calling this function for multiple times will cause data lose.
+      *
+      * Put all results in a [[Iterable]] and then issue ResultFuture.complete(Iterable).
+      *
+      * @param result to complete the async collector with
+      */
+    def complete(result: Iterable[OUT])
 
-  /**
-    * Complete this ResultFuture with an error.
-    *
-    * @param throwable to complete the async collector with
-    */
-  def completeExceptionally(throwable: Throwable)
+    /**
+      * 完成此ResultFuture，但出现错误。
+      *
+      * Complete this ResultFuture with an error.
+      *
+      * @param throwable to complete the async collector with
+      */
+    def completeExceptionally(throwable: Throwable)
 }

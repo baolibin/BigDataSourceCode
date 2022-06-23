@@ -18,6 +18,7 @@
 package org.apache.flink.streaming.api.scala
 
 import org.apache.flink.annotation.PublicEvolving
+import org.apache.flink.streaming.api.scala.extensions.impl.acceptPartialFunctions.{OnConnectedStream, OnDataStream, OnJoinedStream, OnKeyedStream, OnWindowedStream}
 import org.apache.flink.streaming.api.windowing.windows.Window
 
 /**
@@ -79,17 +80,17 @@ package object extensions {
 
     @PublicEvolving
     implicit def acceptPartialFunctions[L, R, K, W <: Window](
-                                                                     ds: JoinedStreams[L, R]#Where[K]#EqualTo#WithWindow[W]): OnJoinedStream[L, R, K, W] =
+                                                                 ds: JoinedStreams[L, R]#Where[K]#EqualTo#WithWindow[W]): OnJoinedStream[L, R, K, W] =
         new OnJoinedStream[L, R, K, W](ds)
 
     @PublicEvolving
     implicit def acceptPartialFunctions[IN1, IN2](
-                                                         ds: ConnectedStreams[IN1, IN2]): OnConnectedStream[IN1, IN2] =
+                                                     ds: ConnectedStreams[IN1, IN2]): OnConnectedStream[IN1, IN2] =
         new OnConnectedStream[IN1, IN2](ds)
 
     @PublicEvolving
     implicit def acceptPartialFunctions[T, K, W <: Window](
-                                                                  ds: WindowedStream[T, K, W]): OnWindowedStream[T, K, W] =
+                                                              ds: WindowedStream[T, K, W]): OnWindowedStream[T, K, W] =
         new OnWindowedStream[T, K, W](ds)
 
 }

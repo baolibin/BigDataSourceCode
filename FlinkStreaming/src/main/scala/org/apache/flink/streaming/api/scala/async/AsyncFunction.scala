@@ -24,7 +24,7 @@ import org.apache.flink.annotation.PublicEvolving
 import org.apache.flink.api.common.functions.Function
 
 /**
-  * 触发异步I/O操作的函数。
+  * 触发异步输入/输出操作的函数。
   *
   * A function to trigger async I/O operations.
   *
@@ -44,6 +44,8 @@ import org.apache.flink.api.common.functions.Function
 trait AsyncFunction[IN, OUT] extends Function {
 
     /**
+      * 触发每个流输入的异步操作
+      *
       * Trigger the async operation for each stream input
       *
       * @param input        element coming from an upstream task
@@ -52,6 +54,8 @@ trait AsyncFunction[IN, OUT] extends Function {
     def asyncInvoke(input: IN, resultFuture: ResultFuture[OUT]): Unit
 
     /**
+      * [[AsyncFunction.asyncInvoke]]发生超时。默认情况下，结果未来异常完成，并出现超时异常。
+      *
       * [[AsyncFunction.asyncInvoke]] timeout occurred.
       * By default, the result future is exceptionally completed with a timeout exception.
       *

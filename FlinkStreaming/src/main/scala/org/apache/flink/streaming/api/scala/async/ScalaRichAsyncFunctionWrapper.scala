@@ -23,6 +23,8 @@ import org.apache.flink.configuration.Configuration
 import org.apache.flink.streaming.api.functions.async.{ResultFuture => JResultFuture, RichAsyncFunction => JRichAsyncFunction}
 
 /**
+  * 将Scala RichAsyncFunction公开为Java RichAsync函数的包装函数。
+  *
   * A wrapper function that exposes a Scala RichAsyncFunction as a Java Rich Async Function.
   *
   * The Scala and Java RichAsyncFunctions differ in their type of "ResultFuture"
@@ -30,26 +32,26 @@ import org.apache.flink.streaming.api.functions.async.{ResultFuture => JResultFu
   *   - Java RichAsyncFunction: [[org.apache.flink.streaming.api.functions.async.ResultFuture]]
   */
 final class ScalaRichAsyncFunctionWrapper[IN, OUT](func: RichAsyncFunction[IN, OUT])
-  extends JRichAsyncFunction[IN, OUT]{
+    extends JRichAsyncFunction[IN, OUT] {
 
-  override def asyncInvoke(input: IN, resultFuture: JResultFuture[OUT]): Unit = {
-    func.asyncInvoke(input, new JavaResultFutureWrapper[OUT](resultFuture))
-  }
+    override def asyncInvoke(input: IN, resultFuture: JResultFuture[OUT]): Unit = {
+        func.asyncInvoke(input, new JavaResultFutureWrapper[OUT](resultFuture))
+    }
 
-  override def timeout(input: IN, resultFuture: JResultFuture[OUT]): Unit = {
-    func.timeout(input, new JavaResultFutureWrapper[OUT](resultFuture))
-  }
+    override def timeout(input: IN, resultFuture: JResultFuture[OUT]): Unit = {
+        func.timeout(input, new JavaResultFutureWrapper[OUT](resultFuture))
+    }
 
-  override def open(parameters: Configuration): Unit = {
-    func.open(parameters)
-  }
+    override def open(parameters: Configuration): Unit = {
+        func.open(parameters)
+    }
 
-  override def close(): Unit = {
-    func.close()
-  }
+    override def close(): Unit = {
+        func.close()
+    }
 
-  override def setRuntimeContext(runtimeContext: RuntimeContext): Unit = {
-    super.setRuntimeContext(runtimeContext)
-    func.setRuntimeContext(super.getRuntimeContext)
-  }
+    override def setRuntimeContext(runtimeContext: RuntimeContext): Unit = {
+        super.setRuntimeContext(runtimeContext)
+        func.setRuntimeContext(super.getRuntimeContext)
+    }
 }
