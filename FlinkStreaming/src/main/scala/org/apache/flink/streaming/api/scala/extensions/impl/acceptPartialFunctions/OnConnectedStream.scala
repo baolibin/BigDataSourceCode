@@ -22,6 +22,8 @@ import org.apache.flink.api.common.typeinfo.TypeInformation
 import org.apache.flink.streaming.api.scala.{ConnectedStreams, DataStream}
 
 /**
+  * 包装连接的数据流，允许使用匿名分部函数来提取元组、case类实例或集合中的项
+  *
   * Wraps a connected data stream, allowing to use anonymous partial functions to
   * perform extraction of items in a tuple, case class instance or collection
   *
@@ -31,49 +33,53 @@ import org.apache.flink.streaming.api.scala.{ConnectedStreams, DataStream}
   */
 class OnConnectedStream[IN1, IN2](stream: ConnectedStreams[IN1, IN2]) {
 
-  /**
-    * Applies a CoMap transformation on the connected streams.
-    *
-    * The transformation consists of two separate functions, where
-    * the first one is called for each element of the first connected stream,
-    * and the second one is called for each element of the second connected stream.
-    *
-    * @param map1 Function called per element of the first input.
-    * @param map2 Function called per element of the second input.
-    * @return The resulting data stream.
-    */
-  @PublicEvolving
-  def mapWith[R: TypeInformation](map1: IN1 => R, map2: IN2 => R): DataStream[R] =
-    stream.map(map1, map2)
+    /**
+      * 在连接的流上应用CoMap转换。
+      *
+      * Applies a CoMap transformation on the connected streams.
+      *
+      * The transformation consists of two separate functions, where
+      * the first one is called for each element of the first connected stream,
+      * and the second one is called for each element of the second connected stream.
+      *
+      * @param map1 Function called per element of the first input.
+      * @param map2 Function called per element of the second input.
+      * @return The resulting data stream.
+      */
+    @PublicEvolving
+    def mapWith[R: TypeInformation](map1: IN1 => R, map2: IN2 => R): DataStream[R] =
+        stream.map(map1, map2)
 
-  /**
-    * Applies a CoFlatMap transformation on the connected streams.
-    *
-    * The transformation consists of two separate functions, where
-    * the first one is called for each element of the first connected stream,
-    * and the second one is called for each element of the second connected stream.
-    *
-    * @param flatMap1 Function called per element of the first input.
-    * @param flatMap2 Function called per element of the second input.
-    * @return The resulting data stream.
-    */
-  @PublicEvolving
-  def flatMapWith[R: TypeInformation](
-      flatMap1: IN1 => TraversableOnce[R], flatMap2: IN2 => TraversableOnce[R]): DataStream[R] =
-    stream.flatMap(flatMap1, flatMap2)
+    /**
+      * 在连接的流上应用CoFlatMap转换。
+      *
+      * Applies a CoFlatMap transformation on the connected streams.
+      *
+      * The transformation consists of two separate functions, where
+      * the first one is called for each element of the first connected stream,
+      * and the second one is called for each element of the second connected stream.
+      *
+      * @param flatMap1 Function called per element of the first input.
+      * @param flatMap2 Function called per element of the second input.
+      * @return The resulting data stream.
+      */
+    @PublicEvolving
+    def flatMapWith[R: TypeInformation](
+                                           flatMap1: IN1 => TraversableOnce[R], flatMap2: IN2 => TraversableOnce[R]): DataStream[R] =
+        stream.flatMap(flatMap1, flatMap2)
 
-  /**
-    * Keys the two connected streams together. After this operation, all
-    * elements with the same key from both streams will be sent to the
-    * same parallel instance of the transformation functions.
-    *
-    * @param key1 The first stream's key function
-    * @param key2 The second stream's key function
-    * @return The key-grouped connected streams
-    */
-  @PublicEvolving
-  def keyingBy[K1: TypeInformation, K2: TypeInformation](key1: IN1 => K1, key2: IN2 => K2):
-      ConnectedStreams[IN1, IN2] =
-    stream.keyBy(key1, key2)
+    /**
+      * Keys the two connected streams together. After this operation, all
+      * elements with the same key from both streams will be sent to the
+      * same parallel instance of the transformation functions.
+      *
+      * @param key1 The first stream's key function
+      * @param key2 The second stream's key function
+      * @return The key-grouped connected streams
+      */
+    @PublicEvolving
+    def keyingBy[K1: TypeInformation, K2: TypeInformation](key1: IN1 => K1, key2: IN2 => K2):
+    ConnectedStreams[IN1, IN2] =
+        stream.keyBy(key1, key2)
 
 }

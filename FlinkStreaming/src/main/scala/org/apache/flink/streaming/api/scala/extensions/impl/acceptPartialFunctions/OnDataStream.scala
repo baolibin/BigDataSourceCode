@@ -22,6 +22,8 @@ import org.apache.flink.api.common.typeinfo.TypeInformation
 import org.apache.flink.streaming.api.scala.{DataStream, KeyedStream}
 
 /**
+  * 包装数据流，允许使用匿名分部函数来提取元组、case类实例或集合中的项
+  *
   * Wraps a data stream, allowing to use anonymous partial functions to
   * perform extraction of items in a tuple, case class instance or collection
   *
@@ -30,49 +32,49 @@ import org.apache.flink.streaming.api.scala.{DataStream, KeyedStream}
   */
 class OnDataStream[T](stream: DataStream[T]) {
 
-  /**
-    * Applies a function `fun` to each item of the stream
-    *
-    * @param fun The function to be applied to each item
-    * @tparam R The type of the items in the returned stream
-    * @return A dataset of R
-    */
-  @PublicEvolving
-  def mapWith[R: TypeInformation](fun: T => R): DataStream[R] =
-    stream.map(fun)
+    /**
+      * Applies a function `fun` to each item of the stream
+      *
+      * @param fun The function to be applied to each item
+      * @tparam R The type of the items in the returned stream
+      * @return A dataset of R
+      */
+    @PublicEvolving
+    def mapWith[R: TypeInformation](fun: T => R): DataStream[R] =
+        stream.map(fun)
 
-  /**
-    * Applies a function `fun` to each item of the stream, producing a collection of items
-    * that will be flattened in the resulting stream
-    *
-    * @param fun The function to be applied to each item
-    * @tparam R The type of the items in the returned stream
-    * @return A dataset of R
-    */
-  @PublicEvolving
-  def flatMapWith[R: TypeInformation](fun: T => TraversableOnce[R]): DataStream[R] =
-    stream.flatMap(fun)
+    /**
+      * Applies a function `fun` to each item of the stream, producing a collection of items
+      * that will be flattened in the resulting stream
+      *
+      * @param fun The function to be applied to each item
+      * @tparam R The type of the items in the returned stream
+      * @return A dataset of R
+      */
+    @PublicEvolving
+    def flatMapWith[R: TypeInformation](fun: T => TraversableOnce[R]): DataStream[R] =
+        stream.flatMap(fun)
 
-  /**
-    * Applies a predicate `fun` to each item of the stream, keeping only those for which
-    * the predicate holds
-    *
-    * @param fun The predicate to be tested on each item
-    * @return A dataset of R
-    */
-  @PublicEvolving
-  def filterWith(fun: T => Boolean): DataStream[T] =
-    stream.filter(fun)
+    /**
+      * Applies a predicate `fun` to each item of the stream, keeping only those for which
+      * the predicate holds
+      *
+      * @param fun The predicate to be tested on each item
+      * @return A dataset of R
+      */
+    @PublicEvolving
+    def filterWith(fun: T => Boolean): DataStream[T] =
+        stream.filter(fun)
 
-  /**
-    * Keys the items according to a keying function `fun`
-    *
-    * @param fun The keying function
-    * @tparam K The type of the key, for which type information must be known
-    * @return A stream of Ts keyed by Ks
-    */
-  @PublicEvolving
-  def keyingBy[K: TypeInformation](fun: T => K): KeyedStream[T, K] =
-    stream.keyBy(fun)
+    /**
+      * Keys the items according to a keying function `fun`
+      *
+      * @param fun The keying function
+      * @tparam K The type of the key, for which type information must be known
+      * @return A stream of Ts keyed by Ks
+      */
+    @PublicEvolving
+    def keyingBy[K: TypeInformation](fun: T => K): KeyedStream[T, K] =
+        stream.keyBy(fun)
 
 }
