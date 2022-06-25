@@ -26,6 +26,10 @@ import org.apache.flink.runtime.state.FunctionInitializationContext;
 import org.apache.flink.runtime.state.FunctionSnapshotContext;
 
 /**
+ * 这是有状态转换函数的核心接口，即在各个流记录之间维护状态的函数。
+ * <p>
+ * 虽然更轻量级的界面作为各种状态的快捷方式存在，但该界面在管理键控状态和操作员状态方面提供了最大的灵活性。
+ * <p>
  * This is the core interface for <i>stateful transformation functions</i>, meaning functions
  * that maintain state across individual stream records.
  * While more lightweight interfaces exist as shortcuts for various types of state, this interface offer the
@@ -137,7 +141,6 @@ import org.apache.flink.runtime.state.FunctionSnapshotContext;
  *     }
  * }
  * }</pre>
- *
  * @see ListCheckpointed
  * @see RuntimeContext
  */
@@ -145,23 +148,26 @@ import org.apache.flink.runtime.state.FunctionSnapshotContext;
 @SuppressWarnings("deprecation")
 public interface CheckpointedFunction {
 
-	/**
-	 * This method is called when a snapshot for a checkpoint is requested. This acts as a hook to the function to
-	 * ensure that all state is exposed by means previously offered through {@link FunctionInitializationContext} when
-	 * the Function was initialized, or offered now by {@link FunctionSnapshotContext} itself.
-	 *
-	 * @param context the context for drawing a snapshot of the operator
-	 * @throws Exception
-	 */
-	void snapshotState(FunctionSnapshotContext context) throws Exception;
+    /**
+     * 当请求检查点的快照时，调用此方法。这充当函数的挂钩，以确保在初始化函数时通过{@link FunctionInitializationContext}以前提供的方式
+     * 公开所有状态，或者现在通过{@link FunctionSnapshotContext}本身提供的方式公开所有状态。
+     * <p>
+     * This method is called when a snapshot for a checkpoint is requested. This acts as a hook to the function to
+     * ensure that all state is exposed by means previously offered through {@link FunctionInitializationContext} when
+     * the Function was initialized, or offered now by {@link FunctionSnapshotContext} itself.
+     * @param context the context for drawing a snapshot of the operator
+     * @throws Exception
+     */
+    void snapshotState(FunctionSnapshotContext context) throws Exception;
 
-	/**
-	 * This method is called when the parallel function instance is created during distributed
-	 * execution. Functions typically set up their state storing data structures in this method.
-	 *
-	 * @param context the context for initializing the operator
-	 * @throws Exception
-	 */
-	void initializeState(FunctionInitializationContext context) throws Exception;
+    /**
+     * 在分布式执行期间创建并行函数实例时，将调用此方法。函数通常在此方法中设置其状态存储数据结构。
+     * <p>
+     * This method is called when the parallel function instance is created during distributed
+     * execution. Functions typically set up their state storing data structures in this method.
+     * @param context the context for initializing the operator
+     * @throws Exception
+     */
+    void initializeState(FunctionInitializationContext context) throws Exception;
 
 }
