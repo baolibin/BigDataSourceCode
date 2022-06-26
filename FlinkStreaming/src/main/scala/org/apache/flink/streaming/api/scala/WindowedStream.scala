@@ -63,6 +63,8 @@ import org.apache.flink.util.Collector
 class WindowedStream[T, K, W <: Window](javaStream: JavaWStream[T, K, W]) {
 
     /**
+      * 将允许的延迟设置为用户指定的值。
+      *
       * Sets the allowed lateness to a user-specified value.
       * If not explicitly set, the allowed lateness is [[0L]].
       * Setting the allowed lateness is only valid for event-time windows.
@@ -77,6 +79,8 @@ class WindowedStream[T, K, W <: Window](javaStream: JavaWStream[T, K, W]) {
     }
 
     /**
+      * 将延迟到达的数据发送到由给定[[输出标记]]标识的侧输出。
+      *
       * Send late arriving data to the side output identified by the given [[OutputTag]]. Data
       * is considered late after the watermark has passed the end of the window plus the allowed
       * lateness set using [[allowedLateness(Time)]].
@@ -91,6 +95,8 @@ class WindowedStream[T, K, W <: Window](javaStream: JavaWStream[T, K, W]) {
     }
 
     /**
+      * 设置应用于触发窗口发射的[[触发器]]。
+      *
       * Sets the [[Trigger]] that should be used to trigger window emission.
       */
     @PublicEvolving
@@ -100,6 +106,8 @@ class WindowedStream[T, K, W <: Window](javaStream: JavaWStream[T, K, W]) {
     }
 
     /**
+      * 设置在发射之前应用于从窗口逐出图元的[[逐出器]]。
+      *
       * Sets the [[Evictor]] that should be used to evict elements from a window before emission.
       *
       * Note: When using an evictor window performance will degrade significantly, since
