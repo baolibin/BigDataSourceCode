@@ -1008,6 +1008,8 @@ class DataStream[T](stream: JavaStream[T]) {
     }
 
     /**
+      * 创建联接操作。有关如何指定键和窗口的示例，请参见[[JoinedStreams]]。
+      *
       * Creates a join operation. See [[JoinedStreams]] for an example of how the keys
       * and window can be specified.
       */
@@ -1016,6 +1018,8 @@ class DataStream[T](stream: JavaStream[T]) {
     }
 
     /**
+      * 将数据流写入标准输出流（stdout）。对于数据流的每个元素，的结果。toString已写入。
+      *
       * Writes a DataStream to the standard output stream (stdout). For each
       * element of the DataStream the result of .toString is
       * written.
@@ -1025,6 +1029,8 @@ class DataStream[T](stream: JavaStream[T]) {
     def print(): DataStreamSink[T] = stream.print()
 
     /**
+      * 将数据流写入标准输出流（stderr）。
+      *
       * Writes a DataStream to the standard output stream (stderr).
       *
       * For each element of the DataStream the result of
@@ -1036,8 +1042,10 @@ class DataStream[T](stream: JavaStream[T]) {
     def printToErr() = stream.printToErr()
 
     /**
+      * 将数据流写入标准输出流（stdout）。对于数据流的每个元素，写入[[AnyRef.toString（）]的结果。
+      *
       * Writes a DataStream to the standard output stream (stdout). For each
-      * element of the DataStream the result of [[AnyRef.toString()]] is
+      * element of the DataStream the result of [[AnyRef.toString ( )]] is
       * written.
       *
       * @param sinkIdentifier The string to prefix the output with.
@@ -1059,6 +1067,8 @@ class DataStream[T](stream: JavaStream[T]) {
     def printToErr(sinkIdentifier: String) = stream.printToErr(sinkIdentifier)
 
     /**
+      * 以文本格式将数据流写入path指定的文件。对于数据流的每个元素，的结果。toString已写入。
+      *
       * Writes a DataStream to the file specified by path in text format. For
       * every element of the DataStream the result of .toString is written.
       *
@@ -1071,6 +1081,8 @@ class DataStream[T](stream: JavaStream[T]) {
 
 
     /**
+      * 以文本格式将数据流写入path指定的文件。对于数据流的每个元素，的结果。toString已写入。
+      *
       * Writes a DataStream to the file specified by path in text format. For
       * every element of the DataStream the result of .toString is written.
       *
@@ -1167,6 +1179,9 @@ class DataStream[T](stream: JavaStream[T]) {
     }
 
     /**
+      * 将给定接收器添加到此数据流。一旦StreamExecutionEnvironment运行，只有添加了接收器的流才会执行。
+      * 执行（…）方法被调用。
+      *
       * Adds the given sink to this DataStream. Only streams with sinks added
       * will be executed once the StreamExecutionEnvironment.execute(...)
       * method is called.
