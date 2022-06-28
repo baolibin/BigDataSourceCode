@@ -474,6 +474,8 @@ class DataStream[T](stream: JavaStream[T]) {
     }
 
     /**
+      * 使用自定义分区器在指定的键字段上对元组数据流进行分区。此方法采用要分区的键位置，以及接受键类型的分区器。
+      *
       * Partitions a tuple DataStream on the specified key fields using a custom partitioner.
       * This method takes the key position to partition on, and a partitioner that accepts the key
       * type.
@@ -518,6 +520,8 @@ class DataStream[T](stream: JavaStream[T]) {
     }
 
     /**
+      * 设置数据流的分区，以便将输出元组广泛地投射到下一个组件的每个并行实例。
+      *
       * Sets the partitioning of the DataStream so that the output tuples
       * are broad casted to every parallel instance of the next component.
       */
@@ -552,6 +556,8 @@ class DataStream[T](stream: JavaStream[T]) {
     def global: DataStream[T] = asScalaStream(stream.global())
 
     /**
+      * 设置数据流的分区，以便将输出元组无序排列到下一个组件。
+      *
       * Sets the partitioning of the DataStream so that the output tuples
       * are shuffled to the next component.
       */
@@ -559,6 +565,8 @@ class DataStream[T](stream: JavaStream[T]) {
     def shuffle: DataStream[T] = asScalaStream(stream.shuffle())
 
     /**
+      * 设置数据流的分区，以便将输出元组转发到下一个组件的本地子任务（只要可能）。
+      *
       * Sets the partitioning of the DataStream so that the output tuples
       * are forwarded to the local subtask of the next component (whenever
       * possible).
@@ -566,6 +574,8 @@ class DataStream[T](stream: JavaStream[T]) {
     def forward: DataStream[T] = asScalaStream(stream.forward())
 
     /**
+      * 设置数据流的分区，以便将输出元组均匀分布到下一个组件。
+      *
       * Sets the partitioning of the DataStream so that the output tuples
       * are distributed evenly to the next component.
       */
@@ -719,6 +729,8 @@ class DataStream[T](stream: JavaStream[T]) {
     }
 
     /**
+      * 通过将给定函数应用于每个元素并展平结果来创建新的数据流。
+      *
       * Creates a new DataStream by applying the given function to every element and flattening
       * the results.
       */
@@ -758,6 +770,8 @@ class DataStream[T](stream: JavaStream[T]) {
 
 
     /**
+      * 创建仅包含满足给定筛选器谓词的元素的新数据流。
+      *
       * Creates a new DataStream that contains only the elements satisfying the given filter predicate.
       */
     def filter(filter: FilterFunction[T]): DataStream[T] = {
@@ -768,6 +782,8 @@ class DataStream[T](stream: JavaStream[T]) {
     }
 
     /**
+      * 创建仅包含满足给定筛选器谓词的元素的新数据流。
+      *
       * Creates a new DataStream that contains only the elements satisfying the given filter predicate.
       */
     def filter(fun: T => Boolean): DataStream[T] = {
@@ -782,6 +798,8 @@ class DataStream[T](stream: JavaStream[T]) {
     }
 
     /**
+      * 将此数据流设置为滚动时间窗口。
+      *
       * Windows this DataStream into tumbling time windows.
       *
       * This is a shortcut for either `.window(TumblingEventTimeWindows.of(size))` or
@@ -969,6 +987,7 @@ class DataStream[T](stream: JavaStream[T]) {
     }
 
     /**
+      * 运算符，用于使用OutputSelector将元组定向到特定的命名输出。对运算符调用此方法将创建一个新的[[拆分流]]。
       *
       * Operator used for directing tuples to specific named outputs using an
       * OutputSelector. Calling this method on an operator creates a new
@@ -980,6 +999,8 @@ class DataStream[T](stream: JavaStream[T]) {
     def split(selector: OutputSelector[T]): SplitStream[T] = asScalaStream(stream.split(selector))
 
     /**
+      * 创建一个新的[[拆分流]]，它只包含满足给定输出选择器谓词的元素。
+      *
       * Creates a new [[SplitStream]] that contains only the elements satisfying the
       * given output selector predicate.
       *
