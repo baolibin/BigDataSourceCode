@@ -26,59 +26,73 @@ import org.apache.flink.streaming.api.windowing.windows.Window
 import org.apache.flink.util.Collector
 
 /**
+  * 使用上下文检索额外信息，在键控（分组）窗口上计算的函数的基抽象类。
+  *
   * Base abstract class for functions that are evaluated over keyed (grouped)
   * windows using a context for retrieving extra information.
   *
-  * @tparam IN The type of the input value.
+  * @tparam IN  The type of the input value.
   * @tparam OUT The type of the output value.
-  * @tparam W The type of the window.
+  * @tparam W   The type of the window.
   */
 @PublicEvolving
 abstract class ProcessAllWindowFunction[IN, OUT, W <: Window]
     extends AbstractRichFunction {
-  /**
-    * Evaluates the window and outputs none or several elements.
-    *
-    * @param context  The context in which the window is being evaluated.
-    * @param elements The elements in the window being evaluated.
-    * @param out      A collector for emitting elements.
-    * @throws Exception The function may throw exceptions to fail the program and trigger recovery.
-    */
-  @throws[Exception]
-  def process(context: Context, elements: Iterable[IN], out: Collector[OUT])
-
-  /**
-    * Deletes any state in the [[Context]] when the Window is purged.
-    *
-    * @param context The context to which the window is being evaluated
-    * @throws Exception The function may throw exceptions to fail the program and trigger recovery.
-    */
-  @throws[Exception]
-  def clear(context: Context) {}
-
-  /**
-    * The context holding window metadata
-    */
-  abstract class Context {
     /**
-      * @return The window that is being evaluated.
+      * 计算窗口并输出一个或多个元素。
+      *
+      * Evaluates the window and outputs none or several elements.
+      *
+      * @param context  The context in which the window is being evaluated.
+      * @param elements The elements in the window being evaluated.
+      * @param out      A collector for emitting elements.
+      * @throws Exception The function may throw exceptions to fail the program and trigger recovery.
       */
-    def window: W
+    @throws[Exception]
+    def process(context: Context, elements: Iterable[IN], out: Collector[OUT])
 
     /**
-      * State accessor for per-key and per-window state.
+      * 清除窗口时，删除[[上下文]]中的任何状态。
+      *
+      * Deletes any state in the [[Context]] when the Window is purged.
+      *
+      * @param context The context to which the window is being evaluated
+      * @throws Exception The function may throw exceptions to fail the program and trigger recovery.
       */
-    def windowState: KeyedStateStore
+    @throws[Exception]
+    def clear(context: Context) {}
 
     /**
-      * State accessor for per-key global state.
+      * 保存窗口元数据的上下文
+      *
+      * The context holding window metadata
       */
-    def globalState: KeyedStateStore
+    abstract class Context {
+        /**
+          * @return The window that is being evaluated.
+          */
+        def window: W
 
-    /**
-      * Emits a record to the side output identified by the [[OutputTag]].
-      */
-    def output[X](outputTag: OutputTag[X], value: X)
-  }
+        /**
+          * 每个键和每个窗口状态的状态访问器。
+          *
+          * State accessor for per-key and per-window state.
+          */
+        def windowState: KeyedStateStore
+
+        /**
+          * 每个键全局状态的状态访问器。
+          *
+          * State accessor for per-key global state.
+          */
+        def globalState: KeyedStateStore
+
+        /**
+          * 向[[输出标记]]标识的侧输出发出记录。
+          *
+          * Emits a record to the side output identified by the [[OutputTag]].
+          */
+        def output[X](outputTag: OutputTag[X], value: X)
+    }
 
 }

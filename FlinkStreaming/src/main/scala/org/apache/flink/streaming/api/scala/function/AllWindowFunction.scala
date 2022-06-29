@@ -25,22 +25,26 @@ import org.apache.flink.streaming.api.windowing.windows.Window
 import org.apache.flink.util.Collector
 
 /**
- * Base interface for functions that are evaluated over non-grouped windows,
- * i.e., windows over all stream partitions.
- *
- * @tparam IN The type of the input value.
- * @tparam OUT The type of the output value.
- */
+  * 用于在非分组窗口（即所有流分区上的窗口）上评估的函数的基本接口。
+  *
+  * Base interface for functions that are evaluated over non-grouped windows,
+  * i.e., windows over all stream partitions.
+  *
+  * @tparam IN  The type of the input value.
+  * @tparam OUT The type of the output value.
+  */
 @Public
 trait AllWindowFunction[IN, OUT, W <: Window] extends Function with Serializable {
 
-  /**
-    * Evaluates the window and outputs none or several elements.
-    *
-    * @param window The window that is being evaluated.
-    * @param input  The elements in the window being evaluated.
-    * @param out    A collector for emitting elements.
-    * @throws Exception The function may throw exceptions to fail the program and trigger recovery.
-    */
-  def apply(window: W, input: Iterable[IN], out: Collector[OUT])
+    /**
+      * 计算窗口并输出一个或多个元素。
+      *
+      * Evaluates the window and outputs none or several elements.
+      *
+      * @param window The window that is being evaluated.
+      * @param input  The elements in the window being evaluated.
+      * @param out    A collector for emitting elements.
+      * @throws Exception The function may throw exceptions to fail the program and trigger recovery.
+      */
+    def apply(window: W, input: Iterable[IN], out: Collector[OUT])
 }

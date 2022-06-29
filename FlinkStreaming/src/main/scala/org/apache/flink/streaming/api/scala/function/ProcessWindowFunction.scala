@@ -26,71 +26,83 @@ import org.apache.flink.streaming.api.windowing.windows.Window
 import org.apache.flink.util.Collector
 
 /**
+  * 使用上下文检索额外信息，在键控（分组）窗口上计算的函数的基抽象类。
+  *
   * Base abstract class for functions that are evaluated over keyed (grouped)
   * windows using a context for retrieving extra information.
   *
-  * @tparam IN The type of the input value.
+  * @tparam IN  The type of the input value.
   * @tparam OUT The type of the output value.
   * @tparam KEY The type of the key.
-  * @tparam W The type of the window.
+  * @tparam W   The type of the window.
   */
 @PublicEvolving
 abstract class ProcessWindowFunction[IN, OUT, KEY, W <: Window]
     extends AbstractRichFunction {
 
-  /**
-    * Evaluates the window and outputs none or several elements.
-    *
-    * @param key      The key for which this window is evaluated.
-    * @param context  The context in which the window is being evaluated.
-    * @param elements The elements in the window being evaluated.
-    * @param out      A collector for emitting elements.
-    * @throws Exception The function may throw exceptions to fail the program and trigger recovery.
-    */
-  @throws[Exception]
-  def process(key: KEY, context: Context, elements: Iterable[IN], out: Collector[OUT])
-
-  /**
-    * Deletes any state in the [[Context]] when the Window is purged.
-    *
-    * @param context The context to which the window is being evaluated
-    * @throws Exception The function may throw exceptions to fail the program and trigger recovery.
-    */
-  @throws[Exception]
-  def clear(context: Context) {}
-
-  /**
-    * The context holding window metadata
-    */
-  abstract class Context {
     /**
-      * Returns the window that is being evaluated.
+      * 计算窗口并输出一个或多个元素。
+      *
+      * Evaluates the window and outputs none or several elements.
+      *
+      * @param key      The key for which this window is evaluated.
+      * @param context  The context in which the window is being evaluated.
+      * @param elements The elements in the window being evaluated.
+      * @param out      A collector for emitting elements.
+      * @throws Exception The function may throw exceptions to fail the program and trigger recovery.
       */
-    def window: W
+    @throws[Exception]
+    def process(key: KEY, context: Context, elements: Iterable[IN], out: Collector[OUT])
 
     /**
-      * Returns the current processing time.
+      * 清除窗口时，删除[[上下文]]中的任何状态。
+      *
+      * Deletes any state in the [[Context]] when the Window is purged.
+      *
+      * @param context The context to which the window is being evaluated
+      * @throws Exception The function may throw exceptions to fail the program and trigger recovery.
       */
-    def currentProcessingTime: Long
+    @throws[Exception]
+    def clear(context: Context) {}
 
     /**
-      * Returns the current event-time watermark.
+      * 保存窗口元数据的上下文
+      *
+      * The context holding window metadata
       */
-    def currentWatermark: Long
+    abstract class Context {
+        /**
+          * 返回正在计算的窗口。
+          *
+          * Returns the window that is being evaluated.
+          */
+        def window: W
 
-    /**
-      * State accessor for per-key and per-window state.
-      */
-    def windowState: KeyedStateStore
+        /**
+          * 返回当前处理时间。
+          *
+          * Returns the current processing time.
+          */
+        def currentProcessingTime: Long
 
-    /**
-      * State accessor for per-key global state.
-      */
-    def globalState: KeyedStateStore
+        /**
+          * Returns the current event-time watermark.
+          */
+        def currentWatermark: Long
 
-    /**
-      * Emits a record to the side output identified by the [[OutputTag]].
-      */
-    def output[X](outputTag: OutputTag[X], value: X);
-  }
+        /**
+          * State accessor for per-key and per-window state.
+          */
+        def windowState: KeyedStateStore
+
+        /**
+          * State accessor for per-key global state.
+          */
+        def globalState: KeyedStateStore
+
+        /**
+          * Emits a record to the side output identified by the [[OutputTag]].
+          */
+        def output[X](outputTag: OutputTag[X], value: X);
+    }
 }
