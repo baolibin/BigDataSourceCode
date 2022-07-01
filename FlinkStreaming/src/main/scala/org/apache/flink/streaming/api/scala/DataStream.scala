@@ -1076,6 +1076,8 @@ class DataStream[T](stream: JavaStream[T]) {
     def print(sinkIdentifier: String): DataStreamSink[T] = stream.print(sinkIdentifier)
 
     /**
+      * 将数据流写入标准输出流（stderr）。
+      *
       * Writes a DataStream to the standard output stream (stderr).
       *
       * For each element of the DataStream the result of
@@ -1122,6 +1124,8 @@ class DataStream[T](stream: JavaStream[T]) {
     }
 
     /**
+      * 将CSV格式的数据流写入路径参数指定的文件。每隔毫秒周期性地执行写入。
+      *
       * Writes the DataStream in CSV format to the file specified by the path parameter. The writing
       * is performed periodically every millis milliseconds.
       *
@@ -1138,6 +1142,8 @@ class DataStream[T](stream: JavaStream[T]) {
     }
 
     /**
+      * 将CSV格式的数据流写入路径参数指定的文件。每隔毫秒周期性地执行写入。
+      *
       * Writes the DataStream in CSV format to the file specified by the path parameter. The writing
       * is performed periodically every millis milliseconds.
       *
