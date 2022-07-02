@@ -33,6 +33,8 @@ import org.apache.flink.streaming.api.scala.{DataStream, KeyedStream}
 class OnDataStream[T](stream: DataStream[T]) {
 
     /**
+      * 将函数“fun”应用于流的每个项
+      *
       * Applies a function `fun` to each item of the stream
       *
       * @param fun The function to be applied to each item
@@ -44,6 +46,8 @@ class OnDataStream[T](stream: DataStream[T]) {
         stream.map(fun)
 
     /**
+      * 将函数“fun”应用于流的每个项，生成将在结果流中展平的项集合
+      *
       * Applies a function `fun` to each item of the stream, producing a collection of items
       * that will be flattened in the resulting stream
       *
@@ -56,6 +60,8 @@ class OnDataStream[T](stream: DataStream[T]) {
         stream.flatMap(fun)
 
     /**
+      * 将谓词“fun”应用于流的每个项，只保留谓词所包含的那些项
+      *
       * Applies a predicate `fun` to each item of the stream, keeping only those for which
       * the predicate holds
       *
@@ -67,6 +73,8 @@ class OnDataStream[T](stream: DataStream[T]) {
         stream.filter(fun)
 
     /**
+      * 根据键控功能对项目进行键控`
+      *
       * Keys the items according to a keying function `fun`
       *
       * @param fun The keying function
