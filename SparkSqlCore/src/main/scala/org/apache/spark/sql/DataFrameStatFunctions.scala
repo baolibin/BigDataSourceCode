@@ -39,6 +39,8 @@ import scala.collection.JavaConverters._
 final class DataFrameStatFunctions private[sql](df: DataFrame) {
 
     /**
+      * 计算数据帧的数字列的近似分位数。
+      *
       * Calculates the approximate quantiles of a numerical column of a DataFrame.
       *
       * The result of this algorithm has the following deterministic bound:
@@ -69,13 +71,15 @@ final class DataFrameStatFunctions private[sql](df: DataFrame) {
       * @since 2.0.0
       */
     def approxQuantile(
-                              col: String,
-                              probabilities: Array[Double],
-                              relativeError: Double): Array[Double] = {
+                          col: String,
+                          probabilities: Array[Double],
+                          relativeError: Double): Array[Double] = {
         approxQuantile(Array(col), probabilities, relativeError).head
     }
 
     /**
+      * 计算数据帧的两个数字列的样本协方差。
+      *
       * Calculate the sample covariance of two numerical columns of a DataFrame.
       *
       * @param col1 the name of the first column
@@ -95,6 +99,8 @@ final class DataFrameStatFunctions private[sql](df: DataFrame) {
     }
 
     /**
+      * 计算数据帧中两列的皮尔逊相关系数。
+      *
       * Calculates the Pearson Correlation Coefficient of two columns of a DataFrame.
       *
       * @param col1 the name of the column
@@ -132,7 +138,7 @@ final class DataFrameStatFunctions private[sql](df: DataFrame) {
       */
     def corr(col1: String, col2: String, method: String): Double = {
         require(method == "pearson", "Currently only the calculation of the Pearson Correlation " +
-                "coefficient is supported.")
+            "coefficient is supported.")
         StatFunctions.pearsonCorrelation(df, Seq(col1, col2))
     }
 
@@ -387,7 +393,7 @@ final class DataFrameStatFunctions private[sql](df: DataFrame) {
       * @since 2.0.0
       */
     def countMinSketch(
-                              colName: String, eps: Double, confidence: Double, seed: Int): CountMinSketch = {
+                          colName: String, eps: Double, confidence: Double, seed: Int): CountMinSketch = {
         countMinSketch(Column(colName), eps, confidence, seed)
     }
 
@@ -420,7 +426,7 @@ final class DataFrameStatFunctions private[sql](df: DataFrame) {
             case _ =>
                 throw new IllegalArgumentException(
                     s"Count-min Sketch only supports string type and integral types, " +
-                            s"and does not support type $colType."
+                        s"and does not support type $colType."
                 )
         }
 
@@ -499,7 +505,7 @@ final class DataFrameStatFunctions private[sql](df: DataFrame) {
             case _ =>
                 throw new IllegalArgumentException(
                     s"Bloom filter only supports string type and integral types, " +
-                            s"and does not support type $colType."
+                        s"and does not support type $colType."
                 )
         }
 
@@ -516,11 +522,11 @@ final class DataFrameStatFunctions private[sql](df: DataFrame) {
       * Python-friendly version of [[approxQuantile()]]
       */
     private[spark] def approxQuantile(
-                                             cols: List[String],
-                                             probabilities: List[Double],
-                                             relativeError: Double): java.util.List[java.util.List[Double]] = {
+                                         cols: List[String],
+                                         probabilities: List[Double],
+                                         relativeError: Double): java.util.List[java.util.List[Double]] = {
         approxQuantile(cols.toArray, probabilities.toArray, relativeError)
-                .map(_.toList.asJava).toList.asJava
+            .map(_.toList.asJava).toList.asJava
     }
 
     /**
@@ -540,9 +546,9 @@ final class DataFrameStatFunctions private[sql](df: DataFrame) {
       * @since 2.2.0
       */
     def approxQuantile(
-                              cols: Array[String],
-                              probabilities: Array[Double],
-                              relativeError: Double): Array[Array[Double]] = {
+                          cols: Array[String],
+                          probabilities: Array[Double],
+                          relativeError: Double): Array[Array[Double]] = {
         StatFunctions.multipleApproxQuantiles(
             df.select(cols.map(col): _*),
             cols,

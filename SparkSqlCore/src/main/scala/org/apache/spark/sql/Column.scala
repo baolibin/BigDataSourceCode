@@ -63,9 +63,9 @@ private[sql] object Column {
   */
 @InterfaceStability.Stable
 class TypedColumn[-T, U](
-                                expr: Expression,
-                                private[sql] val encoder: ExpressionEncoder[U])
-        extends Column(expr) {
+                            expr: Expression,
+                            private[sql] val encoder: ExpressionEncoder[U])
+    extends Column(expr) {
 
     /**
       * Gives the [[TypedColumn]] a name (alias).
@@ -83,8 +83,8 @@ class TypedColumn[-T, U](
       * on a decoded object.
       */
     private[sql] def withInputType(
-                                          inputEncoder: ExpressionEncoder[_],
-                                          inputAttributes: Seq[Attribute]): TypedColumn[T, U] = {
+                                      inputEncoder: ExpressionEncoder[_],
+                                      inputAttributes: Seq[Attribute]): TypedColumn[T, U] = {
         val unresolvedDeserializer = UnresolvedDeserializer(inputEncoder.deserializer, inputAttributes)
         val newExpr = expr transform {
             case ta: TypedAggregateExpression if ta.inputDeserializer.isEmpty =>
@@ -169,7 +169,7 @@ class Column(val expr: Expression) extends Logging {
       *  - Given a Map, a key of the correct type can be used to retrieve an individual value.
       *  - Given a Struct, a string fieldName can be used to extract that field.
       *  - Given an Array of Structs, a string fieldName can be used to extract filed
-      * of every struct in that array, and return an Array of fields
+      *    of every struct in that array, and return an Array of fields
       *
       * @group expr_ops
       * @since 1.4.0
@@ -249,7 +249,7 @@ class Column(val expr: Expression) extends Logging {
         if (this.expr == right) {
             logWarning(
                 s"Constructing trivially true equals predicate, '${this.expr} = $right'. " +
-                        "Perhaps you need to use aliases.")
+                    "Perhaps you need to use aliases.")
         }
         EqualTo(expr, right)
     }

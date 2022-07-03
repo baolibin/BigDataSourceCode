@@ -37,8 +37,7 @@ import org.apache.spark.unsafe.types.UTF8String
 import scala.collection.JavaConverters._
 
 /**
-  * 用于从外部存储系统（如文件系统、键值存储等）加载[[Dataset]]的接口。
-  * 使用`SparkSession.read文件`来访问这个。
+  * 用于从外部存储系统（如文件系统、键值存储等）加载[[Dataset]]的接口。使用`SparkSession.read文件`来访问这个。
   *
   * Interface used to load a [[Dataset]] from external storage systems (e.g. file systems,
   * key-value stores, etc). Use `SparkSession.read` to access this.
@@ -65,6 +64,8 @@ class DataFrameReader private[sql](sparkSession: SparkSession) extends Logging {
     }
 
     /**
+      * 为基础数据源添加输入选项。
+      *
       * Adds an input option for the underlying data source.
       *
       * @since 2.0.0
@@ -72,6 +73,8 @@ class DataFrameReader private[sql](sparkSession: SparkSession) extends Logging {
     def option(key: String, value: Boolean): DataFrameReader = option(key, value.toString)
 
     /**
+      * 为基础数据源添加输入选项。
+      *
       * Adds an input option for the underlying data source.
       *
       * You can set the following option(s):
@@ -88,6 +91,8 @@ class DataFrameReader private[sql](sparkSession: SparkSession) extends Logging {
     }
 
     /**
+      * 为基础数据源添加输入选项。
+      *
       * Adds an input option for the underlying data source.
       *
       * @since 2.0.0
@@ -167,13 +172,13 @@ class DataFrameReader private[sql](sparkSession: SparkSession) extends Logging {
       * @since 1.4.0
       */
     def jdbc(
-                    url: String,
-                    table: String,
-                    columnName: String,
-                    lowerBound: Long,
-                    upperBound: Long,
-                    numPartitions: Int,
-                    connectionProperties: Properties): DataFrame = {
+                url: String,
+                table: String,
+                columnName: String,
+                lowerBound: Long,
+                upperBound: Long,
+                numPartitions: Int,
+                connectionProperties: Properties): DataFrame = {
         // columnName, lowerBound, upperBound and numPartitions override settings in extraOptions.
         this.extraOptions ++= Map(
             JDBCOptions.JDBC_PARTITION_COLUMN -> columnName,
@@ -228,7 +233,7 @@ class DataFrameReader private[sql](sparkSession: SparkSession) extends Logging {
     def load(paths: String*): DataFrame = {
         if (source.toLowerCase(Locale.ROOT) == DDLUtils.HIVE_PROVIDER) {
             throw new AnalysisException("Hive data source can only be used with tables, you can not " +
-                    "read files of Hive data source directly.")
+                "read files of Hive data source directly.")
         }
 
         sparkSession.baseRelationToDataFrame(
@@ -268,10 +273,10 @@ class DataFrameReader private[sql](sparkSession: SparkSession) extends Logging {
       * @since 1.4.0
       */
     def jdbc(
-                    url: String,
-                    table: String,
-                    predicates: Array[String],
-                    connectionProperties: Properties): DataFrame = {
+                url: String,
+                table: String,
+                predicates: Array[String],
+                connectionProperties: Properties): DataFrame = {
         assertNoSpecifiedSchema("jdbc")
         // connectionProperties should override settings in extraOptions.
         val params = extraOptions.toMap ++ connectionProperties.asScala.toMap
@@ -554,8 +559,8 @@ class DataFrameReader private[sql](sparkSession: SparkSession) extends Logging {
       * `columnNameOfCorruptRecord` as an option.
       */
     private def verifyColumnNameOfCorruptRecord(
-                                                       schema: StructType,
-                                                       columnNameOfCorruptRecord: String): Unit = {
+                                                   schema: StructType,
+                                                   columnNameOfCorruptRecord: String): Unit = {
         schema.getFieldIndex(columnNameOfCorruptRecord).foreach { corruptFieldIndex =>
             val f = schema(corruptFieldIndex)
             if (f.dataType != StringType || !f.nullable) {

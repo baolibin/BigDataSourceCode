@@ -39,6 +39,8 @@ import scala.collection.JavaConverters._
 final class DataFrameNaFunctions private[sql](df: DataFrame) {
 
     /**
+      * 返回一个新的“DataFrame”，其中删除包含任何null或NaN值的行。
+      *
       * Returns a new `DataFrame` that drops rows containing any null or NaN values.
       *
       * @since 1.3.1
@@ -46,6 +48,8 @@ final class DataFrameNaFunctions private[sql](df: DataFrame) {
     def drop(): DataFrame = drop("any", df.columns)
 
     /**
+      * 返回一个新的“DataFrame”，它删除包含null或NaN值的行。
+      *
       * Returns a new `DataFrame` that drops rows containing null or NaN values.
       *
       * If `how` is "any", then drop rows containing any null or NaN values.
@@ -56,6 +60,8 @@ final class DataFrameNaFunctions private[sql](df: DataFrame) {
     def drop(how: String): DataFrame = drop(how, df.columns)
 
     /**
+      * 返回一个新的“DataFrame”，它在指定列中删除包含null或NaN值的行。
+      *
       * Returns a new `DataFrame` that drops rows containing null or NaN values
       * in the specified columns.
       *
