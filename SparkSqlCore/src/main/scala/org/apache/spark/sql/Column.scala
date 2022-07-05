@@ -1364,6 +1364,8 @@ class ColumnName(name: String) extends Column(name) {
     def date: StructField = StructField(name, DateType)
 
     /**
+      * 创建decimal类型的新“StructField”。
+      *
       * Creates a new `StructField` of type decimal.
       *
       * @since 1.3.0
@@ -1417,6 +1419,8 @@ class ColumnName(name: String) extends Column(name) {
     def struct(fields: StructField*): StructField = struct(StructType(fields))
 
     /**
+      * 创建struct类型的新“StructField”。
+      *
       * Creates a new `StructField` of type struct.
       *
       * @since 1.3.0

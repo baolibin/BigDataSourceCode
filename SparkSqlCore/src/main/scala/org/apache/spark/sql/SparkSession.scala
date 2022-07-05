@@ -77,11 +77,11 @@ import scala.util.control.NonFatal
   */
 @InterfaceStability.Stable
 class SparkSession private(
-                                  @transient val sparkContext: SparkContext,
-                                  @transient private val existingSharedState: Option[SharedState],
-                                  @transient private val parentSessionState: Option[SessionState],
-                                  @transient private[sql] val extensions: SparkSessionExtensions)
-        extends Serializable with Closeable with Logging {
+                              @transient val sparkContext: SparkContext,
+                              @transient private val existingSharedState: Option[SharedState],
+                              @transient private val parentSessionState: Option[SessionState],
+                              @transient private[sql] val extensions: SparkSessionExtensions)
+    extends Serializable with Closeable with Logging {
     self =>
 
     /**
@@ -112,12 +112,12 @@ class SparkSession private(
     @transient
     lazy val sessionState: SessionState = {
         parentSessionState
-                .map(_.clone(this))
-                .getOrElse {
-                    SparkSession.instantiateSessionState(
-                        SparkSession.sessionStateClassName(sparkContext.conf),
-                        self)
-                }
+            .map(_.clone(this))
+            .getOrElse {
+                SparkSession.instantiateSessionState(
+                    SparkSession.sessionStateClassName(sparkContext.conf),
+                    self)
+            }
     }
 
     /* ----------------------- *
@@ -356,9 +356,9 @@ class SparkSession private(
       * User can specify whether the input rows should be converted to Catalyst rows.
       */
     private[sql] def createDataFrame(
-                                            rowRDD: RDD[Row],
-                                            schema: StructType,
-                                            needsConversion: Boolean) = {
+                                        rowRDD: RDD[Row],
+                                        schema: StructType,
+                                        needsConversion: Boolean) = {
         // TODO: use MutableProjection when rowRDD is another DataFrame and the applied
         // schema differs from the existing schema on any field data type.
         val catalystRows = if (needsConversion) {
@@ -730,8 +730,8 @@ class SparkSession private(
       * User can specify whether the input rows should be converted to Catalyst rows.
       */
     private[sql] def internalCreateDataFrame(
-                                                    catalystRows: RDD[InternalRow],
-                                                    schema: StructType): DataFrame = {
+                                                catalystRows: RDD[InternalRow],
+                                                schema: StructType): DataFrame = {
         // TODO: use MutableProjection when rowRDD is another DataFrame and the applied
         // schema differs from the existing schema on any field data type.
         val logicalPlan = LogicalRDD(schema.toAttributes, catalystRows)(self)
@@ -742,8 +742,8 @@ class SparkSession private(
       * Apply a schema defined by the schemaString to an RDD. It is only used by PySpark.
       */
     private[sql] def applySchemaToPythonRDD(
-                                                   rdd: RDD[Array[Any]],
-                                                   schemaString: String): DataFrame = {
+                                               rdd: RDD[Array[Any]],
+                                               schemaString: String): DataFrame = {
         val schema = DataType.fromJson(schemaString).asInstanceOf[StructType]
         applySchemaToPythonRDD(rdd, schema)
     }
@@ -752,8 +752,8 @@ class SparkSession private(
       * Apply a schema defined by the schema to an RDD. It is only used by PySpark.
       */
     private[sql] def applySchemaToPythonRDD(
-                                                   rdd: RDD[Array[Any]],
-                                                   schema: StructType): DataFrame = {
+                                               rdd: RDD[Array[Any]],
+                                               schema: StructType): DataFrame = {
         val rowRdd = rdd.map(r => python.EvaluatePython.fromJava(r, schema).asInstanceOf[InternalRow])
         Dataset.ofRows(self, LogicalRDD(schema.toAttributes, rowRdd)(self))
     }
@@ -803,8 +803,7 @@ object SparkSession {
     def builder(): Builder = new Builder
 
     /**
-      * 清除当前线程的活动SparkSession。
-      * 对getOrCreate的后续调用将返回第一个创建的上下文，而不是线程本地重写。
+      * 清除当前线程的活动SparkSession。对getOrCreate的后续调用将返回第一个创建的上下文，而不是线程本地重写。
       *
       * Clears the active SparkSession for current thread. Subsequent calls to getOrCreate will
       * return the first created context instead of a thread-local override.
@@ -849,6 +848,8 @@ object SparkSession {
     ////////////////////////////////////////////////////////////////////////////////////////
 
     /**
+      * 返回生成器返回的默认SparkSession。
+      *
       * Returns the default SparkSession that is returned by the builder.
       *
       * @since 2.2.0
@@ -874,12 +875,14 @@ object SparkSession {
     }
 
     /**
+      * Helper方法基于conf中的“className”创建“SessionState”实例。结果是“SessionState”或基于配置单元的“SessionState”。
+      *
       * Helper method to create an instance of `SessionState` based on `className` from conf.
       * The result is either `SessionState` or a Hive based `SessionState`.
       */
     private def instantiateSessionState(
-                                               className: String,
-                                               sparkSession: SparkSession): SessionState = {
+                                           className: String,
+                                           sparkSession: SparkSession): SessionState = {
         try {
             // invoke `new [Hive]SessionStateBuilder(SparkSession, Option[SessionState])`
             val clazz = Utils.classForName(className)
@@ -921,6 +924,8 @@ object SparkSession {
         private[this] var userSuppliedContext: Option[SparkContext] = None
 
         /**
+          * 设置应用程序的名称，该名称将显示在Spark web UI中。如果未设置应用程序名称，则将使用随机生成的名称。
+          *
           * Sets a name for the application, which will be shown in the Spark web UI.
           * If no application name is set, a randomly generated name will be used.
           *
@@ -929,6 +934,8 @@ object SparkSession {
         def appName(name: String): Builder = config("spark.app.name", name)
 
         /**
+          * 设置配置选项。使用此方法设置的选项将自动传播到“SparkConf”和SparkSession自己的配置。
+          *
           * Sets a config option. Options set using this method are automatically propagated to
           * both `SparkConf` and SparkSession's own configuration.
           *
@@ -962,6 +969,8 @@ object SparkSession {
         }
 
         /**
+          * 基于给定的“SparkConf”设置配置选项列表。
+          *
           * Sets a list of config options based on the given `SparkConf`.
           *
           * @since 2.0.0
@@ -991,7 +1000,7 @@ object SparkSession {
             } else {
                 throw new IllegalArgumentException(
                     "Unable to instantiate SparkSession with Hive support because " +
-                            "Hive classes are not found.")
+                        "Hive classes are not found.")
             }
         }
 
@@ -1081,7 +1090,7 @@ object SparkSession {
                     try {
                         val extensionConfClass = Utils.classForName(extensionConfClassName)
                         val extensionConf = extensionConfClass.newInstance()
-                                .asInstanceOf[SparkSessionExtensions => Unit]
+                            .asInstanceOf[SparkSessionExtensions => Unit]
                         extensionConf(extensions)
                     } catch {
                         // Ignore the error if we cannot find the class or when the class has the wrong type.

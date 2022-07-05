@@ -23,6 +23,7 @@ import org.apache.spark.sql.catalyst.expressions._
 
 /**
   * 定义分区、排序和frame边界的窗口规范。
+  *
   * A window specification that defines the partitioning, ordering, and frame boundaries.
   *
   * Use the static methods in [[Window]] to create a [[WindowSpec]].
@@ -31,9 +32,9 @@ import org.apache.spark.sql.catalyst.expressions._
   */
 @InterfaceStability.Stable
 class WindowSpec private[sql](
-                                     partitionSpec: Seq[Expression],
-                                     orderSpec: Seq[SortOrder],
-                                     frame: WindowFrame) {
+                                 partitionSpec: Seq[Expression],
+                                 orderSpec: Seq[SortOrder],
+                                 frame: WindowFrame) {
 
     /**
       * Defines the partitioning columns in a [[WindowSpec]].

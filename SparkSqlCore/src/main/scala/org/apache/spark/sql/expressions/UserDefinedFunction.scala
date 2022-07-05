@@ -43,11 +43,13 @@ import org.apache.spark.sql.types.DataType
   */
 @InterfaceStability.Stable
 case class UserDefinedFunction protected[sql](
-                                                     f: AnyRef,
-                                                     dataType: DataType,
-                                                     inputTypes: Option[Seq[DataType]]) {
+                                                 f: AnyRef,
+                                                 dataType: DataType,
+                                                 inputTypes: Option[Seq[DataType]]) {
 
     /**
+      * 返回使用给定参数调用UDF的表达式。
+      *
       * Returns an expression that invokes the UDF, using the given arguments.
       *
       * @since 1.3.0

@@ -21,9 +21,7 @@ import org.apache.spark.sql.Encoder
 import org.apache.spark.sql.catalyst.encoders.ExpressionEncoder
 
 /**
-  * 一种聚合器，它使用一个结合的和可交换的归约函数。
-  * 此reduce函数可用于遍历所有输入值，并将它们缩减为单个值。
-  * 如果没有输入，则返回空值。
+  * 一种聚合器，它使用一个结合的和可交换的归约函数。此reduce函数可用于遍历所有输入值，并将它们缩减为单个值。如果没有输入，则返回空值。
   *
   * An aggregator that uses a single associative and commutative reduce function. This reduce
   * function can be used to go through all input values and reduces them to a single value.
@@ -32,7 +30,7 @@ import org.apache.spark.sql.catalyst.encoders.ExpressionEncoder
   * This class currently assumes there is at least one input row.
   */
 private[sql] class ReduceAggregator[T: Encoder](func: (T, T) => T)
-        extends Aggregator[T, (Boolean, T), T] {
+    extends Aggregator[T, (Boolean, T), T] {
 
     @transient private val encoder = implicitly[Encoder[T]]
 

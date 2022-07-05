@@ -22,6 +22,8 @@ import org.apache.spark.sql.Column
 import org.apache.spark.sql.catalyst.expressions._
 
 /**
+  * 用于在数据帧中定义窗口的实用函数。
+  *
   * Utility functions for defining window in DataFrames.
   *
   * {{{
