@@ -35,6 +35,8 @@ import org.apache.spark.sql.internal.SQLConf
 class RuntimeConfig private[sql](sqlConf: SQLConf = new SQLConf) {
 
     /**
+      * 设置给定的Spark运行时配置属性。
+      *
       * Sets the given Spark runtime configuration property.
       *
       * @since 2.0.0
@@ -45,6 +47,8 @@ class RuntimeConfig private[sql](sqlConf: SQLConf = new SQLConf) {
     }
 
     /**
+      * 设置给定的Spark运行时配置属性。
+      *
       * Sets the given Spark runtime configuration property.
       *
       * @since 2.0.0
@@ -61,6 +65,8 @@ class RuntimeConfig private[sql](sqlConf: SQLConf = new SQLConf) {
     }
 
     /**
+      * 设置给定的Spark运行时配置属性。
+      *
       * Sets the given Spark runtime configuration property.
       *
       * @since 2.0.0
@@ -71,6 +77,8 @@ class RuntimeConfig private[sql](sqlConf: SQLConf = new SQLConf) {
     }
 
     /**
+      * 返回给定键的Spark runtime configuration属性的值。
+      *
       * Returns the value of Spark runtime configuration property for the given key.
       *
       * @since 2.0.0
@@ -80,6 +88,8 @@ class RuntimeConfig private[sql](sqlConf: SQLConf = new SQLConf) {
     }
 
     /**
+      * 返回在此配置中设置的所有属性。
+      *
       * Returns all properties set in this conf.
       *
       * @since 2.0.0
@@ -89,6 +99,8 @@ class RuntimeConfig private[sql](sqlConf: SQLConf = new SQLConf) {
     }
 
     /**
+      * 返回给定键的Spark runtime configuration属性的值。
+      *
       * Returns the value of Spark runtime configuration property for the given key.
       *
       * @since 2.0.0
@@ -100,6 +112,8 @@ class RuntimeConfig private[sql](sqlConf: SQLConf = new SQLConf) {
     }
 
     /**
+      * 返回给定键的Spark runtime configuration属性的值。
+      *
       * Returns the value of Spark runtime configuration property for the given key.
       *
       * @throws java.util.NoSuchElementException if the key is not set and does not have a default
@@ -112,6 +126,8 @@ class RuntimeConfig private[sql](sqlConf: SQLConf = new SQLConf) {
     }
 
     /**
+      * 重置给定密钥的配置属性。
+      *
       * Resets the configuration property for the given key.
       *
       * @since 2.0.0
@@ -122,6 +138,8 @@ class RuntimeConfig private[sql](sqlConf: SQLConf = new SQLConf) {
     }
 
     /**
+      * 返回给定键的Spark runtime configuration属性的值。
+      *
       * Returns the value of Spark runtime configuration property for the given key.
       */
     @throws[NoSuchElementException]("if the key is not set")
@@ -134,6 +152,8 @@ class RuntimeConfig private[sql](sqlConf: SQLConf = new SQLConf) {
     }
 
     /**
+      * 返回给定键的Spark runtime configuration属性的值。
+      *
       * Returns the value of Spark runtime configuration property for the given key.
       */
     protected[sql] def get[T](entry: ConfigEntry[T], default: T): T = {
@@ -141,6 +161,8 @@ class RuntimeConfig private[sql](sqlConf: SQLConf = new SQLConf) {
     }
 
     /**
+      * 返回是否设置了特定键。
+      *
       * Returns whether a particular key is set.
       */
     protected[sql] def contains(key: String): Boolean = {

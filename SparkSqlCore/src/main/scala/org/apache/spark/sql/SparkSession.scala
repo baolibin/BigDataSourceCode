@@ -85,6 +85,8 @@ class SparkSession private(
     self =>
 
     /**
+      * 会话间共享的状态，包括“SparkContext”、缓存数据、侦听器和与外部系统交互的目录。
+      *
       * State shared across sessions, including the `SparkContext`, cached data, listener,
       * and a catalog that interacts with external systems.
       *
@@ -135,6 +137,7 @@ class SparkSession private(
       * @since 2.0.0
       */
     @transient lazy val conf: RuntimeConfig = new RuntimeConfig(sessionState.conf)
+
     /**
       * 返回没有行或列的“DataFrame”。
       *
@@ -446,6 +449,8 @@ class SparkSession private(
      * ------------------------------- */
 
     /**
+      * 将为外部数据源创建的“BaseRelation”转换为“DataFrame”。
+      *
       * Convert a `BaseRelation` created for external data sources into a `DataFrame`.
       *
       * @since 2.0.0
@@ -826,6 +831,8 @@ object SparkSession {
     }
 
     /**
+      * 返回生成器返回的当前线程的活动SparkSession。
+      *
       * Returns the active SparkSession for the current thread, returned by the builder.
       *
       * @since 2.2.0
