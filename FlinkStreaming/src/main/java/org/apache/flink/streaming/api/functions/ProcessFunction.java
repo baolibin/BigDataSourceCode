@@ -27,6 +27,7 @@ import org.apache.flink.util.OutputTag;
 
 /**
  * 处理流元素的函数。
+ * <p>
  * A function that processes elements of a stream.
  *
  * <p>For every element in the input stream {@link #processElement(Object, Context, Collector)}
@@ -50,73 +51,73 @@ import org.apache.flink.util.OutputTag;
 @PublicEvolving
 public abstract class ProcessFunction<I, O> extends AbstractRichFunction {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 * 处理输入流中的一个元素。
-	 * Process one element from the input stream.
-	 *
-	 * <p>This function can output zero or more elements using the {@link Collector} parameter
-	 * and also update internal state or set timers using the {@link Context} parameter.
-	 * @param value The input value.
-	 * @param ctx   A {@link Context} that allows querying the timestamp of the element and getting
-	 *              a {@link TimerService} for registering timers and querying the time. The
-	 *              context is only valid during the invocation of this method, do not store it.
-	 * @param out   The collector for returning result values.
-	 * @throws Exception This method may throw exceptions. Throwing an exception will cause the operation
-	 *                   to fail and may trigger recovery.
-	 */
-	public abstract void processElement(I value, Context ctx, Collector<O> out) throws Exception;
+    /**
+     * 处理输入流中的一个元素。
+     * Process one element from the input stream.
+     *
+     * <p>This function can output zero or more elements using the {@link Collector} parameter
+     * and also update internal state or set timers using the {@link Context} parameter.
+     * @param value The input value.
+     * @param ctx   A {@link Context} that allows querying the timestamp of the element and getting
+     *              a {@link TimerService} for registering timers and querying the time. The
+     *              context is only valid during the invocation of this method, do not store it.
+     * @param out   The collector for returning result values.
+     * @throws Exception This method may throw exceptions. Throwing an exception will cause the operation
+     *                   to fail and may trigger recovery.
+     */
+    public abstract void processElement(I value, Context ctx, Collector<O> out) throws Exception;
 
-	/**
-	 * Called when a timer set using {@link TimerService} fires.
-	 * @param timestamp The timestamp of the firing timer.
-	 * @param ctx       An {@link OnTimerContext} that allows querying the timestamp of the firing timer,
-	 *                  querying the {@link TimeDomain} of the firing timer and getting a
-	 *                  {@link TimerService} for registering timers and querying the time.
-	 *                  The context is only valid during the invocation of this method, do not store it.
-	 * @param out       The collector for returning result values.
-	 * @throws Exception This method may throw exceptions. Throwing an exception will cause the operation
-	 *                   to fail and may trigger recovery.
-	 */
-	public void onTimer(long timestamp, OnTimerContext ctx, Collector<O> out) throws Exception {
-	}
+    /**
+     * Called when a timer set using {@link TimerService} fires.
+     * @param timestamp The timestamp of the firing timer.
+     * @param ctx       An {@link OnTimerContext} that allows querying the timestamp of the firing timer,
+     *                  querying the {@link TimeDomain} of the firing timer and getting a
+     *                  {@link TimerService} for registering timers and querying the time.
+     *                  The context is only valid during the invocation of this method, do not store it.
+     * @param out       The collector for returning result values.
+     * @throws Exception This method may throw exceptions. Throwing an exception will cause the operation
+     *                   to fail and may trigger recovery.
+     */
+    public void onTimer(long timestamp, OnTimerContext ctx, Collector<O> out) throws Exception {
+    }
 
-	/**
-	 * Information available in an invocation of {@link #processElement(Object, Context, Collector)}
-	 * or {@link #onTimer(long, OnTimerContext, Collector)}.
-	 */
-	public abstract class Context {
+    /**
+     * Information available in an invocation of {@link #processElement(Object, Context, Collector)}
+     * or {@link #onTimer(long, OnTimerContext, Collector)}.
+     */
+    public abstract class Context {
 
-		/**
-		 * Timestamp of the element currently being processed or timestamp of a firing timer.
-		 *
-		 * <p>This might be {@code null}, for example if the time characteristic of your program
-		 * is set to {@link org.apache.flink.streaming.api.TimeCharacteristic#ProcessingTime}.
-		 */
-		public abstract Long timestamp();
+        /**
+         * Timestamp of the element currently being processed or timestamp of a firing timer.
+         *
+         * <p>This might be {@code null}, for example if the time characteristic of your program
+         * is set to {@link org.apache.flink.streaming.api.TimeCharacteristic#ProcessingTime}.
+         */
+        public abstract Long timestamp();
 
-		/**
-		 * A {@link TimerService} for querying time and registering timers.
-		 */
-		public abstract TimerService timerService();
+        /**
+         * A {@link TimerService} for querying time and registering timers.
+         */
+        public abstract TimerService timerService();
 
-		/**
-		 * Emits a record to the side output identified by the {@link OutputTag}.
-		 * @param outputTag the {@code OutputTag} that identifies the side output to emit to.
-		 * @param value     The record to emit.
-		 */
-		public abstract <X> void output(OutputTag<X> outputTag, X value);
-	}
+        /**
+         * Emits a record to the side output identified by the {@link OutputTag}.
+         * @param outputTag the {@code OutputTag} that identifies the side output to emit to.
+         * @param value     The record to emit.
+         */
+        public abstract <X> void output(OutputTag<X> outputTag, X value);
+    }
 
-	/**
-	 * Information available in an invocation of {@link #onTimer(long, OnTimerContext, Collector)}.
-	 */
-	public abstract class OnTimerContext extends Context {
-		/**
-		 * The {@link TimeDomain} of the firing timer.
-		 */
-		public abstract TimeDomain timeDomain();
-	}
+    /**
+     * Information available in an invocation of {@link #onTimer(long, OnTimerContext, Collector)}.
+     */
+    public abstract class OnTimerContext extends Context {
+        /**
+         * The {@link TimeDomain} of the firing timer.
+         */
+        public abstract TimeDomain timeDomain();
+    }
 
 }
