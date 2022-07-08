@@ -7,6 +7,14 @@
     <groupId>org.apache.spark</groupId>
     <artifactId>BigDataSourceCode</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-core</artifactId>
+            <version>1.9.2</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
     <packaging>pom</packaging>
 
     <modules>

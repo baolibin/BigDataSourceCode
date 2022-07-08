@@ -17,6 +17,9 @@
 
 /**
  * Scala中的核心Spark类。
+ * Java中也使用了一些类，例如@link org.apache.spark.acculator和@link org.apache.spark.storage.StorageLevel，
+ * 但@link org.apache.spark.api.Java包包含主Java api。
+ * <p>
  * Core Spark classes in Scala. A few classes here, such as {@link org.apache.spark.Accumulator}
  * and {@link org.apache.spark.storage.StorageLevel}, are also used in Java, but the
  * {@link org.apache.spark.api.java} package contains the main Java API.

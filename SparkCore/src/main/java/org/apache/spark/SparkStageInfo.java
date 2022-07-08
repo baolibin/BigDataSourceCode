@@ -21,18 +21,27 @@ import java.io.Serializable;
 
 /**
  * 公开有关Spark阶段的信息。
+ * 此接口的设计目的不是在Spark之外实现。我们可能会添加其他方法，这些方法可能会破坏与外部实现的二进制兼容性。
+ * <p>
  * Exposes information about Spark Stages.
- *
+ * <p>
  * This interface is not designed to be implemented outside of Spark.  We may add additional methods
  * which may break binary compatibility with outside implementations.
  */
 public interface SparkStageInfo extends Serializable {
-  int stageId();
-  int currentAttemptId();
-  long submissionTime();
-  String name();
-  int numTasks();
-  int numActiveTasks();
-  int numCompletedTasks();
-  int numFailedTasks();
+    int stageId();
+
+    int currentAttemptId();
+
+    long submissionTime();
+
+    String name();
+
+    int numTasks();
+
+    int numActiveTasks();
+
+    int numCompletedTasks();
+
+    int numFailedTasks();
 }
