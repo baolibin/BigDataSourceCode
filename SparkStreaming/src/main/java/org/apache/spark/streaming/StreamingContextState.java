@@ -20,26 +20,34 @@ package org.apache.spark.streaming;
 import org.apache.spark.annotation.DeveloperApi;
 
 /**
+ * 表示StreamingContext的状态。
+ * <p>
  * :: DeveloperApi ::
- *
+ * <p>
  * Represents the state of a StreamingContext.
  */
 @DeveloperApi
 public enum StreamingContextState {
-  /**
-   * The context has been created, but not been started yet.
-   * Input DStreams, transformations and output operations can be created on the context.
-   */
-  INITIALIZED,
+    /**
+     * 上下文已创建，但尚未启动。可以在上下文中创建输入数据流、转换和输出操作。
+     * <p>
+     * The context has been created, but not been started yet.
+     * Input DStreams, transformations and output operations can be created on the context.
+     */
+    INITIALIZED,
 
-  /**
-   * The context has been started, and been not stopped.
-   * Input DStreams, transformations and output operations cannot be created on the context.
-   */
-  ACTIVE,
+    /**
+     * 上下文已启动，但尚未停止。无法在上下文中创建输入数据流、转换和输出操作。
+     * <p>
+     * The context has been started, and been not stopped.
+     * Input DStreams, transformations and output operations cannot be created on the context.
+     */
+    ACTIVE,
 
-  /**
-   * The context has been stopped and cannot be used any more.
-   */
-  STOPPED
+    /**
+     * 上下文已停止，无法再使用。
+     * <p>
+     * The context has been stopped and cannot be used any more.
+     */
+    STOPPED
 }

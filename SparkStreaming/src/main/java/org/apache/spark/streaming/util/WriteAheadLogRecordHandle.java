@@ -18,13 +18,15 @@
 package org.apache.spark.streaming.util;
 
 /**
+ * 这个抽象类表示一个句柄，该句柄引用在{@link WriteAheadLog WriteAheadLog}中写入的记录。
+ * 它必须包含WriteAheadLog类实现读取和返回记录所需的所有信息。
+ * <p>
  * :: DeveloperApi ::
- *
+ * <p>
  * This abstract class represents a handle that refers to a record written in a
  * {@link WriteAheadLog WriteAheadLog}.
  * It must contain all the information necessary for the record to be read and returned by
  * an implementation of the WriteAheadLog class.
- *
  * @see WriteAheadLog
  */
 @org.apache.spark.annotation.DeveloperApi

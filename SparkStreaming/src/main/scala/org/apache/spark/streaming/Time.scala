@@ -18,8 +18,7 @@
 package org.apache.spark.streaming
 
 /**
-  * 这是一个简单的类，表示时间的绝对瞬间。
-  * 在内部，它将时间表示为当前时间与1970年1月1日午夜UTC之间的差值（以毫秒为单位）。
+  * 这是一个简单的类，表示时间的绝对瞬间。在内部，它将时间表示为当前时间与1970年1月1日午夜UTC之间的差值（以毫秒为单位）。
   * 这与System.currentTimeMillis返回的格式相同.
   *
   * This is a simple class that represents an absolute instant of time.

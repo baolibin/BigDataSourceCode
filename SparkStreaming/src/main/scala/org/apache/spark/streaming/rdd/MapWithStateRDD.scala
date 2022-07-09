@@ -18,9 +18,11 @@
 package org.apache.spark.streaming.rdd
 
 import java.io.{IOException, ObjectOutputStream}
-
 import org.apache.spark._
+import org.apache.spark.launcher.SparkAppHandle.State
 import org.apache.spark.rdd.RDD
+import org.apache.spark.streaming.{StateImpl, Time}
+import org.apache.spark.streaming.util.{EmptyStateMap, StateMap}
 import org.apache.spark.util.Utils
 
 import scala.collection.mutable.ArrayBuffer

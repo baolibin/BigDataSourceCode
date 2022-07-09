@@ -19,83 +19,89 @@ package org.apache.spark.streaming
 
 import org.apache.spark.util.Utils
 
-case class Duration (private val millis: Long) {
+case class Duration(private val millis: Long) {
 
-  def < (that: Duration): Boolean = (this.millis < that.millis)
+    def <(that: Duration): Boolean = (this.millis < that.millis)
 
-  def <= (that: Duration): Boolean = (this.millis <= that.millis)
+    def <=(that: Duration): Boolean = (this.millis <= that.millis)
 
-  def > (that: Duration): Boolean = (this.millis > that.millis)
+    def >(that: Duration): Boolean = (this.millis > that.millis)
 
-  def >= (that: Duration): Boolean = (this.millis >= that.millis)
+    def >=(that: Duration): Boolean = (this.millis >= that.millis)
 
-  def + (that: Duration): Duration = new Duration(millis + that.millis)
+    def +(that: Duration): Duration = new Duration(millis + that.millis)
 
-  def - (that: Duration): Duration = new Duration(millis - that.millis)
+    def -(that: Duration): Duration = new Duration(millis - that.millis)
 
-  def * (times: Int): Duration = new Duration(millis * times)
+    def *(times: Int): Duration = new Duration(millis * times)
 
-  def / (that: Duration): Double = millis.toDouble / that.millis.toDouble
+    def /(that: Duration): Double = millis.toDouble / that.millis.toDouble
 
-  // Java-friendlier versions of the above.
+    // Java-friendlier versions of the above.
 
-  def less(that: Duration): Boolean = this < that
+    def less(that: Duration): Boolean = this < that
 
-  def lessEq(that: Duration): Boolean = this <= that
+    def lessEq(that: Duration): Boolean = this <= that
 
-  def greater(that: Duration): Boolean = this > that
+    def greater(that: Duration): Boolean = this > that
 
-  def greaterEq(that: Duration): Boolean = this >= that
+    def greaterEq(that: Duration): Boolean = this >= that
 
-  def plus(that: Duration): Duration = this + that
+    def plus(that: Duration): Duration = this + that
 
-  def minus(that: Duration): Duration = this - that
+    def minus(that: Duration): Duration = this - that
 
-  def times(times: Int): Duration = this * times
+    def times(times: Int): Duration = this * times
 
-  def div(that: Duration): Double = this / that
+    def div(that: Duration): Double = this / that
 
-  def isMultipleOf(that: Duration): Boolean =
-    (this.millis % that.millis == 0)
+    def isMultipleOf(that: Duration): Boolean =
+        (this.millis % that.millis == 0)
 
-  def min(that: Duration): Duration = if (this < that) this else that
+    def min(that: Duration): Duration = if (this < that) this else that
 
-  def max(that: Duration): Duration = if (this > that) this else that
+    def max(that: Duration): Duration = if (this > that) this else that
 
-  def isZero: Boolean = (this.millis == 0)
+    def isZero: Boolean = (this.millis == 0)
 
-  override def toString: String = (millis.toString + " ms")
+    override def toString: String = (millis.toString + " ms")
 
-  def toFormattedString: String = millis.toString
+    def toFormattedString: String = millis.toString
 
-  def milliseconds: Long = millis
+    def milliseconds: Long = millis
 
-  def prettyPrint: String = Utils.msDurationToString(millis)
+    def prettyPrint: String = Utils.msDurationToString(millis)
 
 }
 
 /**
- * Helper object that creates instance of [[org.apache.spark.streaming.Duration]] representing
- * a given number of milliseconds.
- */
+  * 创建代表给定毫秒数的[[org.apache.spark.streaming.Duration]]实例的Helper对象。
+  *
+  * Helper object that creates instance of [[org.apache.spark.streaming.Duration]] representing
+  * a given number of milliseconds.
+  */
 object Milliseconds {
-  def apply(milliseconds: Long): Duration = new Duration(milliseconds)
+    def apply(milliseconds: Long): Duration = new Duration(milliseconds)
 }
 
 /**
- * Helper object that creates instance of [[org.apache.spark.streaming.Duration]] representing
- * a given number of seconds.
- */
+  * 创建代表给定秒数的[[org.apache.spark.streaming.Duration]]实例的Helper对象。
+  *
+  * Helper object that creates instance of [[org.apache.spark.streaming.Duration]] representing
+  * a given number of seconds.
+  */
 object Seconds {
-  def apply(seconds: Long): Duration = new Duration(seconds * 1000)
+    def apply(seconds: Long): Duration = new Duration(seconds * 1000)
 }
 
 /**
- * Helper object that creates instance of [[org.apache.spark.streaming.Duration]] representing
- * a given number of minutes.
- */
+  * 创建代表给定分钟数的[[org.apache.spark.streaming.Duration]]实例的Helper对象。
+  *
+  * Helper object that creates instance of [[org.apache.spark.streaming.Duration]] representing
+  * a given number of minutes.
+  */
 object Minutes {
-  def apply(minutes: Long): Duration = new Duration(minutes * 60000)
+    def apply(minutes: Long): Duration = new Duration(minutes * 60000)
 }
 
 // Java-friendlier versions of the objects above.
@@ -103,19 +109,19 @@ object Minutes {
 
 object Durations {
 
-  /**
-   * @return [[org.apache.spark.streaming.Duration]] representing given number of milliseconds.
-   */
-  def milliseconds(milliseconds: Long): Duration = Milliseconds(milliseconds)
+    /**
+      * @return [[org.apache.spark.streaming.Duration]] representing given number of milliseconds.
+      */
+    def milliseconds(milliseconds: Long): Duration = Milliseconds(milliseconds)
 
-  /**
-   * @return [[org.apache.spark.streaming.Duration]] representing given number of seconds.
-   */
-  def seconds(seconds: Long): Duration = Seconds(seconds)
+    /**
+      * @return [[org.apache.spark.streaming.Duration]] representing given number of seconds.
+      */
+    def seconds(seconds: Long): Duration = Seconds(seconds)
 
-  /**
-   * @return [[org.apache.spark.streaming.Duration]] representing given number of minutes.
-   */
-  def minutes(minutes: Long): Duration = Minutes(minutes)
+    /**
+      * @return [[org.apache.spark.streaming.Duration]] representing given number of minutes.
+      */
+    def minutes(minutes: Long): Duration = Minutes(minutes)
 
 }

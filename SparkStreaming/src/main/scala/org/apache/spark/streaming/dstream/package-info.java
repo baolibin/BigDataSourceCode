@@ -16,6 +16,8 @@
  */
 
 /**
+ * 数据流的各种实现。
+ * <p>
  * Various implementations of DStreams.
  */
 package org.apache.spark.streaming.dstream;
