@@ -42,6 +42,8 @@ import _root_.scala.language.implicitConversions
 class StreamExecutionEnvironment(javaEnv: JavaEnv) {
 
     /**
+      * 返回包装好的Java环境
+      *
       * @return the wrapped Java environment
       */
     def getJavaEnv: JavaEnv = javaEnv
@@ -61,6 +63,8 @@ class StreamExecutionEnvironment(javaEnv: JavaEnv) {
     def getCachedFiles = javaEnv.getCachedFiles
 
     /**
+      * 设置通过此环境执行的操作的并行性。
+      *
       * Sets the parallelism for operations executed through this environment.
       * Setting a parallelism of x here will cause all operators (such as join, map, reduce) to run
       * with x parallel instances. This value can be overridden by specific operations using
@@ -74,7 +78,7 @@ class StreamExecutionEnvironment(javaEnv: JavaEnv) {
       * Sets the maximum degree of parallelism defined for the program.
       * The maximum degree of parallelism specifies the upper limit for dynamic scaling. It also
       * defines the number of key groups used for partitioned state.
-      **/
+      * */
     def setMaxParallelism(maxParallelism: Int): Unit = {
         javaEnv.setMaxParallelism(maxParallelism)
     }
@@ -112,6 +116,8 @@ class StreamExecutionEnvironment(javaEnv: JavaEnv) {
     }
 
     /**
+      * 获取为此环境设置的默认缓冲区超时
+      *
       * Gets the default buffer timeout set for this environment
       */
     def getBufferTimeout = javaEnv.getBufferTimeout
@@ -318,6 +324,7 @@ class StreamExecutionEnvironment(javaEnv: JavaEnv) {
     // --------------------------------------------------------------------------------------------
     // Registry for types and serializers
     // --------------------------------------------------------------------------------------------
+
     /**
       * Adds a new Kryo default serializer to the Runtime.
       * <p/>
@@ -383,6 +390,7 @@ class StreamExecutionEnvironment(javaEnv: JavaEnv) {
     // --------------------------------------------------------------------------------------------
     //  Time characteristic
     // --------------------------------------------------------------------------------------------
+
     /**
       * Sets the time characteristic for all streams create from this environment, e.g., processing
       * time, event time, or ingestion time.
@@ -653,6 +661,8 @@ class StreamExecutionEnvironment(javaEnv: JavaEnv) {
     def execute() = javaEnv.execute()
 
     /**
+      * 触发程序执行。环境将执行导致“接收器”操作的程序的所有部分。接收操作例如打印结果或将其转发到消息队列。
+      *
       * Triggers the program execution. The environment will execute all parts of
       * the program that have resulted in a "sink" operation. Sink operations are
       * for example printing results or forwarding them to a message queue.
@@ -705,9 +715,9 @@ class StreamExecutionEnvironment(javaEnv: JavaEnv) {
       * system. The runtime will copy the files temporarily to a local cache, if needed.
       *
       * The {@link org.apache.flink.api.common.functions.RuntimeContext} can be obtained inside UDFs
-      * via {@link org.apache.flink.api.common.functions.RichFunction#getRuntimeContext()} and
+      * via {@link org.apache.flink.api.common.functions.RichFunction# getRuntimeContext ( )} and
       * provides access {@link org.apache.flink.api.common.cache.DistributedCache} via
-      * {@link org.apache.flink.api.common.functions.RuntimeContext#getDistributedCache()}.
+      * {@link org.apache.flink.api.common.functions.RuntimeContext# getDistributedCache ( )}.
       *
       * @param filePath The path of the file, as a URI (e.g. "file:///some/path" or
       *                 "hdfs://host:port/and/path")
@@ -724,9 +734,9 @@ class StreamExecutionEnvironment(javaEnv: JavaEnv) {
       * system. The runtime will copy the files temporarily to a local cache, if needed.
       *
       * The {@link org.apache.flink.api.common.functions.RuntimeContext} can be obtained inside UDFs
-      * via {@link org.apache.flink.api.common.functions.RichFunction#getRuntimeContext()} and
+      * via {@link org.apache.flink.api.common.functions.RichFunction# getRuntimeContext ( )} and
       * provides access {@link org.apache.flink.api.common.cache.DistributedCache} via
-      * {@link org.apache.flink.api.common.functions.RuntimeContext#getDistributedCache()}.
+      * {@link org.apache.flink.api.common.functions.RuntimeContext# getDistributedCache ( )}.
       *
       * @param filePath   The path of the file, as a URI (e.g. "file:///some/path" or
       *                   "hdfs://host:port/and/path")
