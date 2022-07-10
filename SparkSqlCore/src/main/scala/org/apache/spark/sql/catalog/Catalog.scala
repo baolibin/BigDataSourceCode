@@ -23,7 +23,6 @@ import org.apache.spark.sql.{AnalysisException, DataFrame, Dataset}
 
 import scala.collection.JavaConverters._
 
-
 /**
   * Spark的目录接口。要访问请使用`SparkSession.catalog`。
   *
@@ -277,9 +276,9 @@ abstract class Catalog {
       */
     @deprecated("use createTable instead.", "2.2.0")
     def createExternalTable(
-                                   tableName: String,
-                                   source: String,
-                                   options: java.util.Map[String, String]): DataFrame = {
+                               tableName: String,
+                               source: String,
+                               options: java.util.Map[String, String]): DataFrame = {
         createTable(tableName, source, options)
     }
 
@@ -296,9 +295,9 @@ abstract class Catalog {
     @Experimental
     @InterfaceStability.Evolving
     def createTable(
-                           tableName: String,
-                           source: String,
-                           options: java.util.Map[String, String]): DataFrame = {
+                       tableName: String,
+                       source: String,
+                       options: java.util.Map[String, String]): DataFrame = {
         createTable(tableName, source, options.asScala.toMap)
     }
 
@@ -314,9 +313,9 @@ abstract class Catalog {
       */
     @deprecated("use createTable instead.", "2.2.0")
     def createExternalTable(
-                                   tableName: String,
-                                   source: String,
-                                   options: Map[String, String]): DataFrame = {
+                               tableName: String,
+                               source: String,
+                               options: Map[String, String]): DataFrame = {
         createTable(tableName, source, options)
     }
 
@@ -334,9 +333,9 @@ abstract class Catalog {
     @Experimental
     @InterfaceStability.Evolving
     def createTable(
-                           tableName: String,
-                           source: String,
-                           options: Map[String, String]): DataFrame
+                       tableName: String,
+                       source: String,
+                       options: Map[String, String]): DataFrame
 
     /**
       * :: Experimental ::
@@ -350,10 +349,10 @@ abstract class Catalog {
       */
     @deprecated("use createTable instead.", "2.2.0")
     def createExternalTable(
-                                   tableName: String,
-                                   source: String,
-                                   schema: StructType,
-                                   options: java.util.Map[String, String]): DataFrame = {
+                               tableName: String,
+                               source: String,
+                               schema: StructType,
+                               options: java.util.Map[String, String]): DataFrame = {
         createTable(tableName, source, schema, options)
     }
 
@@ -370,10 +369,10 @@ abstract class Catalog {
     @Experimental
     @InterfaceStability.Evolving
     def createTable(
-                           tableName: String,
-                           source: String,
-                           schema: StructType,
-                           options: java.util.Map[String, String]): DataFrame = {
+                       tableName: String,
+                       source: String,
+                       schema: StructType,
+                       options: java.util.Map[String, String]): DataFrame = {
         createTable(tableName, source, schema, options.asScala.toMap)
     }
 
@@ -389,10 +388,10 @@ abstract class Catalog {
       */
     @deprecated("use createTable instead.", "2.2.0")
     def createExternalTable(
-                                   tableName: String,
-                                   source: String,
-                                   schema: StructType,
-                                   options: Map[String, String]): DataFrame = {
+                               tableName: String,
+                               source: String,
+                               schema: StructType,
+                               options: Map[String, String]): DataFrame = {
         createTable(tableName, source, schema, options)
     }
 
@@ -410,10 +409,10 @@ abstract class Catalog {
     @Experimental
     @InterfaceStability.Evolving
     def createTable(
-                           tableName: String,
-                           source: String,
-                           schema: StructType,
-                           options: Map[String, String]): DataFrame
+                       tableName: String,
+                       source: String,
+                       schema: StructType,
+                       options: Map[String, String]): DataFrame
 
     /**
       * Drops the local temporary view with the given view name in the catalog.

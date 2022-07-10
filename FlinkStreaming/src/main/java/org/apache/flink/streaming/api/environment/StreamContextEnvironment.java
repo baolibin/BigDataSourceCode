@@ -27,6 +27,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * 在CLI客户端或测试实用程序创建{@link StreamExecutionEnvironment}的情况下将使用的
+ * 特殊{@link StreamExecutionEnvironment}，
+ * 该环境应在调用{@link StreamExecutionEnvironment#getExecutionEnvironment（）}时使用。
+ * <p>
  * Special {@link StreamExecutionEnvironment} that will be used in cases where the CLI client or
  * testing utilities create a {@link StreamExecutionEnvironment} that should be used when
  * {@link StreamExecutionEnvironment#getExecutionEnvironment()} is called.
@@ -34,31 +38,31 @@ import org.slf4j.LoggerFactory;
 @PublicEvolving
 public class StreamContextEnvironment extends StreamExecutionEnvironment {
 
-	private static final Logger LOG = LoggerFactory.getLogger(StreamContextEnvironment.class);
+    private static final Logger LOG = LoggerFactory.getLogger(StreamContextEnvironment.class);
 
-	private final ContextEnvironment ctx;
+    private final ContextEnvironment ctx;
 
-	protected StreamContextEnvironment(ContextEnvironment ctx) {
-		this.ctx = ctx;
-		if (ctx.getParallelism() > 0) {
-			setParallelism(ctx.getParallelism());
-		}
-	}
+    protected StreamContextEnvironment(ContextEnvironment ctx) {
+        this.ctx = ctx;
+        if (ctx.getParallelism() > 0) {
+            setParallelism(ctx.getParallelism());
+        }
+    }
 
-	@Override
-	public JobExecutionResult execute(StreamGraph streamGraph) throws Exception {
-		transformations.clear();
+    @Override
+    public JobExecutionResult execute(StreamGraph streamGraph) throws Exception {
+        transformations.clear();
 
-		// execute the programs
-		if (ctx instanceof DetachedEnvironment) {
-			LOG.warn("Job was executed in detached mode, the results will be available on completion.");
-			((DetachedEnvironment) ctx).setDetachedPlan(streamGraph);
-			return DetachedEnvironment.DetachedJobExecutionResult.INSTANCE;
-		} else {
-			return ctx
-				.getClient()
-				.run(streamGraph, ctx.getJars(), ctx.getClasspaths(), ctx.getUserCodeClassLoader(), ctx.getSavepointRestoreSettings())
-				.getJobExecutionResult();
-		}
-	}
+        // execute the programs
+        if (ctx instanceof DetachedEnvironment) {
+            LOG.warn("Job was executed in detached mode, the results will be available on completion.");
+            ((DetachedEnvironment) ctx).setDetachedPlan(streamGraph);
+            return DetachedEnvironment.DetachedJobExecutionResult.INSTANCE;
+        } else {
+            return ctx
+                    .getClient()
+                    .run(streamGraph, ctx.getJars(), ctx.getClasspaths(), ctx.getUserCodeClassLoader(), ctx.getSavepointRestoreSettings())
+                    .getJobExecutionResult();
+        }
+    }
 }

@@ -46,7 +46,6 @@ import scala.collection.JavaConverters._
 import scala.reflect.runtime.universe.TypeTag
 import scala.util.control.NonFatal
 
-
 /**
   * 使用Dataset和DataFrameAPI编程Spark的入口点。
   *
