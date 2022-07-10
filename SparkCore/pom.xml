@@ -41,7 +41,7 @@
         <hadoop.version>2.6.5</hadoop.version>
         <jets3t.version>0.9.3</jets3t.version>
         <curator.version>2.6.0</curator.version>
-        <jetty.version>9.3.11.v20160721</jetty.version>
+        <jetty.version>9.4.41.v20210516</jetty.version>
         <commons.math3.version>3.4.1</commons.math3.version>
         <commons-lang3.version>3.5</commons-lang3.version>
         <slf4j.version>1.7.16</slf4j.version>
