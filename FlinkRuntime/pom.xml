@@ -6,7 +6,7 @@
     <artifactId>FlinkRuntime</artifactId>
     <packaging>jar</packaging>
     <groupId>org.apache.flink</groupId>
-    <version>1.9.0</version>
+    <version>1.9.2</version>
     <name>FlinkRuntime</name>
 
     <properties>
