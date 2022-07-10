@@ -38,7 +38,7 @@
         <oro.version>2.0.8</oro.version>
         <avro.version>1.7.7</avro.version>
         <chill.version>0.8.0</chill.version>
-        <hadoop.version>2.6.5</hadoop.version>
+        <hadoop.version>2.7.0</hadoop.version>
         <jets3t.version>0.9.3</jets3t.version>
         <curator.version>2.6.0</curator.version>
         <jetty.version>9.3.11.v20160721</jetty.version>
