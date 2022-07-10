@@ -22,10 +22,12 @@ import java.io.Serializable;
 import scala.Tuple2;
 
 /**
+ * 返回键值对的函数，并可用于构造PAIRDDS。
+ * <p>
  * A function that returns key-value pairs (Tuple2&lt;K, V&gt;), and can be used to
  * construct PairRDDs.
  */
 @FunctionalInterface
 public interface PairFunction<T, K, V> extends Serializable {
-  Tuple2<K, V> call(T t) throws Exception;
+    Tuple2<K, V> call(T t) throws Exception;
 }

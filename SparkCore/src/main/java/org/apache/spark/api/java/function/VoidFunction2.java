@@ -20,9 +20,11 @@ package org.apache.spark.api.java.function;
 import java.io.Serializable;
 
 /**
+ * 一个双参数函数，接受T1和T2类型的参数，没有返回值。
+ * <p>
  * A two-argument function that takes arguments of type T1 and T2 with no return value.
  */
 @FunctionalInterface
 public interface VoidFunction2<T1, T2> extends Serializable {
-  void call(T1 v1, T2 v2) throws Exception;
+    void call(T1 v1, T2 v2) throws Exception;
 }

@@ -20,9 +20,11 @@ package org.apache.spark.api.java.function;
 import java.io.Serializable;
 
 /**
+ * 没有返回值的函数。
+ * <p>
  * A function with no return value.
  */
 @FunctionalInterface
 public interface VoidFunction<T> extends Serializable {
-  void call(T t) throws Exception;
+    void call(T t) throws Exception;
 }

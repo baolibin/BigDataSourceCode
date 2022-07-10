@@ -25,24 +25,25 @@ import java.util.Locale;
 import java.util.Set;
 
 public enum TaskSorting {
-  ID,
-  INCREASING_RUNTIME("runtime"),
-  DECREASING_RUNTIME("-runtime");
+    ID,
+    INCREASING_RUNTIME("runtime"),
+    DECREASING_RUNTIME("-runtime");
 
-  private final Set<String> alternateNames;
-  TaskSorting(String... names) {
-    alternateNames = new HashSet<>();
-    Collections.addAll(alternateNames, names);
-  }
+    private final Set<String> alternateNames;
 
-  public static TaskSorting fromString(String str) {
-    String lower = str.toLowerCase(Locale.ROOT);
-    for (TaskSorting t: values()) {
-      if (t.alternateNames.contains(lower)) {
-        return t;
-      }
+    TaskSorting(String... names) {
+        alternateNames = new HashSet<>();
+        Collections.addAll(alternateNames, names);
     }
-    return EnumUtil.parseIgnoreCase(TaskSorting.class, str);
-  }
+
+    public static TaskSorting fromString(String str) {
+        String lower = str.toLowerCase(Locale.ROOT);
+        for (TaskSorting t : values()) {
+            if (t.alternateNames.contains(lower)) {
+                return t;
+            }
+        }
+        return EnumUtil.parseIgnoreCase(TaskSorting.class, str);
+    }
 
 }

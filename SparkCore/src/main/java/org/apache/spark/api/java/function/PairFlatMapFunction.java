@@ -23,10 +23,12 @@ import java.util.Iterator;
 import scala.Tuple2;
 
 /**
+ * 从每个输入记录返回零个或多个键值对记录的函数。键值对表示为scala。Tuple2对象。
+ * <p>
  * A function that returns zero or more key-value pair records from each input record. The
  * key-value pairs are represented as scala.Tuple2 objects.
  */
 @FunctionalInterface
 public interface PairFlatMapFunction<T, K, V> extends Serializable {
-  Iterator<Tuple2<K, V>> call(T t) throws Exception;
+    Iterator<Tuple2<K, V>> call(T t) throws Exception;
 }

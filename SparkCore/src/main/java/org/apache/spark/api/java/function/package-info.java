@@ -16,6 +16,9 @@
  */
 
 /**
+ * 在Spark的Java API中表示函数的一组接口。用户创建这些接口的实现，将函数传递给Spark的各种Java API方法。
+ * 有关更多详细信息，请访问Spark的Java编程指南。
+ * <p>
  * Set of interfaces to represent functions in Spark's Java API. Users create implementations of
  * these interfaces to pass functions to various Java API methods for Spark. Please visit Spark's
  * Java programming guide for more details.

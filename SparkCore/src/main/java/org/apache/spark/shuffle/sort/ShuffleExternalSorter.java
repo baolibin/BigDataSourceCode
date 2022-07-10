@@ -45,6 +45,8 @@ import org.apache.spark.unsafe.memory.MemoryBlock;
 import org.apache.spark.util.Utils;
 
 /**
+ * 专门用于基于排序的洗牌的外部分类器。
+ * <p>
  * An external sorter that is specialized for sort-based shuffle.
  * <p>
  * Incoming records are appended to data pages. When all records have been inserted (or when the

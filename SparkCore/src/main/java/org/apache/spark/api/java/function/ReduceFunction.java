@@ -20,9 +20,11 @@ package org.apache.spark.api.java.function;
 import java.io.Serializable;
 
 /**
+ * 用于数据集reduce的函数的基本接口。
+ * <p>
  * Base interface for function used in Dataset's reduce.
  */
 @FunctionalInterface
 public interface ReduceFunction<T> extends Serializable {
-  T call(T v1, T v2) throws Exception;
+    T call(T v1, T v2) throws Exception;
 }
