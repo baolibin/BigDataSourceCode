@@ -18,7 +18,7 @@
         <akka.version>2.5.21</akka.version>
         <jackson.version>2.9.8</jackson.version>
         <scala.version>2.11.12</scala.version>
-        <zookeeper.version>3.4.10</zookeeper.version>
+        <zookeeper.version>3.4.14</zookeeper.version>
     </properties>
 
     <dependencies>
