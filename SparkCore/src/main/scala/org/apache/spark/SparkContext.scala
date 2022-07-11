@@ -2766,6 +2766,9 @@ object SparkContext extends Logging {
     }
 
     /**
+      * 创建一个修改版本的SparkConf，参数可以单独传递给SparkContext，使SparkContext的构造函数更容易编写。
+      * 这将忽略作为默认值null传递的参数，而不是像SparkConf那样抛出异常。
+      *
       * Creates a modified version of a SparkConf with the parameters that can be passed separately
       * to SparkContext, to make it easier to write SparkContext's constructors. This ignores
       * parameters that are passed as the default value of null, instead of throwing an exception
@@ -2792,6 +2795,8 @@ object SparkContext extends Logging {
     }
 
     /**
+      * 在本地模式下执行时使用的驱动程序内核数，否则为0。
+      *
       * The number of driver cores to use for execution in local mode, 0 otherwise.
       */
     private[spark] def numDriverCores(master: String): Int = {
