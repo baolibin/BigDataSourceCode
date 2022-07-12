@@ -24,6 +24,7 @@ import org.apache.spark.scheduler.MapStatus
 /**
   * 在一个map任务中向shuffle系统写出记录。
   * Hadoop的MapReduce是强制性写入磁盘,而Spark可选择写入内存还是磁盘.
+  *
   * Obtained inside a map task to write out records to the shuffle system.
   */
 private[spark] abstract class ShuffleWriter[K, V] {

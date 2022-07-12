@@ -22,7 +22,9 @@ import org.apache.spark.storage.ShuffleBlockId
 
 private[spark]
 /**
-  * 这个特性的实现者理解如何为逻辑shuffle块标识符（即map、reduce和shuffle）检索块数据。
+  * 这种特性的实现者了解如何为逻辑洗牌块标识符(即map、reduce和洗牌)检索块数据。
+  * 实现可以使用文件或文件段来封装shuffle数据。当检索shuffle数据时，
+  * BlockStore使用它对不同的shuffle实现进行抽象。
   *
   * Implementers of this trait understand how to retrieve block data for a logical shuffle block
   * identifier (i.e. map, reduce, and shuffle). Implementations may use files or file segments to
@@ -33,7 +35,8 @@ trait ShuffleBlockResolver {
     type ShuffleId = Int
 
     /**
-      * 根据shuffle数据块获取物理文件
+      * 检索指定块的数据。如果该块的数据不可用，则抛出未指定的异常。
+      *
       * Retrieve the data for the specified block. If the data for that block is not available,
       * throws an unspecified exception.
       */

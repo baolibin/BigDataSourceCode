@@ -24,6 +24,7 @@ package org.apache.spark.shuffle
   */
 private[spark] trait ShuffleReader[K, C] {
     /** Read the combined key-values for this reduce task */
+
     /**
       * Reduce Task拉取数据,通过Http协议.
       * 拉取的数据量级大会溢写磁盘,会发生归并排序.

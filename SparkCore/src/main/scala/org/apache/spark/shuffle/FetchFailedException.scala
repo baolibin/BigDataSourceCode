@@ -22,7 +22,7 @@ import org.apache.spark.util.Utils
 import org.apache.spark.{FetchFailed, TaskContext, TaskFailedReason}
 
 /**
-  * 无法获取shuffle块。执行器捕获这个异常并将其传播回DAGScheduler（通过TaskEndReason），以便我们重新提交上一阶段。
+  * 获取shuffle块失败。处理步骤执行程序捕获这个异常并将其传播回DAGScheduler(通过TaskEndReason)，这样我们就可以重新提交前一个阶段。
   *
   * Failed to fetch a shuffle block. The executor catches this exception and propagates it
   * back to DAGScheduler (through TaskEndReason) so we'd resubmit the previous stage.
@@ -35,20 +35,20 @@ import org.apache.spark.{FetchFailed, TaskContext, TaskFailedReason}
   * (or risk triggering any other exceptions).  See SPARK-19276.
   */
 private[spark] class FetchFailedException(
-                                                 bmAddress: BlockManagerId,
-                                                 shuffleId: Int,
-                                                 mapId: Int,
-                                                 reduceId: Int,
-                                                 message: String,
-                                                 cause: Throwable = null)
-        extends Exception(message, cause) {
+                                             bmAddress: BlockManagerId,
+                                             shuffleId: Int,
+                                             mapId: Int,
+                                             reduceId: Int,
+                                             message: String,
+                                             cause: Throwable = null)
+    extends Exception(message, cause) {
 
     def this(
-                    bmAddress: BlockManagerId,
-                    shuffleId: Int,
-                    mapId: Int,
-                    reduceId: Int,
-                    cause: Throwable) {
+                bmAddress: BlockManagerId,
+                shuffleId: Int,
+                mapId: Int,
+                reduceId: Int,
+                cause: Throwable) {
         this(bmAddress, shuffleId, mapId, reduceId, cause.getMessage, cause)
     }
 
@@ -66,7 +66,7 @@ private[spark] class FetchFailedException(
   * Failed to get shuffle metadata from [[org.apache.spark.MapOutputTracker]].
   */
 private[spark] class MetadataFetchFailedException(
-                                                         shuffleId: Int,
-                                                         reduceId: Int,
-                                                         message: String)
-        extends FetchFailedException(null, shuffleId, -1, reduceId, message)
+                                                     shuffleId: Int,
+                                                     reduceId: Int,
+                                                     message: String)
+    extends FetchFailedException(null, shuffleId, -1, reduceId, message)

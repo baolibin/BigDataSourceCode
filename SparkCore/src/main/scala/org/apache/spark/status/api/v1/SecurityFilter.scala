@@ -22,15 +22,15 @@ import javax.ws.rs.ext.Provider
 
 @Provider
 private[v1] class SecurityFilter extends ContainerRequestFilter with ApiRequestContext {
-  override def filter(req: ContainerRequestContext): Unit = {
-    val user = httpRequest.getRemoteUser()
-    if (!uiRoot.securityManager.checkUIViewPermissions(user)) {
-      req.abortWith(
-        Response
-          .status(Response.Status.FORBIDDEN)
-          .entity(raw"""user "$user" is not authorized""")
-          .build()
-      )
+    override def filter(req: ContainerRequestContext): Unit = {
+        val user = httpRequest.getRemoteUser()
+        if (!uiRoot.securityManager.checkUIViewPermissions(user)) {
+            req.abortWith(
+                Response
+                    .status(Response.Status.FORBIDDEN)
+                    .entity(raw"""user "$user" is not authorized""")
+                    .build()
+            )
+        }
     }
-  }
 }
