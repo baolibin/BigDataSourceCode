@@ -33,12 +33,16 @@ object TaskContext {
     private[this] val taskContext: ThreadLocal[TaskContext] = new ThreadLocal[TaskContext]
 
     /**
+      * 返回当前活动的TaskContext。这可以在用户函数内部调用，以访问有关运行任务的上下文信息。
+      *
       * Return the currently active TaskContext. This can be called inside of
       * user functions to access contextual information about running tasks.
       */
     def get(): TaskContext = taskContext.get
 
     /**
+      * 返回当前活动TaskContext的分区id。如果本地执行等情况下没有活动的TaskContext，则返回0。
+      *
       * Returns the partition id of currently active TaskContext. It will return 0
       * if there is no active TaskContext for cases like local execution.
       */
@@ -55,16 +59,22 @@ object TaskContext {
     // showing up in JavaDoc.
 
     /**
+      * 设置线程本地TaskContext。
+      *
       * Set the thread local TaskContext. Internal to Spark.
       */
     protected[spark] def setTaskContext(tc: TaskContext): Unit = taskContext.set(tc)
 
     /**
+      * 取消设置线程本地TaskContext
+      *
       * Unset the thread local TaskContext. Internal to Spark.
       */
     protected[spark] def unset(): Unit = taskContext.remove()
 
     /**
+      * 不代表实际任务的空任务上下文。这仅用于测试。
+      *
       * An empty task context that does not represent an actual task.  This is only used in tests.
       */
     private[spark] def empty(): TaskContextImpl = {
@@ -75,6 +85,7 @@ object TaskContext {
 
 /**
   * 有关任务的上下文信息，可在执行过程中读取或修改。
+  *
   * Contextual information about a task which can be read or mutated during
   * execution. To access the TaskContext for a running task, use:
   * {{{
@@ -91,18 +102,21 @@ abstract class TaskContext extends Serializable {
 
     /**
       * 如果任务已完成，则返回true。
+      *
       * Returns true if the task has completed.
       */
     def isCompleted(): Boolean
 
     /**
       * 如果任务已终止，则返回true。
+      *
       * Returns true if the task has been killed.
       */
     def isInterrupted(): Boolean
 
     /**
       * 如果任务在驱动程序中本地运行，则返回true。
+      *
       * Returns true if the task is running locally in the driver program.
       *
       * @return false

@@ -130,6 +130,7 @@ private[spark] case class SSLOptions(
 
     /**
       * 返回此SSLOptions的字符串表示形式，并屏蔽所有密码。
+      *
       * Returns a string representation of this SSLOptions with all the passwords masked.
       */
     override def toString: String = s"SSLOptions{enabled=$enabled, " +

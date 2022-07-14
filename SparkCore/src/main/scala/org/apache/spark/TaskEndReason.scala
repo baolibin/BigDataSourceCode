@@ -30,8 +30,7 @@ import org.apache.spark.util.{AccumulatorV2, Utils}
 // ==============================================================================================
 
 /**
-  * 任务结束的各种可能原因。
-  * low-level的TaskScheduler应该为“短暂”的失败重试几次任务，并且只报告需要重新提交一些旧阶段的失败，
+  * 任务结束的各种可能原因。low-level的TaskScheduler应该为“短暂”的失败重试几次任务，并且只报告需要重新提交一些旧阶段的失败，
   * 例如shuffle map fetch失败。
   *
   * :: DeveloperApi ::
@@ -44,6 +43,7 @@ sealed trait TaskEndReason
 
 /**
   * 任务成功了。
+  *
   * :: DeveloperApi ::
   * Task succeeded.
   */
@@ -52,6 +52,7 @@ case object Success extends TaskEndReason
 
 /**
   * 任务失败的各种可能原因。
+  *
   * :: DeveloperApi ::
   * Various possible reasons why a task failed.
   */
@@ -59,6 +60,7 @@ case object Success extends TaskEndReason
 sealed trait TaskFailedReason extends TaskEndReason {
     /**
       * web UI中显示的错误消息。
+      *
       * Error message displayed in the web UI.
       */
     def toErrorString: String
@@ -235,6 +237,7 @@ case class TaskKilled(reason: String) extends TaskFailedReason {
 
 /**
   * 任务请求驱动程序提交，但被拒绝。
+  *
   * :: DeveloperApi ::
   * Task requested the driver to commit, but was denied.
   */
@@ -256,6 +259,7 @@ case class TaskCommitDenied(
 
 /**
   * 任务失败，因为运行它的执行器丢失。这可能是因为任务使JVM崩溃。
+  *
   * :: DeveloperApi ::
   * The task failed because the executor that it was running on was lost. This may happen because
   * the task crashed the JVM.
@@ -279,6 +283,8 @@ case class ExecutorLostFailure(
 }
 
 /**
+  * 我们不知道任务为什么结束——例如，因为在反序列化任务结果时发生了ClassNotFound异常。
+  *
   * :: DeveloperApi ::
   * We don't know why the task ended -- for example, because of a ClassNotFound exception when
   * deserializing the task result.
