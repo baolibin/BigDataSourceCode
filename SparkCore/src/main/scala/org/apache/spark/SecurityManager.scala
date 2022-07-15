@@ -303,6 +303,8 @@ private[spark] class SecurityManager(
     }
 
     /**
+      * 应在查看或修改ACL之前设置管理ACL。如果修改管理ACL，还应设置视图并再次修改ACL以获取更改。
+      *
       * Admin acls should be set before the view or modify acls.  If you modify the admin
       * acls you should also set the view and modify acls again to pick up the changes.
       */
@@ -340,6 +342,8 @@ private[spark] class SecurityManager(
     }
 
     /**
+      * 应在查看或修改ACL之前设置管理ACL。如果修改管理ACL，还应设置视图并再次修改ACL以获取更改。
+      *
       * Admin acls should be set before the view or modify acls.  If you modify the admin
       * acls you should also set the view and modify acls again to pick up the changes.
       */

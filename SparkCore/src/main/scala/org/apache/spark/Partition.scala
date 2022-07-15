@@ -24,8 +24,9 @@ package org.apache.spark
   */
 trait Partition extends Serializable {
     /**
+      * 在其父RDD中获取分区的索引
+      *
       * Get the partition's index within its parent RDD
-      * 分区序列索引从0开始递增
       */
     def index: Int
 

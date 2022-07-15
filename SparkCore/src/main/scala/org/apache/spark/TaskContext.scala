@@ -186,6 +186,8 @@ abstract class TaskContext extends Serializable {
     def attemptNumber(): Int
 
     /**
+      * 此任务尝试的唯一ID（在同一SparkContext中，没有两个任务尝试共享相同的尝试ID）。这大致相当于Hadoop的TaskAttempid。
+      *
       * An ID that is unique to this task attempt (within the same SparkContext, no two task attempts
       * will share the same attempt ID).  This is roughly equivalent to Hadoop's TaskAttemptID.
       */
@@ -193,6 +195,7 @@ abstract class TaskContext extends Serializable {
 
     /**
       * 获取驱动程序上游的本地属性集，如果缺少，则为null。
+      *
       * Get a local property set upstream in the driver, or null if it is missing. See also
       * `org.apache.org.apache.spark.SparkContext.setLocalProperty`.
       */
@@ -211,24 +214,28 @@ abstract class TaskContext extends Serializable {
 
     /**
       * 如果任务被中断，抛出TaskKilledException并说明中断原因。
+      *
       * If the task is interrupted, throws TaskKilledException with the reason for the interrupt.
       */
     private[spark] def killTaskIfInterrupted(): Unit
 
     /**
       * 如果任务被中断，说明此任务被终止的原因，否则说明无。
+      *
       * If the task is interrupted, the reason this task was killed, otherwise None.
       */
     private[spark] def getKillReason(): Option[String]
 
     /**
       * 返回此任务的托管内存的管理器。
+      *
       * Returns the manager for this task's managed memory.
       */
     private[spark] def taskMemoryManager(): TaskMemoryManager
 
     /**
       * 注册属于此任务的累加器。累加器在执行器中反序列化时必须调用此方法。
+      *
       * Register an accumulator that belongs to this task. Accumulators must call this method when
       * deserializing in executors.
       */
