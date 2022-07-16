@@ -44,7 +44,7 @@ private[spark] case class Heartbeat(
                                        blockManagerId: BlockManagerId)
 
 /**
-  * SparkContext用于通知HeartbeatReceiver SparkContext的事件。已创建taskScheduler。
+  * SparkContext用于通知HeartbeatReceiver SparkContext的事件。taskScheduler已创建。
   *
   * An event that SparkContext uses to notify HeartbeatReceiver that SparkContext.taskScheduler is
   * created.

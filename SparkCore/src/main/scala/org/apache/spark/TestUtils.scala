@@ -41,6 +41,7 @@ import scala.util.Try
 
 /**
   * 测试实用程序。包含在主代码库中，因为它被多个项目使用。
+  *
   * Utilities for tests. Included in main codebase since it's used by multiple
   * projects.
   *
@@ -53,7 +54,8 @@ private[spark] object TestUtils {
     private val SOURCE = JavaFileObject.Kind.SOURCE
 
     /**
-      * 创建一个用给定名称定义类的jar。
+      * 创建一个jar，定义具有给定名称的类。
+      *
       * Create a jar that defines classes with the given names.
       *
       * Note: if this is used during class loader tests, class names should be unique
@@ -77,6 +79,7 @@ private[spark] object TestUtils {
 
     /**
       * 创建一个包含这组文件的jar文件。所有文件都将位于指定的目录或jar的根目录下。
+      *
       * Create a jar file that contains this set of files. All files will be located in the specified
       * directory or at the root of the jar.
       */
@@ -103,6 +106,7 @@ private[spark] object TestUtils {
 
     /**
       * 创建具有给定名称的已编译类。类文件将被放置在destDir中。
+      *
       * Creates a compiled class with the given name. Class file will be placed in destDir.
       */
     def createCompiledClass(
@@ -120,6 +124,7 @@ private[spark] object TestUtils {
 
     /**
       * 使用源文件创建已编译的类。类文件将被放置在destDir中。
+      *
       * Creates a compiled class with the source file. Class file will be placed in destDir.
       */
     def createCompiledClass(
@@ -155,6 +160,7 @@ private[spark] object TestUtils {
 
     /**
       * 创建一个包含多个文件的jar文件。“files”映射包含jar文件中的文件名到其内容的映射。
+      *
       * Create a jar file containing multiple files. The `files` map contains a mapping of
       * file names in the jar file to their contents.
       */
@@ -173,6 +179,7 @@ private[spark] object TestUtils {
 
     /**
       * 运行一些涉及提交到给定上下文的作业的代码，并断言这些作业溢出了
+      *
       * Run some code involving jobs submitted to the given context and assert that the jobs spilled.
       */
     def assertSpilled[T](sc: SparkContext, identifier: String)(body: => T): Unit = {
@@ -184,6 +191,7 @@ private[spark] object TestUtils {
 
     /**
       * 运行一些涉及提交到给定上下文的作业的代码，并断言这些作业没有溢出。
+      *
       * Run some code involving jobs submitted to the given context and assert that the jobs
       * did not spill.
       */
@@ -196,6 +204,7 @@ private[spark] object TestUtils {
 
     /**
       * 测试命令是否可用。
+      *
       * Test if a command is available.
       */
     def testCommandAvailable(command: String): Boolean = {
@@ -205,6 +214,7 @@ private[spark] object TestUtils {
 
     /**
       * 从HTTP（S）URL返回响应代码。
+      *
       * Returns the response code from an HTTP(S) URL.
       */
     def httpResponseCode(
@@ -255,6 +265,7 @@ private[spark] object TestUtils {
 
 /**
   * 一种“SparkListener”，用于检测Spark作业中是否发生泄漏。
+  *
   * A `SparkListener` that detects whether spills have occurred in Spark jobs.
   */
 private class SpillListener extends SparkListener {

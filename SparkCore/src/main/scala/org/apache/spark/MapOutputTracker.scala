@@ -45,6 +45,7 @@ private[spark] case class GetMapOutputMessage(shuffleId: Int, context: RpcCallCo
 
 /**
   * MapOutputTrackerMaster的RpcEndpoint类
+  *
   * RpcEndpoint class for MapOutputTrackerMaster
   */
 private[spark] class MapOutputTrackerMasterEndpoint(
@@ -76,6 +77,8 @@ private[spark] class MapOutputTrackerMasterEndpoint(
 private[spark] abstract class MapOutputTracker(conf: SparkConf) extends Logging {
 
     /**
+      * 此哈希映射对于驱动程序和执行器具有不同的行为。
+      *
       * This HashMap has different behavior for the driver and the executors.
       *
       * On the driver, it serves as the source of map outputs recorded from ShuffleMapTasks.
@@ -98,6 +101,8 @@ private[spark] abstract class MapOutputTracker(conf: SparkConf) extends Logging 
     protected var epoch: Long = 0
 
     /**
+      * 从执行器调用，以获取需要从给定reduce任务中读取的每个洗牌块的服务器URI和输出大小。
+      *
       * Called from executors to get the server URIs and output sizes for each shuffle block that
       * needs to be read from a given reduce task.
       *
