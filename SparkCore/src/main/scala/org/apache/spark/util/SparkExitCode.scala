@@ -20,6 +20,7 @@ package org.apache.spark.util
 private[spark] object SparkExitCode {
     /**
       * 已达到默认的未捕获异常处理程序。
+      *
       * The default uncaught exception handler was reached.
       */
     val UNCAUGHT_EXCEPTION = 50

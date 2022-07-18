@@ -46,7 +46,7 @@ class StatCounter(values: TraversableOnce[Double]) extends Serializable {
     def this() = this(Nil)
 
     /**
-      * 
+      *
       * Add multiple values into this StatCounter, updating the internal statistics. */
     def merge(values: TraversableOnce[Double]): StatCounter = {
         values.foreach(v => merge(v))
@@ -122,12 +122,16 @@ class StatCounter(values: TraversableOnce[Double]) extends Serializable {
     }
 
     /**
+      * 返回值的样本标准偏差，通过除以N-1而不是N来校正估计方差时的偏差。
+      *
       * Return the sample standard deviation of the values, which corrects for bias in estimating the
       * variance by dividing by N-1 instead of N.
       */
     def sampleStdev: Double = math.sqrt(sampleVariance)
 
     /**
+      * 返回样本方差，通过除以N-1而不是N来校正估计方差时的偏差。
+      *
       * Return the sample variance, which corrects for bias in estimating the variance by dividing
       * by N-1 instead of N.
       */
