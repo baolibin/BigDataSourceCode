@@ -51,6 +51,8 @@ private[spark] class WholeTextFileInputFormat
     }
 
     /**
+      * 允许最终用户设置minPartitions，以保持与旧Hadoop API的兼容性，旧Hadoop API是通过setMaxSplitSize设置的
+      *
       * Allow minPartitions set by end-user in order to keep compatibility with old Hadoop API,
       * which is set through setMaxSplitSize
       */

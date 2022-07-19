@@ -72,6 +72,8 @@ public final class BytesToBytesMap extends MemoryConsumer {
     private final TaskMemoryManager taskMemoryManager;
 
     /**
+     * 用于跟踪所有分配数据页的链接列表，以便我们可以释放所有内存。
+     * <p>
      * A linked list for tracking all allocated data pages so that we can free all of our memory.
      */
     private final LinkedList<MemoryBlock> dataPages = new LinkedList<>();
