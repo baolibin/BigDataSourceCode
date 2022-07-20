@@ -34,6 +34,9 @@ private[spark] object ThreadUtils {
         ExecutionContext.fromExecutorService(MoreExecutors.sameThreadExecutor())
 
     /**
+      * 一个“ExecutionContextExecutor”，在调用“执行/提交”的线程中运行每个任务。
+      * 调用者应该确保在这个“ExecutionContextExecutor”中运行的任务很短并且从不阻塞。
+      *
       * An `ExecutionContextExecutor` that runs each task in the thread that invokes `execute/submit`.
       * The caller should make sure the tasks running in this `ExecutionContextExecutor` are short and
       * never block.
@@ -42,6 +45,7 @@ private[spark] object ThreadUtils {
 
     /**
       * 创建一个线程工厂，用前缀命名线程，并将线程设置为守护进程。
+      *
       * Create a thread factory that names threads with a prefix and also sets the threads to daemon.
       */
     def namedThreadFactory(prefix: String): ThreadFactory = {
@@ -80,6 +84,8 @@ private[spark] object ThreadUtils {
     }
 
     /**
+      * newFixedThreadPool上的包装器。线程名称的格式为前缀ID，其中ID是唯一的、按顺序分配的整数。
+      *
       * Wrapper over newFixedThreadPool. Thread names are formatted as prefix-ID, where ID is a
       * unique, sequentially assigned integer.
       */
@@ -89,6 +95,8 @@ private[spark] object ThreadUtils {
     }
 
     /**
+      * newSingleThreadExecutor上的包装器。
+      *
       * Wrapper over newSingleThreadExecutor.
       */
     def newDaemonSingleThreadExecutor(threadName: String): ExecutorService = {
@@ -97,6 +105,8 @@ private[spark] object ThreadUtils {
     }
 
     /**
+      * ScheduledThreadPoolExecutor上的包装器。
+      *
       * Wrapper over ScheduledThreadPoolExecutor.
       */
     def newDaemonSingleThreadScheduledExecutor(threadName: String): ScheduledExecutorService = {
@@ -109,8 +119,9 @@ private[spark] object ThreadUtils {
     }
 
     /**
+      * 在新线程中运行一段代码并返回结果。新线程中的异常被抛出到调用线程中，并带有一个经过调整的堆栈跟踪，
+      * 该跟踪删除了对此方法的引用，以保持清晰。异常堆栈跟踪如下所示
       *
-      * 
       * Run a piece of code in a new thread and return the result. Exception in the new thread is
       * thrown in the caller thread with an adjusted stack trace that removes references to this
       * method for clarity. The exception stack traces will be like the following
@@ -169,6 +180,8 @@ private[spark] object ThreadUtils {
     }
 
     /**
+      * 用指定的最大并行度和名称前缀构造一个新的Scala ForkJoinPool。
+      *
       * Construct a new Scala ForkJoinPool with a specified max parallelism and name prefix.
       */
     def newForkJoinPool(prefix: String, maxThreadNumber: Int): SForkJoinPool = {
@@ -188,6 +201,8 @@ private[spark] object ThreadUtils {
     // scalastyle:off awaitresult
 
     /**
+      * “等待”的首选替代方案。结果（）`。
+      *
       * Preferred alternative to `Await.result()`.
       *
       * This method wraps and re-throws any exceptions thrown by the underlying `Await` call, ensuring
@@ -218,6 +233,8 @@ private[spark] object ThreadUtils {
     // scalastyle:off awaitready
 
     /**
+      * “等待”的首选替代方案。ready（）`。
+      *
       * Preferred alternative to `Await.ready()`.
       *
       * @see [[awaitResult]]
