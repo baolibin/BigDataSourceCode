@@ -42,10 +42,10 @@ object PythonRunner {
         val otherArgs = args.slice(2, args.length)
         val sparkConf = new SparkConf()
         val pythonExec = sparkConf.get(PYSPARK_DRIVER_PYTHON)
-                .orElse(sparkConf.get(PYSPARK_PYTHON))
-                .orElse(sys.env.get("PYSPARK_DRIVER_PYTHON"))
-                .orElse(sys.env.get("PYSPARK_PYTHON"))
-                .getOrElse("python")
+            .orElse(sparkConf.get(PYSPARK_PYTHON))
+            .orElse(sys.env.get("PYSPARK_DRIVER_PYTHON"))
+            .orElse(sys.env.get("PYSPARK_PYTHON"))
+            .getOrElse("python")
 
         // Format python file paths before adding them to the PYTHONPATH
         val formattedPythonFile = formatPath(pythonFile)
@@ -104,14 +104,16 @@ object PythonRunner {
     }
 
     /**
+      * 在逗号分隔的路径列表中格式化每个python文件路径，以便可以将其正确添加到PYTHONPATH。
+      *
       * Format each python file path in the comma-delimited list of paths, so it can be
       * added to the PYTHONPATH correctly.
       */
     def formatPaths(paths: String, testWindows: Boolean = false): Array[String] = {
         Option(paths).getOrElse("")
-                .split(",")
-                .filter(_.nonEmpty)
-                .map { p => formatPath(p, testWindows) }
+            .split(",")
+            .filter(_.nonEmpty)
+            .map { p => formatPath(p, testWindows) }
     }
 
     /**
@@ -124,7 +126,7 @@ object PythonRunner {
     def formatPath(path: String, testWindows: Boolean = false): String = {
         if (Utils.nonLocalPaths(path, testWindows).nonEmpty) {
             throw new IllegalArgumentException("Launching Python applications through " +
-                    s"org.apache.spark-submit is currently only supported for local files: $path")
+                s"org.apache.spark-submit is currently only supported for local files: $path")
         }
         // get path when scheme is file.
         val uri = Try(new URI(path)).getOrElse(new File(path).toURI)

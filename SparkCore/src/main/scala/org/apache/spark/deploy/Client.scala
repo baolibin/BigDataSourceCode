@@ -39,11 +39,11 @@ import scala.util.{Failure, Success}
   * all masters and see which one could handle it.
   */
 private class ClientEndpoint(
-                                    override val rpcEnv: RpcEnv,
-                                    driverArgs: ClientArguments,
-                                    masterEndpoints: Seq[RpcEndpointRef],
-                                    conf: SparkConf)
-        extends ThreadSafeRpcEndpoint with Logging {
+                                override val rpcEnv: RpcEnv,
+                                driverArgs: ClientArguments,
+                                masterEndpoints: Seq[RpcEndpointRef],
+                                conf: SparkConf)
+    extends ThreadSafeRpcEndpoint with Logging {
 
     // A scheduled executor used to send messages at the specified time.
     private val forwardMessageThread =
@@ -81,7 +81,7 @@ private class ClientEndpoint(
 
                 val extraJavaOptsConf = "org.apache.spark.driver.extraJavaOptions"
                 val extraJavaOpts = sys.props.get(extraJavaOptsConf)
-                        .map(Utils.splitCommandString).getOrElse(Seq.empty)
+                    .map(Utils.splitCommandString).getOrElse(Seq.empty)
                 val sparkJavaOpts = Utils.sparkJavaOpts(conf)
                 val javaOpts = sparkJavaOpts ++ extraJavaOpts
                 val command = new Command(mainClass,
@@ -104,6 +104,8 @@ private class ClientEndpoint(
     }
 
     /**
+      * 将消息发送给master，并将回复以异步方式转发给self。
+      *
       * Send the message to master and forward the reply to self asynchronously.
       */
     private def ayncSendToMasterAndForwardReply[T: ClassTag](message: Any): Unit = {
@@ -233,7 +235,7 @@ object Client {
             RpcEnv.create("driverClient", Utils.localHostName(), 0, conf, new SecurityManager(conf))
 
         val masterEndpoints = driverArgs.masters.map(RpcAddress.fromSparkURL).
-                map(rpcEnv.setupEndpointRef(_, Master.ENDPOINT_NAME))
+            map(rpcEnv.setupEndpointRef(_, Master.ENDPOINT_NAME))
         rpcEnv.setupEndpoint("client", new ClientEndpoint(rpcEnv, driverArgs, masterEndpoints, conf))
 
         rpcEnv.awaitTermination()
