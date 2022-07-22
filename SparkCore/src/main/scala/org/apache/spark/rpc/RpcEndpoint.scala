@@ -83,6 +83,8 @@ private[spark] trait RpcEndpoint {
     }
 
     /**
+      * 在处理消息期间引发任何异常时调用。
+      *
       * Invoked when any exception is thrown during handling messages.
       */
     def onError(cause: Throwable): Unit = {
@@ -91,6 +93,8 @@ private[spark] trait RpcEndpoint {
     }
 
     /**
+      * 当“remoteAddress”连接到当前节点时调用。
+      *
       * Invoked when `remoteAddress` is connected to the current node.
       */
     def onConnected(remoteAddress: RpcAddress): Unit = {

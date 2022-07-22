@@ -32,11 +32,15 @@ private[spark] trait RpcCallContext {
     def reply(response: Any): Unit
 
     /**
+      * 向发件人报告故障。
+      *
       * Report a failure to the sender.
       */
     def sendFailure(e: Throwable): Unit
 
     /**
+      * 此邮件的发件人。
+      *
       * The sender of this message.
       */
     def senderAddress: RpcAddress
