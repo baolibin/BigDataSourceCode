@@ -79,6 +79,8 @@ public final class BytesToBytesMap extends MemoryConsumer {
     private final LinkedList<MemoryBlock> dataPages = new LinkedList<>();
 
     /**
+     * 用于存储新哈希表项的键和值的数据页。当该页面变满时，将分配一个新页面，该指针将更改为指向该新页面。
+     * <p>
      * The data page that will be used to store keys and values for new hashtable entries. When this
      * page becomes full, a new page will be allocated and this pointer will change to point to that
      * new page.
@@ -86,6 +88,8 @@ public final class BytesToBytesMap extends MemoryConsumer {
     private MemoryBlock currentPage = null;
 
     /**
+     * 偏移到“currentPage”中，指向可以将新数据插入页面的位置。这不包括页面的基偏移。
+     * <p>
      * Offset into `currentPage` that points to the location where new data can be inserted into
      * the page. This does not incorporate the page's base offset.
      */
@@ -122,6 +126,8 @@ public final class BytesToBytesMap extends MemoryConsumer {
     // absolute memory addresses.
 
     /**
+     * 长阵列是否可以增长。如果为false，我们将不会插入更多元素。
+     * <p>
      * Whether or not the longArray can grow. We will not insert more elements if it's false.
      */
     private boolean canGrowArray = true;
@@ -129,12 +135,16 @@ public final class BytesToBytesMap extends MemoryConsumer {
     private final double loadFactor;
 
     /**
+     * 包含键和值数据的数据页的大小。地图条目不能跨越多个页面，因此这限制了最大条目大小。
+     * <p>
      * The size of the data pages that hold key and value data. Map entries cannot span multiple
      * pages, so this limits the maximum entry size.
      */
     private final long pageSizeBytes;
 
     /**
+     * 地图中定义的键数。
+     * <p>
      * Number of keys defined in the map.
      */
     private int numKeys;
