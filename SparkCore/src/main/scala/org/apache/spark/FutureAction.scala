@@ -43,11 +43,14 @@ trait FutureAction[T] extends Future[T] {
 
     /**
       * 取消此操作的执行。
+      *
       * Cancels the execution of this action.
       */
     def cancel(): Unit
 
     /**
+      * 阻止，直到此操作完成。
+      *
       * Blocks until this action completes.
       *
       * @param atMost maximum wait time, which may be negative (no waiting is done), Duration.Inf
@@ -57,6 +60,8 @@ trait FutureAction[T] extends Future[T] {
     override def ready(atMost: Duration)(implicit permit: CanAwait): FutureAction.this.type
 
     /**
+      * 等待并返回此操作的结果（类型T）。
+      *
       * Awaits and returns the result (of type T) of this action.
       *
       * @param atMost maximum wait time, which may be negative (no waiting is done), Duration.Inf
@@ -68,22 +73,30 @@ trait FutureAction[T] extends Future[T] {
     override def result(atMost: Duration)(implicit permit: CanAwait): T
 
     /**
+      * 当此操作完成时，通过异常或值应用提供的函数。
+      *
       * When this action is completed, either through an exception, or a value, applies the provided
       * function.
       */
     def onComplete[U](func: (Try[T]) => U)(implicit executor: ExecutionContext): Unit
 
     /**
+      * 返回操作是否已使用值或异常完成。
+      *
       * Returns whether the action has already been completed with a value or an exception.
       */
     override def isCompleted: Boolean
 
     /**
+      * 返回操作是否已取消。
+      *
       * Returns whether the action has been cancelled.
       */
     def isCancelled: Boolean
 
     /**
+      * 这个未来的价值。
+      *
       * The value of this Future.
       *
       * If the future is not completed the returned value will be None. If the future is completed
@@ -93,12 +106,16 @@ trait FutureAction[T] extends Future[T] {
     override def value: Option[Try[T]]
 
     /**
+      * 阻止并返回此作业的结果。
+      *
       * Blocks and returns the result of this job.
       */
     @throws(classOf[SparkException])
     def get(): T = ThreadUtils.awaitResult(this, Duration.Inf)
 
     /**
+      * 返回由基础异步操作运行的作业ID。
+      *
       * Returns the job IDs run by the underlying async operation.
       *
       * This returns the current snapshot of the job list. Certain operations may run multiple
@@ -110,6 +127,8 @@ trait FutureAction[T] extends Future[T] {
 
 
 /**
+  * 保存触发单个作业的操作结果的[[FutureAction]]。示例包括count、collect和reduce。
+  *
   * A [[FutureAction]] holding the result of an action that triggers a single job. Examples include
   * count, collect, reduce.
   */
