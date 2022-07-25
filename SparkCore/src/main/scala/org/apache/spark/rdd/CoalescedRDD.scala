@@ -28,6 +28,8 @@ import scala.language.existentials
 import scala.reflect.ClassTag
 
 /**
+  * 类，该类通过基本上跟踪父分区来捕获合并的RDD
+  *
   * Class that captures a coalesced RDD by essentially keeping track of parent partitions
   *
   * @param index             of this coalesced partition
@@ -36,13 +38,15 @@ import scala.reflect.ClassTag
   * @param preferredLocation the preferred location for this partition
   */
 private[spark] case class CoalescedRDDPartition(
-                                                       index: Int,
-                                                       @transient rdd: RDD[_],
-                                                       parentsIndices: Array[Int],
-                                                       @transient preferredLocation: Option[String] = None) extends Partition {
+                                                   index: Int,
+                                                   @transient rdd: RDD[_],
+                                                   parentsIndices: Array[Int],
+                                                   @transient preferredLocation: Option[String] = None) extends Partition {
     var parents: Seq[Partition] = parentsIndices.map(rdd.partitions(_))
 
     /**
+      * 计算父分区在其getPreferredLocs中包含preferredLocation的部分。
+      *
       * Computes the fraction of the parents' partitions containing preferredLocation within
       * their getPreferredLocs.
       *
@@ -80,10 +84,10 @@ private[spark] case class CoalescedRDDPartition(
   * @param partitionCoalescer [[PartitionCoalescer]] implementation to use for coalescing
   */
 private[spark] class CoalescedRDD[T: ClassTag](
-                                                      @transient var prev: RDD[T],
-                                                      maxPartitions: Int,
-                                                      partitionCoalescer: Option[PartitionCoalescer] = None)
-        extends RDD[T](prev.context, Nil) { // Nil since we implement getDependencies
+                                                  @transient var prev: RDD[T],
+                                                  maxPartitions: Int,
+                                                  partitionCoalescer: Option[PartitionCoalescer] = None)
+    extends RDD[T](prev.context, Nil) { // Nil since we implement getDependencies
 
     require(maxPartitions > 0 || maxPartitions == prev.partitions.length,
         s"Number of partitions ($maxPartitions) must be positive.")
@@ -163,7 +167,7 @@ private[spark] class CoalescedRDD[T: ClassTag](
   */
 
 private class DefaultPartitionCoalescer(val balanceSlack: Double = 0.10)
-        extends PartitionCoalescer {
+    extends PartitionCoalescer {
     val rnd = new scala.util.Random(7919) // keep this class deterministic
     // each element of groupArr represents one coalesced partition
     val groupArr = ArrayBuffer[PartitionGroup]()
@@ -249,9 +253,9 @@ private class DefaultPartitionCoalescer(val balanceSlack: Double = 0.10)
     }
 
     def throwBalls(
-                          maxPartitions: Int,
-                          prev: RDD[_],
-                          balanceSlack: Double, partitionLocs: PartitionLocations) {
+                      maxPartitions: Int,
+                      prev: RDD[_],
+                      balanceSlack: Double, partitionLocs: PartitionLocations) {
         if (noLocality) { // no preferredLocations in parent RDD, no randomization needed
             if (maxPartitions > groupArr.size) { // just return prev.partitions
                 for ((p, i) <- prev.partitions.zipWithIndex) {
@@ -314,10 +318,10 @@ private class DefaultPartitionCoalescer(val balanceSlack: Double = 0.10)
       * @return partition group (bin to be put in)
       */
     def pickBin(
-                       p: Partition,
-                       prev: RDD[_],
-                       balanceSlack: Double,
-                       partitionLocs: PartitionLocations): PartitionGroup = {
+                   p: Partition,
+                   prev: RDD[_],
+                   balanceSlack: Double,
+                   partitionLocs: PartitionLocations): PartitionGroup = {
         val slack = (balanceSlack * prev.partitions.length).toInt
         // least loaded pref locs
         val pref = currPrefLocs(p, prev).map(getLeastGroupHash(_)).sortWith(compare)

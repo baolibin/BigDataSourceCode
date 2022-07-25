@@ -28,7 +28,7 @@ private[spark] class BlockRDDPartition(val blockId: BlockId, idx: Int) extends P
 
 private[spark]
 class BlockRDD[T: ClassTag](sc: SparkContext, @transient val blockIds: Array[BlockId])
-        extends RDD[T](sc, Nil) {
+    extends RDD[T](sc, Nil) {
 
     @transient lazy val _locations = BlockManager.blockIdsToHosts(blockIds, SparkEnv.get)
     @volatile private var _isValid = true
@@ -40,7 +40,11 @@ class BlockRDD[T: ClassTag](sc: SparkContext, @transient val blockIds: Array[Blo
         }.toArray
     }
 
-    /** Check if this BlockRDD is valid. If not valid, exception is thrown. */
+    /**
+      * 检查此BlockRDD是否有效。如果无效，则引发异常。
+      *
+      * Check if this BlockRDD is valid. If not valid, exception is thrown.
+      */
     private[spark] def assertValid() {
         if (!isValid) {
             throw new SparkException(
@@ -49,6 +53,8 @@ class BlockRDD[T: ClassTag](sc: SparkContext, @transient val blockIds: Array[Blo
     }
 
     /**
+      * 这个BlockRDD是否实际可用。如果使用“This.removeBlocks”删除了数据块，则为false。
+      *
       * Whether this BlockRDD is actually usable. This will be false if the data blocks have been
       * removed using `this.removeBlocks`.
       */
@@ -77,6 +83,8 @@ class BlockRDD[T: ClassTag](sc: SparkContext, @transient val blockIds: Array[Blo
     }
 
     /**
+      * 删除制作此BlockRDD的数据块。注意：这是一个不可逆的操作，因为块中的数据一旦删除就无法恢复。小心使用。
+      *
       * Remove the data blocks that this BlockRDD is made from. NOTE: This is an
       * irreversible operation, as the data in the blocks cannot be recovered back
       * once removed. Use it with caution.
