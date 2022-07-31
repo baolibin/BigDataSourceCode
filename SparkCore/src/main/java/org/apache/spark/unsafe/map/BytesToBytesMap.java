@@ -108,6 +108,8 @@ public final class BytesToBytesMap extends MemoryConsumer {
     // of memory.
 
     /**
+     * 存储键和值的单个数组。
+     * <p>
      * A single array to store the key and value.
      * <p>
      * Position {@code 2 * i} in the array is used to track a pointer to the key at index {@code i},

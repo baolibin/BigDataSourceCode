@@ -49,16 +49,22 @@ abstract class BlockTransferService extends ShuffleClient with Closeable with Lo
     def close(): Unit
 
     /**
+      * 服务正在侦听的端口号，仅在调用[[init]]后可用。
+      *
       * Port number the service is listening on, available only after [[init]] is invoked.
       */
     def port: Int
 
     /**
+      * 服务正在侦听的主机名，仅在调用[[init]]后可用。
+      *
       * Host name the service is listening on, available only after [[init]] is invoked.
       */
     def hostName: String
 
     /**
+      * 从远程节点异步获取块序列，仅在调用[[init]]后可用。
+      *
       * Fetch a sequence of blocks from a remote node asynchronously,
       * available only after [[init]] is invoked.
       *
@@ -75,6 +81,8 @@ abstract class BlockTransferService extends ShuffleClient with Closeable with Lo
                                 shuffleFiles: Array[File]): Unit
 
     /**
+      * 将单个块上载到远程节点，仅在调用[[init]]后可用。
+      *
       * Upload a single block to a remote node, available only after [[init]] is invoked.
       */
     def uploadBlock(
@@ -87,6 +95,8 @@ abstract class BlockTransferService extends ShuffleClient with Closeable with Lo
                        classTag: ClassTag[_]): Future[Unit]
 
     /**
+      * [[fetchBlocks]]的一种特殊情况，因为它只提取一个块，并且正在阻塞。
+      *
       * A special case of [[fetchBlocks]], as it fetches only one block and is blocking.
       *
       * It is also only available after [[init]] is invoked.
@@ -111,6 +121,8 @@ abstract class BlockTransferService extends ShuffleClient with Closeable with Lo
     }
 
     /**
+      * 将单个块上载到远程节点，仅在调用[[init]]后可用。
+      *
       * Upload a single block to a remote node, available only after [[init]] is invoked.
       *
       * This method is similar to [[uploadBlock]], except this one blocks the thread
