@@ -152,16 +152,22 @@ public final class BytesToBytesMap extends MemoryConsumer {
     private int numKeys;
 
     /**
+     * 映射中定义的值的数量。一个键可以有多个值。
+     * <p>
      * Number of values defined in the map. A key could have multiple values.
      */
     private int numValues;
 
     /**
+     * 一旦密钥数超过此阈值，地图将展开。
+     * <p>
      * The map will be expanded once the number of keys exceeds this threshold.
      */
     private int growthThreshold;
 
     /**
+     * 截断哈希代码的掩码，使其不超过长数组的大小。这是一种强度降低优化；我们基本上是在执行模数运算，但要使用位掩码，因为这是一个2次方大小的哈希映射。
+     * <p>
      * Mask for truncating hashcodes so that they do not exceed the long array's size.
      * This is a strength reduction optimization; we're essentially performing a modulus operation,
      * but doing so with a bitmask because this is a power-of-2-sized hash map.
