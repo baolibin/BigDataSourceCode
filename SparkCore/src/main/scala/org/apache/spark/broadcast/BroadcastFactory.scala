@@ -35,6 +35,7 @@ private[spark] trait BroadcastFactory {
 
     /**
       * 创建一个新的广播变量。
+      *
       * Creates a new broadcast variable.
       *
       * @param value   value to broadcast

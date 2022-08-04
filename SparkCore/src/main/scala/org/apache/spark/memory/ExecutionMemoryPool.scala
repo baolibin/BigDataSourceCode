@@ -41,8 +41,8 @@ import scala.collection.mutable
   * @param memoryMode the type of memory tracked by this pool (on- or off-heap)
   */
 private[memory] class ExecutionMemoryPool(
-                                                 lock: Object,
-                                                 memoryMode: MemoryMode
+                                             lock: Object,
+                                             memoryMode: MemoryMode
                                          ) extends MemoryPool(lock) with Logging {
 
     private[this] val poolName: String = memoryMode match {
@@ -52,6 +52,7 @@ private[memory] class ExecutionMemoryPool(
 
     /**
       * 任务Task对应的内存消耗
+      *
       * Map from taskAttemptId -> memory consumption in bytes
       */
     @GuardedBy("lock")
@@ -64,6 +65,7 @@ private[memory] class ExecutionMemoryPool(
 
     /**
       * 释放指定Task占用的所有字节内存数
+      *
       * Release all memory for the given task and mark it as inactive (e.g. when a task ends).
       *
       * @return the number of bytes freed.
@@ -76,6 +78,7 @@ private[memory] class ExecutionMemoryPool(
 
     /**
       * 返回指定Task使用的内存消耗
+      *
       * Returns the memory consumption, in bytes, for the given task.
       */
     def getMemoryUsageForTask(taskAttemptId: Long): Long = lock.synchronized {
@@ -84,6 +87,7 @@ private[memory] class ExecutionMemoryPool(
 
     /**
       * 释放指定Task指定内存字节数
+      *
       * Release `numBytes` of memory acquired by the given task.
       */
     def releaseMemory(numBytes: Long, taskAttemptId: Long): Unit = lock.synchronized {
@@ -91,7 +95,7 @@ private[memory] class ExecutionMemoryPool(
         var memoryToFree = if (curMem < numBytes) {
             logWarning(
                 s"Internal error: release called on $numBytes bytes but task only has $curMem bytes " +
-                        s"of memory from the $poolName pool")
+                    s"of memory from the $poolName pool")
             curMem
         } else {
             numBytes
@@ -107,6 +111,7 @@ private[memory] class ExecutionMemoryPool(
 
     /**
       * 为指定的Task申请内存，并返回获得的字节数
+      *
       * Try to acquire up to `numBytes` of memory for the given task and return the number of bytes
       * obtained, or 0 if none can be allocated.
       *
@@ -128,10 +133,10 @@ private[memory] class ExecutionMemoryPool(
       * @return the number of bytes granted to the task.
       */
     private[memory] def acquireMemory(
-                                             numBytes: Long,
-                                             taskAttemptId: Long,
-                                             maybeGrowPool: Long => Unit = (additionalSpaceNeeded: Long) => Unit,
-                                             computeMaxPoolSize: () => Long = () => poolSize): Long = lock.synchronized {
+                                         numBytes: Long,
+                                         taskAttemptId: Long,
+                                         maybeGrowPool: Long => Unit = (additionalSpaceNeeded: Long) => Unit,
+                                         computeMaxPoolSize: () => Long = () => poolSize): Long = lock.synchronized {
         assert(numBytes > 0, s"invalid number of bytes requested: $numBytes")
 
         // TODO: clean up this clunky method signature
