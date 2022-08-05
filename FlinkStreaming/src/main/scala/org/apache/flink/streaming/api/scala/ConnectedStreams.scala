@@ -82,6 +82,8 @@ class ConnectedStreams[IN1, IN2](javaStream: JavaCStream[IN1, IN2]) {
     }
 
     /**
+      * 对这些连接的流应用CoMap转换。
+      *
       * Applies a CoMap transformation on these connected streams.
       *
       * The transformation calls [[CoMapFunction#map1]] for each element
@@ -107,6 +109,8 @@ class ConnectedStreams[IN1, IN2](javaStream: JavaCStream[IN1, IN2]) {
     }
 
     /**
+      * 对连接的输入流应用给定的[[协处理函数]]，从而创建转换的输出流。
+      *
       * Applies the given [[CoProcessFunction]] on the connected input streams,
       * thereby creating a transformed output stream.
       *
@@ -159,6 +163,8 @@ class ConnectedStreams[IN1, IN2](javaStream: JavaCStream[IN1, IN2]) {
 
 
     /**
+      * 对这些连接的流应用共平面映射变换。
+      *
       * Applies a CoFlatMap transformation on these connected streams.
       *
       * The transformation calls [[CoFlatMapFunction#flatMap1]] for each element
