@@ -32,13 +32,25 @@ import org.apache.spark.util.SparkExitCode._
 private[spark]
 object ExecutorExitCode {
 
-    /** DiskStore failed to create a local temporary directory after many attempts. */
+    /**
+      * 多次尝试后，DiskStore未能创建本地临时目录。
+      *
+      * DiskStore failed to create a local temporary directory after many attempts.
+      */
     val DISK_STORE_FAILED_TO_CREATE_DIR = 53
 
-    /** ExternalBlockStore failed to initialize after many attempts. */
+    /**
+      * 多次尝试后，ExternalBlockStore未能初始化。
+      *
+      * ExternalBlockStore failed to initialize after many attempts.
+      */
     val EXTERNAL_BLOCK_STORE_FAILED_TO_INITIALIZE = 54
 
-    /** ExternalBlockStore failed to create a local temporary directory after many attempts. */
+    /**
+      * 在多次尝试后，ExternalBlockStore未能创建本地临时目录。
+      *
+      * ExternalBlockStore failed to create a local temporary directory after many attempts.
+      */
     val EXTERNAL_BLOCK_STORE_FAILED_TO_CREATE_DIR = 55
 
     /**
@@ -63,12 +75,12 @@ object ExecutorExitCode {
                 "Unable to send heartbeats to driver."
             case _ =>
                 "Unknown executor exit code (" + exitCode + ")" + (
-                        if (exitCode > 128) {
-                            " (died from signal " + (exitCode - 128) + "?)"
-                        } else {
-                            ""
-                        }
-                        )
+                    if (exitCode > 128) {
+                        " (died from signal " + (exitCode - 128) + "?)"
+                    } else {
+                        ""
+                    }
+                    )
         }
     }
 }
