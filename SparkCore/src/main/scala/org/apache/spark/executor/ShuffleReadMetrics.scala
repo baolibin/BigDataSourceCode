@@ -45,16 +45,22 @@ class ShuffleReadMetrics private[spark]() extends Serializable {
     def fetchWaitTime: Long = _fetchWaitTime.sum
 
     /**
+      * 此任务从洗牌中读取的记录总数。
+      *
       * Total number of records read from the shuffle by this task.
       */
     def recordsRead: Long = _recordsRead.sum
 
     /**
+      * 此任务在洗牌中获取的总字节数（远程和本地）。
+      *
       * Total bytes fetched in the shuffle by this task (both remote and local).
       */
     def totalBytesRead: Long = remoteBytesRead + localBytesRead
 
     /**
+      * 此任务从洗牌读取的远程字节总数。
+      *
       * Total number of remote bytes read from the shuffle by this task.
       */
     def remoteBytesRead: Long = _remoteBytesRead.sum

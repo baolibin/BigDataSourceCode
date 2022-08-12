@@ -54,6 +54,8 @@ object ExecutorExitCode {
     val EXTERNAL_BLOCK_STORE_FAILED_TO_CREATE_DIR = 55
 
     /**
+      * Executor向驱动程序发送心跳的次数不能超过“org.apache.spark.Executor.heartbeat.maxFailures”次。
+      *
       * Executor is unable to send heartbeats to the driver more than
       * "org.apache.spark.executor.heartbeat.maxFailures" times.
       */
