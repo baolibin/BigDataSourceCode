@@ -66,21 +66,29 @@ class ShuffleReadMetrics private[spark]() extends Serializable {
     def remoteBytesRead: Long = _remoteBytesRead.sum
 
     /**
+      * 洗牌从本地磁盘读取的数据
+      *
       * Shuffle data that was read from the local disk (as opposed to from a remote executor).
       */
     def localBytesRead: Long = _localBytesRead.sum
 
     /**
+      * 此任务在此洗牌中获取的块数
+      *
       * Number of blocks fetched in this shuffle by this task (remote or local).
       */
     def totalBlocksFetched: Long = remoteBlocksFetched + localBlocksFetched
 
     /**
+      * 此任务在此洗牌中获取的远程块数。
+      *
       * Number of remote blocks fetched in this shuffle by this task.
       */
     def remoteBlocksFetched: Long = _remoteBlocksFetched.sum
 
     /**
+      * 此任务在此洗牌中获取的本地块数。
+      *
       * Number of local blocks fetched in this shuffle by this task.
       */
     def localBlocksFetched: Long = _localBlocksFetched.sum
