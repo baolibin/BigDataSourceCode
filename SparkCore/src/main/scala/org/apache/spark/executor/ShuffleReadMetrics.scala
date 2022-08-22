@@ -118,6 +118,8 @@ class ShuffleReadMetrics private[spark]() extends Serializable {
     private[spark] def setRecordsRead(v: Long): Unit = _recordsRead.setValue(v)
 
     /**
+      * 重置当前度量值（`this'），并合并所有独立度量值
+      *
       * Resets the value of the current metrics (`this`) and merges all the independent
       * [[TempShuffleReadMetrics]] into `this`.
       */
@@ -140,6 +142,8 @@ class ShuffleReadMetrics private[spark]() extends Serializable {
 }
 
 /**
+  * 临时混洗读取度量保持器，用于为每个混洗依赖项收集混洗读取指标，所有临时指标将最终合并到[[ShuffleReadMetrics]]中。
+  *
   * A temporary shuffle read metrics holder that is used to collect shuffle read metrics for each
   * shuffle dependency, and all temporary metrics will be merged into the [[ShuffleReadMetrics]] at
   * last.
