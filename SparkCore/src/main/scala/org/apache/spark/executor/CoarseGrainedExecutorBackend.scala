@@ -49,14 +49,14 @@ import scala.util.{Failure, Success}
   * @param env
   */
 private[spark] class CoarseGrainedExecutorBackend(
-                                                         override val rpcEnv: RpcEnv,
-                                                         driverUrl: String,
-                                                         executorId: String,
-                                                         hostname: String,
-                                                         cores: Int,
-                                                         userClassPath: Seq[URL],
-                                                         env: SparkEnv)
-        extends ThreadSafeRpcEndpoint with ExecutorBackend with Logging {
+                                                     override val rpcEnv: RpcEnv,
+                                                     driverUrl: String,
+                                                     executorId: String,
+                                                     hostname: String,
+                                                     cores: Int,
+                                                     userClassPath: Seq[URL],
+                                                     env: SparkEnv)
+    extends ThreadSafeRpcEndpoint with ExecutorBackend with Logging {
 
     private[this] val stopping = new AtomicBoolean(false)
     // If this CoarseGrainedExecutorBackend is changed to support multiple threads, then this may need
@@ -84,7 +84,7 @@ private[spark] class CoarseGrainedExecutorBackend(
     def extractLogUrls: Map[String, String] = {
         val prefix = "SPARK_LOG_URL_"
         sys.env.filterKeys(_.startsWith(prefix))
-                .map(e => (e._1.substring(prefix.length).toLowerCase(Locale.ROOT), e._2))
+            .map(e => (e._1.substring(prefix.length).toLowerCase(Locale.ROOT), e._2))
     }
 
     /**
@@ -151,6 +151,8 @@ private[spark] class CoarseGrainedExecutorBackend(
     }
 
     /**
+      * 其他子类可以重载此函数，以不同方式处理执行器出口。例如，当执行器停机时，后端可能不想让父进程停机。
+      *
       * This function can be overloaded by other child classes to handle
       * executor exits differently. For e.g. when an executor goes down,
       * back-end may not want to take the parent process down.
@@ -234,7 +236,7 @@ private[spark] object CoarseGrainedExecutorBackend extends Logging {
         }
 
         if (driverUrl == null || executorId == null || hostname == null || cores <= 0 ||
-                appId == null) {
+            appId == null) {
             printUsageAndExit()
         }
         // 调用方法创建executor进程
@@ -254,13 +256,13 @@ private[spark] object CoarseGrainedExecutorBackend extends Logging {
       * @param userClassPath
       */
     private def run(
-                           driverUrl: String,
-                           executorId: String,
-                           hostname: String,
-                           cores: Int,
-                           appId: String,
-                           workerUrl: Option[String],
-                           userClassPath: Seq[URL]) {
+                       driverUrl: String,
+                       executorId: String,
+                       hostname: String,
+                       cores: Int,
+                       appId: String,
+                       workerUrl: Option[String],
+                       userClassPath: Seq[URL]) {
 
         Utils.initDaemon(log)
 
@@ -295,7 +297,7 @@ private[spark] object CoarseGrainedExecutorBackend extends Logging {
             }
             if (driverConf.contains("org.apache.spark.yarn.credentials.file")) {
                 logInfo("Will periodically update credentials from: " +
-                        driverConf.get("org.apache.spark.yarn.credentials.file"))
+                    driverConf.get("org.apache.spark.yarn.credentials.file"))
                 SparkHadoopUtil.get.startCredentialUpdater(driverConf)
             }
 
