@@ -1741,7 +1741,11 @@ class SparkContext(config: SparkConf) extends Logging {
         }
     }
 
-    /** Post the environment update event once the task scheduler is ready */
+    /**
+      * 任务计划程序就绪后，发布环境更新事件
+      *
+      * Post the environment update event once the task scheduler is ready
+      */
     private def postEnvironmentUpdate() {
         if (taskScheduler != null) {
             val schedulingMode = getSchedulingMode.toString
@@ -1757,6 +1761,8 @@ class SparkContext(config: SparkConf) extends Logging {
     private[spark] def conf: SparkConf = _conf
 
     /**
+      * 返回当前调度模式
+      *
       * Return current scheduling mode
       */
     def getSchedulingMode: SchedulingMode.SchedulingMode = {
@@ -1771,6 +1777,8 @@ class SparkContext(config: SparkConf) extends Logging {
     }
 
     /**
+      * 返回添加到资源的jar文件列表。
+      *
       * Returns a list of jar files that are added to resources.
       */
     def listJars(): Seq[String] = addedJars.keySet.toSeq
