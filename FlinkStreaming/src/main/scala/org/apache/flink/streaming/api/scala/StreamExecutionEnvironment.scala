@@ -75,6 +75,8 @@ class StreamExecutionEnvironment(javaEnv: JavaEnv) {
     }
 
     /**
+      * 设置为程序定义的最大并行度。
+      *
       * Sets the maximum degree of parallelism defined for the program.
       * The maximum degree of parallelism specifies the upper limit for dynamic scaling. It also
       * defines the number of key groups used for partitioned state.
@@ -84,12 +86,16 @@ class StreamExecutionEnvironment(javaEnv: JavaEnv) {
     }
 
     /**
+      * 返回此执行环境的默认并行度。请注意
+      *
       * Returns the default parallelism for this execution environment. Note that this
       * value can be overridden by individual operations using [[DataStream#setParallelism(int)]]
       */
     def getParallelism = javaEnv.getParallelism
 
     /**
+      * 返回为程序定义的最大并行度。
+      *
       * Returns the maximum degree of parallelism defined for the program.
       *
       * The maximum degree of parallelism specifies the upper limit for dynamic scaling. It also
