@@ -54,6 +54,8 @@ public abstract class MemoryConsumer {
     }
 
     /**
+     * 返回已用内存的大小（以字节为单位）。
+     * <p>
      * Returns the size of used memory in bytes.
      */
     protected long getUsed() {
@@ -61,6 +63,8 @@ public abstract class MemoryConsumer {
     }
 
     /**
+     * 在建造过程中强制溢出。
+     * <p>
      * Force spill during building.
      */
     public void spill() throws IOException {
@@ -68,6 +72,8 @@ public abstract class MemoryConsumer {
     }
 
     /**
+     * 将一些数据溢出到磁盘以释放内存，当没有足够的内存用于任务时，TaskMemoryManager将调用这些数据。
+     * <p>
      * Spill some data to disk to release memory, which will be called by TaskMemoryManager
      * when there is not enough memory for the task.
      * <p>
@@ -84,6 +90,8 @@ public abstract class MemoryConsumer {
     public abstract long spill(long size, MemoryConsumer trigger) throws IOException;
 
     /**
+     * 分配“大小”的长数组。
+     * <p>
      * Allocates a LongArray of `size`.
      */
     public LongArray allocateArray(long size) {
@@ -103,6 +111,8 @@ public abstract class MemoryConsumer {
     }
 
     /**
+     * 释放长数组。
+     * <p>
      * Frees a LongArray.
      */
     public void freeArray(LongArray array) {
@@ -110,6 +120,8 @@ public abstract class MemoryConsumer {
     }
 
     /**
+     * 为内存块分配至少“必需”字节。
+     * <p>
      * Allocate a memory block with at least `required` bytes.
      * <p>
      * Throws IOException if there is not enough memory.
