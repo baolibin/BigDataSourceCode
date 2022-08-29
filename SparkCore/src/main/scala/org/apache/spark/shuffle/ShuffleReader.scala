@@ -32,6 +32,8 @@ private[spark] trait ShuffleReader[K, C] {
     def read(): Iterator[Product2[K, C]]
 
     /**
+      * 关闭此读取器。
+      *
       * Close this reader.
       * TODO: Add this back when we make the ShuffleReader a developer API that others can implement
       * (at which point this will likely be necessary).

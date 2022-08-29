@@ -63,6 +63,8 @@ private[spark] class FetchFailedException(
 }
 
 /**
+  * 无法获取洗牌元数据
+  *
   * Failed to get shuffle metadata from [[org.apache.spark.MapOutputTracker]].
   */
 private[spark] class MetadataFetchFailedException(
