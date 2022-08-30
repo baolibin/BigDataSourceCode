@@ -25,29 +25,32 @@ import org.apache.flink.api.common.typeutils.TypeSerializer
 import org.apache.flink.configuration.Configuration
 
 /**
- * Trait implementing the functionality necessary to apply stateful functions in 
- * RichFunctions without exposing the OperatorStates to the user. The user should
- * call the applyWithState method in his own RichFunction implementation.
- */
+  * 特性实现在RichFunctions中应用有状态函数所需的功能，而不向用户公开运算符状态。
+  * 用户应该在自己的RichFunction实现中调用applyWithState方法。
+  *
+  * Trait implementing the functionality necessary to apply stateful functions in
+  * RichFunctions without exposing the OperatorStates to the user. The user should
+  * call the applyWithState method in his own RichFunction implementation.
+  */
 @Public
 trait StatefulFunction[I, O, S] extends RichFunction {
 
-  protected val stateSerializer: TypeSerializer[S]
-  
-  private[this] var state: ValueState[S] = _
-  
+    protected val stateSerializer: TypeSerializer[S]
 
-  def applyWithState(in: I, fun: (I, Option[S]) => (O, Option[S])): O = {
-    val (o, s: Option[S]) = fun(in, Option(state.value()))
-    s match {
-      case Some(v) => state.update(v)
-      case None => state.update(null.asInstanceOf[S])
+    private[this] var state: ValueState[S] = _
+
+
+    def applyWithState(in: I, fun: (I, Option[S]) => (O, Option[S])): O = {
+        val (o, s: Option[S]) = fun(in, Option(state.value()))
+        s match {
+            case Some(v) => state.update(v)
+            case None => state.update(null.asInstanceOf[S])
+        }
+        o
     }
-    o
-  }
 
-  override def open(c: Configuration) = {
-    val info = new ValueStateDescriptor[S]("state", stateSerializer)
-    state = getRuntimeContext().getState(info)
-  }
+    override def open(c: Configuration) = {
+        val info = new ValueStateDescriptor[S]("state", stateSerializer)
+        state = getRuntimeContext().getState(info)
+    }
 }

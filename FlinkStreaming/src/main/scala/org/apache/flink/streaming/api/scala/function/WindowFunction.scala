@@ -25,23 +25,27 @@ import org.apache.flink.streaming.api.windowing.windows.Window
 import org.apache.flink.util.Collector
 
 /**
+  * 在键控（分组）窗口上计算的函数的基本接口。
+  *
   * Base interface for functions that are evaluated over keyed (grouped) windows.
   *
-  * @tparam IN The type of the input value.
+  * @tparam IN  The type of the input value.
   * @tparam OUT The type of the output value.
   * @tparam KEY The type of the key.
   */
 @Public
 trait WindowFunction[IN, OUT, KEY, W <: Window] extends Function with Serializable {
 
-  /**
-    * Evaluates the window and outputs none or several elements.
-    *
-    * @param key    The key for which this window is evaluated.
-    * @param window The window that is being evaluated.
-    * @param input  The elements in the window being evaluated.
-    * @param out    A collector for emitting elements.
-    * @throws Exception The function may throw exceptions to fail the program and trigger recovery.
-    */
-  def apply(key: KEY, window: W, input: Iterable[IN], out: Collector[OUT])
+    /**
+      * 计算窗口并输出一个或多个元素。
+      *
+      * Evaluates the window and outputs none or several elements.
+      *
+      * @param key    The key for which this window is evaluated.
+      * @param window The window that is being evaluated.
+      * @param input  The elements in the window being evaluated.
+      * @param out    A collector for emitting elements.
+      * @throws Exception The function may throw exceptions to fail the program and trigger recovery.
+      */
+    def apply(key: KEY, window: W, input: Iterable[IN], out: Collector[OUT])
 }
