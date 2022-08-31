@@ -46,6 +46,8 @@ object AsyncDataStream {
     private val DEFAULT_QUEUE_CAPACITY = 100
 
     /**
+      * 对输入数据流应用异步函数。仅针对水印保持输出顺序。位于相同两个水印之间的流记录可以重新排序。
+      *
       * Apply an asynchronous function on the input data stream. The output order is only maintained
       * with respect to watermarks. Stream records which lie between the same two watermarks, can be
       * re-ordered.
@@ -69,6 +71,8 @@ object AsyncDataStream {
     }
 
     /**
+      * 对输入数据流应用异步函数。仅针对水印保持输出顺序。位于相同两个水印之间的流记录可以重新排序。
+      *
       * Apply an asynchronous function on the input data stream. The output order is only maintained
       * with respect to watermarks. Stream records which lie between the same two watermarks, can be
       * re-ordered.
