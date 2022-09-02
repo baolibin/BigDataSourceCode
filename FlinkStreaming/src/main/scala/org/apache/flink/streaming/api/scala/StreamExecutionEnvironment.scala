@@ -129,6 +129,8 @@ class StreamExecutionEnvironment(javaEnv: JavaEnv) {
     def getBufferTimeout = javaEnv.getBufferTimeout
 
     /**
+      * 禁用流式传输运算符的运算符链接。运算符链接允许非混洗操作位于同一线程中，完全避免序列化和反序列化。
+      *
       * Disables operator chaining for streaming operators. Operator chaining
       * allows non-shuffle operations to be co-located in the same thread fully
       * avoiding serialization and de-serialization.
@@ -145,6 +147,8 @@ class StreamExecutionEnvironment(javaEnv: JavaEnv) {
     // ------------------------------------------------------------------------
 
     /**
+      * 获取检查点配置，该配置定义检查点间隔、检查点之间的延迟等值。
+      *
       * Gets the checkpoint config, which defines values like checkpoint interval, delay between
       * checkpoints, etc.
       */
