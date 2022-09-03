@@ -208,6 +208,8 @@ class StreamExecutionEnvironment(javaEnv: JavaEnv) {
     }
 
     /**
+      * 为流作业启用检查点。流数据流的分布式状态将定期快照。如果失败，流数据流将从最新完成的检查点重新启动。
+      *
       * Enables checkpointing for the streaming job. The distributed state of the streaming
       * dataflow will be periodically snapshotted. In case of a failure, the streaming
       * dataflow will be restarted from the latest completed checkpoint.
@@ -229,6 +231,8 @@ class StreamExecutionEnvironment(javaEnv: JavaEnv) {
     }
 
     /**
+      * 用于启用容错的方法。激活流媒体操作员状态的监控和备份。状态检查点之间的时间间隔以毫秒为单位。
+      *
       * Method for enabling fault-tolerance. Activates monitoring and backup of streaming
       * operator states. Time interval between state checkpoints is specified in in millis.
       *
