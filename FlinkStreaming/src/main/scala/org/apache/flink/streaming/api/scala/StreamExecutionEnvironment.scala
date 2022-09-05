@@ -250,6 +250,8 @@ class StreamExecutionEnvironment(javaEnv: JavaEnv) {
     def getCheckpointingMode = javaEnv.getCheckpointingMode()
 
     /**
+      * 设置描述如何存储和检查点运算符状态的状态后端。它定义了在执行期间保持状态的数据结构（例如哈希表、RockDB或其他数据存储）以及检查点数据将被持久化的位置。
+      *
       * Sets the state backend that describes how to store and checkpoint operator state. It defines
       * both which data structures hold state during execution (for example hash tables, RockDB,
       * or other data stores) as well as where checkpointed data will be persisted.
@@ -285,6 +287,8 @@ class StreamExecutionEnvironment(javaEnv: JavaEnv) {
     }
 
     /**
+      * 返回定义如何存储和检查点状态的状态后端。
+      *
       * Returns the state backend that defines how to store and checkpoint state.
       */
     @PublicEvolving
@@ -302,6 +306,8 @@ class StreamExecutionEnvironment(javaEnv: JavaEnv) {
     }
 
     /**
+      * 返回指定的重新启动策略配置。
+      *
       * Returns the specified restart strategy configuration.
       *
       * @return The restart strategy configuration to be used
