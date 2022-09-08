@@ -331,6 +331,8 @@ class StreamExecutionEnvironment(javaEnv: JavaEnv) {
     }
 
     /**
+      * 获取系统尝试重新执行失败任务的次数。值“-1”表示应使用系统默认值（如配置中定义）。
+      *
       * Gets the number of times the system will try to re-execute failed tasks. A value
       * of "-1" indicates that the system default value (as defined in the configuration)
       * should be used.
@@ -346,6 +348,8 @@ class StreamExecutionEnvironment(javaEnv: JavaEnv) {
     // --------------------------------------------------------------------------------------------
 
     /**
+      * 将新的Kryo默认序列化程序添加到运行时。
+      *
       * Adds a new Kryo default serializer to the Runtime.
       * <p/>
       * Note that the serializer instance must be serializable (as defined by
