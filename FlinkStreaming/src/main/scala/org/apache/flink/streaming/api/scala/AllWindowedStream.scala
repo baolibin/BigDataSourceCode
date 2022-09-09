@@ -101,6 +101,8 @@ class AllWindowedStream[T, W <: Window](javaStream: JavaAllWStream[T, W]) {
     }
 
     /**
+      * 设置应用于在发射前从窗口中逐出元素的[[逐出器]]。
+      *
       * Sets the [[Evictor]] that should be used to evict elements from a window before emission.
       *
       * Note: When using an evictor window performance will degrade significantly, since

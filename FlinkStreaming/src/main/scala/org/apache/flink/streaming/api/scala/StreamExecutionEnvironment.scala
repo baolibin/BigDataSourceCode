@@ -369,6 +369,8 @@ class StreamExecutionEnvironment(javaEnv: JavaEnv) {
     }
 
     /**
+      * 将新的Kryo默认序列化程序添加到运行时。
+      *
       * Adds a new Kryo default serializer to the Runtime.
       *
       * @param type
@@ -381,6 +383,8 @@ class StreamExecutionEnvironment(javaEnv: JavaEnv) {
     }
 
     /**
+      * 在[[KryoSerializer]]处向序列化程序注册给定类型。
+      *
       * Registers the given type with the serializer at the [[KryoSerializer]].
       *
       * Note that the serializer instance must be serializable (as defined by java.io.Serializable),
@@ -416,6 +420,8 @@ class StreamExecutionEnvironment(javaEnv: JavaEnv) {
     // --------------------------------------------------------------------------------------------
 
     /**
+      * 设置从此环境创建的所有流的时间特性，例如处理时间、事件时间或摄取时间。
+      *
       * Sets the time characteristic for all streams create from this environment, e.g., processing
       * time, event time, or ingestion time.
       *
@@ -432,6 +438,8 @@ class StreamExecutionEnvironment(javaEnv: JavaEnv) {
     }
 
     /**
+      * 获取时间特性
+      *
       * Gets the time characteristic/
       *
       * @see #setStreamTimeCharacteristic
@@ -454,6 +462,8 @@ class StreamExecutionEnvironment(javaEnv: JavaEnv) {
     }
 
     /**
+      * 创建包含给定元素的数据流。所有元素必须是同一类型。
+      *
       * Creates a DataStream that contains the given elements. The elements must all be of the
       * same type.
       *
