@@ -398,6 +398,8 @@ class StreamExecutionEnvironment(javaEnv: JavaEnv) {
     }
 
     /**
+      * 在[[KryoSerializer]]处向序列化程序注册给定类型。
+      *
       * Registers the given type with the serializer at the [[KryoSerializer]].
       */
     def registerTypeWithKryoSerializer(clazz: Class[_], serializer: Class[_ <: Serializer[_]]) {
