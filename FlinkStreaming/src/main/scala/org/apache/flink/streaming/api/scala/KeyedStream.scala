@@ -736,6 +736,8 @@ class KeyedStream[T, K](javaStream: KeyedJavaStream[T, K]) extends DataStream[T]
         }
 
         /**
+          * 使用用户函数完成联接操作，该函数为每个联接的元素对执行。
+          *
           * Completes the join operation with the user function that is executed for each joined pair
           * of elements.
           *
