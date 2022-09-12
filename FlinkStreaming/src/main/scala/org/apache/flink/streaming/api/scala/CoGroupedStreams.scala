@@ -111,6 +111,8 @@ class CoGroupedStreams[T1, T2](input1: DataStream[T1], input2: DataStream[T2]) {
         class EqualTo(keySelector2: KeySelector[T2, KEY]) {
 
             /**
+              * 指定协作组操作工作的窗口。
+              *
               * Specifies the window on which the co-group operation works.
               */
             @PublicEvolving
@@ -138,6 +140,8 @@ class CoGroupedStreams[T1, T2](input1: DataStream[T1], input2: DataStream[T2]) {
                                              val allowedLateness: Time) {
 
                 /**
+                  * 设置应用于触发窗口发射的[[Trigger]]。
+                  *
                   * Sets the [[Trigger]] that should be used to trigger window emission.
                   */
                 @PublicEvolving

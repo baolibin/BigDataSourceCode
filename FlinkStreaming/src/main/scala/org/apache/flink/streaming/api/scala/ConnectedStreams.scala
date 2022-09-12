@@ -137,6 +137,8 @@ class ConnectedStreams[IN1, IN2](javaStream: JavaCStream[IN1, IN2]) {
     }
 
     /**
+      * 对连接的输入键控流应用给定的[[KeyedCoProcessFunction]]，从而创建转换的输出流。
+      *
       * Applies the given [[KeyedCoProcessFunction]] on the connected input keyed streams,
       * thereby creating a transformed output stream.
       *

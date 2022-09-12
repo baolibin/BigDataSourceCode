@@ -1218,6 +1218,8 @@ class DataStream[T](stream: JavaStream[T]) {
         stream.addSink(sinkFunction)
 
     /**
+      * 将给定接收器添加到此数据流。调用StreamExecutionEnvironment.execute（…）方法后，将只执行添加了接收器的流。
+      *
       * Adds the given sink to this DataStream. Only streams with sinks added
       * will be executed once the StreamExecutionEnvironment.execute(...)
       * method is called.
