@@ -86,21 +86,29 @@ abstract class ProcessWindowFunction[IN, OUT, KEY, W <: Window]
         def currentProcessingTime: Long
 
         /**
+          * 返回当前事件时间水印。
+          *
           * Returns the current event-time watermark.
           */
         def currentWatermark: Long
 
         /**
+          * 每个键和每个窗口状态的状态访问器。
+          *
           * State accessor for per-key and per-window state.
           */
         def windowState: KeyedStateStore
 
         /**
+          * 每个键全局状态的状态访问器。
+          *
           * State accessor for per-key global state.
           */
         def globalState: KeyedStateStore
 
         /**
+          * 向[[OutputTag]]标识的侧输出发出记录。
+          *
           * Emits a record to the side output identified by the [[OutputTag]].
           */
         def output[X](outputTag: OutputTag[X], value: X);
