@@ -718,6 +718,8 @@ class KeyedStream[T, K](javaStream: KeyedJavaStream[T, K]) extends DataStream[T]
         private var upperBoundInclusive = true
 
         /**
+          * 将下限设置为独占
+          *
           * Set the lower bound to be exclusive
           */
         @PublicEvolving
