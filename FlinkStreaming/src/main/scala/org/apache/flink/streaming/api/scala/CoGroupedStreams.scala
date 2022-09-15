@@ -104,6 +104,8 @@ class CoGroupedStreams[T1, T2](input1: DataStream[T1], input2: DataStream[T2]) {
         }
 
         /**
+          * 为第一和第二输入定义的[[KeySelector]]的协同操作。
+          *
           * A co-group operation that a [[KeySelector]] defined for the first and the second input.
           *
           * A window can now be specified using [[window()]].
@@ -174,6 +176,8 @@ class CoGroupedStreams[T1, T2](input1: DataStream[T1], input2: DataStream[T2]) {
                 }
 
                 /**
+                  * 使用为窗口组执行的用户功能完成协作组操作。
+                  *
                   * Completes the co-group operation with the user function that is executed
                   * for windowed groups.
                   */
