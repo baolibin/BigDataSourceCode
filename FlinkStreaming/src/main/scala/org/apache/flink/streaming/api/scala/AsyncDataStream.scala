@@ -132,6 +132,8 @@ object AsyncDataStream {
     }
 
     /**
+      * 对输入数据流应用异步函数。输出顺序仅针对水印进行维护。位于相同两个水印之间的流记录可以重新排序。
+      *
       * Apply an asynchronous function on the input data stream. The output order is only maintained
       * with respect to watermarks. Stream records which lie between the same two watermarks, can be
       * re-ordered.
