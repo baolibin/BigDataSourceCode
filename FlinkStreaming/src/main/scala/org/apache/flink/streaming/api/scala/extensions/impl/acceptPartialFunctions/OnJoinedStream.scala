@@ -33,18 +33,20 @@ import org.apache.flink.streaming.api.windowing.windows.Window
   * @tparam W The type of the window
   */
 class OnJoinedStream[L, R, K, W <: Window](
-    stream: JoinedStreams[L, R]#Where[K]#EqualTo#WithWindow[W]) {
+                                              stream: JoinedStreams[L, R]#Where[K]#EqualTo#WithWindow[W]) {
 
-  /**
-    * Completes the join operation with the user function that is executed
-    * for windowed groups.
-    *
-    * @param fun The function that defines the projection of the join
-    * @tparam O The return type of the projection, for which type information must be known
-    * @return A fully joined data set of Os
-    */
-  @PublicEvolving
-  def projecting[O: TypeInformation](fun: (L, R) => O): DataStream[O] =
-    stream.apply(fun)
+    /**
+      * 使用为窗口组执行的用户函数完成联接操作。
+      *
+      * Completes the join operation with the user function that is executed
+      * for windowed groups.
+      *
+      * @param fun The function that defines the projection of the join
+      * @tparam O The return type of the projection, for which type information must be known
+      * @return A fully joined data set of Os
+      */
+    @PublicEvolving
+    def projecting[O: TypeInformation](fun: (L, R) => O): DataStream[O] =
+        stream.apply(fun)
 
 }
