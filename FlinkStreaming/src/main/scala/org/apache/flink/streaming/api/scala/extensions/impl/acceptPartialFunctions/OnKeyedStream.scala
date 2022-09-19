@@ -31,25 +31,29 @@ import org.apache.flink.streaming.api.scala.{DataStream, KeyedStream}
   */
 class OnKeyedStream[T, K](stream: KeyedStream[T, K]) {
 
-  /**
-    * Applies a reducer `fun` to the stream
-    *
-    * @param fun The reducing function to be applied on the keyed stream
-    * @return A data set of Ts
-    */
-  @PublicEvolving
-  def reduceWith(fun: (T, T) => T): DataStream[T] =
-    stream.reduce(fun)
+    /**
+      * 将减速机“fun”应用于流
+      *
+      * Applies a reducer `fun` to the stream
+      *
+      * @param fun The reducing function to be applied on the keyed stream
+      * @return A data set of Ts
+      */
+    @PublicEvolving
+    def reduceWith(fun: (T, T) => T): DataStream[T] =
+        stream.reduce(fun)
 
-  /**
-    * Folds the stream over a zero element with a reducer `fun`
-    *
-    * @param initialValue The zero element
-    * @param fun The reducing function to be applied on the keyed stream
-    * @return A data set of Rs
-    */
-  @PublicEvolving
-  def foldWith[R: TypeInformation](initialValue: R)(fun: (R, T) => R): DataStream[R] =
-    stream.fold(initialValue)(fun)
+    /**
+      * 使用reducer`fun将流折叠到零元素上`
+      *
+      * Folds the stream over a zero element with a reducer `fun`
+      *
+      * @param initialValue The zero element
+      * @param fun          The reducing function to be applied on the keyed stream
+      * @return A data set of Rs
+      */
+    @PublicEvolving
+    def foldWith[R: TypeInformation](initialValue: R)(fun: (R, T) => R): DataStream[R] =
+        stream.fold(initialValue)(fun)
 
 }
