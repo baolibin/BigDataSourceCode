@@ -90,6 +90,8 @@ class CoGroupedStreams[T1, T2](input1: DataStream[T1], input2: DataStream[T2]) {
     class Where[KEY](keySelector1: KeySelector[T1, KEY], keyType: TypeInformation[KEY]) {
 
         /**
+          * 为第二个输入中的元素指定[[KeySelector]]。
+          *
           * Specifies a [[KeySelector]] for elements from the second input.
           */
         def equalTo(keySelector: T2 => KEY): EqualTo = {
@@ -153,6 +155,8 @@ class CoGroupedStreams[T1, T2](input1: DataStream[T1], input2: DataStream[T2]) {
                 }
 
                 /**
+                  * 设置应用于在发射之前从窗口中逐出元素的[[Evictor]]。
+                  *
                   * Sets the [[Evictor]] that should be used to evict elements from a window before
                   * emission.
                   *
