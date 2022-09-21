@@ -202,6 +202,8 @@ class CoGroupedStreams[T1, T2](input1: DataStream[T1], input2: DataStream[T2]) {
                 }
 
                 /**
+                  * 使用为窗口化组执行的用户功能完成协同组操作。
+                  *
                   * Completes the co-group operation with the user function that is executed
                   * for windowed groups.
                   */
@@ -222,6 +224,8 @@ class CoGroupedStreams[T1, T2](input1: DataStream[T1], input2: DataStream[T2]) {
                 }
 
                 /**
+                  * 使用为窗口化组执行的用户功能完成协同组操作。
+                  *
                   * Completes the co-group operation with the user function that is executed
                   * for windowed groups.
                   */
