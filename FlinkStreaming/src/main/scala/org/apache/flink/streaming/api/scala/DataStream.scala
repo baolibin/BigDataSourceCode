@@ -1186,6 +1186,8 @@ class DataStream[T](stream: JavaStream[T]) {
     }
 
     /**
+      * 使用给定的[[OutputFormat]]写入数据流。
+      *
       * Writes a DataStream using the given [[OutputFormat]].
       */
     @PublicEvolving
@@ -1194,6 +1196,8 @@ class DataStream[T](stream: JavaStream[T]) {
     }
 
     /**
+      * 将数据流作为字节数组写入套接字。输出的格式由[[SerializationSchema]]指定。
+      *
       * Writes the DataStream to a socket as a byte array. The format of the output is
       * specified by a [[SerializationSchema]].
       */
