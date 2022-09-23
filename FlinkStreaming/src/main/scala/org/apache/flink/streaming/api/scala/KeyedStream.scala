@@ -729,6 +729,8 @@ class KeyedStream[T, K](javaStream: KeyedJavaStream[T, K]) extends DataStream[T]
         }
 
         /**
+          * 将上限设置为独占
+          *
           * Set the upper bound to be exclusive
           */
         @PublicEvolving
