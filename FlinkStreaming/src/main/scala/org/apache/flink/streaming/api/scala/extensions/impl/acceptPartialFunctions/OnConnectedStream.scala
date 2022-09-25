@@ -69,6 +69,8 @@ class OnConnectedStream[IN1, IN2](stream: ConnectedStreams[IN1, IN2]) {
         stream.flatMap(flatMap1, flatMap2)
 
     /**
+      * 将两个连接的流设置为关键帧。完成此操作后，两个流中具有相同键的所有元素将被发送到转换函数的相同并行实例。
+      *
       * Keys the two connected streams together. After this operation, all
       * elements with the same key from both streams will be sent to the
       * same parallel instance of the transformation functions.
