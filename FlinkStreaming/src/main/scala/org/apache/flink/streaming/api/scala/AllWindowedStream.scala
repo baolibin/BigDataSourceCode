@@ -76,6 +76,9 @@ class AllWindowedStream[T, W <: Window](javaStream: JavaAllWStream[T, W]) {
     }
 
     /**
+      * 将延迟到达的数据发送到由给定[[OutputTag]]标识的侧输出。
+      * 水印超过窗口末尾加上使用[[allowedLateness（Time）]]设置的允许延迟时间后，数据被视为延迟。
+      *
       * Send late arriving data to the side output identified by the given [[OutputTag]]. Data
       * is considered late after the watermark has passed the end of the window plus the allowed
       * lateness set using [[allowedLateness(Time)]].
