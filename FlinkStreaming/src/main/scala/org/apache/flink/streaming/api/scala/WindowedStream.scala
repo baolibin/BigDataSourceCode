@@ -195,6 +195,8 @@ class WindowedStream[T, K, W <: Window](javaStream: JavaWStream[T, K, W]) {
     }
 
     /**
+      * 将给定的窗口函数应用于每个窗口。为每个键的每个窗口求值分别调用窗口函数。窗口函数的输出被解释为常规的非窗口流。
+      *
       * Applies the given window function to each window. The window function is called for each
       * evaluation of the window for each key individually. The output of the window function is
       * interpreted as a regular non-windowed stream.
