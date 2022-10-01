@@ -255,6 +255,8 @@ class WindowedStream[T, K, W <: Window](javaStream: JavaWStream[T, K, W]) {
     }
 
     /**
+      * 将给定的reduce函数应用于每个窗口。然后将窗口缩减值作为窗口函数的输入传递。窗口函数的输出被解释为常规的非窗口流。
+      *
       * Applies the given reduce function to each window. The window reduced value is
       * then passed as input of the window function. The output of the window function
       * is interpreted as a regular non-windowed stream.
