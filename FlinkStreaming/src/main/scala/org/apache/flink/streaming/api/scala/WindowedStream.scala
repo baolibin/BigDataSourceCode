@@ -282,6 +282,8 @@ class WindowedStream[T, K, W <: Window](javaStream: JavaWStream[T, K, W]) {
     // -------------------------- aggregate() ---------------------------------
 
     /**
+      * 将给定的聚合函数应用于每个窗口和键。为每个元素调用聚合函数，以递增方式聚合值，并将状态保持为每个键和窗口一个累加器。
+      *
       * Applies the given aggregation function to each window and key. The aggregation function
       * is called for each element, aggregating values incrementally and keeping the state to
       * one accumulator per key and window.
