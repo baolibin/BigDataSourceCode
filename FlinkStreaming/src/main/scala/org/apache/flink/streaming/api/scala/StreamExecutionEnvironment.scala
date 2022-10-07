@@ -512,6 +512,8 @@ class StreamExecutionEnvironment(javaEnv: JavaEnv) {
     }
 
     /**
+      * 创建一个DataStream，它表示通过逐行读取给定文件而生成的字符串。将使用系统的默认字符集读取文件。
+      *
       * Creates a DataStream that represents the Strings produced by reading the
       * given file line wise. The file will be read with the system's default
       * character set.
