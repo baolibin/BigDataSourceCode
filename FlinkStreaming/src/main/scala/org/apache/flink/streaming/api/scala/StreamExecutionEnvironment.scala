@@ -522,6 +522,8 @@ class StreamExecutionEnvironment(javaEnv: JavaEnv) {
         asScalaStream(javaEnv.readTextFile(filePath))
 
     /**
+      * 创建一个数据流，该数据流表示通过逐行读取给定文件而生成的字符串。具有给定名称的字符集将用于读取文件。
+      * 
       * Creates a data stream that represents the Strings produced by reading the given file
       * line wise. The character set with the given name will be used to read the files.
       */
