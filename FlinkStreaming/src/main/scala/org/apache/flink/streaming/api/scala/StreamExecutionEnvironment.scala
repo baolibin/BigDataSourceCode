@@ -523,7 +523,7 @@ class StreamExecutionEnvironment(javaEnv: JavaEnv) {
 
     /**
       * 创建一个数据流，该数据流表示通过逐行读取给定文件而生成的字符串。具有给定名称的字符集将用于读取文件。
-      * 
+      *
       * Creates a data stream that represents the Strings produced by reading the given file
       * line wise. The character set with the given name will be used to read the files.
       */
@@ -532,6 +532,8 @@ class StreamExecutionEnvironment(javaEnv: JavaEnv) {
 
 
     /**
+      * 使用给定的输入格式读取给定的文件。文件路径应作为URI传递
+      *
       * Reads the given file with the given input format. The file path should be passed
       * as a URI (e.g., "file:///some/local/file" or "hdfs://host:port/file/path").
       */
