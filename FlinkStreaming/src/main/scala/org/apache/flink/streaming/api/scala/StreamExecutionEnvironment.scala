@@ -556,6 +556,8 @@ class StreamExecutionEnvironment(javaEnv: JavaEnv) {
         asScalaStream(javaEnv.readFileStream(StreamPath, intervalMillis, watchType))
 
     /**
+      * 根据给定的[[FileInputFormat]]读取用户指定路径的内容。取决于提供的[[FileProcessingMode]]。
+      *
       * Reads the contents of the user-specified path based on the given [[FileInputFormat]].
       * Depending on the provided [[FileProcessingMode]].
       *
