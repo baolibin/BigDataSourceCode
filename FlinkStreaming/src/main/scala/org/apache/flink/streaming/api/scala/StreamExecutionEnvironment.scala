@@ -675,6 +675,8 @@ class StreamExecutionEnvironment(javaEnv: JavaEnv) {
     }
 
     /**
+      * 使用用户定义的源函数为任意源功能创建DataStream。
+      *
       * Create a DataStream using a user defined source function for arbitrary
       * source functionality.
       */
