@@ -726,6 +726,8 @@ class StreamExecutionEnvironment(javaEnv: JavaEnv) {
     def getExecutionPlan = javaEnv.getExecutionPlan
 
     /**
+      * 流作业[[org.apache.flink.streaming.api.graph.StreamGraph]]的获取者。
+      *
       * Getter of the [[org.apache.flink.streaming.api.graph.StreamGraph]] of the streaming job.
       *
       * @return The StreamGraph representing the transformations
