@@ -718,6 +718,8 @@ class StreamExecutionEnvironment(javaEnv: JavaEnv) {
     def execute(jobName: String) = javaEnv.execute(jobName)
 
     /**
+      * 创建系统将用来执行程序的计划，并使用执行数据流图的JSON表示将其作为String返回。请注意，在执行计划之前，需要调用此函数。
+      *
       * Creates the plan with which the system will execute the program, and
       * returns it as a String using a JSON representation of the execution data
       * flow graph. Note that this needs to be called, before the plan is
