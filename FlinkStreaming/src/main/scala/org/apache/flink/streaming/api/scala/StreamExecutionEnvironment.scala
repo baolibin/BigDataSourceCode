@@ -407,6 +407,9 @@ class StreamExecutionEnvironment(javaEnv: JavaEnv) {
     }
 
     /**
+      * 向序列化堆栈注册给定类型。如果该类型最终序列化为POJO，那么该类型将注册到POJO序列化器。
+      * 如果类型最终被Kryo序列化，那么它将在Kryo注册，以确保只写入标记。
+      *
       * Registers the given type with the serialization stack. If the type is eventually
       * serialized as a POJO, then the type is registered with the POJO serializer. If the
       * type ends up being serialized with Kryo, then it will be registered at Kryo to make
