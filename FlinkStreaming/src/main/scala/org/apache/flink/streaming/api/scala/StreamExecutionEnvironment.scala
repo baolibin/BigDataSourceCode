@@ -458,6 +458,8 @@ class StreamExecutionEnvironment(javaEnv: JavaEnv) {
     // --------------------------------------------------------------------------------------------
 
     /**
+      * 创建包含数字序列的新DataStream。此源是一个并行源。如果手动将并行度设置为“1”，则发出的元素是有序的。
+      *
       * Creates a new DataStream that contains a sequence of numbers. This source is a parallel source.
       * If you manually set the parallelism to `1` the emitted elements are in order.
       */
