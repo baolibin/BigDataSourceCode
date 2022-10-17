@@ -482,6 +482,8 @@ class StreamExecutionEnvironment(javaEnv: JavaEnv) {
     }
 
     /**
+      * 从给定的非空[[Seq]]创建DataStream。元素需要是可序列化的，因为如果需要，框架可能会将元素移动到集群中。
+      *
       * Creates a DataStream from the given non-empty [[Seq]]. The elements need to be serializable
       * because the framework may move the elements into the cluster if needed.
       *
