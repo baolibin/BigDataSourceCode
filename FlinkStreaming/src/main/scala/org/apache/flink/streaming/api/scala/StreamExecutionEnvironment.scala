@@ -499,6 +499,8 @@ class StreamExecutionEnvironment(javaEnv: JavaEnv) {
     }
 
     /**
+      * 从给定的[[Iterator]]创建DataStream。
+      *
       * Creates a DataStream from the given [[Iterator]].
       *
       * Note that this operation will result in a non-parallel data source, i.e. a data source with
