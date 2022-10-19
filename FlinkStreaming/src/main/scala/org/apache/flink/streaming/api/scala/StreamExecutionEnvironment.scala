@@ -512,6 +512,8 @@ class StreamExecutionEnvironment(javaEnv: JavaEnv) {
     }
 
     /**
+      * 从给定的[[SplittableIterator]]创建数据流。
+      * 
       * Creates a DataStream from the given [[SplittableIterator]].
       */
     def fromParallelCollection[T: TypeInformation](data: SplittableIterator[T]):
