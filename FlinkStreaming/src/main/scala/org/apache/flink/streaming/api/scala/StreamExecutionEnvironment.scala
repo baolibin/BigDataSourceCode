@@ -513,7 +513,7 @@ class StreamExecutionEnvironment(javaEnv: JavaEnv) {
 
     /**
       * 从给定的[[SplittableIterator]]创建数据流。
-      * 
+      *
       * Creates a DataStream from the given [[SplittableIterator]].
       */
     def fromParallelCollection[T: TypeInformation](data: SplittableIterator[T]):
@@ -553,6 +553,9 @@ class StreamExecutionEnvironment(javaEnv: JavaEnv) {
         asScalaStream(javaEnv.readFile(inputFormat, filePath))
 
     /**
+      * 创建包含系统监视给定路径时创建的文件内容的数据流。将使用系统的默认字符集读取文件。用户可以检查以毫秒为单位的监视间隔以及文件修改的处理方式。
+      * 默认情况下，它每100毫秒只检查一次新文件。
+      *
       * Creates a DataStream that contains the contents of file created while
       * system watches the given path. The file will be read with the system's
       * default character set. The user can check the monitoring interval in milliseconds,
