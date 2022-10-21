@@ -647,6 +647,9 @@ class StreamExecutionEnvironment(javaEnv: JavaEnv) {
     }
 
     /**
+      * 创建包含从套接字无限接收的字符串的新DataStream。接收的字符串由系统的默认字符集解码。
+      * 如果每秒钟启动一次临时服务中断重新连接，则以秒为单位指定最大重试间隔。
+      *
       * Creates a new DataStream that contains the strings received infinitely
       * from socket. Received strings are decoded by the system's default
       * character set. The maximum retry interval is specified in seconds, in case
