@@ -661,6 +661,9 @@ class StreamExecutionEnvironment(javaEnv: JavaEnv) {
         asScalaStream(javaEnv.socketTextStream(hostname, port))
 
     /**
+      * 用于创建具有特定输入格式的输入数据流的泛型方法。由于所有数据流都需要有关其类型的特定信息，因此此方法需要确定输入格式生成的数据类型。
+      * 它将尝试通过反射确定数据类型，除非输入格式实现ResultTypeQueryable接口。
+      *
       * Generic method to create an input data stream with a specific input format.
       * Since all data streams need specific information about their types, this method needs to
       * determine the type of the data produced by the input format. It will attempt to determine the
