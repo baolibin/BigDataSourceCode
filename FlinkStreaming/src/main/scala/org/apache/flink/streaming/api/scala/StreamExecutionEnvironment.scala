@@ -766,6 +766,8 @@ class StreamExecutionEnvironment(javaEnv: JavaEnv) {
     def getWrappedStreamExecutionEnvironment = javaEnv
 
     /**
+      * 返回给定函数的“闭包清理”版本。仅在[[org.apache.flink.api.common.ExecutionConfig]]中未禁用闭包清理时才进行清理
+      *
       * Returns a "closure-cleaned" version of the given function. Cleans only if closure cleaning
       * is not disabled in the [[org.apache.flink.api.common.ExecutionConfig]]
       */
