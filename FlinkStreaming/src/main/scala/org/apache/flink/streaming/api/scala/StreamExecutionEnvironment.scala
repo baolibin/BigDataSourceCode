@@ -781,6 +781,9 @@ class StreamExecutionEnvironment(javaEnv: JavaEnv) {
     }
 
     /**
+      * 在分布式缓存中以给定名称注册文件。该文件可从本地路径下的（分布式）运行时中的任何用户定义函数访问。
+      * 文件可以是本地文件（将通过BlobServer分发），也可以是分布式文件系统中的文件。如果需要，运行时将临时将文件复制到本地缓存。
+      *
       * Registers a file at the distributed cache under the given name. The file will be accessible
       * from any user-defined function in the (distributed) runtime under a local path. Files
       * may be local files (which will be distributed via BlobServer), or files in a distributed file
