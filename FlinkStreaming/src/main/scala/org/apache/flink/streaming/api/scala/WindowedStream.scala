@@ -544,7 +544,7 @@ class WindowedStream[T, K, W <: Window](javaStream: JavaWStream[T, K, W]) {
 
     /**
       * 将给定的折叠函数应用于每个窗口。然后将窗口折叠值作为过程窗口函数的输入传递。进程窗口函数的输出被解释为常规的非窗口流。
-      * 
+      *
       * Applies the given fold function to each window. The window folded value is
       * then passed as input of the process window function.
       * The output of the process window function is interpreted as a regular non-windowed stream.
@@ -577,6 +577,8 @@ class WindowedStream[T, K, W <: Window](javaStream: JavaWStream[T, K, W]) {
     // ---------------------------- apply() -------------------------------------
 
     /**
+      * 将给定的窗口函数应用于每个窗口。对于每个键的窗口的每次求值，都会单独调用窗口函数。窗口函数的输出被解释为常规的非窗口流。
+      * 
       * Applies the given window function to each window. The window function is called for each
       * evaluation of the window for each key individually. The output of the window function is
       * interpreted as a regular non-windowed stream.
