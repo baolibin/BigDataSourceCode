@@ -607,7 +607,7 @@ class WindowedStream[T, K, W <: Window](javaStream: JavaWStream[T, K, W]) {
       *
       * Not that this function requires that all data in the windows is buffered until the window
       * is evaluated, as the function provides no means of pre-aggregation.
-      *
+      *     
       * @param function The window function.
       * @return The data stream that is the result of applying the window function to the window.
       */
