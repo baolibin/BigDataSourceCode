@@ -790,6 +790,8 @@ class WindowedStream[T, K, W <: Window](javaStream: JavaWStream[T, K, W]) {
     def max(position: Int): DataStream[T] = aggregate(AggregationType.MAX, position)
 
     /**
+      * 应用一个聚合，该聚合在给定字段中给出窗口中元素的最大值。
+      *
       * Applies an aggregation that that gives the maximum of the elements in the window at
       * the given field.
       */
