@@ -799,13 +799,15 @@ class WindowedStream[T, K, W <: Window](javaStream: JavaWStream[T, K, W]) {
 
     /**
       * 应用一个聚合，该聚合给出窗口中给定位置的最小元素。
-      * 
+      *
       * Applies an aggregation that that gives the minimum of the elements in the window at
       * the given position.
       */
     def min(position: Int): DataStream[T] = aggregate(AggregationType.MIN, position)
 
     /**
+      * 应用一个聚合，该聚合在给定字段中给出窗口中的最小元素。
+      * 
       * Applies an aggregation that that gives the minimum of the elements in the window at
       * the given field.
       */
