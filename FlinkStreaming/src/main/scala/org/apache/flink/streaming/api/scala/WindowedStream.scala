@@ -814,6 +814,8 @@ class WindowedStream[T, K, W <: Window](javaStream: JavaWStream[T, K, W]) {
     def min(field: String): DataStream[T] = aggregate(AggregationType.MIN, field)
 
     /**
+      * 应用对窗口中给定位置的元素求和的聚合。
+      * 
       * Applies an aggregation that sums the elements in the window at the given position.
       */
     def sum(position: Int): DataStream[T] = aggregate(AggregationType.SUM, position)
