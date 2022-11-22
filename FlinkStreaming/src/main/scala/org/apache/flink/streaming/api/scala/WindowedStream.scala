@@ -600,14 +600,14 @@ class WindowedStream[T, K, W <: Window](javaStream: JavaWStream[T, K, W]) {
 
     /**
       * 将给定的窗口函数应用于每个窗口。对于每个键的窗口的每次求值，都会单独调用窗口函数。窗口函数的输出被解释为常规的非窗口流。
-      *      
+      *
       * Applies the given window function to each window. The window function is called for each
       * evaluation of the window for each key individually. The output of the window function is
       * interpreted as a regular non-windowed stream.
       *
       * Not that this function requires that all data in the windows is buffered until the window
       * is evaluated, as the function provides no means of pre-aggregation.
-      *     
+      *
       * @param function The window function.
       * @return The data stream that is the result of applying the window function to the window.
       */
@@ -621,7 +621,7 @@ class WindowedStream[T, K, W <: Window](javaStream: JavaWStream[T, K, W]) {
 
     /**
       * 将给定的窗口函数应用于每个窗口。对于每个键的窗口的每次求值，都会单独调用窗口函数。窗口函数的输出被解释为常规的非窗口流。
-      * 
+      *
       * Applies the given window function to each window. The window function is called for each
       * evaluation of the window for each key individually. The output of the window function is
       * interpreted as a regular non-windowed stream.
@@ -709,7 +709,7 @@ class WindowedStream[T, K, W <: Window](javaStream: JavaWStream[T, K, W]) {
 
     /**
       * 将给定的窗口函数应用于每个窗口。对于每个键的窗口的每次求值，都会单独调用窗口函数。窗口函数的输出被解释为常规的非窗口流。
-      * 
+      *
       * Applies the given window function to each window. The window function is called for each
       * evaluation of the window for each key individually. The output of the window function is
       * interpreted as a regular non-windowed stream.
@@ -783,7 +783,7 @@ class WindowedStream[T, K, W <: Window](javaStream: JavaWStream[T, K, W]) {
 
     /**
       * 应用一个聚合，该聚合在给定位置给出窗口中元素的最大值。
-      * 
+      *
       * Applies an aggregation that that gives the maximum of the elements in the window at
       * the given position.
       */
@@ -807,7 +807,7 @@ class WindowedStream[T, K, W <: Window](javaStream: JavaWStream[T, K, W]) {
 
     /**
       * 应用一个聚合，该聚合在给定字段中给出窗口中的最小元素。
-      * 
+      *
       * Applies an aggregation that that gives the minimum of the elements in the window at
       * the given field.
       */
@@ -815,12 +815,14 @@ class WindowedStream[T, K, W <: Window](javaStream: JavaWStream[T, K, W]) {
 
     /**
       * 应用对窗口中给定位置的元素求和的聚合。
-      * 
+      *
       * Applies an aggregation that sums the elements in the window at the given position.
       */
     def sum(position: Int): DataStream[T] = aggregate(AggregationType.SUM, position)
 
     /**
+      * 应用对窗口中给定字段的元素求和的聚合。
+      *
       * Applies an aggregation that sums the elements in the window at the given field.
       */
     def sum(field: String): DataStream[T] = aggregate(AggregationType.SUM, field)
