@@ -846,6 +846,8 @@ class WindowedStream[T, K, W <: Window](javaStream: JavaWStream[T, K, W]) {
         field)
 
     /**
+      * 应用一个聚合，该聚合按给定位置给出窗口的最小元素。当相等时，返回第一个。
+      * 
       * Applies an aggregation that that gives the minimum element of the window by
       * the given position. When equality, returns the first.
       */
