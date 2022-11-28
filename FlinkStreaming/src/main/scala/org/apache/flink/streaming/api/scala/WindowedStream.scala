@@ -856,7 +856,7 @@ class WindowedStream[T, K, W <: Window](javaStream: JavaWStream[T, K, W]) {
 
     /**
       * 应用一个聚合，该聚合按给定字段给出窗口的最小元素。当相等时，返回第一个。
-      * 
+      *
       * Applies an aggregation that that gives the minimum element of the window by
       * the given field. When equality, returns the first.
       */
@@ -901,6 +901,8 @@ class WindowedStream[T, K, W <: Window](javaStream: JavaWStream[T, K, W]) {
     }
 
     /**
+      * 获取输出类型
+      * 
       * Gets the output type.
       */
     private def getInputType(): TypeInformation[T] = javaStream.getInputType
