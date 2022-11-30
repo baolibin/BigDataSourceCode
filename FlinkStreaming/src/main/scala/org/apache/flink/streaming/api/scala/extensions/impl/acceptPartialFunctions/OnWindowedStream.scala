@@ -68,6 +68,8 @@ class OnWindowedStream[T, K, W <: Window](stream: WindowedStream[T, K, W]) {
         stream.fold(initialValue)(function)
 
     /**
+      * 将给定的窗口函数应用于每个窗口。每个键的每个窗口求值都会单独调用窗口函数。窗口函数的输出被解释为规则的非窗口流。
+      *
       * Applies the given window function to each window. The window function is called for each
       * evaluation of the window for each key individually. The output of the window function is
       * interpreted as a regular non-windowed stream.
