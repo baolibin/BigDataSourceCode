@@ -139,6 +139,9 @@ class JdbcRDD[T: ClassTag](
 
 object JdbcRDD {
     /**
+      * 创建RDD，该RDD在JDBC连接上执行SQL查询并读取结果。每一行都被转换为一个“Object”数组。
+      * 有关用法示例，请参阅测试用例JavaAPISuite.testJavaJdbcRDD。
+      *
       * Create an RDD that executes a SQL query on a JDBC connection and reads results. Each row is
       * converted into a `Object` array. For usage example, see test case JavaAPISuite.testJavaJdbcRDD.
       *
@@ -180,7 +183,7 @@ object JdbcRDD {
 
     /**
       * 创建RDD，该RDD在JDBC连接上执行SQL查询并读取结果。有关用法示例，请参阅测试用例JavaAPISuite.testJavaJdbcRDD。
-      * 
+      *
       * Create an RDD that executes a SQL query on a JDBC connection and reads results.
       * For usage example, see test case JavaAPISuite.testJavaJdbcRDD.
       *
