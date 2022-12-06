@@ -85,6 +85,8 @@ private[spark] class MetricsSystem private (
   private var metricsServlet: Option[MetricsServlet] = None
 
   /**
+    * 获取此度量系统使用的任何UI处理程序；只能在start（）之后调用。
+    * 
    * Get any UI handlers used by this metrics system; can only be called after start().
    */
   def getServletHandlers: Array[ServletContextHandler] = {
