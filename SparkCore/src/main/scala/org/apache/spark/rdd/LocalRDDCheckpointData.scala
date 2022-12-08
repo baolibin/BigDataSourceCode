@@ -35,9 +35,11 @@ import scala.reflect.ClassTag
   * for use cases where RDDs build up long lineages that need to be truncated often (e.g. GraphX).
   */
 private[spark] class LocalRDDCheckpointData[T: ClassTag](@transient private val rdd: RDD[T])
-        extends RDDCheckpointData[T](rdd) with Logging {
+    extends RDDCheckpointData[T](rdd) with Logging {
 
     /**
+      * 确保RDD已完全缓存，以便稍后可以恢复分区。
+      *
       * Ensure the RDD is fully cached so the partitions can be recovered later.
       */
     protected override def doCheckpoint(): CheckpointRDD[T] = {

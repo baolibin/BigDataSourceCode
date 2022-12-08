@@ -47,6 +47,8 @@ private[spark] class LocalCheckpointRDD[T: ClassTag](
     }
 
     /**
+      * 引发一个异常，指示找不到相关块。
+      *
       * Throw an exception indicating that the relevant block is not found.
       *
       * This should only be called if the original RDD is explicitly unpersisted or if an
