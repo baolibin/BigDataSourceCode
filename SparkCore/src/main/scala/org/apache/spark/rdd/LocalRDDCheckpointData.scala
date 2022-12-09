@@ -68,6 +68,8 @@ private[spark] object LocalRDDCheckpointData {
     val DEFAULT_STORAGE_LEVEL = StorageLevel.MEMORY_AND_DISK
 
     /**
+      * 将指定的存储级别转换为使用磁盘的存储级别。
+      *
       * Transform the specified storage level to one that uses disk.
       *
       * This guarantees that the RDD can be recomputed multiple times correctly as long as

@@ -48,10 +48,10 @@ import scala.reflect.ClassTag
   * }}}
   */
 class OrderedRDDFunctions[K: Ordering : ClassTag,
-        V: ClassTag,
-        P <: Product2[K, V] : ClassTag] @DeveloperApi()(
-                                                               self: RDD[P])
-        extends Logging with Serializable {
+    V: ClassTag,
+    P <: Product2[K, V] : ClassTag] @DeveloperApi()(
+                                                       self: RDD[P])
+    extends Logging with Serializable {
     private val ordering = implicitly[Ordering[K]]
 
     /**
@@ -65,10 +65,12 @@ class OrderedRDDFunctions[K: Ordering : ClassTag,
     : RDD[(K, V)] = self.withScope {
         val part = new RangePartitioner(numPartitions, self, ascending)
         new ShuffledRDD[K, V, V](self, part)
-                .setKeyOrdering(if (ascending) ordering else ordering.reverse)
+            .setKeyOrdering(if (ascending) ordering else ordering.reverse)
     }
 
     /**
+      * 根据给定的分区器重新划分RDD，并在每个生成的分区内，按其键对记录进行排序。
+      *
       * Repartition the RDD according to the given partitioner and, within each resulting partition,
       * sort records by their keys.
       *
