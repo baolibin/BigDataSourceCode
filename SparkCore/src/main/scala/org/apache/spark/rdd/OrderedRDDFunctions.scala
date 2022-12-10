@@ -55,6 +55,9 @@ class OrderedRDDFunctions[K: Ordering : ClassTag,
     private val ordering = implicitly[Ordering[K]]
 
     /**
+      * 按关键字对RDD进行排序，以便每个分区包含一个已排序的元素范围。
+      * 在生成的RDD上调用“collect”或“save”将返回或输出一个有序的记录列表（在“save”情况下，它们将按键的顺序写入文件系统中的多个“part-X”文件）。
+      *
       * Sort the RDD by key, so that each partition contains a sorted range of the elements. Calling
       * `collect` or `save` on the resulting RDD will return or output an ordered list of records
       * (in the `save` case, they will be written to multiple `part-X` files in the filesystem, in
@@ -82,6 +85,8 @@ class OrderedRDDFunctions[K: Ordering : ClassTag,
     }
 
     /**
+      * 返回仅包含包含范围“lower”到“upper”中的元素的RDD。如果已使用“RangePartitioner”对RDD进行分区，则只需扫描可能包含匹配元素的分区即可有效执行此操作。否则，标准的“过滤器”将应用于所有分区。
+      *
       * Returns an RDD containing only the elements in the inclusive range `lower` to `upper`.
       * If the RDD has been partitioned using a `RangePartitioner`, then this operation can be
       * performed efficiently by only scanning the partitions that might contain matching elements.
