@@ -62,6 +62,8 @@ private[spark] class ReliableCheckpointRDD[T: ClassTag](
     private val broadcastedConf = sc.broadcast(new SerializableConfiguration(hadoopConf))
 
     /**
+      * 读取与给定分区关联的检查点文件的内容。
+      *
       * Read the content of the checkpoint file associated with the given partition.
       */
     override def compute(split: Partition, context: TaskContext): Iterator[T] = {
@@ -70,6 +72,8 @@ private[spark] class ReliableCheckpointRDD[T: ClassTag](
     }
 
     /**
+      * 返回检查点目录中文件描述的分区。
+      *
       * Return partitions described by the files in the checkpoint directory.
       *
       * Since the original RDD may belong to a prior application, there is no way to know a
