@@ -96,6 +96,8 @@ private[spark] class ReliableCheckpointRDD[T: ClassTag](
     }
 
     /**
+      * 返回与给定分区关联的检查点文件的位置。
+      *
       * Return the locations of the checkpoint file associated with the given partition.
       */
     protected override def getPreferredLocations(split: Partition): Seq[String] = {
@@ -110,6 +112,8 @@ private[spark] class ReliableCheckpointRDD[T: ClassTag](
 private[spark] object ReliableCheckpointRDD extends Logging {
 
     /**
+      * 将RDD写入检查点文件，并返回表示RDD的ReliableCheckpointRDD。
+      *
       * Write RDD to checkpoint files and return a ReliableCheckpointRDD representing the RDD.
       */
     def writeRDDToCheckpointDirectory[T: ClassTag](
