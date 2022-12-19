@@ -157,6 +157,8 @@ private[spark] object ReliableCheckpointRDD extends Logging {
     }
 
     /**
+      * 将RDD分区的数据写入检查点文件。
+      *
       * Write an RDD partition's data to a checkpoint file.
       */
     def writePartitionToCheckpointFile[T: ClassTag](
@@ -211,6 +213,8 @@ private[spark] object ReliableCheckpointRDD extends Logging {
     }
 
     /**
+      * 返回给定分区的检查点文件名。
+      *
       * Return the checkpoint file name for the given partition.
       */
     private def checkpointFileName(partitionIndex: Int): String = {
