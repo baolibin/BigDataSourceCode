@@ -222,6 +222,8 @@ private[spark] object ReliableCheckpointRDD extends Logging {
     }
 
     /**
+      * 将分区器写入给定的RDD检查点目录。这是在尽最大努力的基础上完成的；写入分区程序时的任何异常都会被捕获、记录并忽略。
+      *
       * Write a partitioner to the given RDD checkpoint directory. This is done on a best-effort
       * basis; any exception while writing the partitioner is caught, logged and ignored.
       */
@@ -251,6 +253,8 @@ private[spark] object ReliableCheckpointRDD extends Logging {
     }
 
     /**
+      * 读取指定检查点文件的内容。
+      *
       * Read the content of the specified checkpoint file.
       */
     def readCheckpointFile[T](
