@@ -30,18 +30,20 @@ import scala.reflect.ClassTag
   * This allows drivers to be restarted on failure with previously computed state.
   */
 private[spark] class ReliableRDDCheckpointData[T: ClassTag](@transient private val rdd: RDD[T])
-        extends RDDCheckpointData[T](rdd) with Logging {
+    extends RDDCheckpointData[T](rdd) with Logging {
 
     // The directory to which the associated RDD has been checkpointed to
     // This is assumed to be a non-local path that points to some reliable storage
     private val cpDir: String =
     ReliableRDDCheckpointData.checkpointPath(rdd.context, rdd.id)
-            .map(_.toString)
-            .getOrElse {
-                throw new SparkException("Checkpoint dir must be specified.")
-            }
+        .map(_.toString)
+        .getOrElse {
+            throw new SparkException("Checkpoint dir must be specified.")
+        }
 
     /**
+      * 返回此RDD被检查点指向的目录。如果RDD尚未检查点，则返回None。
+      *
       * Return the directory to which this RDD was checkpointed.
       * If the RDD is not checkpointed yet, return None.
       */

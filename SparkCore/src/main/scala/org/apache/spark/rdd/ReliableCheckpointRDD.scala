@@ -282,6 +282,8 @@ private[spark] object ReliableCheckpointRDD extends Logging {
     }
 
     /**
+      * 从给定的RDD检查点目录中读取分区器（如果存在）。这是在尽最大努力的基础上完成的；读取分区程序时的任何异常都会被捕获、记录并忽略。
+      *
       * Read a partitioner from the given RDD checkpoint directory, if it exists.
       * This is done on a best-effort basis; any exception while reading the partitioner is
       * caught, logged and ignored.
