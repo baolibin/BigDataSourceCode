@@ -56,6 +56,8 @@ private[spark] class ReliableRDDCheckpointData[T: ClassTag](@transient private v
     }
 
     /**
+      * 将此RDD具体化，并将其内容写入可靠的DFS。这将在该RDD上调用的第一个操作完成后立即调用。
+      *
       * Materialize this RDD and write its content to a reliable DFS.
       * This is called immediately after the first action invoked on this RDD has completed.
       */
@@ -77,7 +79,10 @@ private[spark] class ReliableRDDCheckpointData[T: ClassTag](@transient private v
 
 private[spark] object ReliableRDDCheckpointData extends Logging {
 
-    /** Clean up the files associated with the checkpoint data for this RDD. */
+    /**
+      * 清理与此RDD的检查点数据关联的文件
+      * Clean up the files associated with the checkpoint data for this RDD.
+      */
     def cleanCheckpoint(sc: SparkContext, rddId: Int): Unit = {
         checkpointPath(sc, rddId).foreach { path =>
             path.getFileSystem(sc.hadoopConfiguration).delete(path, true)
