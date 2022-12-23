@@ -33,11 +33,11 @@ import scala.reflect.{ClassTag, classTag}
   *       convert our keys and values to Writable.
   */
 class SequenceFileRDDFunctions[K <% Writable : ClassTag, V <% Writable : ClassTag](
-                                                                                          self: RDD[(K, V)],
-                                                                                          _keyWritableClass: Class[_ <: Writable],
-                                                                                          _valueWritableClass: Class[_ <: Writable])
-        extends Logging
-                with Serializable {
+                                                                                      self: RDD[(K, V)],
+                                                                                      _keyWritableClass: Class[_ <: Writable],
+                                                                                      _valueWritableClass: Class[_ <: Writable])
+    extends Logging
+        with Serializable {
 
     private val keyWritableClass =
         if (_keyWritableClass == null) {
@@ -56,6 +56,10 @@ class SequenceFileRDDFunctions[K <% Writable : ClassTag, V <% Writable : ClassTa
         }
 
     /**
+      * 使用我们从RDD的键和值类型推断的可写类型，将RDD输出为Hadoop SequenceFile。
+      * 如果键或值是可写的，那么我们直接使用它们的类；否则，我们将Int和Double等原始类型映射到IntWritable、DoubleWritable等，
+      * 将字节数组映射到BytesWritable，将字符串映射到Text。“路径”可以位于任何Hadoop支持的文件系统上。
+      *
       * Output the RDD as a Hadoop SequenceFile using the Writable types we infer from the RDD's key
       * and value types. If the key or value are Writable, then we use their classes directly;
       * otherwise we map primitive types such as Int and Double to IntWritable, DoubleWritable, etc,
@@ -63,8 +67,8 @@ class SequenceFileRDDFunctions[K <% Writable : ClassTag, V <% Writable : ClassTa
       * file system.
       */
     def saveAsSequenceFile(
-                                  path: String,
-                                  codec: Option[Class[_ <: CompressionCodec]] = None): Unit = self.withScope {
+                              path: String,
+                              codec: Option[Class[_ <: CompressionCodec]] = None): Unit = self.withScope {
         def anyToWritable[U <% Writable](u: U): Writable = u
 
         // TODO We cannot force the return type of `anyToWritable` be same as keyWritableClass and
@@ -75,7 +79,7 @@ class SequenceFileRDDFunctions[K <% Writable : ClassTag, V <% Writable : ClassTa
         val convertValue = self.valueClass != valueWritableClass
 
         logInfo("Saving as sequence file of type (" + keyWritableClass.getSimpleName + "," +
-                valueWritableClass.getSimpleName + ")")
+            valueWritableClass.getSimpleName + ")")
         val format = classOf[SequenceFileOutputFormat[Writable, Writable]]
         val jobConf = new JobConf(self.context.hadoopConfiguration)
         if (!convertKey && !convertValue) {
@@ -102,7 +106,7 @@ class SequenceFileRDDFunctions[K <% Writable : ClassTag, V <% Writable : ClassTa
                 // is not of the form "java.lang.Object apply(java.lang.Object)"
                 implicitly[T => Writable].getClass.getDeclaredMethods().filter(
                     m => m.getReturnType().toString != "class java.lang.Object" &&
-                            m.getName() == "apply")(0).getReturnType
+                        m.getName() == "apply")(0).getReturnType
 
             }
             // TODO: use something like WritableConverter to avoid reflection
