@@ -62,13 +62,19 @@ class ShuffledRDD[K: ClassTag, V: ClassTag, C: ClassTag](
         this
     }
 
-    /** Set key ordering for RDD's shuffle. */
+    /**
+      * 设置RDD洗牌的键顺序
+      * Set key ordering for RDD's shuffle.
+      */
     def setKeyOrdering(keyOrdering: Ordering[K]): ShuffledRDD[K, V, C] = {
         this.keyOrdering = Option(keyOrdering)
         this
     }
 
-    /** Set aggregator for RDD's shuffle. */
+    /**
+      * 设置RDD洗牌的聚合器
+      * Set aggregator for RDD's shuffle.
+      */
     def setAggregator(aggregator: Aggregator[K, V, C]): ShuffledRDD[K, V, C] = {
         this.aggregator = Option(aggregator)
         this
