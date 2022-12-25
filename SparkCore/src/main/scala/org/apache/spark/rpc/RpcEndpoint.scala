@@ -55,6 +55,8 @@ private[spark] trait RpcEndpoint {
     val rpcEnv: RpcEnv
 
     /**
+      * 处理来自“RpcEndpointRef.send”或“RpcCallContext.reply”的消息。如果收到不匹配的消息，将引发“SparkException”并发送到“onError”。
+      *
       * Process messages from `RpcEndpointRef.send` or `RpcCallContext.reply`. If receiving a
       * unmatched message, `SparkException` will be thrown and sent to `onError`.
       */

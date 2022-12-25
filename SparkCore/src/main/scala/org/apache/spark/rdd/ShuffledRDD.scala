@@ -80,7 +80,10 @@ class ShuffledRDD[K: ClassTag, V: ClassTag, C: ClassTag](
         this
     }
 
-    /** Set mapSideCombine flag for RDD's shuffle. */
+    /**
+      * 为RDD的洗牌设置mapSideCombine标志
+      * Set mapSideCombine flag for RDD's shuffle.
+      */
     def setMapSideCombine(mapSideCombine: Boolean): ShuffledRDD[K, V, C] = {
         this.mapSideCombine = mapSideCombine
         this
