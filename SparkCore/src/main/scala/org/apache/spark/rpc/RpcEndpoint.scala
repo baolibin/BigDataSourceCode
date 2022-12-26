@@ -65,6 +65,8 @@ private[spark] trait RpcEndpoint {
     }
 
     /**
+      * 处理来自“RpcEndpointRef.aask”的消息。如果收到不匹配的消息，将抛出“SparkException”并发送到“onError”。
+      * 
       * Process messages from `RpcEndpointRef.ask`. If receiving a unmatched message,
       * `SparkException` will be thrown and sent to `onError`.
       */
