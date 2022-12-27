@@ -66,7 +66,7 @@ private[spark] trait RpcEndpoint {
 
     /**
       * 处理来自“RpcEndpointRef.aask”的消息。如果收到不匹配的消息，将抛出“SparkException”并发送到“onError”。
-      * 
+      *
       * Process messages from `RpcEndpointRef.ask`. If receiving a unmatched message,
       * `SparkException` will be thrown and sent to `onError`.
       */
@@ -106,6 +106,8 @@ private[spark] trait RpcEndpoint {
     }
 
     /**
+      * 当“remoteAddress”丢失时调用。
+      *
       * Invoked when `remoteAddress` is lost.
       */
     def onDisconnected(remoteAddress: RpcAddress): Unit = {
@@ -113,6 +115,8 @@ private[spark] trait RpcEndpoint {
     }
 
     /**
+      * 当当前节点和“remoteAddress”之间的连接发生网络错误时调用。
+      * 
       * Invoked when some network error happens in the connection between the current node and
       * `remoteAddress`.
       */
