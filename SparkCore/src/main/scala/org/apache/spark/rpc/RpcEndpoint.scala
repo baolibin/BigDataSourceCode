@@ -116,7 +116,7 @@ private[spark] trait RpcEndpoint {
 
     /**
       * 当当前节点和“remoteAddress”之间的连接发生网络错误时调用。
-      * 
+      *
       * Invoked when some network error happens in the connection between the current node and
       * `remoteAddress`.
       */
@@ -125,6 +125,8 @@ private[spark] trait RpcEndpoint {
     }
 
     /**
+      * 在[[RpcEndpoint]]开始处理任何消息之前调用。
+      *
       * Invoked before [[RpcEndpoint]] starts to handle any message.
       */
     def onStart(): Unit = {
@@ -132,6 +134,8 @@ private[spark] trait RpcEndpoint {
     }
 
     /**
+      * 在[[RpcEndpoint]]停止时调用`self在该方法中将为null，您不能使用它发送或询问消息。
+      *
       * Invoked when [[RpcEndpoint]] is stopping. `self` will be `null` in this method and you cannot
       * use it to send or ask messages.
       */
