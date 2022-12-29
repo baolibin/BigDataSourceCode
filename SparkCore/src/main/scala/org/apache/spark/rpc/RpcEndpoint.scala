@@ -155,6 +155,8 @@ private[spark] trait RpcEndpoint {
 }
 
 /**
+  * 需要RpcEnv线程安全地向其发送消息的特性。
+  *
   * A trait that requires RpcEnv thread-safely sending messages to it.
   *
   * Thread-safety means processing of one message happens before processing of the next message by
