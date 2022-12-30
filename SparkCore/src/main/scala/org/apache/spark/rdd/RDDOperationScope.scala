@@ -45,11 +45,13 @@ import org.apache.spark.internal.Logging
 @JsonInclude(Include.NON_NULL)
 @JsonPropertyOrder(Array("id", "name", "parent"))
 private[spark] class RDDOperationScope(
-                                              val name: String,
-                                              val parent: Option[RDDOperationScope] = None,
-                                              val id: String = RDDOperationScope.nextScopeId().toString) {
+                                          val name: String,
+                                          val parent: Option[RDDOperationScope] = None,
+                                          val id: String = RDDOperationScope.nextScopeId().toString) {
 
     /**
+      * 返回此作用域所属的作用域列表，包括此作用域本身。结果从最外面的作用域（最早的祖先）排序到此作用域。
+      *
       * Return a list of scopes that this scope is a part of, including this scope itself.
       * The result is ordered from the outermost scope (eldest ancestor) to this scope.
       */
@@ -76,6 +78,8 @@ private[spark] class RDDOperationScope(
 }
 
 /**
+  * 一组实用程序方法，用于构建RDD作用域的分层表示。RDD范围跟踪创建给定RDD的一系列操作。
+  *
   * A collection of utility methods to construct a hierarchical representation of RDD scopes.
   * An RDD scope tracks the series of operations that created a given RDD.
   */
@@ -87,6 +91,8 @@ private[spark] object RDDOperationScope extends Logging {
     def nextScopeId(): Int = scopeCounter.getAndIncrement
 
     /**
+      * 执行给定的主体，以便在此主体中创建的所有RDD都具有相同的作用域。作用域的名称将是堆栈跟踪中与此方法不同的第一个方法名称。
+      *
       * Execute the given body such that all RDDs created in this body will have the same scope.
       * The name of the scope will be the first method name in the stack trace that is not the
       * same as this method's.
@@ -94,18 +100,18 @@ private[spark] object RDDOperationScope extends Logging {
       * Note: Return statements are NOT allowed in body.
       */
     private[spark] def withScope[T](
-                                           sc: SparkContext,
-                                           allowNesting: Boolean = false)(body: => T): T = {
+                                       sc: SparkContext,
+                                       allowNesting: Boolean = false)(body: => T): T = {
         val ourMethodName = "withScope"
         val callerMethodName = Thread.currentThread.getStackTrace()
-                .dropWhile(_.getMethodName != ourMethodName)
-                .find(_.getMethodName != ourMethodName)
-                .map(_.getMethodName)
-                .getOrElse {
-                    // Log a warning just in case, but this should almost certainly never happen
-                    logWarning("No valid method name for this RDD operation scope!")
-                    "N/A"
-                }
+            .dropWhile(_.getMethodName != ourMethodName)
+            .find(_.getMethodName != ourMethodName)
+            .map(_.getMethodName)
+            .getOrElse {
+                // Log a warning just in case, but this should almost certainly never happen
+                logWarning("No valid method name for this RDD operation scope!")
+                "N/A"
+            }
         withScope[T](sc, callerMethodName, allowNesting, ignoreParent = false)(body)
     }
 
@@ -123,10 +129,10 @@ private[spark] object RDDOperationScope extends Logging {
       * Note: Return statements are NOT allowed in body.
       */
     private[spark] def withScope[T](
-                                           sc: SparkContext,
-                                           name: String,
-                                           allowNesting: Boolean,
-                                           ignoreParent: Boolean)(body: => T): T = {
+                                       sc: SparkContext,
+                                       name: String,
+                                       allowNesting: Boolean,
+                                       ignoreParent: Boolean)(body: => T): T = {
         // Save the old scope to restore it later
         val scopeKey = SparkContext.RDD_SCOPE_KEY
         val noOverrideKey = SparkContext.RDD_SCOPE_NO_OVERRIDE_KEY
