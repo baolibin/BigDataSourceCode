@@ -87,7 +87,10 @@ private[spark] object RDDOperationScope extends Logging {
     private val jsonMapper = new ObjectMapper().registerModule(DefaultScalaModule)
     private val scopeCounter = new AtomicInteger(0)
 
-    /** Return a globally unique operation scope ID. */
+    /**
+      * 返回全局唯一的操作范围ID
+      * Return a globally unique operation scope ID.
+      */
     def nextScopeId(): Int = scopeCounter.getAndIncrement
 
     /**
@@ -116,6 +119,8 @@ private[spark] object RDDOperationScope extends Logging {
     }
 
     /**
+      * 执行给定的主体，以便在此主体中创建的所有RDD都具有相同的作用域。
+      *
       * Execute the given body such that all RDDs created in this body will have the same scope.
       *
       * If nesting is allowed, any subsequent calls to this method in the given body will instantiate
