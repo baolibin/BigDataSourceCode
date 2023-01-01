@@ -38,15 +38,15 @@ import scala.reflect.ClassTag
   * (printing them one per line) and returns the output as a collection of strings.
   */
 private[spark] class PipedRDD[T: ClassTag](
-                                                  prev: RDD[T],
-                                                  command: Seq[String],
-                                                  envVars: Map[String, String],
-                                                  printPipeContext: (String => Unit) => Unit,
-                                                  printRDDElement: (T, String => Unit) => Unit,
-                                                  separateWorkingDir: Boolean,
-                                                  bufferSize: Int,
-                                                  encoding: String)
-        extends RDD[String](prev) {
+                                              prev: RDD[T],
+                                              command: Seq[String],
+                                              envVars: Map[String, String],
+                                              printPipeContext: (String => Unit) => Unit,
+                                              printRDDElement: (T, String => Unit) => Unit,
+                                              separateWorkingDir: Boolean,
+                                              bufferSize: Int,
+                                              encoding: String)
+    extends RDD[String](prev) {
 
     override def getPartitions: Array[Partition] = firstParent[T].partitions
 
@@ -91,7 +91,7 @@ private[spark] class PipedRDD[T: ClassTag](
                 workInTaskDirectory = true
             } catch {
                 case e: Exception => logError("Unable to setup task working directory: " + e.getMessage +
-                        " (" + taskDirectory + ")", e)
+                    " (" + taskDirectory + ")", e)
             }
         }
 
@@ -163,7 +163,7 @@ private[spark] class PipedRDD[T: ClassTag](
                     cleanup()
                     if (exitStatus != 0) {
                         throw new IllegalStateException(s"Subprocess exited with status $exitStatus. " +
-                                s"Command ran: " + command.mkString(" "))
+                            s"Command ran: " + command.mkString(" "))
                     }
                     false
                 }
@@ -186,7 +186,7 @@ private[spark] class PipedRDD[T: ClassTag](
                 if (t != null) {
                     val commandRan = command.mkString(" ")
                     logError(s"Caught exception while running pipe() operator. Command ran: $commandRan. " +
-                            s"Exception: ${t.getMessage}")
+                        s"Exception: ${t.getMessage}")
                     proc.destroy()
                     cleanup()
                     throw t
@@ -196,6 +196,8 @@ private[spark] class PipedRDD[T: ClassTag](
     }
 
     /**
+      * 一个FilenameFilter，它接受与传入的名称不相等的任何内容。
+      *
       * A FilenameFilter that accepts anything that isn't equal to the name passed in.
       *
       * @param filterName of file or directory to leave out
