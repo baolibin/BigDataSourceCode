@@ -131,7 +131,10 @@ abstract class RDD[T: ClassTag](
     // Avoid handling doCheckpoint multiple times to prevent excessive recursion
     @transient private var doCheckpointCalled = false
 
-    /** Construct an RDD with just a one-to-one dependency on one parent */
+    /**
+      * 构造一个RDD，它只依赖于一个父级
+      * Construct an RDD with just a one-to-one dependency on one parent
+      */
     def this(@transient oneParent: RDD[_]) =
         this(oneParent.context, List(new OneToOneDependency(oneParent)))
 
@@ -139,13 +142,19 @@ abstract class RDD[T: ClassTag](
     def context: SparkContext = sc
 
     /**
+      * 由子类实现以计算给定分区。
+      *
       * :: DeveloperApi ::
       * Implemented by subclasses to compute a given partition.
       */
     @DeveloperApi
     def compute(split: Partition, context: TaskContext): Iterator[T]
 
-    /** The SparkContext that created this RDD. */
+    /**
+      * 创建此RDD的SparkContext
+      *
+      * The SparkContext that created this RDD.
+      */
     def sparkContext: SparkContext = sc
 
     /** Assign a name to this RDD  对RDD指定一个名字 */
