@@ -164,6 +164,8 @@ abstract class RDD[T: ClassTag](
     }
 
     /**
+      * 使用默认存储级别（“MEMORY_ONLY”）保留此RDD。
+      * 
       * Persist this RDD with the default storage level (`MEMORY_ONLY`).
       */
     def cache(): this.type = persist()
