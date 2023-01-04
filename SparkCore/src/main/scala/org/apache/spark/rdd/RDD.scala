@@ -165,17 +165,22 @@ abstract class RDD[T: ClassTag](
 
     /**
       * 使用默认存储级别（“MEMORY_ONLY”）保留此RDD。
-      * 
+      *
       * Persist this RDD with the default storage level (`MEMORY_ONLY`).
       */
     def cache(): this.type = persist()
 
     /**
+      * 使用默认存储级别（“MEMORY_ONLY”）保留此RDD。
+      *
       * Persist this RDD with the default storage level (`MEMORY_ONLY`).
       */
     def persist(): this.type = persist(StorageLevel.MEMORY_ONLY)
 
     /**
+      * 设置此RDD的存储级别，以便在第一次计算RDD后在操作中保持其值。仅当RDD尚未设置存储级别时，
+      * 才能使用此选项分配新的存储级别。本地检查点是一个例外。
+      *
       * Set this RDD's storage level to persist its values across operations after the first time
       * it is computed. This can only be used to assign a new storage level if the RDD does not
       * have a storage level set yet. Local checkpointing is an exception.
