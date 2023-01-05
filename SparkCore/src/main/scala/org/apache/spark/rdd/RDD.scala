@@ -197,6 +197,8 @@ abstract class RDD[T: ClassTag](
     }
 
     /**
+      * 将此RDD标记为使用指定级别进行持久化。
+      *
       * Mark this RDD for persisting using the specified level.
       *
       * @param newLevel      the target storage level
@@ -219,6 +221,8 @@ abstract class RDD[T: ClassTag](
     }
 
     /**
+      * 返回此RDD是否标记为本地检查点。暴露测试。
+      *
       * Return whether this RDD is marked for local checkpointing.
       * Exposed for testing.
       */
