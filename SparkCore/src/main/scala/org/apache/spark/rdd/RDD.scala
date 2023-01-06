@@ -234,6 +234,8 @@ abstract class RDD[T: ClassTag](
     }
 
     /**
+      * 将RDD标记为非持久性，并从内存和磁盘中删除其所有块。
+      *
       * Mark the RDD as non-persistent, and remove all blocks for it from memory and disk.
       *
       * @param blocking Whether to block until all blocks are deleted.
@@ -246,7 +248,10 @@ abstract class RDD[T: ClassTag](
         this
     }
 
-    /** Get the RDD's current storage level, or StorageLevel.NONE if none is set. */
+    /**
+      * 获取RDD的当前存储级别，如果未设置，则获取StorageLevel.NONE
+      * Get the RDD's current storage level, or StorageLevel.NONE if none is set.
+      */
     def getStorageLevel: StorageLevel = storageLevel
 
     /**
