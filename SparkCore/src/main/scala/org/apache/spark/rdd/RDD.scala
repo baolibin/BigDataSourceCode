@@ -255,6 +255,8 @@ abstract class RDD[T: ClassTag](
     def getStorageLevel: StorageLevel = storageLevel
 
     /**
+      * 获取此RDD的分区数组，考虑RDD是否为检查点。
+      *
       * Get the array of partitions of this RDD, taking into account whether the
       * RDD is checkpointed or not.
       */
@@ -279,6 +281,8 @@ abstract class RDD[T: ClassTag](
     final def getNumPartitions: Int = partitions.length
 
     /**
+      * 考虑RDD是否为检查点，获取分区的首选位置。
+      *
       * Get the preferred locations of a partition, taking into account whether the
       * RDD is checkpointed.
       */
