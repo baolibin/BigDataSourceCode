@@ -293,6 +293,8 @@ abstract class RDD[T: ClassTag](
     }
 
     /**
+      * 可选地由子类重写以指定放置首选项。
+      *
       * Optionally overridden by subclasses to specify placement preferences.
       */
     protected def getPreferredLocations(split: Partition): Seq[String] = Nil
@@ -311,6 +313,8 @@ abstract class RDD[T: ClassTag](
     }
 
     /**
+      * 首先将函数应用于此RDD的所有元素，然后将结果展平，从而返回新的RDD。
+      * 
       * Return a new RDD by first applying a function to all elements of this
       * RDD, and then flattening the results.
       */
