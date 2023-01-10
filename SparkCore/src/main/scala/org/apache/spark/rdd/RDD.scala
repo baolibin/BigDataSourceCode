@@ -314,7 +314,7 @@ abstract class RDD[T: ClassTag](
 
     /**
       * 首先将函数应用于此RDD的所有元素，然后将结果展平，从而返回新的RDD。
-      * 
+      *
       * Return a new RDD by first applying a function to all elements of this
       * RDD, and then flattening the results.
       */
@@ -324,6 +324,8 @@ abstract class RDD[T: ClassTag](
     }
 
     /**
+      * 返回仅包含满足谓词的元素的新RDD。
+      *
       * Return a new RDD containing only the elements that satisfy a predicate.
       */
     def filter(f: T => Boolean): RDD[T] = withScope {
@@ -337,6 +339,8 @@ abstract class RDD[T: ClassTag](
     // Transformations (return a new RDD)
 
     /**
+      * 返回包含此RDD中不同元素的新RDD。
+      *
       * Return a new RDD containing the distinct elements in this RDD.
       */
     def distinct(numPartitions: Int)(implicit ord: Ordering[T] = null): RDD[T] = withScope {
@@ -344,6 +348,8 @@ abstract class RDD[T: ClassTag](
     }
 
     /**
+      * 返回包含此RDD中不同元素的新RDD。
+      * 
       * Return a new RDD containing the distinct elements in this RDD.
       */
     def distinct(): RDD[T] = withScope {
