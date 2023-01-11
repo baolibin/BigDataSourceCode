@@ -349,7 +349,7 @@ abstract class RDD[T: ClassTag](
 
     /**
       * 返回包含此RDD中不同元素的新RDD。
-      * 
+      *
       * Return a new RDD containing the distinct elements in this RDD.
       */
     def distinct(): RDD[T] = withScope {
@@ -357,10 +357,16 @@ abstract class RDD[T: ClassTag](
     }
 
     /**
+      * 返回一个正好具有numPartitions分区的新RDD。
+      *
       * Return a new RDD that has exactly numPartitions partitions.
+      *
+      * 可以增加或减少此RDD中的并行度。在内部，这使用洗牌来重新分配数据。
       *
       * Can increase or decrease the level of parallelism in this RDD. Internally, this uses
       * a shuffle to redistribute data.
+      *
+      * 如果要减少此RDD中的分区数，请考虑使用“联合”，这样可以避免执行混洗。
       *
       * If you are decreasing the number of partitions in this RDD, consider using `coalesce`,
       * which can avoid performing a shuffle.
