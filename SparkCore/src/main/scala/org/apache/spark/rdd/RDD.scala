@@ -376,6 +376,8 @@ abstract class RDD[T: ClassTag](
     }
 
     /**
+      * 返回缩减为“numPartitions”分区的新RDD。
+      *
       * Return a new RDD that is reduced into `numPartitions` partitions.
       *
       * This results in a narrow dependency, e.g. if you go from 1000 partitions
