@@ -405,7 +405,11 @@ abstract class RDD[T: ClassTag](
     : RDD[T] = withScope {
         require(numPartitions > 0, s"Number of partitions ($numPartitions) must be positive.")
         if (shuffle) {
-            /** Distributes elements evenly across output partitions, starting from a random partition. */
+            /**
+              * 从随机分区开始，在输出分区之间均匀分布元素。
+              *
+              * Distributes elements evenly across output partitions, starting from a random partition.
+              */
             val distributePartition = (index: Int, items: Iterator[T]) => {
                 var position = (new Random(index)).nextInt(numPartitions)
                 items.map { t =>
@@ -428,6 +432,8 @@ abstract class RDD[T: ClassTag](
     }
 
     /**
+      * 通过将函数应用于此RDD的每个分区，同时跟踪原始分区的索引，返回新的RDD。
+      *
       * Return a new RDD by applying a function to each partition of this RDD, while tracking the index
       * of the original partition.
       *
