@@ -451,6 +451,8 @@ abstract class RDD[T: ClassTag](
     }
 
     /**
+      * 返回此RDD的采样子集。
+      *
       * Return a sampled subset of this RDD.
       *
       * @param withReplacement can elements be sampled multiple times (replaced when sampled out)
@@ -480,6 +482,8 @@ abstract class RDD[T: ClassTag](
     }
 
     /**
+      * 使用提供的权重随机拆分此RDD。
+      *
       * Randomly splits this RDD with the provided weights.
       *
       * @param weights weights for splits, will be normalized if they don't sum to 1
