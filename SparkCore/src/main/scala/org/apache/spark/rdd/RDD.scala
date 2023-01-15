@@ -508,6 +508,8 @@ abstract class RDD[T: ClassTag](
     }
 
     /**
+      * DataFrames中随机拆分的内部方法。对给定概率范围的RDD进行采样。
+      *
       * Internal method exposed for Random Splits in DataFrames. Samples an RDD given a probability
       * range.
       *
@@ -525,6 +527,8 @@ abstract class RDD[T: ClassTag](
     }
 
     /**
+      * 返回数组中此RDD的固定大小采样子集
+      *
       * Return a fixed-size sampled subset of this RDD in an array
       *
       * @param withReplacement whether sampling is done with replacement
@@ -576,6 +580,7 @@ abstract class RDD[T: ClassTag](
 
     /**
       * 将2个RDD合并在一起，不去重。调用的就是union算子
+      *
       * Return the union of this RDD and another one. Any identical elements will appear multiple
       * times (use `.distinct()` to eliminate them).
       */
@@ -585,6 +590,7 @@ abstract class RDD[T: ClassTag](
 
     /**
       * 将2个RDD合并在一起，不去重
+      * 
       * Return the union of this RDD and another one. Any identical elements will appear multiple
       * times (use `.distinct()` to eliminate them).
       */
