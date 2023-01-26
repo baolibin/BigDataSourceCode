@@ -590,7 +590,7 @@ abstract class RDD[T: ClassTag](
 
     /**
       * 将2个RDD合并在一起，不去重
-      * 
+      *
       * Return the union of this RDD and another one. Any identical elements will appear multiple
       * times (use `.distinct()` to eliminate them).
       */
