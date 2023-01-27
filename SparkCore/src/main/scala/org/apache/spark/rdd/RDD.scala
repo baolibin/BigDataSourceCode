@@ -623,6 +623,8 @@ abstract class RDD[T: ClassTag](
     }
 
     /**
+      * 返回此RDD与另一个RDD的交集。输出将不包含任何重复的元素，即使输入RDD包含。
+      *
       * Return the intersection of this RDD and another one. The output will not contain any duplicate
       * elements, even if the input RDDs did.
       *
@@ -635,6 +637,8 @@ abstract class RDD[T: ClassTag](
     }
 
     /**
+      * 返回此RDD与另一个RDD的交集。输出将不包含任何重复的元素，即使输入RDD包含。
+      *
       * Return the intersection of this RDD and another one. The output will not contain any duplicate
       * elements, even if the input RDDs did.
       *
@@ -650,6 +654,8 @@ abstract class RDD[T: ClassTag](
     }
 
     /**
+      * 返回此RDD与另一个RDD的交集。输出将不包含任何重复的元素，即使输入RDD包含。跨集群执行哈希分区
+      *
       * Return the intersection of this RDD and another one. The output will not contain any duplicate
       * elements, even if the input RDDs did.  Performs a hash partition across the cluster
       *
