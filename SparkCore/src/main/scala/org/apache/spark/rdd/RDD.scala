@@ -667,6 +667,8 @@ abstract class RDD[T: ClassTag](
     }
 
     /**
+      * 返回通过将每个分区中的所有元素合并到一个数组中创建的RDD。
+      *
       * Return an RDD created by coalescing all elements within each partition into an array.
       */
     def glom(): RDD[Array[T]] = withScope {
@@ -674,6 +676,8 @@ abstract class RDD[T: ClassTag](
     }
 
     /**
+      * 返回此RDD与另一个RDD的笛卡尔积，即所有元素对（a，b）的RDD，其中a在“this”中，b在“other”中。
+      * 
       * Return the Cartesian product of this RDD and another one, that is, the RDD of all pairs of
       * elements (a, b) where a is in `this` and b is in `other`.
       */
