@@ -677,7 +677,7 @@ abstract class RDD[T: ClassTag](
 
     /**
       * 返回此RDD与另一个RDD的笛卡尔积，即所有元素对（a，b）的RDD，其中a在“this”中，b在“other”中。
-      * 
+      *
       * Return the Cartesian product of this RDD and another one, that is, the RDD of all pairs of
       * elements (a, b) where a is in `this` and b is in `other`.
       */
@@ -686,6 +686,8 @@ abstract class RDD[T: ClassTag](
     }
 
     /**
+      * 返回分组项目的RDD。每个组由一个键和映射到该键的元素序列组成。每个组中元素的顺序都不保证，甚至在每次评估生成的RDD时都可能有所不同。
+      *
       * Return an RDD of grouped items. Each group consists of a key and a sequence of elements
       * mapping to that key. The ordering of elements within each group is not guaranteed, and
       * may even differ each time the resulting RDD is evaluated.
@@ -699,6 +701,8 @@ abstract class RDD[T: ClassTag](
     }
 
     /**
+      * 返回分组项目的RDD。每个组由一个键和映射到该键的元素序列组成。每个组中元素的顺序都不保证，甚至在每次评估生成的RDD时都可能有所不同。
+      *
       * Return an RDD of grouped items. Each group consists of a key and a sequence of elements
       * mapping to that key. The ordering of elements within each group is not guaranteed, and
       * may even differ each time the resulting RDD is evaluated.
