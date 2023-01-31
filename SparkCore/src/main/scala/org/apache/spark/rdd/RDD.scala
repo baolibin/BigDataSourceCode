@@ -744,7 +744,7 @@ abstract class RDD[T: ClassTag](
 
     /**
       * 在一个作用域中执行一个代码块，以便在此主体中创建的所有新RDD都属于同一作用域。有关详细信息
-      * 
+      *
       * Execute a block of code in a scope such that all new RDDs created in this body will
       * be part of the same scope. For more detail, see {{org.apache.org.apache.spark.rdd.RDDOperationScope}}.
       *
@@ -768,6 +768,8 @@ abstract class RDD[T: ClassTag](
     }
 
     /**
+      * 将管道元素创建的RDD返回到分叉的外部进程。
+      *
       * Return an RDD created by piping elements to a forked external process.
       */
     def pipe(command: String): RDD[String] = withScope {
@@ -777,6 +779,8 @@ abstract class RDD[T: ClassTag](
     }
 
     /**
+      * 将管道元素创建的RDD返回到分叉的外部进程。
+      * 
       * Return an RDD created by piping elements to a forked external process.
       */
     def pipe(command: String, env: Map[String, String]): RDD[String] = withScope {
