@@ -780,7 +780,7 @@ abstract class RDD[T: ClassTag](
 
     /**
       * 将管道元素创建的RDD返回到分叉的外部进程。
-      * 
+      *
       * Return an RDD created by piping elements to a forked external process.
       */
     def pipe(command: String, env: Map[String, String]): RDD[String] = withScope {
@@ -836,6 +836,8 @@ abstract class RDD[T: ClassTag](
     }
 
     /**
+      * 将此RDD与另一个RDD进行Zip，返回与每个RDD中的第一个元素、每个RDD的第二个元素等的键值对。假设两个RDD具有*相同数量的分区*，并且每个分区中的元素数量*相同*
+      * 
       * Zips this RDD with another one, returning key-value pairs with the first element in each RDD,
       * second element in each RDD, etc. Assumes that the two RDDs have the *same number of
       * partitions* and the *same number of elements in each partition* (e.g. one was made through
