@@ -837,7 +837,7 @@ abstract class RDD[T: ClassTag](
 
     /**
       * 将此RDD与另一个RDD进行Zip，返回与每个RDD中的第一个元素、每个RDD的第二个元素等的键值对。假设两个RDD具有*相同数量的分区*，并且每个分区中的元素数量*相同*
-      * 
+      *
       * Zips this RDD with another one, returning key-value pairs with the first element in each RDD,
       * second element in each RDD, etc. Assumes that the two RDDs have the *same number of
       * partitions* and the *same number of elements in each partition* (e.g. one was made through
@@ -859,6 +859,8 @@ abstract class RDD[T: ClassTag](
     }
 
     /**
+      * 使用一个（或多个）RDD压缩此RDD的分区，并通过向压缩的分区应用函数返回新的RDD。假设所有RDD具有相同数量的分区*，但不*要求它们在每个分区中拥有相同数量的元素。
+      * 
       * Zip this RDD's partitions with one (or more) RDD(s) and return a new RDD by
       * applying a function to the zipped partitions. Assumes that all the RDDs have the
       * *same number of partitions*, but does *not* require them to have the same number
