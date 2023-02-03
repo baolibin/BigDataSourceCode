@@ -860,7 +860,7 @@ abstract class RDD[T: ClassTag](
 
     /**
       * 使用一个（或多个）RDD压缩此RDD的分区，并通过向压缩的分区应用函数返回新的RDD。假设所有RDD具有相同数量的分区*，但不*要求它们在每个分区中拥有相同数量的元素。
-      * 
+      *
       * Zip this RDD's partitions with one (or more) RDD(s) and return a new RDD by
       * applying a function to the zipped partitions. Assumes that all the RDDs have the
       * *same number of partitions*, but does *not* require them to have the same number
