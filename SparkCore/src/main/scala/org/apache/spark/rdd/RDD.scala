@@ -903,6 +903,8 @@ abstract class RDD[T: ClassTag](
     }
 
     /**
+      * 将函数f应用于此RDD的所有元素。
+      *
       * Applies a function f to all elements of this RDD.
       */
     def foreach(f: T => Unit): Unit = withScope {
@@ -911,6 +913,8 @@ abstract class RDD[T: ClassTag](
     }
 
     /**
+      * 将函数f应用于此RDD的每个分区。
+      * 
       * Applies a function f to each partition of this RDD.
       */
     def foreachPartition(f: Iterator[T] => Unit): Unit = withScope {
