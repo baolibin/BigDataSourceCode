@@ -914,7 +914,7 @@ abstract class RDD[T: ClassTag](
 
     /**
       * 将函数f应用于此RDD的每个分区。
-      * 
+      *
       * Applies a function f to each partition of this RDD.
       */
     def foreachPartition(f: Iterator[T] => Unit): Unit = withScope {
@@ -926,6 +926,8 @@ abstract class RDD[T: ClassTag](
     // Actions (launch a job to return a value to the user program)
 
     /**
+      * 返回包含此RDD中所有元素的数组。
+      *
       * Return an array that contains all of the elements in this RDD.
       *
       * @note This method should only be used if the resulting array is expected to be small, as
@@ -937,6 +939,8 @@ abstract class RDD[T: ClassTag](
     }
 
     /**
+      * 返回包含此RDD中所有元素的迭代器。
+      * 
       * Return an iterator that contains all of the elements in this RDD.
       *
       * The iterator will consume as much memory as the largest partition in this RDD.
