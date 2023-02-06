@@ -940,7 +940,7 @@ abstract class RDD[T: ClassTag](
 
     /**
       * 返回包含此RDD中所有元素的迭代器。
-      * 
+      *
       * Return an iterator that contains all of the elements in this RDD.
       *
       * The iterator will consume as much memory as the largest partition in this RDD.
@@ -958,6 +958,8 @@ abstract class RDD[T: ClassTag](
     }
 
     /**
+      * 通过应用“f”返回包含所有匹配值的RDD。
+      *
       * Return an RDD that contains all matching values by applying `f`.
       */
     def collect[U: ClassTag](f: PartialFunction[T, U]): RDD[U] = withScope {
@@ -966,6 +968,8 @@ abstract class RDD[T: ClassTag](
     }
 
     /**
+      * 返回RDD，其中包含“this”中不在“other”中的元素。
+      * 
       * Return an RDD with the elements from `this` that are not in `other`.
       *
       * Uses `this` partitioner/partition size, because even if `other` is huge, the resulting
