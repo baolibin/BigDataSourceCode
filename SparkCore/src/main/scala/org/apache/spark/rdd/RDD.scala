@@ -969,7 +969,7 @@ abstract class RDD[T: ClassTag](
 
     /**
       * 返回RDD，其中包含“this”中不在“other”中的元素。
-      * 
+      *
       * Return an RDD with the elements from `this` that are not in `other`.
       *
       * Uses `this` partitioner/partition size, because even if `other` is huge, the resulting
@@ -980,6 +980,8 @@ abstract class RDD[T: ClassTag](
     }
 
     /**
+      * 返回RDD，其中包含“this”中不在“other”中的元素。
+      *
       * Return an RDD with the elements from `this` that are not in `other`.
       */
     def subtract(other: RDD[T], numPartitions: Int): RDD[T] = withScope {
@@ -987,6 +989,8 @@ abstract class RDD[T: ClassTag](
     }
 
     /**
+      * 返回RDD，其中包含“this”中不在“other”中的元素。
+      * 
       * Return an RDD with the elements from `this` that are not in `other`.
       */
     def subtract(
