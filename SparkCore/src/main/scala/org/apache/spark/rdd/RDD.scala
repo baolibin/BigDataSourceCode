@@ -990,7 +990,7 @@ abstract class RDD[T: ClassTag](
 
     /**
       * 返回RDD，其中包含“this”中不在“other”中的元素。
-      * 
+      *
       * Return an RDD with the elements from `this` that are not in `other`.
       */
     def subtract(
@@ -1015,6 +1015,8 @@ abstract class RDD[T: ClassTag](
     }
 
     /**
+      * 以多级树模式减少此RDD的元素。
+      *
       * Reduces the elements of this RDD in a multi-level tree pattern.
       *
       * @param depth suggested depth of the tree (default: 2)
@@ -1077,6 +1079,8 @@ abstract class RDD[T: ClassTag](
     }
 
     /**
+      * 以多级树模式聚合此RDD的元素。
+      * 
       * Aggregates the elements of this RDD in a multi-level tree pattern.
       *
       * @param depth suggested depth of the tree (default: 2)
