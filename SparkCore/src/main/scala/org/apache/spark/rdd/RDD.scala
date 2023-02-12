@@ -1080,7 +1080,7 @@ abstract class RDD[T: ClassTag](
 
     /**
       * 以多级树模式聚合此RDD的元素。
-      * 
+      *
       * Aggregates the elements of this RDD in a multi-level tree pattern.
       *
       * @param depth suggested depth of the tree (default: 2)
@@ -1124,6 +1124,8 @@ abstract class RDD[T: ClassTag](
     def count(): Long = sc.runJob(this, Utils.getIteratorSize _).sum
 
     /**
+      * count（）的近似版本，即使不是所有任务都已完成，也会在超时内返回可能不完整的结果。
+      *
       * Approximate version of count() that returns a potentially incomplete result
       * within a timeout, even if not all tasks have finished.
       *
@@ -1154,6 +1156,8 @@ abstract class RDD[T: ClassTag](
     }
 
     /**
+      * 将此RDD中每个唯一值的计数作为（value，count）对的局部映射返回。
+      * 
       * Return the count of each unique value in this RDD as a local map of (value, count) pairs.
       *
       * @note This method should only be used if the resulting map is expected to be small, as
