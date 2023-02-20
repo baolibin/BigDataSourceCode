@@ -1157,7 +1157,7 @@ abstract class RDD[T: ClassTag](
 
     /**
       * 将此RDD中每个唯一值的计数作为（value，count）对的局部映射返回。
-      * 
+      *
       * Return the count of each unique value in this RDD as a local map of (value, count) pairs.
       *
       * @note This method should only be used if the resulting map is expected to be small, as
@@ -1175,6 +1175,8 @@ abstract class RDD[T: ClassTag](
     }
 
     /**
+      * countByValue（）的近似版本。
+      *
       * Approximate version of countByValue().
       *
       * @param timeout    maximum time to wait for the job, in milliseconds
@@ -1200,6 +1202,8 @@ abstract class RDD[T: ClassTag](
     }
 
     /**
+      * 返回RDD中不同元素的近似数量。
+      * 
       * Return approximate number of distinct elements in the RDD.
       *
       * The algorithm used is based on streamlib's implementation of "HyperLogLog in Practice:
