@@ -1203,7 +1203,7 @@ abstract class RDD[T: ClassTag](
 
     /**
       * 返回RDD中不同元素的近似数量。
-      * 
+      *
       * Return approximate number of distinct elements in the RDD.
       *
       * The algorithm used is based on streamlib's implementation of "HyperLogLog in Practice:
@@ -1220,6 +1220,8 @@ abstract class RDD[T: ClassTag](
     }
 
     /**
+      * 返回RDD中不同元素的近似数量。
+      *
       * Return approximate number of distinct elements in the RDD.
       *
       * The algorithm used is based on streamlib's implementation of "HyperLogLog in Practice:
@@ -1278,6 +1280,8 @@ abstract class RDD[T: ClassTag](
     }
 
     /**
+      * 将此RDD与其元素索引合并。排序首先基于分区索引，然后是每个分区内项目的排序。因此，第一个分区中的第一个项得到索引0，最后一个分区中最后一个项得到最大的索引。
+      * 
       * Zips this RDD with its element indices. The ordering is first based on the partition index
       * and then the ordering of items within each partition. So the first item in the first
       * partition gets index 0, and the last item in the last partition receives the largest index.
