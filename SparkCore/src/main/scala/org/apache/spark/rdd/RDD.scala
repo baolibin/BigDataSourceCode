@@ -1401,7 +1401,7 @@ abstract class RDD[T: ClassTag](
     /**
       *
       * 返回此RDD中由指定的隐式排序[T]定义的前k个（最小）元素，并保持排序。这与[[top]]相反。
-      * 
+      *
       * Returns the first k (smallest) elements from this RDD as defined by the specified
       * implicit Ordering[T] and maintains the ordering. This does the opposite of [[top]].
       * For example:
@@ -1441,6 +1441,8 @@ abstract class RDD[T: ClassTag](
     }
 
     /**
+      * 返回由隐式排序[T]定义的此RDD的最大值。
+      *
       * Returns the max of this RDD as defined by the implicit Ordering[T].
       *
       * @return the maximum element of the RDD
@@ -1450,6 +1452,8 @@ abstract class RDD[T: ClassTag](
     }
 
     /**
+      * 使用指定的交换和结合二进制运算符减少此RDD的元素。
+      * 
       * Reduces the elements of this RDD using the specified commutative and
       * associative binary operator.
       */
