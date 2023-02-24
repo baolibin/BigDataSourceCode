@@ -1453,7 +1453,7 @@ abstract class RDD[T: ClassTag](
 
     /**
       * 使用指定的交换和结合二进制运算符减少此RDD的元素。
-      * 
+      *
       * Reduces the elements of this RDD using the specified commutative and
       * associative binary operator.
       */
@@ -1481,6 +1481,8 @@ abstract class RDD[T: ClassTag](
     }
 
     /**
+      * 返回由隐式排序[T]定义的此RDD的最小值。
+      *
       * Returns the min of this RDD as defined by the implicit Ordering[T].
       *
       * @return the minimum element of the RDD
@@ -1502,6 +1504,8 @@ abstract class RDD[T: ClassTag](
     }
 
     /**
+      * 使用元素的字符串表示将此RDD保存为文本文件。
+      * 
       * Save this RDD as a text file, using string representations of elements.
       */
     def saveAsTextFile(path: String): Unit = withScope {
