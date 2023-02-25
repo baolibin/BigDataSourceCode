@@ -1505,7 +1505,7 @@ abstract class RDD[T: ClassTag](
 
     /**
       * 使用元素的字符串表示将此RDD保存为文本文件。
-      * 
+      *
       * Save this RDD as a text file, using string representations of elements.
       */
     def saveAsTextFile(path: String): Unit = withScope {
@@ -1533,6 +1533,8 @@ abstract class RDD[T: ClassTag](
     }
 
     /**
+      * 通过将函数应用于此RDD的每个分区，返回一个新的RDD。
+      *
       * Return a new RDD by applying a function to each partition of this RDD.
       *
       * `preservesPartitioning` indicates whether the input function preserves the partitioner, which
@@ -1549,6 +1551,8 @@ abstract class RDD[T: ClassTag](
     }
 
     /**
+      * 使用元素的字符串表示将此RDD保存为压缩文本文件。
+      * 
       * Save this RDD as a compressed text file, using string representations of elements.
       */
     def saveAsTextFile(path: String, codec: Class[_ <: CompressionCodec]): Unit = withScope {
