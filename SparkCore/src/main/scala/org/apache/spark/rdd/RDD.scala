@@ -1552,7 +1552,7 @@ abstract class RDD[T: ClassTag](
 
     /**
       * 使用元素的字符串表示将此RDD保存为压缩文本文件。
-      * 
+      *
       * Save this RDD as a compressed text file, using string representations of elements.
       */
     def saveAsTextFile(path: String, codec: Class[_ <: CompressionCodec]): Unit = withScope {
@@ -1571,6 +1571,8 @@ abstract class RDD[T: ClassTag](
     }
 
     /**
+      * 将此RDD保存为序列化对象的SequenceFile。
+      *
       * Save this RDD as a SequenceFile of serialized objects.
       */
     def saveAsObjectFile(path: String): Unit = withScope {
@@ -1598,6 +1600,8 @@ abstract class RDD[T: ClassTag](
     }
 
     /**
+      * 使用Spark现有的缓存层将此RDD标记为本地检查点。
+      * 
       * Mark this RDD for local checkpointing using Spark's existing caching layer.
       *
       * This method is for users who wish to truncate RDD lineages while skipping the expensive
