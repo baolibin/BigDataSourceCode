@@ -1601,7 +1601,7 @@ abstract class RDD[T: ClassTag](
 
     /**
       * 使用Spark现有的缓存层将此RDD标记为本地检查点。
-      * 
+      *
       * Mark this RDD for local checkpointing using Spark's existing caching layer.
       *
       * This method is for users who wish to truncate RDD lineages while skipping the expensive
@@ -1663,6 +1663,8 @@ abstract class RDD[T: ClassTag](
     }
 
     /**
+      * 返回此RDD是否是可靠的或本地的检查点和物化的。
+      * 
       * Return whether this RDD is checkpointed and materialized, either reliably or locally.
       */
     def isCheckpointed: Boolean = isCheckpointedAndMaterialized
