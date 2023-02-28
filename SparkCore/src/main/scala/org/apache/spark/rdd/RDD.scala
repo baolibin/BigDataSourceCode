@@ -1664,7 +1664,7 @@ abstract class RDD[T: ClassTag](
 
     /**
       * 返回此RDD是否是可靠的或本地的检查点和物化的。
-      * 
+      *
       * Return whether this RDD is checkpointed and materialized, either reliably or locally.
       */
     def isCheckpointed: Boolean = isCheckpointedAndMaterialized
@@ -1678,6 +1678,8 @@ abstract class RDD[T: ClassTag](
         checkpointData.exists(_.isCheckpointed)
 
     /**
+      * 获取此RDD被检查指向的目录的名称。如果RDD是本地检查点，则不会定义此项。
+      *
       * Gets the name of the directory to which this RDD was checkpointed.
       * This is not defined if the RDD is checkpointed locally.
       */
@@ -1688,7 +1690,10 @@ abstract class RDD[T: ClassTag](
         }
     }
 
-    /** A description of this RDD and its recursive dependencies for debugging. */
+    /**
+      * 此RDD及其用于调试的递归依赖关系的描述
+      * 
+      * A description of this RDD and its recursive dependencies for debugging. */
     def toDebugString: String = {
         // Get a debug description of an rdd without its children
         def debugSelf(rdd: RDD[_]): Seq[String] = {
