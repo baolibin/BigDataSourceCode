@@ -1692,7 +1692,7 @@ abstract class RDD[T: ClassTag](
 
     /**
       * 此RDD及其用于调试的递归依赖关系的描述
-      * 
+      *
       * A description of this RDD and its recursive dependencies for debugging. */
     def toDebugString: String = {
         // Get a debug description of an rdd without its children
@@ -1800,12 +1800,17 @@ abstract class RDD[T: ClassTag](
         dependencies.head.rdd.asInstanceOf[RDD[U]]
     }
 
-    /** Returns the jth parent RDD: e.g. rdd.parent[T](0) is equivalent to rdd.firstParent[T] */
+    /**
+      * 返回第j个父级RDD：例如RDD.parent[T]（0）等同于RDD.firstParent[T]
+      * 
+      * Returns the jth parent RDD: e.g. rdd.parent[T](0) is equivalent to rdd.firstParent[T] */
     protected[spark] def parent[U: ClassTag](j: Int) = {
         dependencies(j).rdd.asInstanceOf[RDD[U]]
     }
 
     /**
+      * 获取此RDD的依赖项列表，考虑RDD是否为检查点。
+      *
       * Get the list of dependencies of this RDD, taking into account whether the
       * RDD is checkpointed or not.
       */
