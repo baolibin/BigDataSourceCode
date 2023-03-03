@@ -1832,6 +1832,8 @@ abstract class RDD[T: ClassTag](
     private def checkpointRDD: Option[CheckpointRDD[T]] = checkpointData.flatMap(_.checkpointRDD)
 
     /**
+      * 由子类实现，以返回此RDD如何依赖于父RDD。此方法只调用一次，因此在其中执行耗时的计算是安全的。
+      *
       * Implemented by subclasses to return how this RDD depends on parent RDDs. This method will only
       * be called once, so it is safe to implement a time-consuming computation in it.
       */
@@ -1864,6 +1866,8 @@ abstract class RDD[T: ClassTag](
     }
 
     /**
+      * 如果RDD是检查点，则计算RDD分区或从检查点读取它。
+      * 
       * Compute an RDD partition or read it from a checkpoint if the RDD is checkpointing.
       */
     private[spark] def computeOrReadCheckpoint(split: Partition, context: TaskContext): Iterator[T] = {
