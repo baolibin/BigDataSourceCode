@@ -1867,7 +1867,7 @@ abstract class RDD[T: ClassTag](
 
     /**
       * 如果RDD是检查点，则计算RDD分区或从检查点读取它。
-      * 
+      *
       * Compute an RDD partition or read it from a checkpoint if the RDD is checkpointing.
       */
     private[spark] def computeOrReadCheckpoint(split: Partition, context: TaskContext): Iterator[T] = {
@@ -1879,6 +1879,8 @@ abstract class RDD[T: ClassTag](
     }
 
     /**
+      * 获取或计算RDD分区。缓存RDD时由RDD.iterator（）使用。
+      *
       * Gets or computes an RDD partition. Used by RDD.iterator() when an RDD is cached.
       */
     private[spark] def getOrCompute(partition: Partition, context: TaskContext): Iterator[T] = {
@@ -1926,6 +1928,8 @@ abstract class RDD[T: ClassTag](
     }
 
     /**
+      * [performance]Spark的内部mapPartitions方法跳过闭包清理。
+      *
       * [performance] Spark's internal mapPartitions method that skips closure cleaning.
       */
     private[spark] def mapPartitionsInternal[U: ClassTag](
@@ -1937,7 +1941,10 @@ abstract class RDD[T: ClassTag](
             preservesPartitioning)
     }
 
-    /** A private method for tests, to look at the contents of each partition */
+    /**
+      * 用于测试的私有方法，用于查看每个分区的内容
+      * 
+      * A private method for tests, to look at the contents of each partition */
     private[spark] def collectPartitions(): Array[Array[T]] = withScope {
         sc.runJob(this, (iter: Iterator[T]) => iter.toArray)
     }
