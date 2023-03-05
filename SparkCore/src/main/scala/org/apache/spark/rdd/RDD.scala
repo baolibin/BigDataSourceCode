@@ -1943,13 +1943,15 @@ abstract class RDD[T: ClassTag](
 
     /**
       * 用于测试的私有方法，用于查看每个分区的内容
-      * 
+      *
       * A private method for tests, to look at the contents of each partition */
     private[spark] def collectPartitions(): Array[Array[T]] = withScope {
         sc.runJob(this, (iter: Iterator[T]) => iter.toArray)
     }
 
     /**
+      * 用于更改RDD的ClassTag的专用API。用于内部Java Scala API兼容性。
+      * 
       * Private API for changing an RDD's ClassTag.
       * Used for internal Java-Scala API compatibility.
       */
@@ -1959,6 +1961,8 @@ abstract class RDD[T: ClassTag](
     }
 
     /**
+      * 用于更改RDD的ClassTag的专用API。用于内部Java Scala API兼容性。
+      *
       * Private API for changing an RDD's ClassTag.
       * Used for internal Java-Scala API compatibility.
       */
