@@ -1951,7 +1951,7 @@ abstract class RDD[T: ClassTag](
 
     /**
       * 用于更改RDD的ClassTag的专用API。用于内部Java Scala API兼容性。
-      * 
+      *
       * Private API for changing an RDD's ClassTag.
       * Used for internal Java-Scala API compatibility.
       */
@@ -1996,6 +1996,8 @@ abstract class RDD[T: ClassTag](
     }
 
     /**
+      * 将此RDD的依赖项从其原始父项更改为从检查点文件创建的新RDD（“newRDD”），并忘记其旧的依赖项和分区。
+      * 
       * Changes the dependencies of this RDD from its original parents to a new RDD (`newRDD`)
       * created from the checkpoint file, and forget its old dependencies and partitions.
       */
