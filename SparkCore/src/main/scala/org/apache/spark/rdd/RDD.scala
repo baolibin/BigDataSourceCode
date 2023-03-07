@@ -1997,7 +1997,7 @@ abstract class RDD[T: ClassTag](
 
     /**
       * 将此RDD的依赖项从其原始父项更改为从检查点文件创建的新RDD（“newRDD”），并忘记其旧的依赖项和分区。
-      * 
+      *
       * Changes the dependencies of this RDD from its original parents to a new RDD (`newRDD`)
       * created from the checkpoint file, and forget its old dependencies and partitions.
       */
@@ -2020,6 +2020,8 @@ abstract class RDD[T: ClassTag](
 
 
 /**
+  * 定义在特定类型的RDD上提供额外功能的隐式函数。
+  * 
   * Defines implicit functions that provide extra functionalities on RDDs of specific types.
   *
   * For example, [[RDD.rddToPairRDDFunctions]] converts an RDD into a [[PairRDDFunctions]] for
