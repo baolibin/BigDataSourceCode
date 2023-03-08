@@ -29,6 +29,8 @@ import org.apache.spark.unsafe.types.UTF8String
 private[spark] object InputFileBlockHolder {
 
     /**
+      * 读取的当前文件名的线程变量。这由Spark SQL中的InputFileName函数使用。
+      * 
       * The thread variable for the name of the current file being read. This is used by
       * the InputFileName function in Spark SQL.
       */
