@@ -125,6 +125,8 @@ private[spark] class CoalescedRDD[T: ClassTag](
     }
 
     /**
+      * 返回分区的首选计算机。如果拆分类型为CoalencedRDDDPartition，则首选计算机也将是大多数父拆分所首选的计算机。
+      * 
       * Returns the preferred machine for the partition. If split is of type CoalescedRDDPartition,
       * then the preferred machine will be one which most parent splits prefer too.
       *
