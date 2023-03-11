@@ -181,7 +181,7 @@ private class DefaultPartitionCoalescer(val balanceSlack: Double = 0.10)
 
     /**
       * 运行打包算法并返回一个分区组数组，如果可能的话，这些分区组是负载均衡的，并按位置分组
-      * 
+      *
       * Runs the packing algorithm and returns an array of PartitionGroups that if possible are
       * load balanced and grouped by locality
       *
@@ -311,6 +311,8 @@ private class DefaultPartitionCoalescer(val balanceSlack: Double = 0.10)
     }
 
     /**
+      * 获取父RDD分区并决定将其放在哪个分区组中考虑位置，但也使用2个选项的幂来实现负载平衡它使用balanceSlack变量在两者之间取得平衡
+      * 
       * Takes a parent RDD partition and decides which of the partition groups to put it in
       * Takes locality into account, but also uses power of 2 choices to load balance
       * It strikes a balance between the two using the balanceSlack variable
