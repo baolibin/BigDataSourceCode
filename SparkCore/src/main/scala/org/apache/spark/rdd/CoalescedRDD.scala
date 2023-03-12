@@ -312,7 +312,7 @@ private class DefaultPartitionCoalescer(val balanceSlack: Double = 0.10)
 
     /**
       * 获取父RDD分区并决定将其放在哪个分区组中考虑位置，但也使用2个选项的幂来实现负载平衡它使用balanceSlack变量在两者之间取得平衡
-      * 
+      *
       * Takes a parent RDD partition and decides which of the partition groups to put it in
       * Takes locality into account, but also uses power of 2 choices to load balance
       * It strikes a balance between the two using the balanceSlack variable
@@ -369,6 +369,8 @@ private class DefaultPartitionCoalescer(val balanceSlack: Double = 0.10)
     }
 
     /**
+      * 排序并获取列表中与groupHash中的键关联的最少元素返回的PartitionGroup是表示机器“键”的所有组中加载最少的
+      * 
       * Sorts and gets the least element of the list associated with key in groupHash
       * The returned PartitionGroup is the least loaded of all groups that represent the machine "key"
       *
