@@ -370,7 +370,7 @@ private class DefaultPartitionCoalescer(val balanceSlack: Double = 0.10)
 
     /**
       * 排序并获取列表中与groupHash中的键关联的最少元素返回的PartitionGroup是表示机器“键”的所有组中加载最少的
-      * 
+      *
       * Sorts and gets the least element of the list associated with key in groupHash
       * The returned PartitionGroup is the least loaded of all groups that represent the machine "key"
       *

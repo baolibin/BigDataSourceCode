@@ -158,6 +158,8 @@ class PairRDDFunctions[K, V](self: RDD[(K, V)])
     }
 
     /**
+      * 使用关联函数和中性“零值”合并每个键的值，可以将其添加到结果中任意次数，且不得更改结果
+      * 
       * Merge the values for each key using an associative function and a neutral "zero value" which
       * may be added to the result an arbitrary number of times, and must not change the result
       * (e.g., Nil for list concatenation, 0 for addition, or 1 for multiplication.).
