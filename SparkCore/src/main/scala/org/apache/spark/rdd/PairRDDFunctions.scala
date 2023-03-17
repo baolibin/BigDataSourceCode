@@ -181,7 +181,7 @@ class PairRDDFunctions[K, V](self: RDD[(K, V)])
 
     /**
       * 使用关联函数和中性“零值”合并每个键的值，该值可以任意多次添加到结果中，并且不得更改结果
-      * 
+      *
       * Merge the values for each key using an associative function and a neutral "zero value" which
       * may be added to the result an arbitrary number of times, and must not change the result
       * (e.g., Nil for list concatenation, 0 for addition, or 1 for multiplication.).
@@ -204,6 +204,8 @@ class PairRDDFunctions[K, V](self: RDD[(K, V)])
     }
 
     /**
+      * 返回按键采样的此RDD的子集（通过分层采样）。
+      *
       * Return a subset of this RDD sampled by key (via stratified sampling).
       *
       * Create a sample of this RDD using variable sampling rates for different keys as specified by
@@ -231,6 +233,8 @@ class PairRDDFunctions[K, V](self: RDD[(K, V)])
     }
 
     /**
+      * 返回按密钥（通过分层采样）采样的RDD的子集，该子集包含每个层（具有相同密钥的一组对）的math.ceil（numItems*samplingRate）。
+      * 
       * Return a subset of this RDD sampled by key (via stratified sampling) containing exactly
       * math.ceil(numItems * samplingRate) for each stratum (group of pairs with the same key).
       *
