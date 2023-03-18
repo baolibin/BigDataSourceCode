@@ -234,7 +234,7 @@ class PairRDDFunctions[K, V](self: RDD[(K, V)])
 
     /**
       * 返回按密钥（通过分层采样）采样的RDD的子集，该子集包含每个层（具有相同密钥的一组对）的math.ceil（numItems*samplingRate）。
-      * 
+      *
       * Return a subset of this RDD sampled by key (via stratified sampling) containing exactly
       * math.ceil(numItems * samplingRate) for each stratum (group of pairs with the same key).
       *
@@ -265,6 +265,8 @@ class PairRDDFunctions[K, V](self: RDD[(K, V)])
     }
 
     /**
+      * 使用关联和交换的reduce函数合并每个键的值。这也将在将结果发送到reducer之前在每个映射器上执行本地合并，类似于MapReduce中的“合并器”。输出将使用numPartitions分区进行哈希分区。
+      * 
       * Merge the values for each key using an associative and commutative reduce function. This will
       * also perform the merging locally on each mapper before sending results to a reducer, similarly
       * to a "combiner" in MapReduce. Output will be hash-partitioned with numPartitions partitions.
