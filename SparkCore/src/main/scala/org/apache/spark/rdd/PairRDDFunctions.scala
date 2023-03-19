@@ -266,7 +266,7 @@ class PairRDDFunctions[K, V](self: RDD[(K, V)])
 
     /**
       * 使用关联和交换的reduce函数合并每个键的值。这也将在将结果发送到reducer之前在每个映射器上执行本地合并，类似于MapReduce中的“合并器”。输出将使用numPartitions分区进行哈希分区。
-      * 
+      *
       * Merge the values for each key using an associative and commutative reduce function. This will
       * also perform the merging locally on each mapper before sending results to a reducer, similarly
       * to a "combiner" in MapReduce. Output will be hash-partitioned with numPartitions partitions.
@@ -276,6 +276,8 @@ class PairRDDFunctions[K, V](self: RDD[(K, V)])
     }
 
     /**
+      * 使用关联和交换的reduce函数合并每个键的值，但将结果立即以Map的形式返回给master。这也将在将结果发送到reducer之前在每个映射器上执行本地合并，类似于MapReduce中的“合并器”。
+      * 
       * Merge the values for each key using an associative and commutative reduce function, but return
       * the results immediately to the master as a Map. This will also perform the merging locally on
       * each mapper before sending results to a reducer, similarly to a "combiner" in MapReduce.
