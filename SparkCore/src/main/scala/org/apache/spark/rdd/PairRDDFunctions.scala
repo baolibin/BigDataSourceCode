@@ -277,7 +277,7 @@ class PairRDDFunctions[K, V](self: RDD[(K, V)])
 
     /**
       * 使用关联和交换的reduce函数合并每个键的值，但将结果立即以Map的形式返回给master。这也将在将结果发送到reducer之前在每个映射器上执行本地合并，类似于MapReduce中的“合并器”。
-      * 
+      *
       * Merge the values for each key using an associative and commutative reduce function, but return
       * the results immediately to the master as a Map. This will also perform the merging locally on
       * each mapper before sending results to a reducer, similarly to a "combiner" in MapReduce.
@@ -310,6 +310,8 @@ class PairRDDFunctions[K, V](self: RDD[(K, V)])
     }
 
     /**
+      * 计算每个键的元素数量，将结果收集到本地Map中。
+      * 
       * Count the number of elements for each key, collecting the results to a local Map.
       *
       * @note This method should only be used if the resulting map is expected to be small, as
