@@ -343,6 +343,8 @@ class PairRDDFunctions[K, V](self: RDD[(K, V)])
     }
 
     /**
+      * countByKey的近似版本，如果在超时时间内未完成，则可以返回部分结果。
+      * 
       * Approximate version of countByKey that can return a partial result if it does
       * not finish within a timeout.
       *
