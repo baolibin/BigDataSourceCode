@@ -335,7 +335,7 @@ class PairRDDFunctions[K, V](self: RDD[(K, V)])
 
     /**
       * 使用关联和交换的reduce函数合并每个键的值。这也将在将结果发送到reducer之前在每个映射器上执行本地合并，类似于MapReduce中的“合并器”。
-      * 
+      *
       * Merge the values for each key using an associative and commutative reduce function. This will
       * also perform the merging locally on each mapper before sending results to a reducer, similarly
       * to a "combiner" in MapReduce.
@@ -366,6 +366,8 @@ class PairRDDFunctions[K, V](self: RDD[(K, V)])
     }
 
     /**
+      * 返回此RDD中每个键的不同值的近似数目。
+      * 
       * Return approximate number of distinct values for each key in this RDD.
       *
       * The algorithm used is based on streamlib's implementation of "HyperLogLog in Practice:
