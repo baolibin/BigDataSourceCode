@@ -451,6 +451,8 @@ class PairRDDFunctions[K, V](self: RDD[(K, V)])
     }
 
     /**
+      * 返回此RDD中每个键的不同值的近似数目。
+      * 
       * Return approximate number of distinct values for each key in this RDD.
       *
       * The algorithm used is based on streamlib's implementation of "HyperLogLog in Practice:
