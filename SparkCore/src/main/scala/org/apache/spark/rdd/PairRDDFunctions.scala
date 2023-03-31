@@ -452,7 +452,7 @@ class PairRDDFunctions[K, V](self: RDD[(K, V)])
 
     /**
       * 返回此RDD中每个键的不同值的近似数目。
-      * 
+      *
       * Return approximate number of distinct values for each key in this RDD.
       *
       * The algorithm used is based on streamlib's implementation of "HyperLogLog in Practice:
@@ -557,6 +557,8 @@ class PairRDDFunctions[K, V](self: RDD[(K, V)])
     }
 
     /**
+      * 返回使用指定分区器分区的RDD的副本。
+      * 
       * Return a copy of the RDD partitioned using the specified partitioner.
       */
     def partitionBy(partitioner: Partitioner): RDD[(K, V)] = self.withScope {
