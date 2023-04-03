@@ -558,7 +558,7 @@ class PairRDDFunctions[K, V](self: RDD[(K, V)])
 
     /**
       * 返回使用指定分区器分区的RDD的副本。
-      * 
+      *
       * Return a copy of the RDD partitioned using the specified partitioner.
       */
     def partitionBy(partitioner: Partitioner): RDD[(K, V)] = self.withScope {
@@ -712,6 +712,8 @@ class PairRDDFunctions[K, V](self: RDD[(K, V)])
     }
 
     /**
+      * 通过flatMap函数传递键值对RDD中的每个值，而不更改键；这也保留了原始RDD的分区。
+      * 
       * Pass each value in the key-value pair RDD through a flatMap function without changing the
       * keys; this also retains the original RDD's partitioning.
       */
