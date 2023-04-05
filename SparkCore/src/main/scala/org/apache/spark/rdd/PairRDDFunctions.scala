@@ -713,7 +713,7 @@ class PairRDDFunctions[K, V](self: RDD[(K, V)])
 
     /**
       * 通过flatMap函数传递键值对RDD中的每个值，而不更改键；这也保留了原始RDD的分区。
-      * 
+      *
       * Pass each value in the key-value pair RDD through a flatMap function without changing the
       * keys; this also retains the original RDD's partitioning.
       */
@@ -742,6 +742,7 @@ class PairRDDFunctions[K, V](self: RDD[(K, V)])
     }
 
     /**
+      * 通过映射函数传递键值对RDD中的每个值，而不改变键；这也保留了原始RDD的分区。
       * Pass each value in the key-value pair RDD through a map function without changing the keys;
       * this also retains the original RDD's partitioning.
       */
