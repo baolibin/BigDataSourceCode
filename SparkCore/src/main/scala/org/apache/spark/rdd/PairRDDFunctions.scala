@@ -810,6 +810,8 @@ class PairRDDFunctions[K, V](self: RDD[(K, V)])
     }
 
     /**
+      * 将此RDD中的键值对作为Map返回给master。
+      * 
       * Return the key-value pairs in this RDD to the master as a Map.
       *
       * Warning: this doesn't return a multimap (so if you have multiple values to the same key, only
