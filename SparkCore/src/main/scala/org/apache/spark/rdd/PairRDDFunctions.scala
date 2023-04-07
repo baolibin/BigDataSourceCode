@@ -954,6 +954,8 @@ class PairRDDFunctions[K, V](self: RDD[(K, V)])
     }
 
     /**
+      * 返回一个RDD，其中包含“this”中的对，这些对的键不在“other”中。
+      *
       * Return an RDD with the pairs from `this` whose keys are not in `other`.
       */
     def subtractByKey[W: ClassTag](
@@ -963,6 +965,8 @@ class PairRDDFunctions[K, V](self: RDD[(K, V)])
     }
 
     /**
+      * 返回一个RDD，其中包含“this”中的对，这些对的键不在“other”中。
+      * 
       * Return an RDD with the pairs from `this` whose keys are not in `other`.
       */
     def subtractByKey[W: ClassTag](other: RDD[(K, W)], p: Partitioner): RDD[(K, V)] = self.withScope {
