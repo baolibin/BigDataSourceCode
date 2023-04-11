@@ -926,7 +926,7 @@ class PairRDDFunctions[K, V](self: RDD[(K, V)])
 
     /**
       * 对于“this”或“other1”或“other2”中的每个键k，返回一个结果RDD，该RDD包含一个元组，该元组具有“this”、“other1”和“other2”中该键的值列表。
-      * 
+      *
       * For each key k in `this` or `other1` or `other2`, return a resulting RDD that contains a
       * tuple with the list of values for that key in `this`, `other1` and `other2`.
       */
@@ -950,6 +950,8 @@ class PairRDDFunctions[K, V](self: RDD[(K, V)])
     }
 
     /**
+      * 返回一个RDD，其中包含“this”中的对，这些对的键不在“other”中。
+      * 
       * Return an RDD with the pairs from `this` whose keys are not in `other`.
       *
       * Uses `this` partitioner/partition size, because even if `other` is huge, the resulting
