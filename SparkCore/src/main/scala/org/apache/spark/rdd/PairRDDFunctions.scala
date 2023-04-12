@@ -951,7 +951,7 @@ class PairRDDFunctions[K, V](self: RDD[(K, V)])
 
     /**
       * 返回一个RDD，其中包含“this”中的对，这些对的键不在“other”中。
-      * 
+      *
       * Return an RDD with the pairs from `this` whose keys are not in `other`.
       *
       * Uses `this` partitioner/partition size, because even if `other` is huge, the resulting
@@ -1004,6 +1004,8 @@ class PairRDDFunctions[K, V](self: RDD[(K, V)])
     }
 
     /**
+      * 使用Hadoop“OutputFormat”类将RDD输出到任何Hadoop支持的文件系统，该类支持此RDD中的键和值类型K和V。
+      * 
       * Output the RDD to any Hadoop-supported file system, using a Hadoop `OutputFormat` class
       * supporting the key and value types K and V in this RDD.
       */
