@@ -982,6 +982,8 @@ class PairRDDFunctions[K, V](self: RDD[(K, V)])
     }
 
     /**
+      * 返回RDD中键“key”的值列表。如果RDD只搜索键映射到的分区，就可以有效地执行此操作。
+      * 
       * Return the list of values in the RDD for key `key`. This operation is done efficiently if the
       * RDD has a known partitioner by only searching the partition that the key maps to.
       */
