@@ -983,7 +983,7 @@ class PairRDDFunctions[K, V](self: RDD[(K, V)])
 
     /**
       * 返回RDD中键“key”的值列表。如果RDD只搜索键映射到的分区，就可以有效地执行此操作。
-      * 
+      *
       * Return the list of values in the RDD for key `key`. This operation is done efficiently if the
       * RDD has a known partitioner by only searching the partition that the key maps to.
       */
@@ -1043,6 +1043,8 @@ class PairRDDFunctions[K, V](self: RDD[(K, V)])
     }
 
     /**
+      * 使用Hadoop“OutputFormat”类将RDD输出到任何Hadoop支持的文件系统，该类支持此RDD中的键和值类型K和V。
+      * 
       * Output the RDD to any Hadoop-supported file system, using a Hadoop `OutputFormat` class
       * supporting the key and value types K and V in this RDD.
       *
