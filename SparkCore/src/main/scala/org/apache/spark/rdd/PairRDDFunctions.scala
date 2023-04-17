@@ -1018,7 +1018,7 @@ class PairRDDFunctions[K, V](self: RDD[(K, V)])
 
     /**
       * 使用Hadoop“OutputFormat”类将RDD输出到任何Hadoop支持的文件系统，该类支持此RDD中的键和值类型K和V。使用提供的编解码器压缩结果。
-      * 
+      *
       * Output the RDD to any Hadoop-supported file system, using a Hadoop `OutputFormat` class
       * supporting the key and value types K and V in this RDD. Compress the result with the
       * supplied codec.
@@ -1031,6 +1031,8 @@ class PairRDDFunctions[K, V](self: RDD[(K, V)])
     }
 
     /**
+      * 使用Hadoop“OutputFormat”类将RDD输出到任何Hadoop支持的文件系统，该类支持此RDD中的键和值类型K和V。使用提供的编解码器进行压缩。
+    
       * Output the RDD to any Hadoop-supported file system, using a Hadoop `OutputFormat` class
       * supporting the key and value types K and V in this RDD. Compress with the supplied codec.
       */
