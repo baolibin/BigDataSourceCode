@@ -1102,6 +1102,8 @@ class PairRDDFunctions[K, V](self: RDD[(K, V)])
     }
 
     /**
+      * 将RDD输出到任何Hadoop支持的存储系统，使用该存储系统的Hadoop JobConf对象。JobConf应该设置OutputFormat和所需的任何输出路径（例如，要写入的表名），其方式与为Hadoop MapReduce作业配置的方式相同。
+      * 
       * Output the RDD to any Hadoop-supported storage system, using a Hadoop JobConf object for
       * that storage system. The JobConf should set an OutputFormat and any output paths required
       * (e.g. a table name to write to) in the same way as it would be configured for a Hadoop
