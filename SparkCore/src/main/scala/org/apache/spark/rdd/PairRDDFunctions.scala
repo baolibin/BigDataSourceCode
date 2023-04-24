@@ -1172,7 +1172,7 @@ class PairRDDFunctions[K, V](self: RDD[(K, V)])
 
     /**
       * 使用新的Hadoop API“OutputFormat”（mapreduce.OutputFormat）对象将RDD输出到任何Hadoop支持的文件系统，该对象支持此RDD中的键和值类型K和V。
-      * 
+      *
       * Output the RDD to any Hadoop-supported file system, using a new Hadoop API `OutputFormat`
       * (mapreduce.OutputFormat) object supporting the key and value types K and V in this RDD.
       */
@@ -1182,6 +1182,8 @@ class PairRDDFunctions[K, V](self: RDD[(K, V)])
     }
 
     /**
+      * 使用新的Hadoop API“OutputFormat”（mapreduce.OutputFormat）对象将RDD输出到任何Hadoop支持的文件系统，该对象支持此RDD中的键和值类型K和V。
+      * 
       * Output the RDD to any Hadoop-supported file system, using a new Hadoop API `OutputFormat`
       * (mapreduce.OutputFormat) object supporting the key and value types K and V in this RDD.
       */
