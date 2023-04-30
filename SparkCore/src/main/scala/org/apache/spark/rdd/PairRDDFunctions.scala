@@ -1229,6 +1229,8 @@ class PairRDDFunctions[K, V](self: RDD[(K, V)])
     def keys: RDD[K] = self.map(_._1)
 
     /**
+      * 返回一个RDD，其中包含每个元组的值。
+      * 
       * Return an RDD with the values of each tuple.
       */
     def values: RDD[V] = self.map(_._2)
