@@ -1205,6 +1205,9 @@ class PairRDDFunctions[K, V](self: RDD[(K, V)])
     }
 
     /**
+      * 使用该存储系统的Hadoop Configuration对象，将RDD输出到具有新Hadoop API的任何支持Hadoop的存储系统。
+      * Conf应该设置OutputFormat和所需的任何输出路径（例如，要写入的表名），其方式与为Hadoop MapReduce作业配置的方式相同。
+      *
       * Output the RDD to any Hadoop-supported storage system with new Hadoop API, using a Hadoop
       * Configuration object for that storage system. The Conf should set an OutputFormat and any
       * output paths required (e.g. a table name to write to) in the same way as it would be
@@ -1230,7 +1233,7 @@ class PairRDDFunctions[K, V](self: RDD[(K, V)])
 
     /**
       * 返回一个RDD，其中包含每个元组的值。
-      * 
+      *
       * Return an RDD with the values of each tuple.
       */
     def values: RDD[V] = self.map(_._2)
