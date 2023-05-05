@@ -34,7 +34,11 @@ class DoubleRDDFunctions(self: RDD[Double]) extends Logging with Serializable {
         self.fold(0.0)(_ + _)
     }
 
-    /** Compute the mean of this RDD's elements. */
+    /**
+      * 计算此RDD元素的平均值
+      *
+      * Compute the mean of this RDD's elements.
+      */
     def mean(): Double = self.withScope {
         stats().mean
     }
