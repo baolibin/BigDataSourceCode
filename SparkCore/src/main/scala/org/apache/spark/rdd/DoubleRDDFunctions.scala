@@ -51,7 +51,11 @@ class DoubleRDDFunctions(self: RDD[Double]) extends Logging with Serializable {
         stats().variance
     }
 
-    /** Compute the population standard deviation of this RDD's elements. */
+    /**
+      * 计算此RDD元素的总体标准偏差。
+      *
+      * Compute the population standard deviation of this RDD's elements.
+      */
     def stdev(): Double = self.withScope {
         stats().stdev
     }
