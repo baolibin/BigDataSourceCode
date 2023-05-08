@@ -69,6 +69,8 @@ class DoubleRDDFunctions(self: RDD[Double]) extends Logging with Serializable {
     }
 
     /**
+      * 计算该RDD元素的样本标准偏差（通过除以N-1而不是N来校正估计标准偏差时的偏差）。
+      * 
       * Compute the sample standard deviation of this RDD's elements (which corrects for bias in
       * estimating the standard deviation by dividing by N-1 instead of N).
       */
