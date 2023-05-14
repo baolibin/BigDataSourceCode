@@ -80,7 +80,7 @@ class DoubleRDDFunctions(self: RDD[Double]) extends Logging with Serializable {
 
     /**
       * 计算该RDD元素的样本方差（通过除以N-1而不是N来校正方差估计中的偏差）。
-      * 
+      *
       * Compute the sample variance of this RDD's elements (which corrects for bias in
       * estimating the variance by dividing by N-1 instead of N).
       */
@@ -89,6 +89,8 @@ class DoubleRDDFunctions(self: RDD[Double]) extends Logging with Serializable {
     }
 
     /**
+      * 计算此RDD元素的总体标准偏差。
+      * 
       * Compute the population standard deviation of this RDD's elements.
       */
     @Since("2.1.0")
