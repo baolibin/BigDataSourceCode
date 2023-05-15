@@ -90,7 +90,7 @@ class DoubleRDDFunctions(self: RDD[Double]) extends Logging with Serializable {
 
     /**
       * 计算此RDD元素的总体标准偏差。
-      * 
+      *
       * Compute the population standard deviation of this RDD's elements.
       */
     @Since("2.1.0")
@@ -99,6 +99,8 @@ class DoubleRDDFunctions(self: RDD[Double]) extends Logging with Serializable {
     }
 
     /**
+      * 计算此RDD元素的总体方差。
+      * 
       * Compute the population variance of this RDD's elements.
       */
     @Since("2.1.0")
