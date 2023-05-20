@@ -110,7 +110,7 @@ class DoubleRDDFunctions(self: RDD[Double]) extends Logging with Serializable {
 
     /**
       * 在超时时间内返回平均值的近似操作。
-      * 
+      *
       * Approximate operation to return the mean within a timeout.
       */
     def meanApprox(
@@ -122,6 +122,8 @@ class DoubleRDDFunctions(self: RDD[Double]) extends Logging with Serializable {
     }
 
     /**
+      * 在超时时间内返回总和的近似操作。
+      * 
       * Approximate operation to return the sum within a timeout.
       */
     def sumApprox(
