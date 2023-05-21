@@ -40,11 +40,15 @@ private[spark] object InputFileBlockHolder {
         }
 
     /**
+      * 如果未知，则返回保留文件名或空字符串。
+      *
       * Returns the holding file name or empty string if it is unknown.
       */
     def getInputFilePath: UTF8String = inputBlock.get().filePath
 
     /**
+      * 返回当前正在读取的块的起始偏移量，如果未知，则返回-1。
+      *
       * Returns the starting offset of the block currently being read, or -1 if it is unknown.
       */
     def getStartOffset: Long = inputBlock.get().startOffset
