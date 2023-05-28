@@ -54,6 +54,8 @@ private[spark] object InputFileBlockHolder {
     def getStartOffset: Long = inputBlock.get().startOffset
 
     /**
+      * 返回正在读取的块的长度，如果未知，则返回-1。
+      * 
       * Returns the length of the block being read, or -1 if it is unknown.
       */
     def getLength: Long = inputBlock.get().length
