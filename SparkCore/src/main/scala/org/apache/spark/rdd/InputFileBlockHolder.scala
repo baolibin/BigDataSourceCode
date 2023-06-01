@@ -55,12 +55,14 @@ private[spark] object InputFileBlockHolder {
 
     /**
       * 返回正在读取的块的长度，如果未知，则返回-1。
-      * 
+      *
       * Returns the length of the block being read, or -1 if it is unknown.
       */
     def getLength: Long = inputBlock.get().length
 
     /**
+      * 设置线程本地输入块。
+      *
       * Sets the thread-local input block.
       */
     def set(filePath: String, startOffset: Long, length: Long): Unit = {
@@ -71,6 +73,8 @@ private[spark] object InputFileBlockHolder {
     }
 
     /**
+      * 将输入文件块清除为默认值。
+      * 
       * Clears the input file block to default value.
       */
     def unset(): Unit = inputBlock.remove()
