@@ -74,7 +74,7 @@ private[spark] object InputFileBlockHolder {
 
     /**
       * 将输入文件块清除为默认值。
-      * 
+      *
       * Clears the input file block to default value.
       */
     def unset(): Unit = inputBlock.remove()

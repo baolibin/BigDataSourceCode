@@ -86,7 +86,10 @@ abstract class RDD[T: ClassTag](
         logWarning("Spark does not support nested RDDs (see SPARK-5063)")
     }
 
-    /** Optionally overridden by subclasses to specify how they are partitioned. */
+    /**
+      * 可选择由子类重写，以指定它们的分区方式
+      * Optionally overridden by subclasses to specify how they are partitioned.
+      */
     @transient val partitioner: Option[Partitioner] = None
     /** A unique ID for this RDD (within its SparkContext). */
     val id: Int = sc.newRddId()

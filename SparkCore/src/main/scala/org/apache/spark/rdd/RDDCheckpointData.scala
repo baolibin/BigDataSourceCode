@@ -22,6 +22,8 @@ import org.apache.spark.Partition
 import scala.reflect.ClassTag
 
 /**
+  * 枚举以通过检查点管理RDD的状态转换
+  * 
   * Enumeration to manage state transitions of an RDD through checkpointing
   *
   * [ Initialized --{@literal >} checkpointing in progress --{@literal >} checkpointed ]
