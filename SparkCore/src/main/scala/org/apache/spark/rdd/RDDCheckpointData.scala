@@ -23,7 +23,7 @@ import scala.reflect.ClassTag
 
 /**
   * 枚举以通过检查点管理RDD的状态转换
-  * 
+  *
   * Enumeration to manage state transitions of an RDD through checkpointing
   *
   * [ Initialized --{@literal >} checkpointing in progress --{@literal >} checkpointed ]
@@ -56,6 +56,8 @@ private[spark] abstract class RDDCheckpointData[T: ClassTag](@transient private 
     // TODO: are we sure we need to use a global lock in the following methods?
 
     /**
+      * 返回此RDD的检查点数据是否已持久化。
+      * 
       * Return whether the checkpoint data for this RDD is already persisted.
       */
     def isCheckpointed: Boolean = RDDCheckpointData.synchronized {
