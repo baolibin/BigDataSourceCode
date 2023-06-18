@@ -57,7 +57,7 @@ private[spark] abstract class RDDCheckpointData[T: ClassTag](@transient private 
 
     /**
       * 返回此RDD的检查点数据是否已持久化。
-      * 
+      *
       * Return whether the checkpoint data for this RDD is already persisted.
       */
     def isCheckpointed: Boolean = RDDCheckpointData.synchronized {
@@ -65,6 +65,7 @@ private[spark] abstract class RDDCheckpointData[T: ClassTag](@transient private 
     }
 
     /**
+      * 将此RDD具体化并持久化其内容。这是在对该RDD调用的第一个操作完成后立即调用的.
       * Materialize this RDD and persist its content.
       * This is called immediately after the first action invoked on this RDD has completed.
       */
