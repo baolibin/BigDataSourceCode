@@ -91,6 +91,9 @@ private[spark] abstract class RDDCheckpointData[T: ClassTag](@transient private 
     }
 
     /**
+      * 返回包含检查点数据的RDD。
+      * 只有当检查点状态为“Checkpointed”时，才会定义此项。
+
       * Return the RDD that contains our checkpointed data.
       * This is only defined if the checkpoint state is `Checkpointed`.
       */
