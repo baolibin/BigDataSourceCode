@@ -102,6 +102,9 @@ private[spark] abstract class RDDCheckpointData[T: ClassTag](@transient private 
     }
 
     /**
+      * 返回生成的检查点RDD的分区。
+      * 仅用于测试。
+
       * Return the partitions of the resulting checkpoint RDD.
       * For tests only.
       */
