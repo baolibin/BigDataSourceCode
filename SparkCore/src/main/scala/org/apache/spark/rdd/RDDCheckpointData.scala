@@ -115,8 +115,10 @@ private[spark] abstract class RDDCheckpointData[T: ClassTag](@transient private 
     }
 
     /**
+      * 将此RDD具体化并持久化其内容。
       * Materialize this RDD and persist its content.
       *
+      * 子类应该覆盖此方法来定义自定义检查点行为。
       * Subclasses should override this method to define custom checkpointing behavior.
       *
       * @return the checkpoint RDD created in the process.
