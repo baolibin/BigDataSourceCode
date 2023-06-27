@@ -128,6 +128,8 @@ private[spark] abstract class RDDCheckpointData[T: ClassTag](@transient private 
 }
 
 /**
+  * 用于同步检查点操作的全局锁定。
+  * 
   * Global lock for synchronizing checkpoint operations.
   */
 private[spark] object RDDCheckpointData
