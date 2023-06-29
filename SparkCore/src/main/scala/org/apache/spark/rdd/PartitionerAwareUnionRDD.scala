@@ -25,6 +25,8 @@ import org.apache.spark.{OneToOneDependency, Partition, SparkContext, TaskContex
 import scala.reflect.ClassTag
 
 /**
+  * 类表示PartitionerAwareUnionRDD的分区，该类维护父RDD的相应分区的列表。
+  * 
   * Class representing partitions of PartitionerAwareUnionRDD, which maintains the list of
   * corresponding partitions of parent RDDs.
   */
