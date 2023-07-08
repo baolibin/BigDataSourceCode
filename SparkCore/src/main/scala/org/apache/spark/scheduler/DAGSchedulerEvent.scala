@@ -48,7 +48,9 @@ private[scheduler] case class JobSubmitted(
                                                   properties: Properties = null)
         extends DAGSchedulerEvent
 
-/** A map stage as submitted to run as a separate job */
+/**
+  * 提交以作为单独作业运行的映射阶段
+  * A map stage as submitted to run as a separate job */
 private[scheduler] case class MapStageSubmitted(
                                                        jobId: Int,
                                                        dependency: ShuffleDependency[_, _, _],

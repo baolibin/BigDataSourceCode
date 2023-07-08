@@ -85,6 +85,8 @@ private[spark] class EventLoggingListener(
             SparkHadoopUtil.get.newConfiguration(sparkConf))
 
     /**
+      * 在配置的日志目录中创建日志文件。
+      * 
       * Creates the log file in the configured log directory.
       */
     def start() {
