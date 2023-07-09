@@ -86,7 +86,7 @@ private[spark] class EventLoggingListener(
 
     /**
       * 在配置的日志目录中创建日志文件。
-      * 
+      *
       * Creates the log file in the configured log directory.
       */
     def start() {
