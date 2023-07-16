@@ -51,7 +51,7 @@ private[spark] case class NarrowCoGroupSplitDep(
 
 /**
   * 存储有关CoGroupedRdd使用的窄依赖关系的信息。
-  * 
+  *
   * Stores information about the narrow dependencies used by a CoGroupedRdd.
   *
   * @param narrowDeps maps to the dependencies variable in the parent RDD: for each one to one

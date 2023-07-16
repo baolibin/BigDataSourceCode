@@ -22,6 +22,8 @@ import org.apache.spark.{Partition, SparkContext, TaskContext}
 import scala.reflect.ClassTag
 
 /**
+  * 用于恢复检查点数据的RDD分区。
+  *
   * An RDD partition used to recover checkpointed data.
   */
 private[spark] class CheckpointRDDPartition(val index: Int) extends Partition
