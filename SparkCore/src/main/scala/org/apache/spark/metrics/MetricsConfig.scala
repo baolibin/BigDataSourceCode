@@ -86,6 +86,8 @@ private[spark] class MetricsConfig(conf: SparkConf) extends Logging {
     }
 
     /**
+      * 取一组简单的属性和实例命名的正则表达式（第一个点之前的部分）必须符合。并且，返回一个一阶前缀（在第一个点之前）到该前缀下的子属性的映射。
+      *
       * Take a simple set of properties and a regex that the instance names (part before the first dot)
       * have to conform to. And, return a map of the first order prefix (before the first dot) to the
       * sub-properties under that prefix.
@@ -124,6 +126,8 @@ private[spark] class MetricsConfig(conf: SparkConf) extends Logging {
     }
 
     /**
+      * 从配置文件加载配置。如果没有提供配置文件，请尝试获取类路径中的文件。
+      *
       * Loads configuration from a config file. If no config file is provided, try to get file
       * in class path.
       */
