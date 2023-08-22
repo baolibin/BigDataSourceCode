@@ -94,11 +94,15 @@ private[spark] trait TaskScheduler {
     def applicationId(): String = appId
 
     /**
+      * 处理丢失的执行人
+      *
       * Process a lost executor
       */
     def executorLost(executorId: String, reason: ExecutorLossReason): Unit
 
     /**
+      * 获取与作业关联的应用程序的尝试ID。
+      *
       * Get an application's attempt ID associated with the job.
       *
       * @return An application's Attempt ID
