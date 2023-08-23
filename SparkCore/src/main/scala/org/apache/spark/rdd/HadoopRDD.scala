@@ -41,10 +41,12 @@ import scala.collection.immutable.Map
 import scala.reflect.ClassTag
 
 /**
+  * 一个围绕Hadoop InputSplit的Spark拆分类。
+  *
   * A Spark split class that wraps around a Hadoop InputSplit.
   */
 private[spark] class HadoopPartition(rddId: Int, override val index: Int, s: InputSplit)
-        extends Partition {
+    extends Partition {
 
     val inputSplit = new SerializableWritable[InputSplit](s)
 
@@ -53,6 +55,8 @@ private[spark] class HadoopPartition(rddId: Int, override val index: Int, s: Inp
     override def equals(other: Any): Boolean = super.equals(other)
 
     /**
+      * 获取运行管道时应添加到用户环境中的任何环境变量
+      *
       * Get any environment variables that should be added to the users environment when running pipes
       *
       * @return a Map with the environment variables and corresponding values, it could be empty
@@ -94,14 +98,14 @@ private[spark] class HadoopPartition(rddId: Int, override val index: Int, s: Inp
   */
 @DeveloperApi
 class HadoopRDD[K, V](
-                             sc: SparkContext,
-                             broadcastedConf: Broadcast[SerializableConfiguration],
-                             initLocalJobConfFuncOpt: Option[JobConf => Unit],
-                             inputFormatClass: Class[_ <: InputFormat[K, V]],
-                             keyClass: Class[K],
-                             valueClass: Class[V],
-                             minPartitions: Int)
-        extends RDD[(K, V)](sc, Nil) with Logging {
+                         sc: SparkContext,
+                         broadcastedConf: Broadcast[SerializableConfiguration],
+                         initLocalJobConfFuncOpt: Option[JobConf => Unit],
+                         inputFormatClass: Class[_ <: InputFormat[K, V]],
+                         keyClass: Class[K],
+                         valueClass: Class[V],
+                         minPartitions: Int)
+    extends RDD[(K, V)](sc, Nil) with Logging {
 
     if (initLocalJobConfFuncOpt.isDefined) {
         sparkContext.clean(initLocalJobConfFuncOpt.get)
@@ -115,16 +119,16 @@ class HadoopRDD[K, V](
     private val ignoreCorruptFiles = sparkContext.conf.get(IGNORE_CORRUPT_FILES)
 
     def this(
-                    sc: SparkContext,
-                    conf: JobConf,
-                    inputFormatClass: Class[_ <: InputFormat[K, V]],
-                    keyClass: Class[K],
-                    valueClass: Class[V],
-                    minPartitions: Int) = {
+                sc: SparkContext,
+                conf: JobConf,
+                inputFormatClass: Class[_ <: InputFormat[K, V]],
+                keyClass: Class[K],
+                valueClass: Class[V],
+                minPartitions: Int) = {
         this(
             sc,
             sc.broadcast(new SerializableConfiguration(conf))
-                    .asInstanceOf[Broadcast[SerializableConfiguration]],
+                .asInstanceOf[Broadcast[SerializableConfiguration]],
             initLocalJobConfFuncOpt = None,
             inputFormatClass,
             keyClass,
@@ -189,7 +193,7 @@ class HadoopRDD[K, V](
 
     protected def getInputFormat(conf: JobConf): InputFormat[K, V] = {
         val newInputFormat = ReflectionUtils.newInstance(inputFormatClass.asInstanceOf[Class[_]], conf)
-                .asInstanceOf[InputFormat[K, V]]
+            .asInstanceOf[InputFormat[K, V]]
         newInputFormat match {
             case c: Configurable => c.setConf(conf)
             case _ =>
@@ -240,14 +244,14 @@ class HadoopRDD[K, V](
                 context.stageId, theSplit.index, context.attemptNumber, jobConf)
 
             reader =
-                    try {
-                        inputFormat.getRecordReader(split.inputSplit.value, jobConf, Reporter.NULL)
-                    } catch {
-                        case e: IOException if ignoreCorruptFiles =>
-                            logWarning(s"Skipped the rest content in the corrupted file: ${split.inputSplit}", e)
-                            finished = true
-                            null
-                    }
+                try {
+                    inputFormat.getRecordReader(split.inputSplit.value, jobConf, Reporter.NULL)
+                } catch {
+                    case e: IOException if ignoreCorruptFiles =>
+                        logWarning(s"Skipped the rest content in the corrupted file: ${split.inputSplit}", e)
+                        finished = true
+                        null
+                }
             // Register an on-task-completion callback to close the input stream.
             context.addTaskCompletionListener { context =>
                 // Update the bytes read before closing is to make sure lingering bytesRead statistics in
@@ -292,7 +296,7 @@ class HadoopRDD[K, V](
                     if (getBytesReadCallback.isDefined) {
                         updateBytesRead()
                     } else if (split.inputSplit.value.isInstanceOf[FileSplit] ||
-                            split.inputSplit.value.isInstanceOf[CombineFileSplit]) {
+                        split.inputSplit.value.isInstanceOf[CombineFileSplit]) {
                         // If we can't get the bytes read from the FS stats, fall back to the split size,
                         // which may be inaccurate.
                         try {
@@ -311,8 +315,8 @@ class HadoopRDD[K, V](
     /** Maps over a partition, providing the InputSplit that was used as the base of the partition. */
     @DeveloperApi
     def mapPartitionsWithInputSplit[U: ClassTag](
-                                                        f: (InputSplit, Iterator[(K, V)]) => Iterator[U],
-                                                        preservesPartitioning: Boolean = false): RDD[U] = {
+                                                    f: (InputSplit, Iterator[(K, V)]) => Iterator[U],
+                                                    preservesPartitioning: Boolean = false): RDD[U] = {
         new HadoopMapPartitionsWithSplitRDD(this, f, preservesPartitioning)
     }
 
@@ -333,8 +337,8 @@ class HadoopRDD[K, V](
     override def persist(storageLevel: StorageLevel): this.type = {
         if (storageLevel.deserialized) {
             logWarning("Caching HadoopRDDs as deserialized objects usually leads to undesired" +
-                    " behavior because Hadoop's RecordReader reuses the same Writable object for all records." +
-                    " Use a map transformation to make copies of the records.")
+                " behavior because Hadoop's RecordReader reuses the same Writable object for all records." +
+                " Use a map transformation to make copies of the records.")
         }
         super.persist(storageLevel)
     }
@@ -377,7 +381,7 @@ private[spark] object HadoopRDD extends Logging {
         SparkEnv.get.hadoopJobMetadata.put(key, value)
 
     private[spark] def convertSplitLocationInfo(
-                                                       infos: Array[SplitLocationInfo]): Option[Seq[String]] = {
+                                                   infos: Array[SplitLocationInfo]): Option[Seq[String]] = {
         Option(infos).map(_.flatMap { loc =>
             val locationStr = loc.getLocation
             if (locationStr != "localhost") {
@@ -398,10 +402,10 @@ private[spark] object HadoopRDD extends Logging {
       * the given function rather than the index of the partition.
       */
     private[spark] class HadoopMapPartitionsWithSplitRDD[U: ClassTag, T: ClassTag](
-                                                                                          prev: RDD[T],
-                                                                                          f: (InputSplit, Iterator[T]) => Iterator[U],
-                                                                                          preservesPartitioning: Boolean = false)
-            extends RDD[U](prev) {
+                                                                                      prev: RDD[T],
+                                                                                      f: (InputSplit, Iterator[T]) => Iterator[U],
+                                                                                      preservesPartitioning: Boolean = false)
+        extends RDD[U](prev) {
 
         override val partitioner = if (preservesPartitioning) firstParent[T].partitioner else None
 
