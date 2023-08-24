@@ -312,7 +312,11 @@ class HadoopRDD[K, V](
         new InterruptibleIterator[(K, V)](context, iter)
     }
 
-    /** Maps over a partition, providing the InputSplit that was used as the base of the partition. */
+    /**
+      * 映射到分区上，提供用作分区基础的InputSplit
+      *
+      * Maps over a partition, providing the InputSplit that was used as the base of the partition.
+      */
     @DeveloperApi
     def mapPartitionsWithInputSplit[U: ClassTag](
                                                     f: (InputSplit, Iterator[(K, V)]) => Iterator[U],
@@ -353,7 +357,11 @@ private[spark] object HadoopRDD extends Logging {
       */
     val CONFIGURATION_INSTANTIATION_LOCK = new Object()
 
-    /** Update the input bytes read metric each time this number of records has been read */
+    /**
+      * 每次读取此数量的记录时，更新输入字节读取度量
+      *
+      * Update the input bytes read metric each time this number of records has been read
+      */
     val RECORDS_BETWEEN_BYTES_READ_METRIC_UPDATES = 256
 
     /**
