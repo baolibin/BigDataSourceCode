@@ -365,6 +365,8 @@ private[spark] object HadoopRDD extends Logging {
     val RECORDS_BETWEEN_BYTES_READ_METRIC_UPDATES = 256
 
     /**
+      * 下面的三个方法是访问本地映射的助手，本地映射是本地进程的SparkEnv的属性。
+      *
       * The three methods below are helpers for accessing the local map, a property of the SparkEnv of
       * the local process.
       */
@@ -372,7 +374,11 @@ private[spark] object HadoopRDD extends Logging {
 
     def containsCachedMetadata(key: String): Boolean = SparkEnv.get.hadoopJobMetadata.containsKey(key)
 
-    /** Add Hadoop configuration specific to a single partition and attempt. */
+    /**
+      * 添加特定于单个分区的Hadoop配置并尝试
+      *
+      * Add Hadoop configuration specific to a single partition and attempt.
+      */
     def addLocalConfiguration(jobTrackerId: String, jobId: Int, splitId: Int, attemptId: Int,
                               conf: JobConf) {
         val jobID = new JobID(jobTrackerId, jobId)
