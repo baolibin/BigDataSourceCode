@@ -352,6 +352,10 @@ class HadoopRDD[K, V](
 
 private[spark] object HadoopRDD extends Logging {
     /**
+      * 配置的构造函数不是线程安全的（请参阅SPARK-1097和HADOOP-10456）。
+      *
+      * 因此，我们在调用新的JobConf（）或新的Configuration（）之前同步这个锁。
+      *
       * Configuration's constructor is not threadsafe (see SPARK-1097 and HADOOP-10456).
       * Therefore, we synchronize on this lock before calling new JobConf() or new Configuration().
       */
@@ -412,6 +416,8 @@ private[spark] object HadoopRDD extends Logging {
     }
 
     /**
+      * 类似于[[org.apache.spark.rdd.MapPartitionsRDD]]，但将InputSplit传递给给定的函数，而不是分区的索引。
+      *
       * Analogous to [[org.apache.spark.rdd.MapPartitionsRDD]], but passes in an InputSplit to
       * the given function rather than the index of the partition.
       */
