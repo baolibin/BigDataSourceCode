@@ -23,7 +23,7 @@ import org.apache.spark.{NarrowDependency, Partition, TaskContext}
 import scala.reflect.ClassTag
 
 private[spark] class PartitionPruningRDDPartition(idx: Int, val parentSplit: Partition)
-        extends Partition {
+    extends Partition {
     override val index = idx
 }
 
@@ -33,12 +33,12 @@ private[spark] class PartitionPruningRDDPartition(idx: Int, val parentSplit: Par
   * case, the child RDD contains a subset of partitions of the parents'.
   */
 private[spark] class PruneDependency[T](rdd: RDD[T], partitionFilterFunc: Int => Boolean)
-        extends NarrowDependency[T](rdd) {
+    extends NarrowDependency[T](rdd) {
 
     @transient
     val partitions: Array[Partition] = rdd.partitions
-            .filter(s => partitionFilterFunc(s.index)).zipWithIndex
-            .map { case (split, idx) => new PartitionPruningRDDPartition(idx, split): Partition }
+        .filter(s => partitionFilterFunc(s.index)).zipWithIndex
+        .map { case (split, idx) => new PartitionPruningRDDPartition(idx, split): Partition }
 
     override def getParents(partitionId: Int): List[Int] = {
         List(partitions(partitionId).asInstanceOf[PartitionPruningRDDPartition].parentSplit.index)
@@ -59,9 +59,9 @@ private[spark] class PruneDependency[T](rdd: RDD[T], partitionFilterFunc: Int =>
   */
 @DeveloperApi
 class PartitionPruningRDD[T: ClassTag](
-                                              prev: RDD[T],
-                                              partitionFilterFunc: Int => Boolean)
-        extends RDD[T](prev.context, List(new PruneDependency(prev, partitionFilterFunc))) {
+                                          prev: RDD[T],
+                                          partitionFilterFunc: Int => Boolean)
+    extends RDD[T](prev.context, List(new PruneDependency(prev, partitionFilterFunc))) {
 
     override def compute(split: Partition, context: TaskContext): Iterator[T] = {
         firstParent[T].iterator(
@@ -77,6 +77,8 @@ class PartitionPruningRDD[T: ClassTag](
 object PartitionPruningRDD {
 
     /**
+      * 创建PartitionPrunningRDD。当在编译时不知道PartitionPrunningRDD的类型T时，此函数可用于创建它。
+      *
       * Create a PartitionPruningRDD. This function can be used to create the PartitionPruningRDD
       * when its type T is not known at compile time.
       */
