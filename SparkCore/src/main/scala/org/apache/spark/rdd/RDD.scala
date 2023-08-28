@@ -1791,7 +1791,7 @@ abstract class RDD[T: ClassTag](
 
     /**
       * 由子类实现以返回此RDD中的分区集。此方法只调用一次，因此在其中执行耗时的计算是安全的。
-      * 
+      *
       * Implemented by subclasses to return the set of partitions in this RDD. This method will only
       * be called once, so it is safe to implement a time-consuming computation in it.
       *
@@ -1810,7 +1810,7 @@ abstract class RDD[T: ClassTag](
 
     /**
       * 返回第j个父级RDD：例如RDD.parent[T]（0）等同于RDD.firstParent[T]
-      * 
+      *
       * Returns the jth parent RDD: e.g. rdd.parent[T](0) is equivalent to rdd.firstParent[T] */
     protected[spark] def parent[U: ClassTag](j: Int) = {
         dependencies(j).rdd.asInstanceOf[RDD[U]]

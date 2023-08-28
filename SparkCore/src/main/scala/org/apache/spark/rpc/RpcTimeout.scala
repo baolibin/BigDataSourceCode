@@ -26,6 +26,8 @@ import org.apache.spark.SparkConf
 import org.apache.spark.util.{ThreadUtils, Utils}
 
 /**
+  * 如果RpcTimeout修改“TimeoutException”，则引发异常。
+  *
   * An exception thrown if RpcTimeout modifies a `TimeoutException`.
   */
 private[rpc] class RpcTimeoutException(message: String, cause: TimeoutException)
@@ -70,7 +72,7 @@ private[spark] class RpcTimeout(val duration: FiniteDuration, val timeoutProp: S
       * Wait for the completed result and return it. If the result is not available within this
       * timeout, throw a [[RpcTimeoutException]] to indicate which configuration controls the timeout.
       *
-      * @param  future the `Future` to be awaited
+      * @param future the `Future` to be awaited
       * @throws RpcTimeoutException if after waiting for the specified time `future`
       *                             is still not ready
       */

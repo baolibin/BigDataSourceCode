@@ -30,7 +30,7 @@ private[spark] object InputFileBlockHolder {
 
     /**
       * 读取的当前文件名的线程变量。这由Spark SQL中的InputFileName函数使用。
-      * 
+      *
       * The thread variable for the name of the current file being read. This is used by
       * the InputFileName function in Spark SQL.
       */
@@ -80,6 +80,8 @@ private[spark] object InputFileBlockHolder {
     def unset(): Unit = inputBlock.remove()
 
     /**
+      * 一些输入文件信息的包装器。
+      *
       * A wrapper around some input file information.
       *
       * @param filePath    path of the file read, or empty string if not available.
