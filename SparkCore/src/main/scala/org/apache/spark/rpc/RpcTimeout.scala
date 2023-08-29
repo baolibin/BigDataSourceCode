@@ -48,12 +48,18 @@ private[rpc] class RpcTimeoutException(message: String, cause: TimeoutException)
 private[spark] class RpcTimeout(val duration: FiniteDuration, val timeoutProp: String)
     extends Serializable {
 
-    /** Amends the standard message of TimeoutException to include the description */
+    /**
+      * 修改TimeoutException的标准消息以包含描述
+      *
+      * Amends the standard message of TimeoutException to include the description
+      */
     private def createRpcTimeoutException(te: TimeoutException): RpcTimeoutException = {
         new RpcTimeoutException(te.getMessage + ". This timeout is controlled by " + timeoutProp, te)
     }
 
     /**
+      * PartialFunction匹配TimeoutException并将超时描述添加到消息中
+      *
       * PartialFunction to match a TimeoutException and add the timeout description to the message
       *
       * @note This can be used in the recover callback of a Future to add to a TimeoutException
@@ -69,6 +75,8 @@ private[spark] class RpcTimeout(val duration: FiniteDuration, val timeoutProp: S
     }
 
     /**
+      * 等待完成的结果并返回。如果此范围内没有结果timeout，抛出[[RpcTimeoutException]]以指示哪个配置控制超时。
+      *
       * Wait for the completed result and return it. If the result is not available within this
       * timeout, throw a [[RpcTimeoutException]] to indicate which configuration controls the timeout.
       *
