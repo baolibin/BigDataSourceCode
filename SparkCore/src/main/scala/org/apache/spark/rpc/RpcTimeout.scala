@@ -112,6 +112,8 @@ private[spark] object RpcTimeout {
     }
 
     /**
+      * 在配置中查找timeout属性，并使用描述中的属性键创建RpcTimeout。如果未设置属性，则使用给定的默认值
+      *
       * Lookup the timeout property in the configuration and create
       * a RpcTimeout with the property key in the description.
       * Uses the given default value if property is not set
@@ -128,6 +130,8 @@ private[spark] object RpcTimeout {
     }
 
     /**
+      * 在配置中查找超时属性的优先级列表，并使用描述中的第一个设置属性键创建RpcTimeout。如果未设置属性，则使用给定的默认值
+      *
       * Lookup prioritized list of timeout properties in the configuration
       * and create a RpcTimeout with the first set property key in the
       * description.
