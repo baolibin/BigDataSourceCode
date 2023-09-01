@@ -323,6 +323,8 @@ private[spark] class TaskSetManager(
     }
 
     /**
+      * 返回给定执行器ID的挂起任务列表，如果该主机没有映射条目，则返回空列表
+      *
       * Return the pending tasks list for a given executor ID, or an empty list if
       * there is no map entry for that host
       */
@@ -331,6 +333,8 @@ private[spark] class TaskSetManager(
     }
 
     /**
+      * 返回给定主机的挂起任务列表，如果该主机没有映射条目，则返回空列表
+      *
       * Return the pending tasks list for a given host, or an empty list if
       * there is no map entry for that host
       */
