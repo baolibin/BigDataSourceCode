@@ -343,6 +343,8 @@ private[spark] class TaskSetManager(
     }
 
     /**
+      * 返回给定机架的挂起机架本地任务列表，如果该机架没有映射条目，则返回空列表
+      *
       * Return the pending rack-local task list for a given rack, or an empty list if
       * there is no map entry for that rack
       */
@@ -351,6 +353,8 @@ private[spark] class TaskSetManager(
     }
 
     /**
+      * 从给定列表中取消挂起任务的队列并返回其索引。如果列表为空，则返回None。
+      *
       * Dequeue a pending task from the given list and return its index.
       * Return None if the list is empty.
       * This method also cleans up any tasks in the list that have already
