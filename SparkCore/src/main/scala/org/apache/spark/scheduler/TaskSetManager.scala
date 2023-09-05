@@ -380,6 +380,8 @@ private[spark] class TaskSetManager(
     }
 
     /**
+      * 返回给定执行器的推测任务（如果有的话）。该任务不应在此主机上运行，以防主机速度较慢。此外，任务应该满足给定的局部性约束。
+      *
       * Return a speculative task for a given executor if any are available. The task should not have
       * an attempt running on this host, in case the host is slow. In addition, the task should meet
       * the given locality constraint.
@@ -456,7 +458,11 @@ private[spark] class TaskSetManager(
         None
     }
 
-    /** Check whether a task is currently running an attempt on a given host */
+    /**
+      * 检查任务当前是否正在给定主机上运行尝试
+      *
+      * Check whether a task is currently running an attempt on a given host
+      */
     private def hasAttemptOnHost(taskIndex: Int, host: String): Boolean = {
         taskAttempts(taskIndex).exists(_.host == host)
     }
