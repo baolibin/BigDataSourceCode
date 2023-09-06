@@ -172,10 +172,10 @@ private[sql] object Dataset {
   */
 @InterfaceStability.Stable
 class Dataset[T] private[sql](
-                                     @transient val sparkSession: SparkSession,
-                                     @DeveloperApi @InterfaceStability.Unstable @transient val queryExecution: QueryExecution,
-                                     encoder: Encoder[T])
-        extends Serializable {
+                                 @transient val sparkSession: SparkSession,
+                                 @DeveloperApi @InterfaceStability.Unstable @transient val queryExecution: QueryExecution,
+                                 encoder: Encoder[T])
+    extends Serializable {
 
     queryExecution.assertAnalyzed()
 
@@ -280,8 +280,8 @@ class Dataset[T] private[sql](
     def toDF(colNames: String*): DataFrame = {
         require(schema.size == colNames.size,
             "The number of columns doesn't match.\n" +
-                    s"Old column names (${schema.size}): " + schema.fields.map(_.name).mkString(", ") + "\n" +
-                    s"New column names (${colNames.size}): " + colNames.mkString(", "))
+                s"Old column names (${schema.size}): " + schema.fields.map(_.name).mkString(", ") + "\n" +
+                s"New column names (${colNames.size}): " + colNames.mkString(", "))
 
         val newCols = logicalPlan.output.zip(colNames).map { case (oldAttribute, newName) =>
             Column(oldAttribute).as(newName)
@@ -291,7 +291,7 @@ class Dataset[T] private[sql](
 
     /**
       * 返回此数据集的schema。
-    *
+      *
       * Returns the schema of this Dataset.
       *
       * @group basic
@@ -417,11 +417,11 @@ class Dataset[T] private[sql](
       * Returns a new Dataset where each record has been mapped on to the specified type. The
       * method used to map columns depend on the type of `U`:
       *  - When `U` is a class, fields for the class will be mapped to columns of the same name
-      * (case sensitivity is determined by `spark.sql.caseSensitive`).
+      *    (case sensitivity is determined by `spark.sql.caseSensitive`).
       *  - When `U` is a tuple, the columns will be mapped by ordinal (i.e. the first column will
-      * be assigned to `_1`).
+      *    be assigned to `_1`).
       *  - When `U` is a primitive type (i.e. String, Int, etc), then the first column of the
-      * `DataFrame` will be used.
+      *    `DataFrame` will be used.
       *
       * If the schema of the Dataset does not match the desired `U` type, you can use `select`
       * along with `alias` or `as` to rearrange or rename as required.
@@ -440,9 +440,9 @@ class Dataset[T] private[sql](
       *
       * Spark will use this watermark for several purposes:
       *  - To know when a given time window aggregation can be finalized and thus can be emitted when
-      * using output modes that do not allow updates.
+      *    using output modes that do not allow updates.
       *  - To minimize the amount of state that we need to keep for on-going aggregations,
-      * `mapGroupsWithState` and `dropDuplicates` operators.
+      *    `mapGroupsWithState` and `dropDuplicates` operators.
       *
       * The current watermark is computed by looking at the `MAX(eventTime)` seen across
       * all of the partitions in the query minus a user specified `delayThreshold`.  Due to the cost
@@ -464,7 +464,7 @@ class Dataset[T] private[sql](
     def withWatermark(eventTime: String, delayThreshold: String): Dataset[T] = withTypedPlan {
         val parsedDelay =
             Option(CalendarInterval.fromString("interval " + delayThreshold))
-                    .getOrElse(throw new AnalysisException(s"Unable to parse time delay '$delayThreshold'"))
+                .getOrElse(throw new AnalysisException(s"Unable to parse time delay '$delayThreshold'"))
         require(parsedDelay.milliseconds >= 0 && parsedDelay.months >= 0,
             s"delay threshold ($delayThreshold) should not be negative.")
         EliminateEventTimeWatermark(
@@ -776,7 +776,7 @@ class Dataset[T] private[sql](
         // by creating a new instance for one of the branch.
         val joined = sparkSession.sessionState.executePlan(
             Join(logicalPlan, right.logicalPlan, joinType = JoinType(joinType), None))
-                .analyzed.asInstanceOf[Join]
+            .analyzed.asInstanceOf[Join]
 
         withPlan {
             Join(
@@ -841,7 +841,7 @@ class Dataset[T] private[sql](
         // After the cloning, left and right side will have distinct expression ids.
         val plan = withPlan(
             Join(logicalPlan, right.logicalPlan, JoinType(joinType), Some(joinExprs.expr)))
-                .queryExecution.analyzed.asInstanceOf[Join]
+            .queryExecution.analyzed.asInstanceOf[Join]
 
         // If auto self join alias is disabled, return the plan.
         if (!sparkSession.sessionState.conf.dataFrameSelfJoinAutoResolveAmbiguity) {
@@ -1066,10 +1066,10 @@ class Dataset[T] private[sql](
 
     private[sql] def resolve(colName: String): NamedExpression = {
         queryExecution.analyzed.resolveQuoted(colName, sparkSession.sessionState.analyzer.resolver)
-                .getOrElse {
-                    throw new AnalysisException(
-                        s"""Cannot resolve column name "$colName" among (${schema.fieldNames.mkString(", ")})""")
-                }
+            .getOrElse {
+                throw new AnalysisException(
+                    s"""Cannot resolve column name "$colName" among (${schema.fieldNames.mkString(", ")})""")
+            }
     }
 
     /**
@@ -1253,9 +1253,9 @@ class Dataset[T] private[sql](
     @Experimental
     @InterfaceStability.Evolving
     def select[U1, U2, U3](
-                                  c1: TypedColumn[T, U1],
-                                  c2: TypedColumn[T, U2],
-                                  c3: TypedColumn[T, U3]): Dataset[(U1, U2, U3)] =
+                              c1: TypedColumn[T, U1],
+                              c2: TypedColumn[T, U2],
+                              c3: TypedColumn[T, U3]): Dataset[(U1, U2, U3)] =
         selectUntyped(c1, c2, c3).asInstanceOf[Dataset[(U1, U2, U3)]]
 
     /**
@@ -1268,10 +1268,10 @@ class Dataset[T] private[sql](
     @Experimental
     @InterfaceStability.Evolving
     def select[U1, U2, U3, U4](
-                                      c1: TypedColumn[T, U1],
-                                      c2: TypedColumn[T, U2],
-                                      c3: TypedColumn[T, U3],
-                                      c4: TypedColumn[T, U4]): Dataset[(U1, U2, U3, U4)] =
+                                  c1: TypedColumn[T, U1],
+                                  c2: TypedColumn[T, U2],
+                                  c3: TypedColumn[T, U3],
+                                  c4: TypedColumn[T, U4]): Dataset[(U1, U2, U3, U4)] =
         selectUntyped(c1, c2, c3, c4).asInstanceOf[Dataset[(U1, U2, U3, U4)]]
 
     /**
@@ -1297,11 +1297,11 @@ class Dataset[T] private[sql](
     @Experimental
     @InterfaceStability.Evolving
     def select[U1, U2, U3, U4, U5](
-                                          c1: TypedColumn[T, U1],
-                                          c2: TypedColumn[T, U2],
-                                          c3: TypedColumn[T, U3],
-                                          c4: TypedColumn[T, U4],
-                                          c5: TypedColumn[T, U5]): Dataset[(U1, U2, U3, U4, U5)] =
+                                      c1: TypedColumn[T, U1],
+                                      c2: TypedColumn[T, U2],
+                                      c3: TypedColumn[T, U3],
+                                      c4: TypedColumn[T, U4],
+                                      c5: TypedColumn[T, U5]): Dataset[(U1, U2, U3, U4, U5)] =
         selectUntyped(c1, c2, c3, c4, c5).asInstanceOf[Dataset[(U1, U2, U3, U4, U5)]]
 
     /**
@@ -1759,8 +1759,8 @@ class Dataset[T] private[sql](
         // ordering deterministic. Note that MapTypes cannot be sorted and are explicitly pruned out
         // from the sort order.
         val sortOrder = logicalPlan.output
-                .filter(attr => RowOrdering.isOrderable(attr.dataType))
-                .map(SortOrder(_, Ascending))
+            .filter(attr => RowOrdering.isOrderable(attr.dataType))
+            .map(SortOrder(_, Ascending))
         val plan = if (sortOrder.nonEmpty) {
             Sort(sortOrder, global = false, logicalPlan)
         } else {
@@ -1856,6 +1856,8 @@ class Dataset[T] private[sql](
     }
 
     /**
+      * （特定于Scala）返回一个新的数据集，其中一列已被所提供的函数扩展为零行或更多行。这类似于HiveQL中的“横向视图”。输入行的所有列都与函数输出的每个值隐式连接。
+      *
       * (Scala-specific) Returns a new Dataset where a single column has been expanded to zero
       * or more rows by the provided function. This is similar to a `LATERAL VIEW` in HiveQL. All
       * columns of the input row are implicitly joined with each value that is output by the function.
@@ -1925,6 +1927,8 @@ class Dataset[T] private[sql](
     }
 
     /**
+      * 返回一个删除了列的新数据集。如果架构不包含列名，则这是不操作的。
+      *
       * Returns a new Dataset with a column dropped. This is a no-op if schema doesn't contain
       * column name.
       *
@@ -2123,11 +2127,11 @@ class Dataset[T] private[sql](
 
     private def aggregatableColumns: Seq[Expression] = {
         schema.fields
-                .filter(f => f.dataType.isInstanceOf[NumericType] || f.dataType.isInstanceOf[StringType])
-                .map { n =>
-                    queryExecution.analyzed.resolveQuoted(n.name, sparkSession.sessionState.analyzer.resolver)
-                            .get
-                }
+            .filter(f => f.dataType.isInstanceOf[NumericType] || f.dataType.isInstanceOf[StringType])
+            .map { n =>
+                queryExecution.analyzed.resolveQuoted(n.name, sparkSession.sessionState.analyzer.resolver)
+                    .get
+            }
     }
 
     /**
@@ -2737,9 +2741,9 @@ class Dataset[T] private[sql](
     }
 
     private def createTempViewCommand(
-                                             viewName: String,
-                                             replace: Boolean,
-                                             global: Boolean): CreateViewCommand = {
+                                         viewName: String,
+                                         replace: Boolean,
+                                         global: Boolean): CreateViewCommand = {
         val viewType = if (global) GlobalTempView else LocalTempView
 
         val tableIdentifier = try {
@@ -3005,10 +3009,10 @@ class Dataset[T] private[sql](
       * `func` to each partition.
       */
     private[sql] def mapPartitionsInR(
-                                             func: Array[Byte],
-                                             packageNames: Array[Byte],
-                                             broadcastVars: Array[Broadcast[Object]],
-                                             schema: StructType): DataFrame = {
+                                         func: Array[Byte],
+                                         packageNames: Array[Byte],
+                                         broadcastVars: Array[Broadcast[Object]],
+                                         schema: StructType): DataFrame = {
         val rowEncoder = encoder.asInstanceOf[ExpressionEncoder[Row]]
         Dataset.ofRows(
             sparkSession,
