@@ -2229,7 +2229,10 @@ class Dataset[T] private[sql](
         withTypedPlan(TypedFilter(func, logicalPlan))
     }
 
-    /** A convenient function to wrap a logical plan and produce a Dataset. */
+    /**
+      * 包装逻辑计划并生成数据集的方便函数
+      * A convenient function to wrap a logical plan and produce a Dataset.
+      */
     @inline private def withTypedPlan[U: Encoder](logicalPlan: => LogicalPlan): Dataset[U] = {
         Dataset(sparkSession, logicalPlan)
     }
@@ -2414,6 +2417,8 @@ class Dataset[T] private[sql](
     def collect(): Array[T] = withAction("collect", queryExecution)(collectFromPlan)
 
     /**
+      * 收集火花计划中的所有元素。
+      *
       * Collect all elements from a spark plan.
       */
     private def collectFromPlan(plan: SparkPlan): Array[T] = {
@@ -2421,6 +2426,8 @@ class Dataset[T] private[sql](
     }
 
     /**
+      * 返回包含此数据集中所有行的Java列表。
+      *
       * Returns a Java list that contains all rows in this Dataset.
       *
       * Running collect requires moving all the data into the application's driver process, and
