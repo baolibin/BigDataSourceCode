@@ -2914,6 +2914,8 @@ class Dataset[T] private[sql](
     }
 
     /**
+      * 返回组成此数据集的文件的尽力而为的快照。该方法只需向每个组成BaseRelation询问其各自的文件，并获取所有结果的并集。根据源关系，这可能无法找到所有输入文件。重复项将被删除。
+      *
       * Returns a best-effort snapshot of the files that compose this Dataset. This method simply
       * asks each constituent BaseRelation for its respective files and takes the union of all results.
       * Depending on the source relations, this may not find all input files. Duplicates are removed.
@@ -3037,6 +3039,8 @@ class Dataset[T] private[sql](
     }
 
     /**
+      * 包装一个数据集操作来跟踪主体中的所有Spark作业，这样我们就可以将它们与执行连接起来。
+      *
       * Wrap a Dataset action to track all Spark jobs in the body so that we can connect them with
       * an execution.
       */
