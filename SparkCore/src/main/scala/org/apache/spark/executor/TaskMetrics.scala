@@ -73,11 +73,15 @@ class TaskMetrics private[spark]() extends Serializable {
     def executorDeserializeCpuTime: Long = _executorDeserializeCpuTime.sum
 
     /**
+      * 执行器实际运行任务（包括获取混洗数据）所花费的时间。
+      *
       * Time the executor spends actually running the task (including fetching shuffle data).
       */
     def executorRunTime: Long = _executorRunTime.sum
 
     /**
+      * CPU执行器实际运行任务所花费的时间
+      *
       * CPU Time the executor spends actually running the task
       * (including fetching shuffle data) in nanoseconds.
       */
