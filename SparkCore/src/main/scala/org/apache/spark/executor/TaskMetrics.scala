@@ -88,16 +88,22 @@ class TaskMetrics private[spark]() extends Serializable {
     def executorCpuTime: Long = _executorCpuTime.sum
 
     /**
+      * 此任务作为TaskResult传输回驱动程序的字节数。
+      *
       * The number of bytes this task transmitted back to the driver as the TaskResult.
       */
     def resultSize: Long = _resultSize.sum
 
     /**
+      * JVM在执行此任务时用于垃圾收集的时间量。
+      *
       * Amount of time the JVM spent in garbage collection while executing this task.
       */
     def jvmGCTime: Long = _jvmGCTime.sum
 
     /**
+      * 序列化任务结果所花费的时间量。
+      *
       * Amount of time spent serializing the task result.
       */
     def resultSerializationTime: Long = _resultSerializationTime.sum
