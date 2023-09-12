@@ -109,11 +109,15 @@ class TaskMetrics private[spark]() extends Serializable {
     def resultSerializationTime: Long = _resultSerializationTime.sum
 
     /**
+      * 此任务溢出的内存中字节数。
+      *
       * The number of in-memory bytes spilled by this task.
       */
     def memoryBytesSpilled: Long = _memoryBytesSpilled.sum
 
     /**
+      * 此任务溢出的磁盘上的字节数。
+      *
       * The number of on-disk bytes spilled by this task.
       */
     def diskBytesSpilled: Long = _diskBytesSpilled.sum
