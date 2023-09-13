@@ -123,6 +123,8 @@ class TaskMetrics private[spark]() extends Serializable {
     def diskBytesSpilled: Long = _diskBytesSpilled.sum
 
     /**
+      * 在混洗、聚合和联接过程中创建的内部数据结构所使用的峰值内存。该累加器的值应该大约是在该任务中创建的所有这样的数据结构上的峰值大小的总和。对于SQL作业，这只跟踪所有不安全的运算符和ExternalSort。
+      *
       * Peak memory used by internal data structures created during shuffles, aggregations and
       * joins. The value of this accumulator should be approximately the sum of the peak sizes
       * across all such data structures created in this task. For SQL jobs, this only tracks all
@@ -131,6 +133,8 @@ class TaskMetrics private[spark]() extends Serializable {
     def peakExecutionMemory: Long = _peakExecutionMemory.sum
 
     /**
+      * 由于此任务而更新的任何块的存储状态。
+      *
       * Storage statuses of any blocks that have been updated as a result of this task.
       */
     def updatedBlockStatuses: Seq[(BlockId, BlockStatus)] = {
