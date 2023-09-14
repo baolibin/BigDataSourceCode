@@ -76,6 +76,8 @@ private[spark] abstract class RpcEnv(conf: SparkConf) {
     private[spark] val defaultLookupTimeout = RpcUtils.lookupRpcTimeout(conf)
 
     /**
+      * 返回[[RpcEnv]]正在侦听的地址。
+      *
       * Return the address that [[RpcEnv]] is listening to.
       */
     def address: RpcAddress
@@ -107,6 +109,8 @@ private[spark] abstract class RpcEnv(conf: SparkConf) {
     }
 
     /**
+      * 停止“endpoint”指定的[[RpcEndpoint]]。
+      * 
       * Stop [[RpcEndpoint]] specified by `endpoint`.
       */
     def stop(endpoint: RpcEndpointRef): Unit
