@@ -36,23 +36,23 @@ import scala.concurrent.Future
 private[spark] object RpcEnv {
 
     def create(
-                      name: String,
-                      host: String,
-                      port: Int,
-                      conf: SparkConf,
-                      securityManager: SecurityManager,
-                      clientMode: Boolean = false): RpcEnv = {
+                  name: String,
+                  host: String,
+                  port: Int,
+                  conf: SparkConf,
+                  securityManager: SecurityManager,
+                  clientMode: Boolean = false): RpcEnv = {
         create(name, host, host, port, conf, securityManager, clientMode)
     }
 
     def create(
-                      name: String,
-                      bindAddress: String,
-                      advertiseAddress: String,
-                      port: Int,
-                      conf: SparkConf,
-                      securityManager: SecurityManager,
-                      clientMode: Boolean): RpcEnv = {
+                  name: String,
+                  bindAddress: String,
+                  advertiseAddress: String,
+                  port: Int,
+                  conf: SparkConf,
+                  securityManager: SecurityManager,
+                  clientMode: Boolean): RpcEnv = {
         val config = RpcEnvConfig(conf, name, bindAddress, advertiseAddress, port, securityManager,
             clientMode)
         new NettyRpcEnvFactory().create(config)
@@ -110,18 +110,22 @@ private[spark] abstract class RpcEnv(conf: SparkConf) {
 
     /**
       * 停止“endpoint”指定的[[RpcEndpoint]]。
-      * 
+      *
       * Stop [[RpcEndpoint]] specified by `endpoint`.
       */
     def stop(endpoint: RpcEndpointRef): Unit
 
     /**
+      * 异步关闭此[[RpcEnv]]。如果需要确保[[RpcEnv]]成功退出，请在[[shutdown（）]]之后直接调用[[awaitTermination（）]]。
+      *
       * Shutdown this [[RpcEnv]] asynchronously. If need to make sure [[RpcEnv]] exits successfully,
       * call [[awaitTermination()]] straight after [[shutdown()]].
       */
     def shutdown(): Unit
 
     /**
+      * 等待[[RpcEnv]]退出。
+      *
       * Wait until [[RpcEnv]] exits.
       *
       * TODO do we need a timeout parameter?
@@ -203,10 +207,10 @@ private[spark] trait RpcEnvFileServer {
 }
 
 private[spark] case class RpcEnvConfig(
-                                              conf: SparkConf,
-                                              name: String,
-                                              bindAddress: String,
-                                              advertiseAddress: String,
-                                              port: Int,
-                                              securityManager: SecurityManager,
-                                              clientMode: Boolean)
+                                          conf: SparkConf,
+                                          name: String,
+                                          bindAddress: String,
+                                          advertiseAddress: String,
+                                          port: Int,
+                                          securityManager: SecurityManager,
+                                          clientMode: Boolean)
