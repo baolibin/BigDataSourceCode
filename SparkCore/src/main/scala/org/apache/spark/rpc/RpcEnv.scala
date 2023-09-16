@@ -165,6 +165,8 @@ private[spark] abstract class RpcEnv(conf: SparkConf) {
 }
 
 /**
+  * RpcEnv使用的服务器，用于将文件服务器到应用程序拥有的其他进程。
+  *
   * A server used by the RpcEnv to server files to other processes owned by the application.
   *
   * The file server can return URIs handled by common libraries (such as "http" or "hdfs"), or
@@ -173,6 +175,8 @@ private[spark] abstract class RpcEnv(conf: SparkConf) {
 private[spark] trait RpcEnvFileServer {
 
     /**
+      * 添加要由此RpcEnv提供服务的文件。当文件存储在驱动程序的本地文件系统上时，它用于将文件从驱动程序提供给执行程序。
+      *
       * Adds a file to be served by this RpcEnv. This is used to serve files from the driver
       * to executors when they're stored on the driver's local file system.
       *
