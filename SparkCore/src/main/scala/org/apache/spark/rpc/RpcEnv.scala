@@ -139,12 +139,16 @@ private[spark] abstract class RpcEnv(conf: SparkConf) {
     def deserialize[T](deserializationAction: () => T): T
 
     /**
+      * 返回用于提供文件的文件服务器的实例。如果RpcEnv未在服务器模式下运行，则此值可能为“null”。
+      *
       * Return the instance of the file server used to serve files. This may be `null` if the
       * RpcEnv is not operating in server mode.
       */
     def fileServer: RpcEnvFileServer
 
     /**
+      * 打开一个通道以从给定的URI下载文件。如果RpcEnvFileServer返回的URI使用“org.apache.spark”方案，则Utils类将调用此方法来检索文件。
+      *
       * Open a channel to download a file from the given URI. If the URIs returned by the
       * RpcEnvFileServer use the "org.apache.spark" scheme, this method will be called by the Utils class to
       * retrieve the files.
