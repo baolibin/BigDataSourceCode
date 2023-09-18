@@ -186,6 +186,8 @@ private[spark] trait RpcEnvFileServer {
     def addFile(file: File): String
 
     /**
+      * 添加一个由此RpcEnv提供的罐子。类似于“addFile”，但适用于使用“SparkContext.addJar”添加的jar。
+      *
       * Adds a jar to be served by this RpcEnv. Similar to `addFile` but for jars added using
       * `SparkContext.addJar`.
       *
@@ -195,6 +197,8 @@ private[spark] trait RpcEnvFileServer {
     def addJar(file: File): String
 
     /**
+      * 添加要通过此文件服务器提供服务的本地目录。
+      *
       * Adds a local directory to be served via this file server.
       *
       * @param baseUri Leading URI path (files can be retrieved by appending their relative
