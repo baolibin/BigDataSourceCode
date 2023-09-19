@@ -197,6 +197,8 @@ private[spark] abstract class MapOutputTracker(conf: SparkConf) extends Logging 
     }
 
     /**
+      * 返回给定混洗的所有输出的统计信息。
+      *
       * Return statistics about all of the outputs for a given shuffle.
       */
     def getStatistics(dep: ShuffleDependency[_, _, _]): MapOutputStatistics = {
@@ -213,7 +215,10 @@ private[spark] abstract class MapOutputTracker(conf: SparkConf) extends Logging 
         }
     }
 
-    /** Called to get current epoch number. */
+    /**
+      * 调用以获取当前历元编号
+      * Called to get current epoch number.
+      */
     def getEpoch: Long = {
         epochLock.synchronized {
             return epoch
@@ -221,6 +226,8 @@ private[spark] abstract class MapOutputTracker(conf: SparkConf) extends Logging 
     }
 
     /**
+      * 从执行器调用以更新epoch编号，可能会因为获取失败而清除旧输出。每个执行器任务都使用创建时驱动程序上的最新epoch编号来调用此任务。
+      *
       * Called from executors to update the epoch number, potentially clearing old outputs
       * because of a fetch failure. Each executor task calls this with the latest epoch
       * number on the driver at the time it was created.
