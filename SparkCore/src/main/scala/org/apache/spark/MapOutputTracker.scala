@@ -242,15 +242,24 @@ private[spark] abstract class MapOutputTracker(conf: SparkConf) extends Logging 
         }
     }
 
-    /** Unregister shuffle data. */
+    /**
+      * 注销混洗数据
+      * Unregister shuffle data.
+      */
     def unregisterShuffle(shuffleId: Int) {
         mapStatuses.remove(shuffleId)
     }
 
-    /** Stop the tracker. */
+    /**
+      * 停止跟踪器
+      * Stop the tracker.
+      */
     def stop() {}
 
-    /** Send a one-way message to the trackerEndpoint, to which we expect it to reply with true. */
+    /**
+      * 向trackerEndpoint发送一条单向消息，我们希望它回复true
+      * Send a one-way message to the trackerEndpoint, to which we expect it to reply with true.
+      */
     protected def sendTracker(message: Any) {
         val response = askTracker[Boolean](message)
         if (response != true) {
