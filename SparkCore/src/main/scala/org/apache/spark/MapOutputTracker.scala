@@ -269,6 +269,8 @@ private[spark] abstract class MapOutputTracker(conf: SparkConf) extends Logging 
     }
 
     /**
+      * 向trackerEndpoint发送消息并在默认超时内获取结果，如果失败，则引发SparkException。
+      *
       * Send a message to the trackerEndpoint and get its result within a default timeout, or
       * throw a SparkException if this fails.
       */
@@ -284,6 +286,8 @@ private[spark] abstract class MapOutputTracker(conf: SparkConf) extends Logging 
 }
 
 /**
+  * 驱动程序的MapOutputTracker。
+  *
   * MapOutputTracker for the driver.
   */
 private[spark] class MapOutputTrackerMaster(conf: SparkConf,
