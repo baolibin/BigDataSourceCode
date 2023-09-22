@@ -301,7 +301,10 @@ private[spark] class MapOutputTrackerMaster(conf: SparkConf,
     private val minSizeForBroadcast =
         conf.getSizeAsBytes("org.apache.spark.shuffle.mapOutput.minSizeForBroadcast", "512k").toInt
 
-    /** Whether to compute locality preferences for reduce tasks */
+    /**
+      * 是否计算减少任务的位置首选项
+      * Whether to compute locality preferences for reduce tasks
+      */
     private val shuffleLocalityEnabled = conf.getBoolean("org.apache.spark.shuffle.reduceLocality.enabled", true)
 
     // Number of map and reduce tasks above which we do not assign preferred locations based on map
@@ -336,7 +339,10 @@ private[spark] class MapOutputTrackerMaster(conf: SparkConf,
         }
         pool
     }
-    /** A poison endpoint that indicates MessageLoop should exit its message loop. */
+    /**
+      * 指示MessageLoop应退出其消息循环的毒端点
+      * A poison endpoint that indicates MessageLoop should exit its message loop.
+      */
     private val PoisonPill = new GetMapOutputMessage(-99, null)
 
     // Make sure that we aren't going to exceed the max RPC message size by making sure
@@ -348,7 +354,9 @@ private[spark] class MapOutputTrackerMaster(conf: SparkConf,
         logError(msg)
         throw new IllegalArgumentException(msg)
     }
-    /** Cache a serialized version of the output statuses for each shuffle to send them out faster */
+    /** 缓存每个shuffle的输出状态的序列化版本，以便更快地发送它们
+      * Cache a serialized version of the output statuses for each shuffle to send them out faster
+      */
     private var cacheEpoch = epoch
 
     def post(message: GetMapOutputMessage): Unit = {
