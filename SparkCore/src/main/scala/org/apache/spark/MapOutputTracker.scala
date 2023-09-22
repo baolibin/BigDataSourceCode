@@ -378,7 +378,11 @@ private[spark] class MapOutputTrackerMaster(conf: SparkConf,
         }
     }
 
-    /** Register multiple map output information for the given shuffle */
+    /**
+      * 为给定的混洗注册多个映射输出信息
+      *
+      * Register multiple map output information for the given shuffle
+      */
     def registerMapOutputs(shuffleId: Int, statuses: Array[MapStatus], changeEpoch: Boolean = false) {
         mapStatuses.put(shuffleId, statuses.clone())
         if (changeEpoch) {
@@ -386,7 +390,11 @@ private[spark] class MapOutputTrackerMaster(conf: SparkConf,
         }
     }
 
-    /** Unregister map output information of the given shuffle, mapper and block manager */
+    /**
+      * 注销给定混洗、映射器和块管理器的映射输出信息
+      *
+      * Unregister map output information of the given shuffle, mapper and block manager
+      */
     def unregisterMapOutput(shuffleId: Int, mapId: Int, bmAddress: BlockManagerId) {
         val arrayOpt = mapStatuses.get(shuffleId)
         if (arrayOpt.isDefined && arrayOpt.get != null) {
