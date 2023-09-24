@@ -417,7 +417,11 @@ private[spark] class MapOutputTrackerMaster(conf: SparkConf,
         }
     }
 
-    /** Unregister shuffle data */
+    /**
+      * 注销混洗数据
+      *
+      * Unregister shuffle data
+      */
     override def unregisterShuffle(shuffleId: Int) {
         mapStatuses.remove(shuffleId)
         cachedSerializedStatuses.remove(shuffleId)
@@ -425,7 +429,11 @@ private[spark] class MapOutputTrackerMaster(conf: SparkConf,
         shuffleIdLocks.remove(shuffleId)
     }
 
-    /** Check if the given shuffle is being tracked */
+    /**
+      * 检查是否正在跟踪给定的洗牌
+      *
+      * Check if the given shuffle is being tracked
+      */
     def containsShuffle(shuffleId: Int): Boolean = {
         cachedSerializedStatuses.contains(shuffleId) || mapStatuses.contains(shuffleId)
     }
