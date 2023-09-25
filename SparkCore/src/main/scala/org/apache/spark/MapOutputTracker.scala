@@ -439,6 +439,8 @@ private[spark] class MapOutputTrackerMaster(conf: SparkConf,
     }
 
     /**
+      * 返回在给定混洗中运行给定映射输出分区的首选主机，即该分区输出最多的节点所在的主机。
+      *
       * Return the preferred hosts on which to run the given map output partition in a given shuffle,
       * i.e. the nodes that the most outputs for that partition are on.
       *
@@ -463,6 +465,8 @@ private[spark] class MapOutputTrackerMaster(conf: SparkConf,
     }
 
     /**
+      * 返回一个位置列表，每个位置的地图输出分数都大于指定的阈值。
+      *
       * Return a list of locations that each have fraction of map output greater than the specified
       * threshold.
       *
