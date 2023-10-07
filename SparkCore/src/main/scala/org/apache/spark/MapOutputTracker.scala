@@ -607,7 +607,11 @@ private[spark] class MapOutputTrackerMaster(conf: SparkConf,
     // Exposed for testing
     private[spark] def getNumCachedSerializedBroadcast = cachedSerializedBroadcast.size
 
-    /** Message loop used for dispatching messages. */
+    /**
+      * 用于调度消息的消息循环
+      *
+      * Message loop used for dispatching messages.
+      */
     private class MessageLoop extends Runnable {
         override def run(): Unit = {
             try {
@@ -639,6 +643,9 @@ private[spark] class MapOutputTrackerMaster(conf: SparkConf,
 }
 
 /**
+  *
+  * 用于执行器的MapOutputTracker，它从驱动程序的MapOututTrackerMaster获取地图输出信息。
+  *
   * MapOutputTracker for the executors, which fetches map output information from the driver's
   * MapOutputTrackerMaster.
   */
