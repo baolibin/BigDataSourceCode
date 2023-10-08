@@ -725,6 +725,8 @@ private[spark] object MapOutputTracker extends Logging {
     }
 
     /**
+      * 给定映射状态的数组和映射输出分区的范围，返回一个序列，该序列针对每个块管理器ID列出存储在该块管理器中的混洗块ID和相应的混洗区块大小。
+      *
       * Given an array of map statuses and a range of map output partitions, returns a sequence that,
       * for each block manager ID, lists the shuffle block IDs and corresponding shuffle block sizes
       * stored at that block manager.
