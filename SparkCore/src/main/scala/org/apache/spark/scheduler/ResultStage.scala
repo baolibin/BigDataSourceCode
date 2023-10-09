@@ -32,16 +32,18 @@ import org.apache.spark.util.CallSite
   * of the RDD, for actions like first() and lookup().
   */
 private[spark] class ResultStage(
-                                        id: Int,
-                                        rdd: RDD[_],
-                                        val func: (TaskContext, Iterator[_]) => _,
-                                        val partitions: Array[Int],
-                                        parents: List[Stage],
-                                        firstJobId: Int,
-                                        callSite: CallSite)
-        extends Stage(id, rdd, partitions.length, parents, firstJobId, callSite) {
+                                    id: Int,
+                                    rdd: RDD[_],
+                                    val func: (TaskContext, Iterator[_]) => _,
+                                    val partitions: Array[Int],
+                                    parents: List[Stage],
+                                    firstJobId: Int,
+                                    callSite: CallSite)
+    extends Stage(id, rdd, partitions.length, parents, firstJobId, callSite) {
 
     /**
+      * 此结果阶段的活动作业。如果作业已完成，则为空
+      *
       * The active job for this result stage. Will be empty if the job has already finished
       * (e.g., because the job was cancelled).
       */

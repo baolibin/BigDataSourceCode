@@ -30,15 +30,18 @@ import scala.language.existentials
 import scala.reflect.ClassTag
 
 /**
+  * 对rdd和splitIndex的引用是暂时的，因为冗余信息存储在CoGroupedRDD对象中。
+  * 因为CoGroupedRDD是与CoGroupPartition分开序列化的，所以如果rdd和splitIndex不是瞬态的，它们将被包含在任务闭包中两次。
+  *
   * The references to rdd and splitIndex are transient because redundant information is stored
   * in the CoGroupedRDD object.  Because CoGroupedRDD is serialized separately from
   * CoGroupPartition, if rdd and splitIndex aren't transient, they'll be included twice in the
   * task closure.
   */
 private[spark] case class NarrowCoGroupSplitDep(
-                                                       @transient rdd: RDD[_],
-                                                       @transient splitIndex: Int,
-                                                       var split: Partition
+                                                   @transient rdd: RDD[_],
+                                                   @transient splitIndex: Int,
+                                                   var split: Partition
                                                ) extends Serializable {
 
     @throws(classOf[IOException])
@@ -60,8 +63,8 @@ private[spark] case class NarrowCoGroupSplitDep(
   *                   narrowDeps should always be equal to the number of parents.
   */
 private[spark] class CoGroupPartition(
-                                             override val index: Int, val narrowDeps: Array[Option[NarrowCoGroupSplitDep]])
-        extends Partition with Serializable {
+                                         override val index: Int, val narrowDeps: Array[Option[NarrowCoGroupSplitDep]])
+    extends Partition with Serializable {
     override def hashCode(): Int = index
 
     override def equals(other: Any): Boolean = super.equals(other)
@@ -81,9 +84,9 @@ private[spark] class CoGroupPartition(
   */
 @DeveloperApi
 class CoGroupedRDD[K: ClassTag](
-                                       @transient var rdds: Seq[RDD[_ <: Product2[K, _]]],
-                                       part: Partitioner)
-        extends RDD[(K, Array[Iterable[_]])](rdds.head.context, Nil) {
+                                   @transient var rdds: Seq[RDD[_ <: Product2[K, _]]],
+                                   part: Partitioner)
+    extends RDD[(K, Array[Iterable[_]])](rdds.head.context, Nil) {
 
     // For example, `(k, a) cogroup (k, b)` produces k -> Array(ArrayBuffer as, ArrayBuffer bs).
     // Each ArrayBuffer is represented as a CoGroup, and the resulting Array as a CoGroupCombiner.
@@ -146,8 +149,8 @@ class CoGroupedRDD[K: ClassTag](
             case shuffleDependency: ShuffleDependency[_, _, _] =>
                 // Read map outputs of shuffle
                 val it = SparkEnv.get.shuffleManager
-                        .getReader(shuffleDependency.shuffleHandle, split.index, split.index + 1, context)
-                        .read()
+                    .getReader(shuffleDependency.shuffleHandle, split.index, split.index + 1, context)
+                    .read()
                 rddIterators += ((it, depNum))
         }
 
