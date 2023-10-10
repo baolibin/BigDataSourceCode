@@ -58,7 +58,11 @@ private[spark] class ResultStage(
     }
 
     /**
+      * 返回丢失（即需要计算）的分区ID的序列。
+      *
       * Returns the sequence of partition ids that are missing (i.e. needs to be computed).
+      *
+      * 只有在存在活动作业时才能调用此操作。
       *
       * This can only be called when there is an active job.
       */
