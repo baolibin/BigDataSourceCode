@@ -30,27 +30,32 @@ import org.apache.spark.annotation.DeveloperApi
   */
 @DeveloperApi
 class TaskInfo(
-                      val taskId: Long,
+                  val taskId: Long,
 
-                      /**
-                        * The index of this task within its task set. Not necessarily the same as the ID of the RDD
-                        * partition that the task is computing.
-                        */
-                      val index: Int,
-                      val attemptNumber: Int,
-                      val launchTime: Long,
-                      val executorId: String,
-                      val host: String,
-                      val taskLocality: TaskLocality.TaskLocality,
-                      val speculative: Boolean) {
+                  /**
+                    * The index of this task within its task set. Not necessarily the same as the ID of the RDD
+                    * partition that the task is computing.
+                    */
+                  val index: Int,
+                  val attemptNumber: Int,
+                  val launchTime: Long,
+                  val executorId: String,
+                  val host: String,
+                  val taskLocality: TaskLocality.TaskLocality,
+                  val speculative: Boolean) {
 
     /**
+      * 任务开始远程获取结果的时间。如果任务结果在任务完成时立即发送（而不是发送IndirectTaskResult并稍后从块管理器获取结果），则不会设置。
+      *
       * The time when the task started remotely getting the result. Will not be set if the
       * task result was sent immediately when the task finished (as opposed to sending an
       * IndirectTaskResult and later fetching the result from the block manager).
       */
     var gettingResultTime: Long = 0
+
     /**
+      * 任务成功完成的时间（如有必要，包括远程获取结果的时间）。
+      *
       * The time when the task has completed successfully (including the time to remotely fetch
       * results, if necessary).
       */
