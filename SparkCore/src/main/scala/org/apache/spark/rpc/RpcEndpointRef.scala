@@ -30,7 +30,7 @@ import scala.reflect.ClassTag
   * A reference for a remote [[RpcEndpoint]]. [[RpcEndpointRef]] is thread-safe.
   */
 private[spark] abstract class RpcEndpointRef(conf: SparkConf)
-        extends Serializable with Logging {
+    extends Serializable with Logging {
 
     private[this] val maxRetries = RpcUtils.numRetries(conf)
     private[this] val retryWaitMs = RpcUtils.retryWaitMs(conf)
@@ -44,6 +44,8 @@ private[spark] abstract class RpcEndpointRef(conf: SparkConf)
     def name: String
 
     /**
+      * 发送单向异步消息。即发即弃语义。
+      *
       * Sends a one-way asynchronous message. Fire-and-forget semantics.
       */
     def send(message: Any): Unit
@@ -78,6 +80,8 @@ private[spark] abstract class RpcEndpointRef(conf: SparkConf)
     def askSync[T: ClassTag](message: Any): T = askSync(message, defaultAskTimeout)
 
     /**
+      * 向相应的[[RpcEndpoint.receiveAndReply]]发送消息，并在指定的超时，如果失败则引发异常。
+      *
       * Send a message to the corresponding [[RpcEndpoint.receiveAndReply]] and get its result within a
       * specified timeout, throw an exception if this fails.
       *
