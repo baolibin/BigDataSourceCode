@@ -33,6 +33,8 @@ class TaskInfo(
                   val taskId: Long,
 
                   /**
+                    * 此任务在其任务集中的索引。不一定与任务正在计算的RDD分区的ID相同。
+                    *
                     * The index of this task within its task set. Not necessarily the same as the ID of the RDD
                     * partition that the task is computing.
                     */
@@ -65,6 +67,9 @@ class TaskInfo(
     private[this] var _accumulables: Seq[AccumulableInfo] = Nil
 
     /**
+      * 在此任务期间对可累积项进行中间更新。请注意，同一个可累加项在单个任务中多次更新是有效的，
+      * 或者一个任务中存在两个名称相同但ID不同的可累加项是有效的。
+      *
       * Intermediate updates to accumulables during this task. Note that it is valid for the same
       * accumulable to be updated multiple times in a single task or for two accumulables with the
       * same name but different IDs to exist in a task.
