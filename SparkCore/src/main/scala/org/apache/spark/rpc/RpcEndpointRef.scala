@@ -51,6 +51,8 @@ private[spark] abstract class RpcEndpointRef(conf: SparkConf)
     def send(message: Any): Unit
 
     /**
+      * 向相应的[[RpcEndpoint.receiveAndReply）]]发送消息，并返回[[Future]]以在指定的超时内接收回复。
+      *
       * Send a message to the corresponding [[RpcEndpoint.receiveAndReply)]] and return a [[Future]] to
       * receive the reply within the specified timeout.
       *
@@ -59,6 +61,8 @@ private[spark] abstract class RpcEndpointRef(conf: SparkConf)
     def ask[T: ClassTag](message: Any, timeout: RpcTimeout): Future[T]
 
     /**
+      * 向相应的[[RpcEndpoint.receiveAndReply）]]发送消息，并向返回[[Future]]在默认超时内接收回复。
+      *
       * Send a message to the corresponding [[RpcEndpoint.receiveAndReply)]] and return a [[Future]] to
       * receive the reply within a default timeout.
       *
