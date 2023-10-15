@@ -71,6 +71,8 @@ private[spark] abstract class RpcEndpointRef(conf: SparkConf)
     def ask[T: ClassTag](message: Any): Future[T] = ask(message, defaultAskTimeout)
 
     /**
+      * 向相应的[[RpcEndpoint.receiveAndReply]]发送消息，并在默认超时，如果失败则抛出异常。
+      *
       * Send a message to the corresponding [[RpcEndpoint.receiveAndReply]] and get its result within a
       * default timeout, throw an exception if this fails.
       *

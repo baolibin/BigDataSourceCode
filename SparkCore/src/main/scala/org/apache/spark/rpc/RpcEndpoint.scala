@@ -144,6 +144,8 @@ private[spark] trait RpcEndpoint {
     }
 
     /**
+      * 一种方便的方法来停止[[RpcEndpoint]]。
+      *
       * A convenient method to stop [[RpcEndpoint]].
       */
     final def stop(): Unit = {
