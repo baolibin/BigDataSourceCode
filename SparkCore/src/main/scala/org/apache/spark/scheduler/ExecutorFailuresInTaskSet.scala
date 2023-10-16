@@ -41,6 +41,8 @@ private[scheduler] class ExecutorFailuresInTaskSet(val node: String) {
     }
 
     /**
+      * 返回此执行程序在给定任务索引上失败的次数。
+      *
       * Return the number of times this executor has failed on the given task index.
       */
     def getNumTaskFailures(index: Int): Int = {
@@ -49,7 +51,7 @@ private[scheduler] class ExecutorFailuresInTaskSet(val node: String) {
 
     override def toString(): String = {
         s"numUniqueTasksWithFailures = $numUniqueTasksWithFailures; " +
-                s"tasksToFailureCount = $taskToFailureCountAndFailureTime"
+            s"tasksToFailureCount = $taskToFailureCountAndFailureTime"
     }
 
     def numUniqueTasksWithFailures: Int = taskToFailureCountAndFailureTime.size
