@@ -53,6 +53,8 @@ private[netty] class Dispatcher(nettyEnv: NettyRpcEnv) extends Logging {
     private val receivers = new LinkedBlockingQueue[EndpointData]
 
     /**
+      * 如果调度程序已停止，则为True。一旦停止，所有发布的消息将立即被弹出。
+      *
       * True if the dispatcher has been stopped. Once stopped, all messages posted will be bounced
       * immediately.
       */

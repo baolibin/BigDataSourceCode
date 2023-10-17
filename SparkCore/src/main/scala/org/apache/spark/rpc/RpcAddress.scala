@@ -27,7 +27,11 @@ import org.apache.spark.util.Utils
   */
 private[spark] case class RpcAddress(host: String, port: Int) {
 
-    /** Returns a string in the form of "org.apache.spark://host:port". */
+    /**
+      * 返回“org.apache”形式的字符串。spark://host:port“
+      *
+      * Returns a string in the form of "org.apache.spark://host:port".
+      */
     def toSparkURL: String = "org.apache.spark://" + hostPort
 
     def hostPort: String = host + ":" + port
