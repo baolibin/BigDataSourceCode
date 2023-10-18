@@ -105,6 +105,8 @@ private[netty] class Dispatcher(nettyEnv: NettyRpcEnv) extends Logging {
     }
 
     /**
+      * 向此进程中所有已注册的[[RpcEndpoint]]发送消息。
+      *
       * Send a message to all registered [[RpcEndpoint]]s in this process.
       *
       * This can be used to make network events known to all end points (e.g. "a new node connected").
@@ -117,7 +119,11 @@ private[netty] class Dispatcher(nettyEnv: NettyRpcEnv) extends Logging {
         }
     }
 
-    /** Posts a message sent by a remote endpoint. */
+    /**
+      * 张贴远程终结点发送的消息。
+      *
+      * Posts a message sent by a remote endpoint.
+      */
     def postRemoteMessage(message: RequestMessage, callback: RpcResponseCallback): Unit = {
         val rpcCallContext =
             new RemoteNettyRpcCallContext(nettyEnv, callback, message.senderAddress)
@@ -125,7 +131,11 @@ private[netty] class Dispatcher(nettyEnv: NettyRpcEnv) extends Logging {
         postMessage(message.receiver.name, rpcMessage, (e) => callback.onFailure(e))
     }
 
-    /** Posts a message sent by a local endpoint. */
+    /**
+      * 张贴由本地终结点发送的消息
+      *
+      * Posts a message sent by a local endpoint.
+      */
     def postLocalMessage(message: RequestMessage, p: Promise[Any]): Unit = {
         val rpcCallContext =
             new LocalNettyRpcCallContext(message.senderAddress, p)
