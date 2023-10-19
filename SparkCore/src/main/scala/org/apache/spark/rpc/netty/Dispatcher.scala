@@ -150,6 +150,8 @@ private[netty] class Dispatcher(nettyEnv: NettyRpcEnv) extends Logging {
     }
 
     /**
+      * 将消息发布到特定端点。
+      *
       * Posts a message to a specific endpoint.
       *
       * @param endpointName      name of the endpoint.
@@ -195,13 +197,19 @@ private[netty] class Dispatcher(nettyEnv: NettyRpcEnv) extends Logging {
     }
 
     /**
+      * 如果端点存在，则返回
+      *
       * Return if the endpoint exists
       */
     def verify(name: String): Boolean = {
         endpoints.containsKey(name)
     }
 
-    /** Thread pool used for dispatching messages. */
+    /**
+      * 用于调度消息的线程池
+      *
+      * Thread pool used for dispatching messages.
+      */
     private val threadpool: ThreadPoolExecutor = {
         val numThreads = nettyEnv.conf.getInt("org.apache.spark.rpc.netty.dispatcher.numThreads",
             math.max(2, Runtime.getRuntime.availableProcessors()))
