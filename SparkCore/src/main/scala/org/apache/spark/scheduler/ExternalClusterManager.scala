@@ -27,6 +27,8 @@ import org.apache.spark.SparkContext
 private[spark] trait ExternalClusterManager {
 
     /**
+      * 检查此群集管理器实例是否可以为某个主URL创建调度程序组件。
+      *
       * Check if this cluster manager instance can create scheduler components
       * for a certain master URL.
       *
@@ -62,6 +64,8 @@ private[spark] trait ExternalClusterManager {
                                scheduler: TaskScheduler): SchedulerBackend
 
     /**
+      * 初始化任务调度程序和后端调度程序。这是在创建调度程序组件后调用的
+      *
       * Initialize task scheduler and backend scheduler. This is called after the
       * scheduler components are created
       *
