@@ -220,7 +220,11 @@ private[netty] class Dispatcher(nettyEnv: NettyRpcEnv) extends Logging {
         pool
     }
 
-    /** Message loop used for dispatching messages. */
+    /**
+      * 用于调度消息的消息循环
+      *
+      * Message loop used for dispatching messages.
+      */
     private class MessageLoop extends Runnable {
         override def run(): Unit = {
             try {
@@ -243,6 +247,10 @@ private[netty] class Dispatcher(nettyEnv: NettyRpcEnv) extends Logging {
         }
     }
 
-    /** A poison endpoint that indicates MessageLoop should exit its message loop. */
+    /**
+      * 指示MessageLoop应退出其消息循环的毒端点
+      *
+      * A poison endpoint that indicates MessageLoop should exit its message loop.
+      */
     private val PoisonPill = new EndpointData(null, null, null)
 }
