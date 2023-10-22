@@ -151,12 +151,16 @@ abstract class TaskContext extends Serializable {
     }
 
     /**
+      * 添加要在任务失败时执行的侦听器。在已经失败的任务中添加侦听器将导致立即调用该侦听器。
+      *
       * Adds a listener to be executed on task failure. Adding a listener to an already failed task
       * will result in that listener being called immediately.
       */
     def addTaskFailureListener(listener: TaskFailureListener): TaskContext
 
     /**
+      * 添加要在任务失败时执行的侦听器。在已经失败的任务中添加侦听器将导致立即调用该侦听器。
+      *
       * Adds a listener to be executed on task failure.  Adding a listener to an already failed task
       * will result in that listener being called immediately.
       */
@@ -168,18 +172,21 @@ abstract class TaskContext extends Serializable {
 
     /**
       * 此任务所属阶段的ID。
+      *
       * The ID of the stage that this task belong to.
       */
     def stageId(): Int
 
     /**
       * 此任务计算的RDD分区的ID。
+      *
       * The ID of the RDD partition that is computed by this task.
       */
     def partitionId(): Int
 
     /**
       * 此任务已尝试了多少次。第一次任务尝试将分配attemptNumber=0，后续尝试的尝试次数将增加。
+      *
       * How many times this task has been attempted.  The first task attempt will be assigned
       * attemptNumber = 0, and subsequent attempts will have increasing attempt numbers.
       */
