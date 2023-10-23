@@ -212,6 +212,8 @@ abstract class TaskContext extends Serializable {
     def taskMetrics(): TaskMetrics
 
     /**
+      * 返回与运行任务的实例关联的具有给定名称的所有度量源。有关更多信息，请参阅“org.apache.org/apache.spark.metrics.MetricsSystem”。
+      *
       * ::DeveloperApi::
       * Returns all metrics sources with the given name which are associated with the instance
       * which runs the task. For more information see `org.apache.org.apache.spark.metrics.MetricsSystem`.
@@ -249,6 +251,8 @@ abstract class TaskContext extends Serializable {
     private[spark] def registerAccumulator(a: AccumulatorV2[_, _]): Unit
 
     /**
+      * 记录此任务由于从远程主机获取失败而失败的情况。这允许驱动程序触发获取失败处理，而不考虑用户代码的介入。
+      *
       * Record that this task has failed due to a fetch failure from a remote host.  This allows
       * fetch-failure handling to get triggered by the driver, regardless of intervening user-code.
       */
