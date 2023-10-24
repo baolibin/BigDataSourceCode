@@ -31,15 +31,23 @@ import scala.collection.mutable.ArrayBuffer
 // Task result. Also contains updates to accumulator variables.
 private[spark] sealed trait TaskResult[T]
 
-/** A reference to a DirectTaskResult that has been stored in the worker's BlockManager. */
+/**
+  * 对已存储在工作程序的BlockManager中的DirectTaskResult的引用。
+  *
+  * A reference to a DirectTaskResult that has been stored in the worker's BlockManager.
+  */
 private[spark] case class IndirectTaskResult[T](blockId: BlockId, size: Int)
-        extends TaskResult[T] with Serializable
+    extends TaskResult[T] with Serializable
 
-/** A TaskResult that contains the task's return value and accumulator updates. */
+/**
+  * TaskResult，包含任务的返回值和累加器更新。
+  *
+  * A TaskResult that contains the task's return value and accumulator updates.
+  */
 private[spark] class DirectTaskResult[T](
-                                                var valueBytes: ByteBuffer,
-                                                var accumUpdates: Seq[AccumulatorV2[_, _]])
-        extends TaskResult[T] with Externalizable {
+                                            var valueBytes: ByteBuffer,
+                                            var accumUpdates: Seq[AccumulatorV2[_, _]])
+    extends TaskResult[T] with Externalizable {
 
     private var valueObjectDeserialized = false
     private var valueObject: T = _
