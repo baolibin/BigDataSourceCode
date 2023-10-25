@@ -81,6 +81,8 @@ private[spark] class DirectTaskResult[T](
     }
 
     /**
+      * 当第一次调用“value（）”时，它需要从“valueBytes”反序列化“valueObject”。对于一个大型实例，可能需要数十秒的时间。因此，当第一次调用“value”时，调用者应该避免阻塞其他线程。
+      *
       * When `value()` is called at the first time, it needs to deserialize `valueObject` from
       * `valueBytes`. It may cost dozens of seconds for a large instance. So when calling `value` at
       * the first time, the caller should avoid to block other threads.

@@ -38,6 +38,8 @@ class ShuffleReadMetrics private[spark]() extends Serializable {
     private[executor] val _recordsRead = new LongAccumulator
 
     /**
+      * 任务等待远程混洗块所花费的时间。这仅包括对混洗输入数据的时间阻塞。例如，如果块B正在被提取，而任务仍未完成处理块A，则不认为它在块B上被阻塞。
+      *
       * Time the task spent waiting for remote shuffle blocks. This only includes the time
       * blocking on shuffle input data. For instance if block B is being fetched while the task is
       * still not finished processing block A, it is not considered to be blocking on block B.
