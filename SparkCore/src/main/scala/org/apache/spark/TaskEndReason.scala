@@ -78,6 +78,8 @@ sealed trait TaskFailedReason extends TaskEndReason {
 }
 
 /**
+  * “org.apache.org.apache.spark.scheduler.ShuffleMapTask”早些时候成功完成，但在阶段完成之前我们失去了执行器。这意味着Spark需要重新安排任务，以便在不同的执行器上重新执行。
+  *
   * :: DeveloperApi ::
   * A `org.apache.org.apache.spark.scheduler.ShuffleMapTask` that completed successfully earlier, but we
   * lost the executor before the stage completed. This means Spark needs to reschedule the task
@@ -89,6 +91,8 @@ case object Resubmitted extends TaskFailedReason {
 }
 
 /**
+  * 任务无法从远程节点获取混洗数据。可能意味着我们已经丢失了任务试图从中获取的远程执行器，因此需要重新运行前一阶段。
+  *
   * :: DeveloperApi ::
   * Task failed to fetch shuffle data from a remote node. Probably means we have lost the remote
   * executors the task is trying to fetch from, and thus need to rerun the previous stage.
