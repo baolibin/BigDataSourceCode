@@ -123,6 +123,8 @@ case class FetchFailed(
 }
 
 /**
+  * 由于运行时异常，任务失败。这是最常见的故障情况，也会捕获用户程序异常。
+  *
   * :: DeveloperApi ::
   * Task failed due to a runtime exception. This is the most common failure case and also captures
   * user program exceptions.
@@ -161,6 +163,8 @@ case class ExceptionFailure(
         }
 
     /**
+      * 返回异常的漂亮字符串表示，包括堆栈跟踪。注意：它不包括异常的原因，仅用于向后兼容性。
+      *
       * Return a nice string representation of the exception, including the stack trace.
       * Note: It does not include the exception's causes, and is only used for backward compatibility.
       */
