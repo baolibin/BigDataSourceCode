@@ -178,6 +178,8 @@ case class ExceptionFailure(
     }
 
     /**
+      * `preserveCause`用于保留异常本身，以便驱动程序可以使用它。如果异常实际上不可序列化，则可以将其设置为“false”。
+      *
       * `preserveCause` is used to keep the exception itself so it is available to the
       * driver. This may be set to `false` in the event that the exception is not in fact
       * serializable.
@@ -201,6 +203,8 @@ case class ExceptionFailure(
 }
 
 /**
+  * 用于在反序列化用户任务代码中引发的Throwable时从异常中恢复的类。如果Throwable无法反序列化，它将为null，但堆栈争用和消息将在SparkException中正确保留。
+  *
   * A class for recovering from exceptions when deserializing a Throwable that was
   * thrown in user task code. If the Throwable cannot be deserialized it will be null,
   * but the stacktrace and message will be preserved correctly in SparkException.
