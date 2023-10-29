@@ -262,6 +262,8 @@ case class TaskCommitDenied(
         s" for job: $jobID, partition: $partitionID, attemptNumber: $attemptNumber"
 
     /**
+      * 如果任务由于提交尝试被拒绝而失败，请不要将此失败计入阶段失败。这是为了防止在许多推测性任务被启动并拒绝提交的情况下出现虚假的阶段失败。
+      *
       * If a task failed because its attempt to commit was denied, do not count this failure
       * towards failing the stage. This is intended to prevent spurious stage failures in cases
       * where many speculative tasks are launched and denied to commit.

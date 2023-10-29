@@ -46,7 +46,7 @@ class InputFormatInfo(val configuration: Configuration, val inputFormatClazz: Cl
 
     override def toString: String = {
         "InputFormatInfo " + super.toString + " .. inputFormatClazz " + inputFormatClazz + ", " +
-                "path : " + path
+            "path : " + path
     }
 
     override def hashCode(): Int = {
@@ -61,7 +61,7 @@ class InputFormatInfo(val configuration: Configuration, val inputFormatClazz: Cl
         case that: InputFormatInfo =>
             // not checking config - that should be fine, right ?
             this.inputFormatClazz == that.inputFormatClazz &&
-                    this.path == that.path
+                this.path == that.path
         case _ => false
     }
 
@@ -81,20 +81,20 @@ class InputFormatInfo(val configuration: Configuration, val inputFormatClazz: Cl
             }
             else {
                 throw new IllegalArgumentException("Specified inputformat " + inputFormatClazz +
-                        " is NOT a supported input format ? does not implement either of the supported hadoop " +
-                        "api's")
+                    " is NOT a supported input format ? does not implement either of the supported hadoop " +
+                    "api's")
             }
         }
         catch {
             case e: ClassNotFoundException =>
                 throw new IllegalArgumentException("Specified inputformat " + inputFormatClazz +
-                        " cannot be found ?", e)
+                    " cannot be found ?", e)
         }
     }
 
     private def findPreferredLocations(): Set[SplitInfo] = {
         logDebug("mapreduceInputFormat : " + mapreduceInputFormat + ", mapredInputFormat : " +
-                mapredInputFormat + ", inputFormatClazz : " + inputFormatClazz)
+            mapredInputFormat + ", inputFormatClazz : " + inputFormatClazz)
         if (mapreduceInputFormat) {
             prefLocsFromMapreduceInputFormat()
         }
@@ -112,7 +112,7 @@ class InputFormatInfo(val configuration: Configuration, val inputFormatClazz: Cl
 
         val instance: org.apache.hadoop.mapreduce.InputFormat[_, _] =
             ReflectionUtils.newInstance(inputFormatClazz.asInstanceOf[Class[_]], conf).asInstanceOf[
-                    org.apache.hadoop.mapreduce.InputFormat[_, _]]
+                org.apache.hadoop.mapreduce.InputFormat[_, _]]
         val job = Job.getInstance(conf)
 
         val retval = new ArrayBuffer[SplitInfo]()
@@ -132,7 +132,7 @@ class InputFormatInfo(val configuration: Configuration, val inputFormatClazz: Cl
 
         val instance: org.apache.hadoop.mapred.InputFormat[_, _] =
             ReflectionUtils.newInstance(inputFormatClazz.asInstanceOf[Class[_]], jobConf).asInstanceOf[
-                    org.apache.hadoop.mapred.InputFormat[_, _]]
+                org.apache.hadoop.mapred.InputFormat[_, _]]
 
         val retval = new ArrayBuffer[SplitInfo]()
         instance.getSplits(jobConf, jobConf.getNumMapTasks()).foreach(
@@ -146,6 +146,8 @@ class InputFormatInfo(val configuration: Configuration, val inputFormatClazz: Cl
 
 object InputFormatInfo {
     /**
+      * 根据输入计算首选位置，并返回位置到块映射。这种分配方法的典型使用遵循如下算法：
+      *
       * Computes the preferred locations based on input(s) and returned a location to block map.
       * Typical use of this method for allocation would follow some algo like this:
       * *
