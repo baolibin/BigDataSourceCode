@@ -91,6 +91,8 @@ class PairRDDFunctions[K, V](self: RDD[(K, V)])
     }
 
     /**
+      * combineByKeyWithClassTag的简化版本，用于对输出RDD进行哈希分区。
+      *
       * :: Experimental ::
       * Simplified version of combineByKeyWithClassTag that hash-partitions the output RDD.
       */
@@ -311,7 +313,7 @@ class PairRDDFunctions[K, V](self: RDD[(K, V)])
 
     /**
       * 计算每个键的元素数量，将结果收集到本地Map中。
-      * 
+      *
       * Count the number of elements for each key, collecting the results to a local Map.
       *
       * @note This method should only be used if the resulting map is expected to be small, as
@@ -346,7 +348,7 @@ class PairRDDFunctions[K, V](self: RDD[(K, V)])
 
     /**
       * countByKey的近似版本，如果在超时时间内未完成，则可以返回部分结果。
-      * 
+      *
       * Approximate version of countByKey that can return a partial result if it does
       * not finish within a timeout.
       *
@@ -408,7 +410,7 @@ class PairRDDFunctions[K, V](self: RDD[(K, V)])
 
     /**
       * 返回此RDD中每个键的不同值的近似数目。
-      * 
+      *
       * Return approximate number of distinct values for each key in this RDD.
       *
       * The algorithm used is based on streamlib's implementation of "HyperLogLog in Practice:
@@ -811,7 +813,7 @@ class PairRDDFunctions[K, V](self: RDD[(K, V)])
 
     /**
       * 将此RDD中的键值对作为Map返回给master。
-      * 
+      *
       * Return the key-value pairs in this RDD to the master as a Map.
       *
       * Warning: this doesn't return a multimap (so if you have multiple values to the same key, only
@@ -1007,7 +1009,7 @@ class PairRDDFunctions[K, V](self: RDD[(K, V)])
 
     /**
       * 使用Hadoop“OutputFormat”类将RDD输出到任何Hadoop支持的文件系统，该类支持此RDD中的键和值类型K和V。
-      * 
+      *
       * Output the RDD to any Hadoop-supported file system, using a Hadoop `OutputFormat` class
       * supporting the key and value types K and V in this RDD.
       */
@@ -1032,7 +1034,7 @@ class PairRDDFunctions[K, V](self: RDD[(K, V)])
 
     /**
       * 使用Hadoop“OutputFormat”类将RDD输出到任何Hadoop支持的文件系统，该类支持此RDD中的键和值类型K和V。使用提供的编解码器进行压缩。
-    
+      *
       * Output the RDD to any Hadoop-supported file system, using a Hadoop `OutputFormat` class
       * supporting the key and value types K and V in this RDD. Compress with the supplied codec.
       */
@@ -1048,7 +1050,7 @@ class PairRDDFunctions[K, V](self: RDD[(K, V)])
 
     /**
       * 使用Hadoop“OutputFormat”类将RDD输出到任何Hadoop支持的文件系统，该类支持此RDD中的键和值类型K和V。
-      * 
+      *
       * Output the RDD to any Hadoop-supported file system, using a Hadoop `OutputFormat` class
       * supporting the key and value types K and V in this RDD.
       *
@@ -1103,7 +1105,7 @@ class PairRDDFunctions[K, V](self: RDD[(K, V)])
 
     /**
       * 将RDD输出到任何Hadoop支持的存储系统，使用该存储系统的Hadoop JobConf对象。JobConf应该设置OutputFormat和所需的任何输出路径（例如，要写入的表名），其方式与为Hadoop MapReduce作业配置的方式相同。
-      * 
+      *
       * Output the RDD to any Hadoop-supported storage system, using a Hadoop JobConf object for
       * that storage system. The JobConf should set an OutputFormat and any output paths required
       * (e.g. a table name to write to) in the same way as it would be configured for a Hadoop
@@ -1226,7 +1228,7 @@ class PairRDDFunctions[K, V](self: RDD[(K, V)])
 
     /**
       * 返回一个RDD，其中包含每个元组的键。
-      * 
+      *
       * Return an RDD with the keys of each tuple.
       */
     def keys: RDD[K] = self.map(_._1)

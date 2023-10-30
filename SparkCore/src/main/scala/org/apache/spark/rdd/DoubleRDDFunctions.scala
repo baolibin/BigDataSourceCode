@@ -70,7 +70,7 @@ class DoubleRDDFunctions(self: RDD[Double]) extends Logging with Serializable {
 
     /**
       * 计算该RDD元素的样本标准偏差（通过除以N-1而不是N来校正估计标准偏差时的偏差）。
-      * 
+      *
       * Compute the sample standard deviation of this RDD's elements (which corrects for bias in
       * estimating the standard deviation by dividing by N-1 instead of N).
       */
@@ -100,7 +100,7 @@ class DoubleRDDFunctions(self: RDD[Double]) extends Logging with Serializable {
 
     /**
       * 计算此RDD元素的总体方差。
-      * 
+      *
       * Compute the population variance of this RDD's elements.
       */
     @Since("2.1.0")
@@ -114,8 +114,8 @@ class DoubleRDDFunctions(self: RDD[Double]) extends Logging with Serializable {
       * Approximate operation to return the mean within a timeout.
       */
     def meanApprox(
-                          timeout: Long,
-                          confidence: Double = 0.95): PartialResult[BoundedDouble] = self.withScope {
+                      timeout: Long,
+                      confidence: Double = 0.95): PartialResult[BoundedDouble] = self.withScope {
         val processPartition = (ctx: TaskContext, ns: Iterator[Double]) => StatCounter(ns)
         val evaluator = new MeanEvaluator(self.partitions.length, confidence)
         self.context.runApproximateJob(self, processPartition, evaluator, timeout)
@@ -127,8 +127,8 @@ class DoubleRDDFunctions(self: RDD[Double]) extends Logging with Serializable {
       * Approximate operation to return the sum within a timeout.
       */
     def sumApprox(
-                         timeout: Long,
-                         confidence: Double = 0.95): PartialResult[BoundedDouble] = self.withScope {
+                     timeout: Long,
+                     confidence: Double = 0.95): PartialResult[BoundedDouble] = self.withScope {
         val processPartition = (ctx: TaskContext, ns: Iterator[Double]) => StatCounter(ns)
         val evaluator = new SumEvaluator(self.partitions.length, confidence)
         self.context.runApproximateJob(self, processPartition, evaluator, timeout)
@@ -174,11 +174,13 @@ class DoubleRDDFunctions(self: RDD[Double]) extends Logging with Serializable {
     }
 
     /**
+      * 使用提供的桶计算直方图。除最后一个已关闭外，所有铲斗都向右打开。
+      *
       * Compute a histogram using the provided buckets. The buckets are all open
       * to the right except for the last which is closed.
-      *  e.g. for the array
+      * e.g. for the array
       * [1, 10, 20, 50] the buckets are [1, 10) [10, 20) [20, 50]
-      *  e.g {@code <=x<10, 10<=x<20, 20<=x<=50}
+      * e.g {@code <=x<10, 10<=x<20, 20<=x<=50}
       * And on the input of 1 and 50 we would have a histogram of 1, 0, 1
       *
       * @note If your histogram is evenly spaced (e.g. [0, 10, 20, 30]) this can be switched
@@ -191,8 +193,8 @@ class DoubleRDDFunctions(self: RDD[Double]) extends Logging with Serializable {
       *       in that bucket.
       */
     def histogram(
-                         buckets: Array[Double],
-                         evenBuckets: Boolean = false): Array[Long] = self.withScope {
+                     buckets: Array[Double],
+                     evenBuckets: Boolean = false): Array[Long] = self.withScope {
         if (buckets.length < 2) {
             throw new IllegalArgumentException("buckets array must have at least two elements")
         }
