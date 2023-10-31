@@ -70,7 +70,7 @@ private[spark] class LiveListenerBus(val sparkContext: SparkContext) extends Spa
                             // Get out of the while loop and shutdown the daemon thread
                             if (!stopped.get) {
                                 throw new IllegalStateException("Polling `null` from eventQueue means" +
-                                        " the listener bus has been stopped. So `stopped` must be true")
+                                    " the listener bus has been stopped. So `stopped` must be true")
                             }
                             return
                         }
@@ -91,6 +91,8 @@ private[spark] class LiveListenerBus(val sparkContext: SparkContext) extends Spa
     private var processingEvent = false
 
     /**
+      * 开始向连接的侦听器发送事件。
+      *
       * Start sending events to attached listeners.
       *
       * This first sends out all buffered events posted before this listener bus has started, then
@@ -132,13 +134,15 @@ private[spark] class LiveListenerBus(val sparkContext: SparkContext) extends Spa
                     val prevLastReportTimestamp = lastReportTimestamp
                     lastReportTimestamp = System.currentTimeMillis()
                     logWarning(s"Dropped $droppedEvents SparkListenerEvents since " +
-                            new java.util.Date(prevLastReportTimestamp))
+                        new java.util.Date(prevLastReportTimestamp))
                 }
             }
         }
     }
 
     /**
+      * 如果事件队列超过其容量，则会丢弃新事件。子类将收到已删除事件的通知。
+      *
       * If the event queue exceeds its capacity, the new events will be dropped. The subclasses will be
       * notified with the dropped events.
       *
@@ -148,8 +152,8 @@ private[spark] class LiveListenerBus(val sparkContext: SparkContext) extends Spa
         if (logDroppedEvent.compareAndSet(false, true)) {
             // Only log the following message once to avoid duplicated annoying logs.
             logError("Dropping SparkListenerEvent because no remaining room in event queue. " +
-                    "This likely means one of the SparkListeners is too slow and cannot keep up with " +
-                    "the rate at which tasks are being started by the scheduler.")
+                "This likely means one of the SparkListeners is too slow and cannot keep up with " +
+                "the rate at which tasks are being started by the scheduler.")
         }
     }
 
