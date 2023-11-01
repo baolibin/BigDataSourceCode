@@ -158,6 +158,8 @@ private[spark] class LiveListenerBus(val sparkContext: SparkContext) extends Spa
     }
 
     /**
+      * 仅用于测试。等待队列中不再有事件，或者等待指定的时间过去。如果在队列清空之前经过了指定的时间，则引发“TimeoutException”。
+      *
       * For testing only. Wait until there are no more events in the queue, or until the specified
       * time has elapsed. Throw `TimeoutException` if the specified time elapsed before the queue
       * emptied.
@@ -178,6 +180,8 @@ private[spark] class LiveListenerBus(val sparkContext: SparkContext) extends Spa
     }
 
     /**
+      * 返回事件队列是否为空。
+      *
       * Return whether the event queue is empty.
       *
       * The use of synchronized here guarantees that all events that once belonged to this queue
