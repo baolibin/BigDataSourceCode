@@ -192,12 +192,16 @@ private[spark] class LiveListenerBus(val sparkContext: SparkContext) extends Spa
     }
 
     /**
+      * 仅用于测试。返回侦听器守护进程线程是否仍处于活动状态。暴露测试。
+      *
       * For testing only. Return whether the listener daemon thread is still alive.
       * Exposed for testing.
       */
     def listenerThreadIsAlive: Boolean = listenerThread.isAlive
 
     /**
+      * 停止侦听器总线。它将等待队列中的事件得到处理，但在停止后会丢弃新事件。
+      *
       * Stop the listener bus. It will wait until the queued events have been processed, but drop the
       * new events after stopping.
       */
@@ -228,7 +232,11 @@ private[spark] object LiveListenerBus {
     // Allows for Context to check whether stop() call is made within listener thread
     val withinListenerThread: DynamicVariable[Boolean] = new DynamicVariable[Boolean](false)
 
-    /** The thread name of Spark listener bus */
+    /**
+      * Spark侦听器总线的线程名称
+      *
+      * The thread name of Spark listener bus
+      */
     val name = "SparkListenerBus"
 }
 
