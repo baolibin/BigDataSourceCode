@@ -29,6 +29,8 @@ private[spark] class PartitionPruningRDDPartition(idx: Int, val parentSplit: Par
 
 
 /**
+  * 表示PartitionPrunningRDD与其父级之间的依赖关系。在这个在这种情况下，子RDD包含父RDD的分区的子集。
+  *
   * Represents a dependency between the PartitionPruningRDD and its parent. In this
   * case, the child RDD contains a subset of partitions of the parents'.
   */

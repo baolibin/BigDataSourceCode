@@ -52,6 +52,8 @@ private[spark] class ActiveJob(
                                   val properties: Properties) {
 
     /**
+      * 我们需要为此作业计算的分区数。注意，对于first（）和lookup（）等操作，结果阶段可能不需要计算其目标RDD中的所有分区。
+      *
       * Number of partitions we need to compute for this job. Note that result stages may not need
       * to compute all partitions in their target RDD, for actions like first() and lookup().
       */
