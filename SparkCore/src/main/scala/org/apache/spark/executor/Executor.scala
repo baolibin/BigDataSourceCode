@@ -53,13 +53,13 @@ import scala.util.control.NonFatal
   * except in the case of Mesos fine-grained mode.
   */
 private[spark] class Executor(
-                                     executorId: String,
-                                     executorHostname: String,
-                                     env: SparkEnv,
-                                     userClassPath: Seq[URL] = Nil,
-                                     isLocal: Boolean = false,
-                                     uncaughtExceptionHandler: UncaughtExceptionHandler = SparkUncaughtExceptionHandler)
-        extends Logging {
+                                 executorId: String,
+                                 executorHostname: String,
+                                 env: SparkEnv,
+                                 userClassPath: Seq[URL] = Nil,
+                                 isLocal: Boolean = false,
+                                 uncaughtExceptionHandler: UncaughtExceptionHandler = SparkUncaughtExceptionHandler)
+    extends Logging {
 
     logInfo(s"Starting executor ID $executorId on host $executorHostname")
 
@@ -90,16 +90,16 @@ private[spark] class Executor(
     // Start worker thread pool
     private val threadPool = {
         val threadFactory = new ThreadFactoryBuilder()
-                .setDaemon(true)
-                .setNameFormat("Executor task launch worker-%d")
-                .setThreadFactory(new ThreadFactory {
-                    override def newThread(r: Runnable): Thread =
-                    // Use UninterruptibleThread to run tasks so that we can allow running codes without being
-                    // interrupted by `Thread.interrupt()`. Some issues, such as KAFKA-1894, HADOOP-10622,
-                    // will hang forever if some methods are interrupted.
-                        new UninterruptibleThread(r, "unused") // thread name will be set by ThreadFactoryBuilder
-                })
-                .build()
+            .setDaemon(true)
+            .setNameFormat("Executor task launch worker-%d")
+            .setThreadFactory(new ThreadFactory {
+                override def newThread(r: Runnable): Thread =
+                // Use UninterruptibleThread to run tasks so that we can allow running codes without being
+                // interrupted by `Thread.interrupt()`. Some issues, such as KAFKA-1894, HADOOP-10622,
+                // will hang forever if some methods are interrupted.
+                    new UninterruptibleThread(r, "unused") // thread name will be set by ThreadFactoryBuilder
+            })
+            .build()
         Executors.newCachedThreadPool(threadFactory).asInstanceOf[ThreadPoolExecutor]
     }
     private val executorSource = new ExecutorSource(threadPool, executorId)
@@ -181,6 +181,8 @@ private[spark] class Executor(
     }
 
     /**
+      * 函数终止执行器中正在运行的任务。这可以由执行器后端调用，以终止任务，而不是关闭JVM。
+      *
       * Function to kill the running tasks in an executor.
       * This can be called by executor back-ends to kill the
       * tasks instead of taking the JVM down.
@@ -234,6 +236,8 @@ private[spark] class Executor(
     private[executor] def numRunningTasks: Int = runningTasks.size()
 
     /**
+      * 创建用于任务的ClassLoader，将用户指定的任何JAR或解释器创建的任何类添加到搜索路径
+      *
       * Create a ClassLoader for use in tasks, adding any JARs specified by the user or any classes
       * created by the interpreter to the search path
       */
@@ -269,7 +273,7 @@ private[spark] class Executor(
             try {
                 val _userClassPathFirst: java.lang.Boolean = userClassPathFirst
                 val klass = Utils.classForName("org.apache.org.apache.spark.repl.ExecutorClassLoader")
-                        .asInstanceOf[Class[_ <: ClassLoader]]
+                    .asInstanceOf[Class[_ <: ClassLoader]]
                 val constructor = klass.getConstructor(classOf[SparkConf], classOf[SparkEnv],
                     classOf[String], classOf[ClassLoader], classOf[Boolean])
                 constructor.newInstance(conf, env, classUri, parent, _userClassPathFirst)
@@ -302,8 +306,8 @@ private[spark] class Executor(
             for ((name, timestamp) <- newJars) {
                 val localName = new URI(name).getPath.split("/").last
                 val currentTimeStamp = currentJars.get(name)
-                        .orElse(currentJars.get(localName))
-                        .getOrElse(-1L)
+                    .orElse(currentJars.get(localName))
+                    .getOrElse(-1L)
                 if (currentTimeStamp < timestamp) {
                     logInfo("Fetching " + name + " with timestamp " + timestamp)
                     // Fetch file with useCache mode, close cache for local mode.
@@ -371,7 +375,7 @@ private[spark] class Executor(
                 heartbeatFailures += 1
                 if (heartbeatFailures >= HEARTBEAT_MAX_FAILURES) {
                     logError(s"Exit as unable to send heartbeats to driver " +
-                            s"more than $HEARTBEAT_MAX_FAILURES times")
+                        s"more than $HEARTBEAT_MAX_FAILURES times")
                     System.exit(ExecutorExitCode.HEARTBEAT_FAILURE)
                 }
         }
@@ -386,9 +390,9 @@ private[spark] class Executor(
       * 运行中task对应的类
       */
     class TaskRunner(
-                            execBackend: ExecutorBackend,
-                            private val taskDescription: TaskDescription)
-            extends Runnable {
+                        execBackend: ExecutorBackend,
+                        private val taskDescription: TaskDescription)
+        extends Runnable {
 
         val taskId = taskDescription.taskId
         val threadName = s"Executor task launch worker for task $taskId"
@@ -496,7 +500,7 @@ private[spark] class Executor(
                     if (releasedLocks.nonEmpty && !threwException) {
                         val errMsg =
                             s"${releasedLocks.size} block locks were not released by TID = $taskId:\n" +
-                                    releasedLocks.mkString("[", ", ", "]")
+                                releasedLocks.mkString("[", ", ", "]")
                         if (conf.getBoolean("org.apache.spark.storage.exceptionOnPinLeak", false)) {
                             throw new SparkException(errMsg)
                         } else {
@@ -509,8 +513,8 @@ private[spark] class Executor(
                     // other exceptions.  Its *possible* this is what the user meant to do (though highly
                     // unlikely).  So we will log an error and keep going.
                     logError(s"TID ${taskId} completed successfully though internally it encountered " +
-                            s"unrecoverable fetch failures!  Most likely this means user code is incorrectly " +
-                            s"swallowing Spark's internal ${classOf[FetchFailedException]}", fetchFailure)
+                        s"unrecoverable fetch failures!  Most likely this means user code is incorrectly " +
+                        s"swallowing Spark's internal ${classOf[FetchFailedException]}", fetchFailure)
                 }
                 val taskFinish = System.currentTimeMillis()
                 val taskFinishCpu = if (threadMXBean.isCurrentThreadCpuTimeSupported) {
@@ -549,8 +553,8 @@ private[spark] class Executor(
                 val serializedResult: ByteBuffer = {
                     if (maxResultSize > 0 && resultSize > maxResultSize) {
                         logWarning(s"Finished $taskName (TID $taskId). Result is larger than maxResultSize " +
-                                s"(${Utils.bytesToString(resultSize)} > ${Utils.bytesToString(maxResultSize)}), " +
-                                s"dropping it.")
+                            s"(${Utils.bytesToString(resultSize)} > ${Utils.bytesToString(maxResultSize)}), " +
+                            s"dropping it.")
                         ser.serialize(new IndirectTaskResult[Any](TaskResultBlockId(taskId), resultSize))
                     } else if (resultSize > maxDirectResultSize) {
                         val blockId = TaskResultBlockId(taskId)
@@ -578,9 +582,9 @@ private[spark] class Executor(
                         // and threw something else.  Regardless, we treat it as a fetch failure.
                         val fetchFailedCls = classOf[FetchFailedException].getName
                         logWarning(s"TID ${taskId} encountered a ${fetchFailedCls} and " +
-                                s"failed, but the ${fetchFailedCls} was hidden by another " +
-                                s"exception.  Spark is handling this like a fetch failure and ignoring the " +
-                                s"other exception: $t")
+                            s"failed, but the ${fetchFailedCls} was hidden by another " +
+                            s"exception.  Spark is handling this like a fetch failure and ignoring the " +
+                            s"other exception: $t")
                     }
                     setTaskFinishedAndClearInterruptStatus()
                     execBackend.statusUpdate(taskId, TaskState.FAILED, ser.serialize(reason))
@@ -591,7 +595,7 @@ private[spark] class Executor(
                     execBackend.statusUpdate(taskId, TaskState.KILLED, ser.serialize(TaskKilled(t.reason)))
 
                 case _: InterruptedException | NonFatal(_) if
-                task != null && task.reasonIfKilled.isDefined =>
+                    task != null && task.reasonIfKilled.isDefined =>
                     val killReason = task.reasonIfKilled.getOrElse("unknown reason")
                     logInfo(s"Executor interrupted and killed $taskName (TID $taskId), reason: $killReason")
                     setTaskFinishedAndClearInterruptStatus()
@@ -688,10 +692,10 @@ private[spark] class Executor(
       * if the supervised task never exits.
       */
     private class TaskReaper(
-                                    taskRunner: TaskRunner,
-                                    val interruptThread: Boolean,
-                                    val reason: String)
-            extends Runnable {
+                                taskRunner: TaskRunner,
+                                val interruptThread: Boolean,
+                                val reason: String)
+        extends Runnable {
 
         private[this] val taskId: Long = taskRunner.taskId
 
@@ -753,13 +757,13 @@ private[spark] class Executor(
                 if (!taskRunner.isFinished && timeoutExceeded()) {
                     if (isLocal) {
                         logError(s"Killed task $taskId could not be stopped within $killTimeoutMs ms; " +
-                                "not killing JVM because we are running in local mode.")
+                            "not killing JVM because we are running in local mode.")
                     } else {
                         // In non-local-mode, the exception thrown here will bubble up to the uncaught exception
                         // handler and cause the executor JVM to exit.
                         throw new SparkException(
                             s"Killing executor JVM because killed task $taskId could not be stopped within " +
-                                    s"$killTimeoutMs ms.")
+                                s"$killTimeoutMs ms.")
                     }
                 }
             } finally {
