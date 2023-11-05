@@ -263,6 +263,8 @@ private[spark] class Executor(
     }
 
     /**
+      * 如果REPL正在使用中，则添加另一个ClassLoader，它将读取REPL定义的新类作为用户类型代码
+      *
       * If the REPL is in use, add another ClassLoader that will read
       * new classes defined by the REPL as the user types code
       */
@@ -289,6 +291,8 @@ private[spark] class Executor(
     }
 
     /**
+      * 如果我们从SparkContext收到一组新的文件和JAR，请下载任何丢失的依赖项。还将我们获取的任何新JAR添加到类加载器中。
+      *
       * Download any missing dependencies if we receive a new set of files and JARs from the
       * SparkContext. Also adds any new JARs we fetched to the class loader.
       */
