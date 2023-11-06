@@ -385,7 +385,11 @@ private[spark] class Executor(
         }
     }
 
-    /** Returns the total amount of time this JVM process has spent in garbage collection. */
+    /**
+      * 返回此JVM进程在垃圾收集中花费的总时间。
+      *
+      * Returns the total amount of time this JVM process has spent in garbage collection.
+      */
     private def computeTotalGcTime(): Long = {
         ManagementFactory.getGarbageCollectorMXBeans.asScala.map(_.getCollectionTime).sum
     }
@@ -401,7 +405,11 @@ private[spark] class Executor(
         val taskId = taskDescription.taskId
         val threadName = s"Executor task launch worker for task $taskId"
         private val taskName = taskDescription.name
-        /** How much the JVM process has spent in GC when the task starts to run. */
+        /**
+          * 当任务开始运行时，JVM进程在GC中花费了多少
+          *
+          * How much the JVM process has spent in GC when the task starts to run.
+          */
         @volatile var startGCTime: Long = _
         /**
           * The task to run. This will be set in run() by deserializing the task binary coming
