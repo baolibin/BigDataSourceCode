@@ -412,11 +412,17 @@ private[spark] class Executor(
           */
         @volatile var startGCTime: Long = _
         /**
+          * 要运行的任务。这将在run（）中通过反序列化来自驱动程序的任务二进制文件来设置。一旦设置好，就永远不会更改。
+          *
           * The task to run. This will be set in run() by deserializing the task binary coming
           * from the driver. Once it is set, it will never be changed.
           */
         @volatile var task: Task[Any] = _
-        /** If specified, this task has been killed and this option contains the reason. */
+        /**
+          * 如果指定，则此任务已被终止，并且此选项包含原因。
+          *
+          * If specified, this task has been killed and this option contains the reason.
+          */
         @volatile private var reasonIfKilled: Option[String] = None
         @volatile private var threadId: Long = -1
         /** Whether this task has been finished. */
