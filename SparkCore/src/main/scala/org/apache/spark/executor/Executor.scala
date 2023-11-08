@@ -667,6 +667,8 @@ private[spark] class Executor(
         }
 
         /**
+          * 将finished标志设置为true并清除当前线程的中断状态
+          *
           * Set the finished flag to true and clear the current thread's interrupt status
           */
         private def setTaskFinishedAndClearInterruptStatus(): Unit = synchronized {
@@ -687,6 +689,8 @@ private[spark] class Executor(
     }
 
     /**
+      * 通过发送中断的标志来监督任务的终止/取消，可以选择发送Thread.interrupt（），并监视任务直到它完成。
+      *
       * Supervises the killing / cancellation of a task by sending the interrupted flag, optionally
       * sending a Thread.interrupt(), and monitoring the task until it finishes.
       *
