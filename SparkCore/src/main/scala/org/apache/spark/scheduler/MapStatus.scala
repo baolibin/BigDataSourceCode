@@ -94,6 +94,8 @@ private[spark] object MapStatus {
 
 
 /**
+  * 跟踪每个块大小的[[MapStatus]]实现。每个块的大小用一个字节表示。
+  *
   * A [[MapStatus]] implementation that tracks the size of each block. Size for each block is
   * represented using a single byte.
   *
@@ -132,6 +134,8 @@ private[spark] class CompressedMapStatus(
 }
 
 /**
+  * 一种[[MapStatus]]实现，用于存储大于org.apache.spark.shuffle.actureBlockThreshold的巨大块的准确大小。它存储其他非空块的平均大小，以及用于跟踪哪些块为空的位图。
+  *
   * A [[MapStatus]] implementation that stores the accurate size of huge blocks, which are larger
   * than org.apache.spark.shuffle.accurateBlockThreshold. It stores the average size of other non-empty blocks,
   * plus a bitmap for tracking which blocks are empty.
