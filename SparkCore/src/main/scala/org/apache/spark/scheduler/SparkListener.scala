@@ -176,6 +176,8 @@ private[spark] case class SparkListenerLogStart(sparkVersion: String) extends Sp
   */
 private[spark] trait SparkHistoryListenerFactory {
     /**
+      * 创建用于重建历史UI的侦听器。
+      *
       * Create listeners used to rebuild the history UI.
       */
     def createListeners(conf: SparkConf, sparkUI: SparkUI): Seq[SparkListener]
@@ -183,6 +185,8 @@ private[spark] trait SparkHistoryListenerFactory {
 
 
 /**
+  * 用于侦听来自Spark调度程序的事件的接口。大多数应用程序可能应该直接扩展SparkListener或SparkFirehoseListener，而不是实现此类。
+  *
   * Interface for listening to events from the Spark scheduler. Most applications should probably
   * extend SparkListener or SparkFirehoseListener directly, rather than implementing this class.
   *
