@@ -195,11 +195,15 @@ private[spark] trait SparkHistoryListenerFactory {
 private[spark] trait SparkListenerInterface {
 
     /**
+      * 当阶段成功或失败时调用，并提供有关已完成阶段的信息。
+      *
       * Called when a stage completes successfully or fails, with information on the completed stage.
       */
     def onStageCompleted(stageCompleted: SparkListenerStageCompleted): Unit
 
     /**
+      * 提交阶段时调用
+      *
       * Called when a stage is submitted
       */
     def onStageSubmitted(stageSubmitted: SparkListenerStageSubmitted): Unit
