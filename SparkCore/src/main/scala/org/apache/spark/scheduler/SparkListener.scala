@@ -209,11 +209,15 @@ private[spark] trait SparkListenerInterface {
     def onStageSubmitted(stageSubmitted: SparkListenerStageSubmitted): Unit
 
     /**
+      * 在任务启动时调用
+      *
       * Called when a task starts
       */
     def onTaskStart(taskStart: SparkListenerTaskStart): Unit
 
     /**
+      * 当任务开始远程获取其结果时调用（对于不需要远程获取结果的任务将不会调用）。
+      *
       * Called when a task begins remotely fetching its result (will not be called for tasks that do
       * not need to fetch the result remotely).
       */
