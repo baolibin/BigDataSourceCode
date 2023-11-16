@@ -224,16 +224,22 @@ private[spark] trait SparkListenerInterface {
     def onTaskGettingResult(taskGettingResult: SparkListenerTaskGettingResult): Unit
 
     /**
+      * 任务结束时调用
+      *
       * Called when a task ends
       */
     def onTaskEnd(taskEnd: SparkListenerTaskEnd): Unit
 
     /**
+      * 作业启动时调用
+      *
       * Called when a job starts
       */
     def onJobStart(jobStart: SparkListenerJobStart): Unit
 
     /**
+      * 作业结束时调用
+      *
       * Called when a job ends
       */
     def onJobEnd(jobEnd: SparkListenerJobEnd): Unit
