@@ -245,16 +245,22 @@ private[spark] trait SparkListenerInterface {
     def onJobEnd(jobEnd: SparkListenerJobEnd): Unit
 
     /**
+      * 在更新环境属性时调用
+      *
       * Called when environment properties have been updated
       */
     def onEnvironmentUpdate(environmentUpdate: SparkListenerEnvironmentUpdate): Unit
 
     /**
+      * 当新的块管理器加入时调用
+      *
       * Called when a new block manager has joined
       */
     def onBlockManagerAdded(blockManagerAdded: SparkListenerBlockManagerAdded): Unit
 
     /**
+      * 在删除现有块管理器时调用
+      *
       * Called when an existing block manager has been removed
       */
     def onBlockManagerRemoved(blockManagerRemoved: SparkListenerBlockManagerRemoved): Unit
