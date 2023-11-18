@@ -266,16 +266,22 @@ private[spark] trait SparkListenerInterface {
     def onBlockManagerRemoved(blockManagerRemoved: SparkListenerBlockManagerRemoved): Unit
 
     /**
+      * 当应用程序手动取消阻止RDD时调用
+      *
       * Called when an RDD is manually unpersisted by the application
       */
     def onUnpersistRDD(unpersistRDD: SparkListenerUnpersistRDD): Unit
 
     /**
+      * 在应用程序启动时调用
+      *
       * Called when the application starts
       */
     def onApplicationStart(applicationStart: SparkListenerApplicationStart): Unit
 
     /**
+      * 在应用程序结束时调用
+      * 
       * Called when the application ends
       */
     def onApplicationEnd(applicationEnd: SparkListenerApplicationEnd): Unit
