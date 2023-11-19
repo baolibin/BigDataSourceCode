@@ -281,17 +281,21 @@ private[spark] trait SparkListenerInterface {
 
     /**
       * 在应用程序结束时调用
-      * 
+      *
       * Called when the application ends
       */
     def onApplicationEnd(applicationEnd: SparkListenerApplicationEnd): Unit
 
     /**
+      * 当驱动程序在检测信号中从执行器接收到任务度量时调用。
+      *
       * Called when the driver receives task metrics from an executor in a heartbeat.
       */
     def onExecutorMetricsUpdate(executorMetricsUpdate: SparkListenerExecutorMetricsUpdate): Unit
 
     /**
+      * 当驱动程序注册新的执行程序时调用。
+      *
       * Called when the driver registers a new executor.
       */
     def onExecutorAdded(executorAdded: SparkListenerExecutorAdded): Unit
