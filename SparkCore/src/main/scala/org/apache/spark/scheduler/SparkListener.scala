@@ -301,16 +301,22 @@ private[spark] trait SparkListenerInterface {
     def onExecutorAdded(executorAdded: SparkListenerExecutorAdded): Unit
 
     /**
+      * 当驱动程序删除执行程序时调用。
+      *
       * Called when the driver removes an executor.
       */
     def onExecutorRemoved(executorRemoved: SparkListenerExecutorRemoved): Unit
 
     /**
+      * 当驱动程序将Spark应用程序的执行程序列入黑名单时调用。
+      *
       * Called when the driver blacklists an executor for a Spark application.
       */
     def onExecutorBlacklisted(executorBlacklisted: SparkListenerExecutorBlacklisted): Unit
 
     /**
+      * 当驱动程序重新启用以前列入黑名单的执行程序时调用。
+      *
       * Called when the driver re-enables a previously blacklisted executor.
       */
     def onExecutorUnblacklisted(executorUnblacklisted: SparkListenerExecutorUnblacklisted): Unit
