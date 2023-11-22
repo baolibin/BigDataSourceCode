@@ -322,11 +322,15 @@ private[spark] trait SparkListenerInterface {
     def onExecutorUnblacklisted(executorUnblacklisted: SparkListenerExecutorUnblacklisted): Unit
 
     /**
+      * 当驱动程序将Spark应用程序的节点列入黑名单时调用。
+      *
       * Called when the driver blacklists a node for a Spark application.
       */
     def onNodeBlacklisted(nodeBlacklisted: SparkListenerNodeBlacklisted): Unit
 
     /**
+      * 当驱动程序重新启用以前列入黑名单的节点时调用。
+      *
       * Called when the driver re-enables a previously blacklisted node.
       */
     def onNodeUnblacklisted(nodeUnblacklisted: SparkListenerNodeUnblacklisted): Unit
