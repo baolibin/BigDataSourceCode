@@ -336,11 +336,15 @@ private[spark] trait SparkListenerInterface {
     def onNodeUnblacklisted(nodeUnblacklisted: SparkListenerNodeUnblacklisted): Unit
 
     /**
+      * 当驱动程序接收到块更新信息时调用。
+      *
       * Called when the driver receives a block update info.
       */
     def onBlockUpdated(blockUpdated: SparkListenerBlockUpdated): Unit
 
     /**
+      * 在发布其他事件（如SQL特定事件）时调用。
+      *
       * Called when other events like SQL-specific events are posted.
       */
     def onOtherEvent(event: SparkListenerEvent): Unit
