@@ -53,13 +53,13 @@ import scala.collection.mutable.HashSet
   *                   RDD was created, for a shuffle map stage, or where the action for a result stage was called.
   */
 private[scheduler] abstract class Stage(
-                                               val id: Int,
-                                               val rdd: RDD[_],
-                                               val numTasks: Int,
-                                               val parents: List[Stage],
-                                               val firstJobId: Int,
-                                               val callSite: CallSite)
-        extends Logging {
+                                           val id: Int,
+                                           val rdd: RDD[_],
+                                           val numTasks: Int,
+                                           val parents: List[Stage],
+                                           val firstJobId: Int,
+                                           val callSite: CallSite)
+    extends Logging {
 
     val numPartitions = rdd.partitions.length
 
@@ -71,13 +71,21 @@ private[scheduler] abstract class Stage(
     val name: String = callSite.shortForm
     val details: String = callSite.longForm
     /**
+      * 由于FetchFailure而失败的阶段尝试ID的集合。我们会跟踪这些失败，以避免在一个阶段因FetchFailure而不断失败时无休止地重试。
+      * 我们跟踪每个失败的尝试ID，以避免在同一阶段的多个任务尝试失败时记录重复的失败（SPARK-5945）。
+      *
       * Set of stage attempt IDs that have failed with a FetchFailure. We keep track of these
       * failures in order to avoid endless retries if a stage keeps failing with a FetchFailure.
       * We keep track of each attempt ID that has failed to avoid recording duplicate failures if
       * multiple tasks from the same stage attempt fail (SPARK-5945).
       */
     val fetchFailedAttemptIds = new HashSet[Int]
-    /** The ID to use for the next new attempt for this stage. */
+    
+    /**
+      * 用于此阶段下一次新尝试的ID
+      *
+      * The ID to use for the next new attempt for this stage.
+      */
     private var nextAttemptId: Int = 0
     /**
       * Pointer to the [[StageInfo]] object for the most recent attempt. This needs to be initialized
@@ -96,8 +104,8 @@ private[scheduler] abstract class Stage(
 
     /** Creates a new attempt for this stage by creating a new StageInfo with a new attempt ID. */
     def makeNewStageAttempt(
-                                   numPartitionsToCompute: Int,
-                                   taskLocalityPreferences: Seq[Seq[TaskLocation]] = Seq.empty): Unit = {
+                               numPartitionsToCompute: Int,
+                               taskLocalityPreferences: Seq[Seq[TaskLocation]] = Seq.empty): Unit = {
         val metrics = new TaskMetrics
         metrics.register(rdd.sparkContext)
         _latestInfo = StageInfo.fromStage(
