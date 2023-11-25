@@ -80,7 +80,7 @@ private[scheduler] abstract class Stage(
       * multiple tasks from the same stage attempt fail (SPARK-5945).
       */
     val fetchFailedAttemptIds = new HashSet[Int]
-    
+
     /**
       * 用于此阶段下一次新尝试的ID
       *
@@ -88,6 +88,9 @@ private[scheduler] abstract class Stage(
       */
     private var nextAttemptId: Int = 0
     /**
+      * 指向最近一次尝试的[[StageInfo]]对象的指针。在实际创建任何尝试之前，需要在此处对其进行初始化，
+      * 因为DAGScheduler使用此StageInfo在作业启动时通知SparkListeners
+      *
       * Pointer to the [[StageInfo]] object for the most recent attempt. This needs to be initialized
       * here, before any attempts have actually been created, because the DAGScheduler uses this
       * StageInfo to tell SparkListeners when a job starts (which happens before any stage attempts
@@ -102,7 +105,11 @@ private[scheduler] abstract class Stage(
         case _ => false
     }
 
-    /** Creates a new attempt for this stage by creating a new StageInfo with a new attempt ID. */
+    /**
+      * 通过使用新的尝试ID创建新的StageInfo来为此阶段创建新的尝试。
+      *
+      * Creates a new attempt for this stage by creating a new StageInfo with a new attempt ID.
+      */
     def makeNewStageAttempt(
                                numPartitionsToCompute: Int,
                                taskLocalityPreferences: Seq[Seq[TaskLocation]] = Seq.empty): Unit = {
