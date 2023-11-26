@@ -39,9 +39,11 @@ import scala.collection.mutable.{HashMap, HashSet}
   * TaskScheduler (e.g. its event handlers). It should not be called from other threads.
   */
 private[scheduler] class TaskSetBlacklist(val conf: SparkConf, val stageId: Int, val clock: Clock)
-        extends Logging {
+    extends Logging {
 
     /**
+      * 从每个执行器到该执行器上的任务失败的映射。这用于此任务集中的黑名单，也会转发到应用级别的[[BlacklistTracker]]如果此任务集成功完成，则列入黑名单。
+      *
       * A map from each executor to the task failures on that executor.  This is used for blacklisting
       * within this taskset, and it is also relayed onto [[BlacklistTracker]] for app-level
       * blacklisting if this taskset completes successfully.
@@ -92,9 +94,9 @@ private[scheduler] class TaskSetBlacklist(val conf: SparkConf, val stageId: Int,
     }
 
     private[scheduler] def updateBlacklistForFailedTask(
-                                                               host: String,
-                                                               exec: String,
-                                                               index: Int): Unit = {
+                                                           host: String,
+                                                           exec: String,
+                                                           index: Int): Unit = {
         val execFailures = execToFailures.getOrElseUpdate(exec, new ExecutorFailuresInTaskSet(host))
         execFailures.updateWithFailure(index, clock.getTimeMillis())
 
