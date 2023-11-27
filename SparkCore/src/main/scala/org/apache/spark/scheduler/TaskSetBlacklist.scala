@@ -54,6 +54,8 @@ private[scheduler] class TaskSetBlacklist(val conf: SparkConf, val stageId: Int,
     private val MAX_FAILURES_PER_EXEC_STAGE = conf.get(config.MAX_FAILURES_PER_EXEC_STAGE)
     private val MAX_FAILED_EXEC_PER_NODE_STAGE = conf.get(config.MAX_FAILED_EXEC_PER_NODE_STAGE)
     /**
+      * 从节点映射到其上所有失败的执行器。需要，因为我们想知道节点上的执行者，即使他们已经去世。
+      * （我们不想麻烦追踪node->execs映射，通常情况下没有任何故障）。
       * Map from node to all executors on it with failures.  Needed because we want to know about
       * executors on a node even after they have died. (We don't want to bother tracking the
       * node -> execs mapping in the usual case when there aren't any failures).
