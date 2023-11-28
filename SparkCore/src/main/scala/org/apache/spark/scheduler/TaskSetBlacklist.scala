@@ -66,6 +66,9 @@ private[scheduler] class TaskSetBlacklist(val conf: SparkConf, val stageId: Int,
     private val blacklistedNodes = new HashSet[String]()
 
     /**
+      * 如果此执行器被列入给定任务的黑名单，则返回true。如果执行器在整个阶段被列入黑名单，或者在整个应用程序中被列入黑清单，则不需要返回true。
+      * 也就是说，在调度器的内部循环中尽可能快地保持这种方法，在那里已经应用了这些过滤器。
+      *
       * Return true if this executor is blacklisted for the given task.  This does *not*
       * need to return true if the executor is blacklisted for the entire stage, or blacklisted
       * for the entire application.  That is to keep this method as fast as possible in the inner-loop
