@@ -139,6 +139,8 @@ private[spark] class CoalescedRDD[T: ClassTag](
 }
 
 /**
+  * 将父RDD（“prev”）的分区合并为更少的分区，以便该RDD的每个分区计算一个或多个父分区。如果父级的分区数大于maxPartitions，则它将产生精确的“maxPartitions”，如果父级较少，则它会产生较少的分区数。
+  *
   * Coalesce the partitions of a parent RDD (`prev`) into fewer partitions, so that each partition of
   * this RDD computes one or more of the parent ones. It will produce exactly `maxPartitions` if the
   * parent had more than maxPartitions, or fewer if the parent had fewer.
@@ -197,6 +199,9 @@ private class DefaultPartitionCoalescer(val balanceSlack: Double = 0.10)
     }
 
     /**
+      * 初始化targetLen分区组。如果有首选位置，则为每组分配一个首选位置。
+      * 这使用优惠券收集器来估计它必须旋转经过多少个首选位置，直到它看到大多数首选位置（2*n log（n））
+      *
       * Initializes targetLen partition groups. If there are preferred locations, each group
       * is assigned a preferredLocation. This uses coupon collector to estimate how many
       * preferredLocations it must rotate through until it has seen most of the preferred
