@@ -35,6 +35,8 @@ import scala.reflect.ClassTag
 class AsyncRDDActions[T: ClassTag](self: RDD[T]) extends Serializable with Logging {
 
     /**
+      * 返回用于计算RDD中元素数的未来值。
+      *
       * Returns a future for counting the number of elements in the RDD.
       */
     def countAsync(): FutureAction[Long] = self.withScope {
@@ -55,6 +57,8 @@ class AsyncRDDActions[T: ClassTag](self: RDD[T]) extends Serializable with Loggi
     }
 
     /**
+      * 返回用于检索此RDD的所有元素的future。
+      *
       * Returns a future for retrieving all elements of this RDD.
       */
     def collectAsync(): FutureAction[Seq[T]] = self.withScope {
