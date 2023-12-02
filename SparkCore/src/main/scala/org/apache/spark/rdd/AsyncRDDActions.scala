@@ -68,6 +68,8 @@ class AsyncRDDActions[T: ClassTag](self: RDD[T]) extends Serializable with Loggi
     }
 
     /**
+      * 返回用于检索RDD的前num个元素的future。
+      *
       * Returns a future for retrieving the first num elements of the RDD.
       */
     def takeAsync(num: Int): FutureAction[Seq[T]] = self.withScope {
@@ -126,6 +128,8 @@ class AsyncRDDActions[T: ClassTag](self: RDD[T]) extends Serializable with Loggi
     }
 
     /**
+      * 将函数f应用于此RDD的所有元素。
+      *
       * Applies a function f to all elements of this RDD.
       */
     def foreachAsync(f: T => Unit): FutureAction[Unit] = self.withScope {
@@ -135,6 +139,8 @@ class AsyncRDDActions[T: ClassTag](self: RDD[T]) extends Serializable with Loggi
     }
 
     /**
+      * 将函数f应用于此RDD的每个分区。
+      *
       * Applies a function f to each partition of this RDD.
       */
     def foreachPartitionAsync(f: Iterator[T] => Unit): FutureAction[Unit] = self.withScope {
