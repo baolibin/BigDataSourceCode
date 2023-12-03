@@ -30,11 +30,11 @@ import scala.concurrent.{Future, Promise}
   * results to the given handler function.
   */
 private[spark] class JobWaiter[T](
-                                         dagScheduler: DAGScheduler,
-                                         val jobId: Int,
-                                         totalTasks: Int,
-                                         resultHandler: (Int, T) => Unit)
-        extends JobListener with Logging {
+                                     dagScheduler: DAGScheduler,
+                                     val jobId: Int,
+                                     totalTasks: Int,
+                                     resultHandler: (Int, T) => Unit)
+    extends JobListener with Logging {
 
     private val finishedTasks = new AtomicInteger(0)
     // If the job is finished, this will be its result. In the case of 0 task jobs (e.g. zero
@@ -47,6 +47,9 @@ private[spark] class JobWaiter[T](
     def completionFuture: Future[Unit] = jobPromise.future
 
     /**
+      * 向DAGScheduler发送信号以取消作业。取消本身是异步处理的。在低级计划程序取消属于此作业的所有任务后，
+      * 它将使此作业失败，并显示SparkException。
+      *
       * Sends a signal to the DAGScheduler to cancel the job. The cancellation itself is handled
       * asynchronously. After the low level scheduler cancels all the tasks belonging to this job, it
       * will fail this job with a SparkException.

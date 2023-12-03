@@ -26,6 +26,8 @@ import scala.collection.mutable.HashMap
   */
 private[scheduler] class ExecutorFailuresInTaskSet(val node: String) {
     /**
+      * 从任务集中任务的索引映射到此执行器上失败的次数和最近的失败时间。
+      *
       * Mapping from index of the tasks in the taskset, to the number of times it has failed on this
       * executor and the most recent failure time.
       */
