@@ -24,44 +24,48 @@ import org.apache.spark.network.client.RpcResponseCallback
 import org.apache.spark.rpc.{RpcAddress, RpcCallContext}
 
 private[netty] abstract class NettyRpcCallContext(override val senderAddress: RpcAddress)
-  extends RpcCallContext with Logging {
+    extends RpcCallContext with Logging {
 
-  protected def send(message: Any): Unit
+    protected def send(message: Any): Unit
 
-  override def reply(response: Any): Unit = {
-    send(response)
-  }
+    override def reply(response: Any): Unit = {
+        send(response)
+    }
 
-  override def sendFailure(e: Throwable): Unit = {
-    send(RpcFailure(e))
-  }
+    override def sendFailure(e: Throwable): Unit = {
+        send(RpcFailure(e))
+    }
 
 }
 
 /**
- * If the sender and the receiver are in the same process, the reply can be sent back via `Promise`.
- */
+  * 如果发送方和接收方处于同一过程中，则可以通过“Promise”发回回复。
+  *
+  * If the sender and the receiver are in the same process, the reply can be sent back via `Promise`.
+  */
 private[netty] class LocalNettyRpcCallContext(
-    senderAddress: RpcAddress,
-    p: Promise[Any])
-  extends NettyRpcCallContext(senderAddress) {
+                                                 senderAddress: RpcAddress,
+                                                 p: Promise[Any])
+    extends NettyRpcCallContext(senderAddress) {
 
-  override protected def send(message: Any): Unit = {
-    p.success(message)
-  }
+    override protected def send(message: Any): Unit = {
+        p.success(message)
+    }
 }
 
 /**
- * A [[RpcCallContext]] that will call [[RpcResponseCallback]] to send the reply back.
- */
+  * 将调用[[RpcResponseCallback]]以发回回复的[[RpcCallContext]]。
+  *
+  * A [[RpcCallContext]] that will call [[RpcResponseCallback]] to send the reply back.
+  */
 private[netty] class RemoteNettyRpcCallContext(
-    nettyEnv: NettyRpcEnv,
-    callback: RpcResponseCallback,
-    senderAddress: RpcAddress)
-  extends NettyRpcCallContext(senderAddress) {
+                                                  nettyEnv: NettyRpcEnv,
+                                                  callback: RpcResponseCallback,
+                                                  senderAddress: RpcAddress)
+    extends NettyRpcCallContext(senderAddress) {
 
-  override protected def send(message: Any): Unit = {
-    val reply = nettyEnv.serialize(message)
-    callback.onSuccess(reply)
-  }
+    override protected def send(message: Any): Unit = {
+        val reply = nettyEnv.serialize(message)
+        callback.onSuccess(reply)
+    }
 }
