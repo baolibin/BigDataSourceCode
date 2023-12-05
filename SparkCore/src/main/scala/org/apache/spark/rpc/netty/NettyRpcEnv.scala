@@ -540,6 +540,8 @@ private[netty] class NettyRpcEndpointRef(
 }
 
 /**
+  * 从发送方发送给接收方的消息。
+  *
   * The message that is sent from the sender to the receiver.
   *
   * @param senderAddress the sender address. It's `null` if this message is from a client
@@ -616,6 +618,8 @@ private[netty] object RequestMessage {
 }
 
 /**
+  * 指示接收器侧发生某种故障的响应。
+  *
   * A response that indicates some failure happens in the receiver side.
   */
 private[netty] case class RpcFailure(e: Throwable)
