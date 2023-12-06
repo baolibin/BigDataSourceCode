@@ -625,6 +625,8 @@ private[netty] object RequestMessage {
 private[netty] case class RpcFailure(e: Throwable)
 
 /**
+  * 将传入的RPC分派到已注册的终结点。
+  *
   * Dispatches incoming RPCs to registered endpoints.
   *
   * The handler keeps track of all client instances that communicate with it, so that the RpcEnv

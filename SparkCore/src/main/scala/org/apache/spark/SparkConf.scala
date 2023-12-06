@@ -210,7 +210,11 @@ class SparkConf(loadDefaults: Boolean) extends Cloneable with Logging with Seria
         this
     }
 
-    /** Gets all the avro schemas in the configuration used in the generic Avro record serializer */
+    /**
+      * 获取通用avro记录序列化程序中使用的配置中的所有avro架构
+      *
+      * Gets all the avro schemas in the configuration used in the generic Avro record serializer
+      */
     def getAvroSchema: Map[Long, String] = {
         getAll.filter { case (k, v) => k.startsWith(avroNamespace) }
             .map { case (k, v) => (k.substring(avroNamespace.length).toLong, v) }
@@ -258,6 +262,8 @@ class SparkConf(loadDefaults: Boolean) extends Cloneable with Logging with Seria
     }
 
     /**
+      * 获取以毫秒为单位的时间参数，如果未设置，则返回默认值。如果没有提供后缀，则假定为毫秒。
+      *
       * Get a time parameter as milliseconds, falling back to a default if not set. If no
       * suffix is provided then milliseconds are assumed.
       */
