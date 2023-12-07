@@ -252,6 +252,8 @@ class SparkConf(loadDefaults: Boolean) extends Cloneable with Logging with Seria
     }
 
     /**
+      * 获取以毫秒为单位的时间参数；如果未设置，则抛出NoSuchElementException。如果没有提供后缀，则假定为毫秒。
+      *
       * Get a time parameter as milliseconds; throws a NoSuchElementException if it's not set. If no
       * suffix is provided then milliseconds are assumed.
       *
@@ -272,6 +274,8 @@ class SparkConf(loadDefaults: Boolean) extends Cloneable with Logging with Seria
     }
 
     /**
+      * 获取以字节为单位的大小参数；如果未设置，则抛出NoSuchElementException。如果没有提供后缀，则假定为字节。
+      *
       * Get a size parameter as bytes; throws a NoSuchElementException if it's not set. If no
       * suffix is provided then bytes are assumed.
       *
@@ -282,6 +286,8 @@ class SparkConf(loadDefaults: Boolean) extends Cloneable with Logging with Seria
     }
 
     /**
+      * 获取以字节为单位的大小参数，如果未设置，则返回到默认值。如果没有提供后缀，则假定为字节。
+      *
       * Get a size parameter as bytes, falling back to a default if not set. If no
       * suffix is provided then bytes are assumed.
       */
