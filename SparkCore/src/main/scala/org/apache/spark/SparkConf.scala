@@ -296,6 +296,8 @@ class SparkConf(loadDefaults: Boolean) extends Cloneable with Logging with Seria
     }
 
     /**
+      * 获取以字节为单位的大小参数，如果未设置，则返回到默认值。
+      *
       * Get a size parameter as bytes, falling back to a default if not set.
       */
     def getSizeAsBytes(key: String, defaultValue: Long): Long = {
@@ -303,6 +305,8 @@ class SparkConf(loadDefaults: Boolean) extends Cloneable with Logging with Seria
     }
 
     /**
+      * 获取一个大小参数为Kibiytes；如果未设置，则抛出NoSuchElementException。如果没有提供后缀，则假定为Kibiytes。
+      *
       * Get a size parameter as Kibibytes; throws a NoSuchElementException if it's not set. If no
       * suffix is provided then Kibibytes are assumed.
       *
