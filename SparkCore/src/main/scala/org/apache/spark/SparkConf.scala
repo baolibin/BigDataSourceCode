@@ -317,6 +317,8 @@ class SparkConf(loadDefaults: Boolean) extends Cloneable with Logging with Seria
     }
 
     /**
+      * 获取一个大小参数Kibiytes，如果未设置，则返回默认值。如果没有提供后缀，则假定为Kibiytes。
+      *
       * Get a size parameter as Kibibytes, falling back to a default if not set. If no
       * suffix is provided then Kibibytes are assumed.
       */
@@ -324,7 +326,11 @@ class SparkConf(loadDefaults: Boolean) extends Cloneable with Logging with Seria
         Utils.byteStringAsKb(get(key, defaultValue))
     }
 
-    /** Get a parameter, falling back to a default if not set */
+    /**
+      * 获取一个参数，如果未设置，则返回到默认值
+      *
+      * Get a parameter, falling back to a default if not set
+      */
     def get(key: String, defaultValue: String): String = {
         getOption(key).getOrElse(defaultValue)
     }
