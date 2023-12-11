@@ -336,6 +336,8 @@ class SparkConf(loadDefaults: Boolean) extends Cloneable with Logging with Seria
     }
 
     /**
+      * 获取一个大小参数，单位为兆字节；如果未设置，则抛出NoSuchElementException。如果没有提供后缀，则假定为兆字节。
+      *
       * Get a size parameter as Mebibytes; throws a NoSuchElementException if it's not set. If no
       * suffix is provided then Mebibytes are assumed.
       *
@@ -345,13 +347,18 @@ class SparkConf(loadDefaults: Boolean) extends Cloneable with Logging with Seria
         Utils.byteStringAsMb(get(key))
     }
 
-    /** Get a parameter; throws a NoSuchElementException if it's not set */
+    /**
+      * 获取一个参数；如果未设置，则引发NoSuchElementException
+      *
+      * Get a parameter; throws a NoSuchElementException if it's not set
+      */
     def get(key: String): String = {
         getOption(key).getOrElse(throw new NoSuchElementException(key))
     }
 
     /**
       * 根据Key返回Option参数值。
+      *
       * Get a parameter as an Option
       */
     def getOption(key: String): Option[String] = {
@@ -359,6 +366,8 @@ class SparkConf(loadDefaults: Boolean) extends Cloneable with Logging with Seria
     }
 
     /**
+      * 获取一个大小参数为兆字节，如果未设置，则返回默认值。如果没有提供后缀，则假定为兆字节。
+      *
       * Get a size parameter as Mebibytes, falling back to a default if not set. If no
       * suffix is provided then Mebibytes are assumed.
       */
