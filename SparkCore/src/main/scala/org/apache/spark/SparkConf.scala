@@ -376,6 +376,8 @@ class SparkConf(loadDefaults: Boolean) extends Cloneable with Logging with Seria
     }
 
     /**
+      * 获取一个大小参数为吉比特；如果未设置，则抛出NoSuchElementException。如果没有提供后缀，则假定为吉比特。
+      *
       * Get a size parameter as Gibibytes; throws a NoSuchElementException if it's not set. If no
       * suffix is provided then Gibibytes are assumed.
       *
@@ -386,6 +388,8 @@ class SparkConf(loadDefaults: Boolean) extends Cloneable with Logging with Seria
     }
 
     /**
+      * 获取一个大小参数为吉比特，如果未设置，则返回到默认值。如果没有提供后缀，则假定为吉比特。
+      *
       * Get a size parameter as Gibibytes, falling back to a default if not set. If no
       * suffix is provided then Gibibytes are assumed.
       */
