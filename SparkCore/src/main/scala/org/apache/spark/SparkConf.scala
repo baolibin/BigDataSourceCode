@@ -397,12 +397,20 @@ class SparkConf(loadDefaults: Boolean) extends Cloneable with Logging with Seria
         Utils.byteStringAsGb(get(key, defaultValue))
     }
 
-    /** Get a parameter as an integer, falling back to a default if not set */
+    /**
+      * 将参数作为整数获取，如果未设置，则返回默认值
+      *
+      * Get a parameter as an integer, falling back to a default if not set
+      */
     def getInt(key: String, defaultValue: Int): Int = {
         getOption(key).map(_.toInt).getOrElse(defaultValue)
     }
 
-    /** Get a parameter as a long, falling back to a default if not set */
+    /**
+      * 获取一个长参数，如果未设置，则返回到默认值
+      *
+      * Get a parameter as a long, falling back to a default if not set
+      */
     def getLong(key: String, defaultValue: Long): Long = {
         getOption(key).map(_.toLong).getOrElse(defaultValue)
     }
