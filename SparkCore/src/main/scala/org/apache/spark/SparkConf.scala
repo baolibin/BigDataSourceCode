@@ -415,12 +415,20 @@ class SparkConf(loadDefaults: Boolean) extends Cloneable with Logging with Seria
         getOption(key).map(_.toLong).getOrElse(defaultValue)
     }
 
-    /** Get a parameter as a double, falling back to a default if not set */
+    /**
+      * 获取一个参数作为双精度，如果未设置则返回到默认值
+      *
+      * Get a parameter as a double, falling back to a default if not set
+      */
     def getDouble(key: String, defaultValue: Double): Double = {
         getOption(key).map(_.toDouble).getOrElse(defaultValue)
     }
 
-    /** Get a parameter as a boolean, falling back to a default if not set */
+    /**
+      * 将参数作为布尔值获取，如果未设置，则返回默认值
+      *
+      * Get a parameter as a boolean, falling back to a default if not set
+      */
     def getBoolean(key: String, defaultValue: Boolean): Boolean = {
         getOption(key).map(_.toBoolean).getOrElse(defaultValue)
     }
