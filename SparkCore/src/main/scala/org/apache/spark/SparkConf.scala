@@ -433,12 +433,18 @@ class SparkConf(loadDefaults: Boolean) extends Cloneable with Logging with Seria
         getOption(key).map(_.toBoolean).getOrElse(defaultValue)
     }
 
-    /** Get all executor environment variables set on this SparkConf */
+    /**
+      * 获取此SparkConf上设置的所有执行器环境变量
+      *
+      * Get all executor environment variables set on this SparkConf
+      */
     def getExecutorEnv: Seq[(String, String)] = {
         getAllWithPrefix("org.apache.spark.executorEnv.")
     }
 
     /**
+      * 获取所有以`prefix开头的参数`
+      *
       * Get all parameters that start with `prefix`
       */
     def getAllWithPrefix(prefix: String): Array[(String, String)] = {
