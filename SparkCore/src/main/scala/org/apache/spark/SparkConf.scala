@@ -453,12 +453,18 @@ class SparkConf(loadDefaults: Boolean) extends Cloneable with Logging with Seria
     }
 
     /**
+      * 返回Spark应用程序id，该id在TaskScheduler注册后在驱动程序中有效，并从Executor中开始生效。
+      *
       * Returns the Spark application id, valid in the Driver after TaskScheduler registration and
       * from the start in the Executor.
       */
     def getAppId: String = get("org.apache.spark.app.id")
 
-    /** Does the configuration contain a given parameter? */
+    /**
+      * 配置是否包含给定的参数
+      *
+      * Does the configuration contain a given parameter?
+      */
     def contains(key: String): Boolean = {
         settings.containsKey(key) ||
             configsWithAlternatives.get(key).toSeq.flatten.exists { alt => contains(alt.key) }
