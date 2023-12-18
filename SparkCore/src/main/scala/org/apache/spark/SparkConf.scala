@@ -484,6 +484,8 @@ class SparkConf(loadDefaults: Boolean) extends Cloneable with Logging with Seria
     }
 
     /**
+      * 返回一个字符串，列出所有键和值，每行一个。这对于打印配置以进行调试非常有用。
+      *
       * Return a string listing all keys and values, one per line. This is useful to print the
       * configuration out for debugging.
       */
@@ -514,6 +516,7 @@ class SparkConf(loadDefaults: Boolean) extends Cloneable with Logging with Seria
 
     /**
       * 设置KV值
+      *
       * Set a configuration variable.
       */
     def set(key: String, value: String): SparkConf = {
@@ -552,7 +555,11 @@ class SparkConf(loadDefaults: Boolean) extends Cloneable with Logging with Seria
         remove(entry.key)
     }
 
-    /** Remove a parameter from the configuration */
+    /**
+      * 从配置中删除参数
+      *
+      * Remove a parameter from the configuration
+      */
     def remove(key: String): SparkConf = {
         settings.remove(key)
         this
