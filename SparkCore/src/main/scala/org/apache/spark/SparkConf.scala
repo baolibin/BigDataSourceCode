@@ -566,6 +566,8 @@ class SparkConf(loadDefaults: Boolean) extends Cloneable with Logging with Seria
     }
 
     /**
+      * 检索预定义配置项的值。
+      *
       * Retrieves the value of a pre-defined configuration entry.
       *
       * - This is an internal Spark API.
@@ -579,6 +581,8 @@ class SparkConf(loadDefaults: Boolean) extends Cloneable with Logging with Seria
     private[spark] def contains(entry: ConfigEntry[_]): Boolean = contains(entry.key)
 
     /**
+      * 通过使用它而不是System.getenv（），可以在单元测试中模拟环境变量。
+      *
       * By using this instead of System.getenv(), environment variables can be mocked
       * in unit tests.
       */
