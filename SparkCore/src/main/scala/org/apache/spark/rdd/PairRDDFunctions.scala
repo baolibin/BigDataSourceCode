@@ -139,6 +139,8 @@ class PairRDDFunctions[K, V](self: RDD[(K, V)])
     }
 
     /**
+      * 使用给定的组合函数和中性“零值”聚合每个键的值。
+      *
       * Aggregate the values of each key, using given combine functions and a neutral "zero value".
       * This function can return a different result type, U, than the type of the values in this RDD,
       * V. Thus, we need one operation for merging a V into a U and one operation for merging two U's,
@@ -330,6 +332,9 @@ class PairRDDFunctions[K, V](self: RDD[(K, V)])
     }
 
     /**
+      * 使用关联和交换的reduce函数合并每个键的值。这也将在将结果发送到reducer之前在每个映射器上本地执行合并，类似于MapReduce中的“合并器”。
+      * 输出将使用现有的partitioner/parallelism级别进行哈希分区。
+      *
       * Merge the values for each key using an associative and commutative reduce function. This will
       * also perform the merging locally on each mapper before sending results to a reducer, similarly
       * to a "combiner" in MapReduce. Output will be hash-partitioned with the existing partitioner/
