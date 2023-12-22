@@ -478,6 +478,8 @@ class PairRDDFunctions[K, V](self: RDD[(K, V)])
     }
 
     /**
+      * 将RDD中每个键的值分组为一个序列。Hash将生成的RDD与划分为“numPartitions”分区。每组中元素的顺序不能保证，甚至每次评估所得RDD时可能会有所不同。
+      *
       * Group the values for each key in the RDD into a single sequence. Hash-partitions the
       * resulting RDD with into `numPartitions` partitions. The ordering of elements within
       * each group is not guaranteed, and may even differ each time the resulting RDD is evaluated.
@@ -493,6 +495,8 @@ class PairRDDFunctions[K, V](self: RDD[(K, V)])
     }
 
     /**
+      * 将RDD中每个键的值分组为一个序列。允许通过传递Partitioner来控制生成的键值对RDD的分区。
+      *
       * Group the values for each key in the RDD into a single sequence. Allows controlling the
       * partitioning of the resulting key-value pair RDD by passing a Partitioner.
       * The ordering of elements within each group is not guaranteed, and may even differ
