@@ -521,6 +521,8 @@ class PairRDDFunctions[K, V](self: RDD[(K, V)])
     }
 
     /**
+      * 泛型函数，用于使用一组自定义聚合函数组合每个键的元素。对于“组合类型”C，将RDD[（K，V）]转换为RDD[类型（K，C）]的结果
+      *
       * :: Experimental ::
       * Generic function to combine the elements for each key using a custom set of aggregation
       * functions. Turns an RDD[(K, V)] into a result of type RDD[(K, C)], for a "combined type" C
@@ -590,6 +592,8 @@ class PairRDDFunctions[K, V](self: RDD[(K, V)])
     private[spark] def keyClass: Class[_] = kt.runtimeClass
 
     /**
+      * combineByKeyWithClassTag的简化版本，该版本使用现有的partitioner/parallelism级别对生成的RDD进行哈希分区。此方法用于向后兼容性。它不向shuffle提供组合器类标签信息。
+      *
       * Simplified version of combineByKeyWithClassTag that hash-partitions the resulting RDD using the
       * existing partitioner/parallelism level. This method is here for backward compatibility. It
       * does not provide combiner classtag information to the shuffle.
