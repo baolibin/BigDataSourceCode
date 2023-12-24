@@ -608,6 +608,8 @@ class PairRDDFunctions[K, V](self: RDD[(K, V)])
     }
 
     /**
+      * combineByKeyWithClassTag的简化版本，该版本使用现有的partitioner/parallelism级别对生成的RDD进行哈希分区。
+      *
       * :: Experimental ::
       * Simplified version of combineByKeyWithClassTag that hash-partitions the resulting RDD using the
       * existing partitioner/parallelism level.
@@ -621,6 +623,9 @@ class PairRDDFunctions[K, V](self: RDD[(K, V)])
     }
 
     /**
+      * 将RDD中每个键的值分组为一个序列。Hash使用现有的partitioner/parallelism级别对生成的RDD进行分区。
+      * 每组中元素的顺序不能保证，甚至每次评估所得RDD时可能会有所不同。
+      *
       * Group the values for each key in the RDD into a single sequence. Hash-partitions the
       * resulting RDD with the existing partitioner/parallelism level. The ordering of elements
       * within each group is not guaranteed, and may even differ each time the resulting RDD is
