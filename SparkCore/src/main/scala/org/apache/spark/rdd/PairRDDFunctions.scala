@@ -640,6 +640,9 @@ class PairRDDFunctions[K, V](self: RDD[(K, V)])
     }
 
     /**
+      * 返回一个RDD，该RDD包含“this”和“other”中具有匹配关键字的所有元素对。
+      * 每对元素将作为（k，（v1，v2））元组返回，其中（k，v1）在“this”中，并且（k，v2）在“其他”中。在集群中执行哈希联接。
+      *
       * Return an RDD containing all pairs of elements with matching keys in `this` and `other`. Each
       * pair of elements will be returned as a (k, (v1, v2)) tuple, where (k, v1) is in `this` and
       * (k, v2) is in `other`. Performs a hash join across the cluster.
@@ -649,6 +652,8 @@ class PairRDDFunctions[K, V](self: RDD[(K, V)])
     }
 
     /**
+      * 返回一个RDD，该RDD包含“this”和“other”中具有匹配关键字的所有元素对。
+      *
       * Return an RDD containing all pairs of elements with matching keys in `this` and `other`. Each
       * pair of elements will be returned as a (k, (v1, v2)) tuple, where (k, v1) is in `this` and
       * (k, v2) is in `other`. Performs a hash join across the cluster.
