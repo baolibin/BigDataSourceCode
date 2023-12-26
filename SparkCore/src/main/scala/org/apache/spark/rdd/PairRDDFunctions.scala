@@ -663,6 +663,8 @@ class PairRDDFunctions[K, V](self: RDD[(K, V)])
     }
 
     /**
+      * 返回一个RDD，该RDD包含“this”和“other”中具有匹配关键字的所有元素对。
+      *
       * Return an RDD containing all pairs of elements with matching keys in `this` and `other`. Each
       * pair of elements will be returned as a (k, (v1, v2)) tuple, where (k, v1) is in `this` and
       * (k, v2) is in `other`. Uses the given Partitioner to partition the output RDD.
@@ -674,6 +676,8 @@ class PairRDDFunctions[K, V](self: RDD[(K, V)])
     }
 
     /**
+      * 执行“this”和“other”的左外部联接。对于`this中的每个元素（k，v）`
+      *
       * Perform a left outer join of `this` and `other`. For each element (k, v) in `this`, the
       * resulting RDD will either contain all pairs (k, (v, Some(w))) for w in `other`, or the
       * pair (k, (v, None)) if no elements in `other` have key k. Hash-partitions the output
