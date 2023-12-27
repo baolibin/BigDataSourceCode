@@ -688,6 +688,8 @@ class PairRDDFunctions[K, V](self: RDD[(K, V)])
     }
 
     /**
+      * 执行“this”和“other”的左外部联接。对于`this中的每个元素（k，v）`
+      *
       * Perform a left outer join of `this` and `other`. For each element (k, v) in `this`, the
       * resulting RDD will either contain all pairs (k, (v, Some(w))) for w in `other`, or the
       * pair (k, (v, None)) if no elements in `other` have key k. Uses the given Partitioner to
@@ -706,6 +708,8 @@ class PairRDDFunctions[K, V](self: RDD[(K, V)])
     }
 
     /**
+      * 执行“this”和“other”的左外部联接。对于`this中的每个元素（k，v）`
+      *
       * Perform a left outer join of `this` and `other`. For each element (k, v) in `this`, the
       * resulting RDD will either contain all pairs (k, (v, Some(w))) for w in `other`, or the
       * pair (k, (v, None)) if no elements in `other` have key k. Hash-partitions the output
