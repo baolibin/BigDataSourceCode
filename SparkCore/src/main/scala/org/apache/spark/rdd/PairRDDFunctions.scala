@@ -795,6 +795,8 @@ class PairRDDFunctions[K, V](self: RDD[(K, V)])
     }
 
     /**
+      * 执行“this”和“other”的右外联接。对于“other”中的每个元素（k，w），所得到的RDD将包含“this”中v的所有对（k，（Some（v），w）），或者如果“this”中没有元素具有关键字k，则包含对（k（None，w）。
+      *
       * Perform a right outer join of `this` and `other`. For each element (k, w) in `other`, the
       * resulting RDD will either contain all pairs (k, (Some(v), w)) for v in `this`, or the
       * pair (k, (None, w)) if no elements in `this` have key k. Hash-partitions the resulting
