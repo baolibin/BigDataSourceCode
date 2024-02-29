@@ -136,6 +136,8 @@ abstract class TaskContext extends Serializable {
     def addTaskCompletionListener(listener: TaskCompletionListener): TaskContext
 
     /**
+      * 以Scala闭包的形式添加一个监听器，以便在任务完成时执行。这在所有情况下都会被称为成功、失败或取消。向已完成的任务中添加侦听器将导致立即调用该侦听器。
+      *
       * Adds a listener in the form of a Scala closure to be executed on task completion.
       * This will be called in all situations - success, failure, or cancellation. Adding a listener
       * to an already completed task will result in that listener being called immediately.
