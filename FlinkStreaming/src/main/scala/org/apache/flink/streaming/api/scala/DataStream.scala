@@ -390,6 +390,8 @@ class DataStream[T](stream: JavaStream[T]) {
     // --------------------------------------------------------------------------
 
     /**
+      * 通过将相同类型的数据流输出彼此合并来创建新的数据流。使用此运算符合并的数据流将同时进行转换。
+      *
       * Creates a new DataStream by merging DataStream outputs of
       * the same type with each other. The DataStreams merged using this operator
       * will be transformed simultaneously.
