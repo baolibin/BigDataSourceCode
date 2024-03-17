@@ -296,6 +296,8 @@ class AllWindowedStream[T, W <: Window](javaStream: JavaAllWStream[T, W]) {
     // --------------------------- aggregate() ----------------------------------
 
     /**
+      * 将给定的聚合函数应用于每个窗口。为每个元素调用聚合函数，以增量方式聚合值，并将状态保持为每个窗口一个累加器。
+      * 
       * Applies the given aggregation function to each window. The aggregation function
       * is called for each element, aggregating values incrementally and keeping the state to
       * one accumulator per window.
