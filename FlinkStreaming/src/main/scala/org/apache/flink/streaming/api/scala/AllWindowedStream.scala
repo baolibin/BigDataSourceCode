@@ -445,6 +445,8 @@ class AllWindowedStream[T, W <: Window](javaStream: JavaAllWStream[T, W]) {
     }
 
     /**
+      * 将给定的折叠功能应用于每个窗口。每次单独评估每个键的窗口时，都会调用窗口函数。reduce函数的输出被解释为常规的非窗口流。
+      *
       * Applies the given fold function to each window. The window function is called for each
       * evaluation of the window for each key individually. The output of the reduce function is
       * interpreted as a regular non-windowed stream.
