@@ -131,6 +131,7 @@ class CoGroupedStreams[T1, T2](input1: DataStream[T1], input2: DataStream[T2]) {
             }
 
             /**
+              * 为两个输入定义了[[KeySelector]]和[[WindowAssigner]]的协作组操作。
               * A co-group operation that has [[KeySelector]]s defined for both inputs as
               * well as a [[WindowAssigner]].
               *
@@ -171,6 +172,7 @@ class CoGroupedStreams[T1, T2](input1: DataStream[T1], input2: DataStream[T2]) {
                 }
 
                 /**
+                  * 设置允许元素延迟的时间代表[[WindowdStream#allowed Latency（Time）]]
                   * Sets the time by which elements are allowed to be late.
                   * Delegates to [[WindowedStream#allowedLateness(Time)]]
                   */
