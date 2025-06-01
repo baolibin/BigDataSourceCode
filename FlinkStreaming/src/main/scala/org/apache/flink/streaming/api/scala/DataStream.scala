@@ -1163,6 +1163,8 @@ class DataStream[T](stream: JavaStream[T]) {
     }
 
     /**
+      * 将CSV格式的DataStream写入path参数指定的文件。写入每毫秒周期性地执行一次。
+      * 
       * Writes the DataStream in CSV format to the file specified by the path parameter. The writing
       * is performed periodically every millis milliseconds.
       *
